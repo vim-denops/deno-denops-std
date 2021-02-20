@@ -35,8 +35,8 @@ export class Vim {
     await this.#denops.cmd(cmd, context);
   }
 
-  async eval(expr: string, context: Context = {}): Promise<void> {
-    await this.#denops.eval(expr, context);
+  async eval(expr: string, context: Context = {}): Promise<unknown> {
+    return await this.#denops.eval(expr, context);
   }
 
   async execute(command: string | string[]): Promise<void> {
