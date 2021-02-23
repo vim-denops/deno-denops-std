@@ -1,4 +1,1 @@
-export * from "./autocmd.ts";
-export * from "./execute.ts";
-export * from "./variable.ts";
-export * from "./vim.ts";
+export { start, Vim } from "./vim/mod.ts";

@@ -1,4 +1,4 @@
-import { Denops } from "./deps.ts";
+import { Denops } from "../deps.ts";
 import { execute } from "./execute.ts";
 
 export async function autocmd(

@@ -1,4 +1,4 @@
-import { Context, Denops, Dispatcher } from "./deps.ts";
+import { Context, Denops, Dispatcher, getCacheOrElse } from "../deps.ts";
 import { execute } from "./execute.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { VariableHelper } from "./variable.ts";
@@ -23,6 +23,12 @@ export class Vim {
     this.env = new VariableHelper(denops, "env");
   }
 
+  static get(): Vim {
+    return getCacheOrElse("vim", () => {
+      return new Vim(Denops.get());
+    });
+  }
+
   get name(): string {
     return this.#denops.name;
   }
@@ -39,8 +45,11 @@ export class Vim {
     return await this.#denops.eval(expr, context);
   }
 
-  async execute(command: string | string[]): Promise<void> {
-    await execute(this.#denops, command);
+  async execute(
+    command: string | string[],
+    context: Context = {},
+  ): Promise<void> {
+    await execute(this.#denops, command, context);
   }
 
   async autocmd(
@@ -56,8 +65,5 @@ export class Vim {
 }
 
 export function start(main: (vim: Vim) => Promise<void>) {
-  Denops.start(async (denops) => {
-    const vim = new Vim(denops);
-    await main(vim);
-  });
+  Denops.start(() => main(Vim.get()));
 }
