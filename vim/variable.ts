@@ -1,4 +1,4 @@
-import { Denops } from "./deps.ts";
+import { Denops } from "../deps.ts";
 
 /**
  * Vim variable groups

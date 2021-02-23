@@ -1,4 +1,4 @@
-import { Context, Denops } from "./deps.ts";
+import { Context, Denops } from "../deps.ts";
 
 /**
  * Execute Vim script directly
