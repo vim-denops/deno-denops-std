@@ -16,10 +16,14 @@ export async function getVar<T = unknown>(
   denops: Denops,
   group: VariableGroups,
   prop: string,
-): Promise<T> {
-  const name = `${group}:${prop}`;
+  defaultValue?: T,
+): Promise<T | null> {
+  const result = await denops.eval(`get(${group}:, name, value)`, {
+    name: prop,
+    value: defaultValue ?? null,
+  });
   // deno-lint-ignore no-explicit-any
-  return (await denops.eval(name)) as any;
+  return result as any;
 }
 
 export async function setVar<T = unknown>(
@@ -52,8 +56,8 @@ export class VariableHelper {
     this.#group = group;
   }
 
-  async get<T = unknown>(prop: string): Promise<T> {
-    return await getVar(this.#denops, this.#group, prop);
+  async get<T = unknown>(prop: string, defaultValue?: T): Promise<T | null> {
+    return await getVar(this.#denops, this.#group, prop, defaultValue);
   }
 
   async set<T = unknown>(prop: string, value: T): Promise<void> {
