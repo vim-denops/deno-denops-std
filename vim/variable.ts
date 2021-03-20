@@ -8,19 +8,22 @@ import { Denops } from "../deps.ts";
  * w - Window local variables
  * t - Tab page local variables
  * v - Vim's variables
- * env - Environment variables
  *
  */
-export type VariableGroups = "g" | "b" | "w" | "t" | "v" | "env";
+export type VariableGroups = "g" | "b" | "w" | "t" | "v";
 
 export async function getVar<T = unknown>(
   denops: Denops,
   group: VariableGroups,
   prop: string,
-): Promise<T> {
-  const name = group === "env" ? `\$${prop}` : `${group}:${prop}`;
+  defaultValue?: T,
+): Promise<T | null> {
+  const result = await denops.eval(`get(${group}:, name, value)`, {
+    name: prop,
+    value: defaultValue ?? null,
+  });
   // deno-lint-ignore no-explicit-any
-  return (await denops.eval(name)) as any;
+  return result as any;
 }
 
 export async function setVar<T = unknown>(
@@ -29,7 +32,7 @@ export async function setVar<T = unknown>(
   prop: string,
   value: T,
 ): Promise<void> {
-  const name = group === "env" ? `\$${prop}` : `${group}:${prop}`;
+  const name = `${group}:${prop}`;
   await denops.cmd(`let ${name} = value`, {
     value,
   });
@@ -40,7 +43,7 @@ export async function removeVar(
   group: VariableGroups,
   prop: string,
 ): Promise<void> {
-  const name = group === "env" ? `\$${prop}` : `${group}:${prop}`;
+  const name = `${group}:${prop}`;
   await denops.cmd(`unlet ${name}`);
 }
 
@@ -53,8 +56,8 @@ export class VariableHelper {
     this.#group = group;
   }
 
-  async get<T = unknown>(prop: string): Promise<T> {
-    return await getVar(this.#denops, this.#group, prop);
+  async get<T = unknown>(prop: string, defaultValue?: T): Promise<T | null> {
+    return await getVar(this.#denops, this.#group, prop, defaultValue);
   }
 
   async set<T = unknown>(prop: string, value: T): Promise<void> {

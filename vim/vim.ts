@@ -11,7 +11,6 @@ export class Vim {
   readonly w: VariableHelper;
   readonly t: VariableHelper;
   readonly v: VariableHelper;
-  readonly env: VariableHelper;
 
   constructor(denops: Denops) {
     this.#denops = denops;
@@ -20,7 +19,6 @@ export class Vim {
     this.w = new VariableHelper(denops, "w");
     this.t = new VariableHelper(denops, "t");
     this.v = new VariableHelper(denops, "v");
-    this.env = new VariableHelper(denops, "env");
   }
 
   static get(): Vim {
