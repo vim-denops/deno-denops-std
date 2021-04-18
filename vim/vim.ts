@@ -31,6 +31,14 @@ export class Vim {
     return this.#denops.name;
   }
 
+  async dispatch(
+    name: string,
+    method: string,
+    params: unknown[],
+  ): Promise<unknown> {
+    return await this.#denops.dispatch(name, method, params);
+  }
+
   async call(func: string, ...args: unknown[]): Promise<unknown> {
     return await this.#denops.call(func, ...args);
   }
