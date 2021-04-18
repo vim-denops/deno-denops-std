@@ -4,7 +4,7 @@ import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { VariableHelper } from "./variable.ts";
 
 export class Vim {
-  static instance?: Vim;
+  private static instance?: Vim;
 
   #denops: Denops;
 
