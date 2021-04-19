@@ -65,6 +65,26 @@ export class Vim {
   }
 }
 
+/**
+ * Define a plugin main function which starts denops mainloop for the plugin
+ * @deprecated Use `main` function instead.
+ */
 export function start(main: (vim: Vim) => Promise<void>) {
-  Denops.start(() => main(Vim.get()));
+  Denops.start(async () => {
+    const vim = Vim.get();
+    console.warn(
+      `${vim.name}: The 'start()' is deprecated since denops_std@v0.8.`,
+    );
+    console.warn(
+      `${vim.name}: Use 'main()' instead to launch a plugin like:`,
+    );
+    console.warn(`${vim.name}:`);
+    console.warn(`${vim.name}:   main(async ({ vim }) => {`);
+    console.warn(`${vim.name}:     vim.register({`);
+    console.warn(`${vim.name}:       // ...`);
+    console.warn(`${vim.name}:     });`);
+    console.warn(`${vim.name}:   });`);
+    console.warn(`${vim.name}:`);
+    await main(vim);
+  });
 }
