@@ -1,36 +1,47 @@
 name: deno
 
-on: [push, pull_request]
+env:
+  DENO_VERSION: 1.x
+
+on:
+  schedule:
+    - cron: '0 7 * * 0'
+  push:
+  pull_request:
+
 
 jobs:
   lint:
     runs-on: ubuntu-20.04
+
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@v2
+      - uses: denoland/setup-deno@main
         with:
-          deno-version: v1.7.2
+          deno-version: ${{ env.DENO_VERSION }}
       - name: Lint
         run: deno lint --unstable
 
   format:
     runs-on: ubuntu-20.04
+
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@v2
+      - uses: denoland/setup-deno@main
         with:
-          deno-version: v1.7.2
+          deno-version: ${{ env.DENO_VERSION }}
       - name: Format
         run: |
           deno fmt --check
 
   test:
     runs-on: ubuntu-20.04
+
     steps:
       - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@v2
+      - uses: denoland/setup-deno@main
         with:
-          deno-version: v1.7.2
+          deno-version: ${{ env.DENO_VERSION }}
       - name: Test
         run: |
           deno test
