@@ -1,3 +1,4 @@
+import * as path from "https://deno.land/std@0.93.0/path/mod.ts";
 import { Denops } from "../deps.ts";
 import { execute } from "./execute.ts";
 
@@ -5,59 +6,68 @@ interface FileInfo {
   isDirectory: boolean;
 }
 
+const homeDir = await Deno.env.get("HOME") as string;
+
 export async function load(
   denops: Denops,
   filePathInfo: URL,
 ): Promise<void> {
-  const scriptPath = await setFile(denops, filePathInfo);
+  if (Deno.build.os === "windows") {
+    filePathInfo.pathname = filePathInfo.pathname.slice(1, filePathInfo.pathname.length);
+  }
 
-  await execute(denops, `source ${scriptPath}`);
+  const scriptPath = await setFile(denops, filePathInfo);
+  const escapePath = await denops.call("fnameescape", scriptPath);
+
+  await execute(denops, "source escapePath", { escapePath });
 }
 
 async function setFile(denops: Denops, filePathInfo: URL): Promise<string> {
-  const re = /.*\//;
-  const homeDir = await Deno.env.get("HOME") as string;
+  const dirName = (await path.dirname(filePathInfo.pathname)) + "/";
+  const fileName = filePathInfo.pathname.replace(dirName, "");
+  let filePath: string;
+
+  if (Deno.build.os === "windows") {
+    filePath = await path.join(homeDir, "AppData", "Local", "denops-std", denops.name, `${denops.name}_${fileName}`);
+  } else {
+    filePath = await path.join(homeDir, ".cache", "denops-std", denops.name, `${denops.name}_${fileName}`);
+  }
 
   if (filePathInfo.protocol === "file:") {
-    const filename = filePathInfo.pathname.replace(re, "");
-    await makePluginDir(homeDir, denops.name);
+    await makePluginDir(denops.name);
 
     await Deno.copyFile(
       filePathInfo.pathname,
-      `${homeDir}/.cache/denops-std/${denops.name}/${denops.name}_${filename}`,
+      filePath,
     );
 
-    return `${homeDir}/.cache/denops-std/${denops.name}/${denops.name}_${filename}`;
+    return filePath;
   } else {
-    const filename = filePathInfo.href.replace(re, "");
-    const data = (await fetch(filePathInfo.href)).arrayBuffer();
-    await makePluginDir(homeDir, denops.name);
+    let data!: Promise<ArrayBuffer>;
+
+    const fetchData = async (): Promise<void> => {
+        data = (await fetch(filePathInfo.href)).arrayBuffer();
+    }
+
+    await Promise.all([fetchData(), makePluginDir(denops.name)]);
 
     await Deno.writeFile(
-      `${homeDir}/.cache/denops-std/${denops.name}/${denops.name}_${filename}`,
+      filePath,
       new Uint8Array(await data),
     );
 
-    return `${homeDir}/.cache/denops-std/${denops.name}/${denops.name}_${filename}`;
+    return `${homeDir}/.cache/denops-std/${denops.name}/${denops.name}_${fileName}`;
   }
 }
 
-async function makePluginDir(home: string, pluginName: string): Promise<void> {
-  try {
-    await Deno.stat(`${home}/.cache`);
-  } catch (err) {
-    await Deno.mkdir(`${home}/.cache`);
-  }
+async function makePluginDir(pluginName: string): Promise<void> {
+  const mkdirOpt = {
+      recursive: true,
+  };
 
-  try {
-    await Deno.stat(`${home}/.cache/denops-std`);
-  } catch (err) {
-    await Deno.mkdir(`${home}/.cache/denops-std`);
-  }
-
-  try {
-    await Deno.stat(`${home}/.cache/denops-std/${pluginName}`);
-  } catch (err) {
-    await Deno.mkdir(`${home}/.cache/denops-std/${pluginName}`);
+  if (Deno.build.os === "windows") {
+    await Deno.mkdir(path.join(homeDir, "AppData", "Local", "denops-std", pluginName), mkdirOpt);
+  } else {
+    await Deno.mkdir(path.join(homeDir, ".cache", "denops-std", pluginName), mkdirOpt);
   }
 }
