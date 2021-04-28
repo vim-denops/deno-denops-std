@@ -2,6 +2,7 @@ import { Context, Denops, Dispatcher } from "../deps.ts";
 import { execute } from "./execute.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { VariableHelper } from "./variable.ts";
+import { load } from "./load.ts";
 
 export class Vim {
   private static instance?: Vim;
@@ -58,6 +59,10 @@ export class Vim {
     main: (helper: AutocmdHelper) => void,
   ): Promise<void> {
     await autocmd(this.#denops, group, main);
+  }
+
+  async load(url: URL): Promise<void> {
+    await load(this.#denops, url);
   }
 
   register(dispatcher: Dispatcher): void {
