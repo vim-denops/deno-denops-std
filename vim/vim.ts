@@ -4,6 +4,14 @@ import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { VariableHelper } from "./variable.ts";
 import { load } from "./load.ts";
 
+/**
+ * Vim is a facade instance visible from each denops plugins for
+ *
+ * 1. Communicate with other plugins
+ * 2. Communicate with the host (Vim/Neovim)
+ * 3. Register them msgpack-rpc APIs
+ *
+ */
 export class Vim {
   private static instance?: Vim;
 
@@ -24,6 +32,9 @@ export class Vim {
     this.v = new VariableHelper(denops, "v");
   }
 
+  /**
+   * Get thread-local Vim instance.
+   */
   static get(): Vim {
     if (!Vim.instance) {
       Vim.instance = new Vim(Denops.get());
@@ -31,29 +42,62 @@ export class Vim {
     return Vim.instance;
   }
 
+  /**
+   * Plugin name
+   */
   get name(): string {
     return this.#denops.name;
   }
 
+  /**
+   * Call an arbitrary function of Vim/Neovim and return the result
+   *
+   * @param fn: A function name of Vim/Neovim.
+   * @param args: Arguments of the function.
+   */
   async call(func: string, ...args: unknown[]): Promise<unknown> {
     return await this.#denops.call(func, ...args);
   }
 
-  async cmd(cmd: string, context: Context = {}): Promise<void> {
-    await this.#denops.cmd(cmd, context);
+  /**
+   * Execute an arbitrary command of Vim/Neovim under a given context.
+   *
+   * @param cmd: A command expression to be executed.
+   * @param ctx: A context object which is expanded to the local namespace (l:)
+   */
+  async cmd(cmd: string, ctx: Context = {}): Promise<void> {
+    await this.#denops.cmd(cmd, ctx);
   }
 
-  async eval(expr: string, context: Context = {}): Promise<unknown> {
-    return await this.#denops.eval(expr, context);
+  /**
+   * Evaluate an arbitrary expression of Vim/Neovim under a given context and return the result.
+   *
+   * @param expr: An expression to be evaluated.
+   * @param ctx: A context object which is expanded to the local namespace (l:)
+   */
+  async eval(expr: string, ctx: Context = {}): Promise<unknown> {
+    return await this.#denops.eval(expr, ctx);
   }
 
+  /**
+   * Execute an arbitrary Vim script under a given context.
+   *
+   * @param script: A script to be executed. Can be string or string list.
+   * @param ctx: A context object which is expanded to the local namespace (l:)
+   */
   async execute(
-    command: string | string[],
-    context: Context = {},
+    script: string | string[],
+    ctx: Context = {},
   ): Promise<void> {
-    await execute(this.#denops, command, context);
+    await execute(this.#denops, script, ctx);
   }
 
+  /**
+   * Define autocmd in autocmd group.
+   *
+   * @param group: An autocmd group name.
+   * @param main: A function which is used to define autocmds.
+   */
   async autocmd(
     group: string,
     main: (helper: AutocmdHelper) => void,
@@ -61,10 +105,20 @@ export class Vim {
     await autocmd(this.#denops, group, main);
   }
 
+  /**
+   * Load an arbitrary Vim script from local or remote.
+   *
+   * @param url: An URL to locate the target Vim script.
+   */
   async load(url: URL): Promise<void> {
     await load(this.#denops, url);
   }
 
+  /**
+   * Register plugin APIs
+   *
+   * @param dispatcher: A collection of the plugin APIs
+   */
   register(dispatcher: Dispatcher): void {
     this.#denops.extendDispatcher(dispatcher);
   }
