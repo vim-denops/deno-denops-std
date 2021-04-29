@@ -5,19 +5,19 @@ import { Context, Denops } from "../deps.ts";
  */
 export async function execute(
   denops: Denops,
-  command: string | string[],
-  context: Context = {},
+  script: string | string[],
+  ctx: Context = {},
 ): Promise<void> {
-  if (Array.isArray(command)) {
-    context = {
-      ...context,
-      __denops_internal_command: command
+  if (Array.isArray(script)) {
+    ctx = {
+      ...ctx,
+      __denops_internal_command: script
         .map((x) => x.replace(/^\s+|\s+$/g, ""))
         .filter((x) => !!x),
     };
-    await denops.cmd("call execute(l:__denops_internal_command, '')", context);
+    await denops.cmd("call execute(l:__denops_internal_command, '')", ctx);
     return;
   }
-  command = command.replace(/\r?\n\s*\\/g, "");
-  await execute(denops, command.split(/\r?\n/g), context);
+  script = script.replace(/\r?\n\s*\\/g, "");
+  await execute(denops, script.split(/\r?\n/g), ctx);
 }
