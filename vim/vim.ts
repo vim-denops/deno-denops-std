@@ -2,6 +2,7 @@ import { Context, Denops, Dispatcher } from "../deps.ts";
 import { execute } from "./execute.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { VariableHelper } from "./variable.ts";
+import { FuctionHelper } from "./function.ts";
 import { load } from "./load.ts";
 
 /**
@@ -23,6 +24,8 @@ export class Vim {
   readonly t: VariableHelper;
   readonly v: VariableHelper;
 
+  readonly fn: FuctionHelper;
+
   constructor(denops: Denops) {
     this.#denops = denops;
     this.g = new VariableHelper(denops, "g");
@@ -30,6 +33,7 @@ export class Vim {
     this.w = new VariableHelper(denops, "w");
     this.t = new VariableHelper(denops, "t");
     this.v = new VariableHelper(denops, "v");
+    this.fn = new FuctionHelper(denops);
   }
 
   /**
