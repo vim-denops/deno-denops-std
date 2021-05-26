@@ -1,7 +1,7 @@
 import { Denops } from "../deps.ts";
 
 export async function bufadd(denops: Denops, name: string): Promise<number> {
-  const bufnr = await denops.eval("bufadd(name)", { name: name });
+  const bufnr = await denops.call("bufadd", name);
   return bufnr as number;
 }
 
@@ -9,59 +9,59 @@ export async function bufexists(
   denops: Denops,
   name: string | number,
 ): Promise<boolean> {
-  const result = await denops.eval("bufexists(name)", { name: name }) as number;
-  return result ? true : false;
+  const result = await denops.call("bufexists", name) as number;
+  return !!result;
 }
 
 export async function buflisted(
   denops: Denops,
   name: string | number,
 ): Promise<boolean> {
-  const result = await denops.eval("buflisted(name)", { name: name }) as number;
-  return result ? true : false;
+  const result = await denops.call("buflisted", name) as number;
+  return !!result;
 }
 
 export async function bufload(
   denops: Denops,
   name: string | number,
 ): Promise<void> {
-  await denops.eval("bufload(name)", { name: name });
+  await denops.call("bufload", name);
 }
 
 export async function bufloaded(
   denops: Denops,
   name: string | number,
 ): Promise<boolean> {
-  const result = await denops.eval("bufloaded(name)", { name: name }) as number;
-  return result ? true : false;
+  const result = await denops.call("bufloaded", name) as number;
+  return !!result;
 }
 
 export async function bufname(
   denops: Denops,
   name?: string | number,
 ): Promise<string> {
-  return await denops.eval("bufname(name)", { name: name }) as string;
+  return await denops.call("bufname", name) as string;
 }
 
 export async function bufnr(
   denops: Denops,
   name: string | number,
 ): Promise<number> {
-  return await denops.eval("bufnr(name)", { name: name }) as number;
+  return await denops.call("bufnr", name) as number;
 }
 
 export async function bufwinid(
   denops: Denops,
   name: string | number,
 ): Promise<number> {
-  return await denops.eval("bufwinid(name)", { name: name }) as number;
+  return await denops.call("bufwinid", name) as number;
 }
 
 export async function bufwinnr(
   denops: Denops,
   name: string | number,
 ): Promise<number> {
-  return await denops.eval("bufwinnr(name)", { name: name }) as number;
+  return await denops.call("bufwinnr", name) as number;
 }
 
 export class FuctionHelper {
