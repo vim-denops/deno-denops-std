@@ -41,7 +41,7 @@ main(async ({ vim }) => {
 });
 ```
 
-See [denops-helloworld.vim](https://github.com/denops-helloworld.vim) for more
+See [denops-helloworld.vim](https://github.com/vim-denops/denops-helloworld.vim) for more
 details.
 
 [deno]: https://deno.land/
