@@ -64,7 +64,7 @@ export async function bufwinnr(
   return await denops.call("bufwinnr", name) as number;
 }
 
-export class FuctionHelper {
+export class FunctionHelper {
   #denops: Denops;
 
   constructor(denops: Denops) {
