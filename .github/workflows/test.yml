@@ -2,11 +2,11 @@ name: deno
 
 env:
   DENO_VERSION: 1.x
-  DENOPS_PATH: "./denops.vim"
+  DENOPS_PATH: "../denops.vim"
 
 on:
   schedule:
-    - cron: '0 7 * * 0'
+    - cron: "0 7 * * 0"
   push:
     branches:
       - main
@@ -53,12 +53,18 @@ jobs:
   test:
     runs-on: ubuntu-20.04
 
+    defaults:
+      run:
+        working-directory: ./repo
+
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: "./repo"
       - uses: actions/checkout@v2
         with:
           repository: "vim-denops/denops.vim"
-          path: "denops.vim"
+          path: "./denops.vim"
       - uses: denoland/setup-deno@main
         with:
           deno-version: ${{ env.DENO_VERSION }}
