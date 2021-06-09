@@ -73,23 +73,9 @@ export async function getbufline(
   denops: Denops,
   name: string | number,
   lnum: string | number,
-): Promise<string>;
-export async function getbufline(
-  denops: Denops,
-  name: string | number,
-  lnum: string | number,
-  end: string | number,
-): Promise<string[]>;
-export async function getbufline(
-  denops: Denops,
-  name: string | number,
-  lnum: string | number,
   end?: string | number,
-): Promise<string | string[]> {
-  if (end) {
-    return await denops.call("getbufline", name, lnum, end) as string[];
-  }
-  return await denops.call("getbufline", name, lnum) as string;
+): Promise<string[]> {
+  return await denops.call("getbufline", name, lnum, end) as string[];
 }
 
 export async function getline(
@@ -194,21 +180,9 @@ export class FunctionHelper {
   async getbufline(
     name: string | number,
     lnum: string | number,
-  ): Promise<string>;
-  async getbufline(
-    name: string | number,
-    lnum: string | number,
-    end: string | number,
-  ): Promise<string[]>;
-  async getbufline(
-    name: string | number,
-    lnum: string | number,
     end?: string | number,
   ) {
-    if (end) {
-      return await getbufline(this.#denops, name, lnum, end);
-    }
-    return await getbufline(this.#denops, name, lnum);
+    return await getbufline(this.#denops, name, lnum, end);
   }
 
   async getline(lnum: string | number): Promise<string>;
