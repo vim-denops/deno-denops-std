@@ -1,4 +1,4 @@
-name: deno
+name: Test
 
 env:
   DENO_VERSION: 1.x
