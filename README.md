@@ -2,7 +2,7 @@
 
 [![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno)](https://deno.land/x/denops_std)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)
-[![Test](https://github.com/vim-denops/deno-denops-std/workflows/Test/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions?query=workflow%3ATest)
+[![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
 
 [Deno][deno] module for [denops.vim][denops.vim]. This module is assumed to be
 used in denops plugin and the code is assumed to be called in a worker thread
