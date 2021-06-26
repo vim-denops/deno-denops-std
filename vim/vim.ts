@@ -14,8 +14,6 @@ import { load } from "./load.ts";
  *
  */
 export class Vim {
-  private static instance?: Vim;
-
   #denops: Denops;
 
   readonly g: VariableHelper;
@@ -34,16 +32,6 @@ export class Vim {
     this.t = new VariableHelper(denops, "t");
     this.v = new VariableHelper(denops, "v");
     this.fn = new FunctionHelper(denops);
-  }
-
-  /**
-   * Get thread-local Vim instance.
-   */
-  static get(): Vim {
-    if (!Vim.instance) {
-      Vim.instance = new Vim(Denops.get());
-    }
-    return Vim.instance;
   }
 
   /**
@@ -124,30 +112,6 @@ export class Vim {
    * @param dispatcher: A collection of the plugin APIs
    */
   register(dispatcher: Dispatcher): void {
-    this.#denops.extendDispatcher(dispatcher);
+    this.#denops.dispatcher = dispatcher;
   }
-}
-
-/**
- * Define a plugin main function which starts denops mainloop for the plugin
- * @deprecated Use `main` function instead.
- */
-export function start(main: (vim: Vim) => Promise<void>) {
-  Denops.start(async () => {
-    const vim = Vim.get();
-    console.warn(
-      `${vim.name}: The 'start()' is deprecated since denops_std@v0.8.`,
-    );
-    console.warn(
-      `${vim.name}: Use 'main()' instead to launch a plugin like:`,
-    );
-    console.warn(`${vim.name}:`);
-    console.warn(`${vim.name}:   main(async ({ vim }) => {`);
-    console.warn(`${vim.name}:     vim.register({`);
-    console.warn(`${vim.name}:       // ...`);
-    console.warn(`${vim.name}:     });`);
-    console.warn(`${vim.name}:   });`);
-    console.warn(`${vim.name}:`);
-    await main(vim);
-  });
 }
