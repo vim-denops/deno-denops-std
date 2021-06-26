@@ -1,18 +1,8 @@
 import { Denops } from "../deps.ts";
 
-/**
- * Vim variable groups
- *
- * g - Global variables
- * b - Buffer local variables
- * w - Window local variables
- * t - Tab page local variables
- * v - Vim's variables
- *
- */
-export type VariableGroups = "g" | "b" | "w" | "t" | "v";
+type VariableGroups = "g" | "b" | "w" | "t" | "v";
 
-export async function getVar<T = unknown>(
+async function getVar<T = unknown>(
   denops: Denops,
   group: VariableGroups,
   prop: string,
@@ -26,7 +16,7 @@ export async function getVar<T = unknown>(
   return result as any;
 }
 
-export async function setVar<T = unknown>(
+async function setVar<T = unknown>(
   denops: Denops,
   group: VariableGroups,
   prop: string,
@@ -38,33 +28,79 @@ export async function setVar<T = unknown>(
   });
 }
 
-export async function removeVar(
+async function removeVar(
   denops: Denops,
   group: VariableGroups,
   prop: string,
 ): Promise<void> {
+  if (group === "v") {
+    throw new Error("A 'remove' is not supported for Vim variables");
+  }
   const name = `${group}:${prop}`;
   await denops.cmd(`unlet ${name}`);
 }
 
-export class VariableHelper {
-  #denops: Denops;
+class VariableHelper {
   #group: VariableGroups;
 
-  constructor(denops: Denops, group: VariableGroups) {
-    this.#denops = denops;
+  constructor(group: VariableGroups) {
     this.#group = group;
   }
 
-  async get<T = unknown>(prop: string, defaultValue?: T): Promise<T | null> {
-    return await getVar(this.#denops, this.#group, prop, defaultValue);
+  /**
+   * Get variable
+   */
+  get<T = unknown>(
+    denops: Denops,
+    prop: string,
+    defaultValue?: T,
+  ): Promise<T | null> {
+    return getVar(denops, this.#group, prop, defaultValue);
   }
 
-  async set<T = unknown>(prop: string, value: T): Promise<void> {
-    await setVar(this.#denops, this.#group, prop, value);
+  /**
+   * Set variable
+   */
+  set<T = unknown>(denops: Denops, prop: string, value: T): Promise<void> {
+    return setVar(denops, this.#group, prop, value);
   }
 
-  async remove(prop: string): Promise<void> {
-    await removeVar(this.#denops, this.#group, prop);
+  /**
+   * Remove variable
+   */
+  remove(denops: Denops, prop: string): Promise<void> {
+    return removeVar(denops, this.#group, prop);
   }
 }
+
+/**
+ * Global variables
+ */
+export const globals = new VariableHelper("g");
+export const g = globals;
+
+/**
+ * Buffer local variables
+ */
+export const buffers = new VariableHelper("b");
+export const b = buffers;
+
+/**
+ * Window local variables
+ */
+export const windows = new VariableHelper("w");
+export const w = windows;
+
+/**
+ * Tabpage local variables
+ */
+export const tabpages = new VariableHelper("t");
+export const t = tabpages;
+
+/**
+ * Vim variables
+ */
+export const vim = new VariableHelper("v");
+export const v = vim;
+
+export { VariableHelper };
