@@ -1,5 +1,4 @@
 import { Context, Denops, Dispatcher } from "../deps.ts";
-import { autocmd, AutocmdHelper } from "./autocmd.ts";
 
 /**
  * Vim is a facade instance visible from each denops plugins for
@@ -51,19 +50,6 @@ export class Vim {
    */
   async eval(expr: string, ctx: Context = {}): Promise<unknown> {
     return await this.#denops.eval(expr, ctx);
-  }
-
-  /**
-   * Define autocmd in autocmd group.
-   *
-   * @param group: An autocmd group name.
-   * @param main: A function which is used to define autocmds.
-   */
-  async autocmd(
-    group: string,
-    main: (helper: AutocmdHelper) => void,
-  ): Promise<void> {
-    await autocmd(this.#denops, group, main);
   }
 
   /**
