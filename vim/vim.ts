@@ -1,6 +1,5 @@
 import { Context, Denops, Dispatcher } from "../deps.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
-import { FunctionHelper } from "./function.ts";
 
 /**
  * Vim is a facade instance visible from each denops plugins for
@@ -13,11 +12,8 @@ import { FunctionHelper } from "./function.ts";
 export class Vim {
   #denops: Denops;
 
-  readonly fn: FunctionHelper;
-
   constructor(denops: Denops) {
     this.#denops = denops;
-    this.fn = new FunctionHelper(denops);
   }
 
   /**
