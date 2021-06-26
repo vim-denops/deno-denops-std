@@ -1,8 +1,6 @@
 import { Context, Denops, Dispatcher } from "../deps.ts";
-import { execute } from "./execute.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
 import { FunctionHelper } from "./function.ts";
-import { load } from "./load.ts";
 
 /**
  * Vim is a facade instance visible from each denops plugins for
@@ -60,19 +58,6 @@ export class Vim {
   }
 
   /**
-   * Execute an arbitrary Vim script under a given context.
-   *
-   * @param script: A script to be executed. Can be string or string list.
-   * @param ctx: A context object which is expanded to the local namespace (l:)
-   */
-  async execute(
-    script: string | string[],
-    ctx: Context = {},
-  ): Promise<void> {
-    await execute(this.#denops, script, ctx);
-  }
-
-  /**
    * Define autocmd in autocmd group.
    *
    * @param group: An autocmd group name.
@@ -83,15 +68,6 @@ export class Vim {
     main: (helper: AutocmdHelper) => void,
   ): Promise<void> {
     await autocmd(this.#denops, group, main);
-  }
-
-  /**
-   * Load an arbitrary Vim script from local or remote.
-   *
-   * @param url: An URL to locate the target Vim script.
-   */
-  async load(url: URL): Promise<void> {
-    await load(this.#denops, url);
   }
 
   /**
