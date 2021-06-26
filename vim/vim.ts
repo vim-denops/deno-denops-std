@@ -1,7 +1,6 @@
 import { Context, Denops, Dispatcher } from "../deps.ts";
 import { execute } from "./execute.ts";
 import { autocmd, AutocmdHelper } from "./autocmd.ts";
-import { VariableHelper } from "./variable.ts";
 import { FunctionHelper } from "./function.ts";
 import { load } from "./load.ts";
 
@@ -16,21 +15,10 @@ import { load } from "./load.ts";
 export class Vim {
   #denops: Denops;
 
-  readonly g: VariableHelper;
-  readonly b: VariableHelper;
-  readonly w: VariableHelper;
-  readonly t: VariableHelper;
-  readonly v: VariableHelper;
-
   readonly fn: FunctionHelper;
 
   constructor(denops: Denops) {
     this.#denops = denops;
-    this.g = new VariableHelper(denops, "g");
-    this.b = new VariableHelper(denops, "b");
-    this.w = new VariableHelper(denops, "w");
-    this.t = new VariableHelper(denops, "t");
-    this.v = new VariableHelper(denops, "v");
     this.fn = new FunctionHelper(denops);
   }
 
