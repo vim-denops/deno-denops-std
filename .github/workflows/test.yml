@@ -24,8 +24,7 @@ jobs:
         with:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Type check
-        run: |
-          deno test --unstable --no-run ./**/*.ts
+        run: make type-check
 
   lint:
     runs-on: ubuntu-20.04
@@ -36,7 +35,7 @@ jobs:
         with:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Lint
-        run: deno lint
+        run: make lint
 
   format:
     runs-on: ubuntu-20.04
@@ -47,8 +46,7 @@ jobs:
         with:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Format
-        run: |
-          deno fmt --check
+        run: make fmt-check
 
   test:
     runs-on: ubuntu-20.04
@@ -90,8 +88,7 @@ jobs:
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable }}
       - name: Test
-        run: |
-          deno test --unstable -A
+        run: make test
         env:
           DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable }}
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable }}
