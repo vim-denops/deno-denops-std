@@ -16,7 +16,7 @@ on:
     paths:
       - "**/*.md"
       - "**/*.ts"
-      - "modules-lock.json"
+      - "denops_std/modules-lock.json"
       - ".github/workflows/test.yml"
   pull_request:
     branches:
@@ -24,7 +24,7 @@ on:
     paths:
       - "**/*.md"
       - "**/*.ts"
-      - "modules-lock.json"
+      - "denops_std/modules-lock.json"
       - ".github/workflows/test.yml"
 
 jobs:
