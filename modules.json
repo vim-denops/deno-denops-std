@@ -1,6 +1,6 @@
 {
   "https://deno.land/std": {
-    "version": "@0.95.0",
+    "version": "@0.100.0",
     "modules": [
       "/path/mod.ts",
       "/hash/mod.ts",
@@ -9,7 +9,7 @@
     ]
   },
   "https://deno.land/x/denops_core": {
-    "version": "@v1.0.0-alpha.0",
+    "version": "@v1.0.0-alpha.7",
     "modules": ["/mod.ts", "/test/mod.ts"]
   },
   "https://deno.land/x/unknownutil": {
