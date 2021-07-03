@@ -27,7 +27,7 @@ test: FORCE	## Test
 	@deno test --unstable -A
 
 dlink: FORCE	## Update dlink
-	@${TOOLS}/bin/dlink
+	(cd denops_std; ${TOOLS}/bin/dlink)
 	@make fmt
 
 FORCE:
