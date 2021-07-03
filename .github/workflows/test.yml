@@ -10,9 +10,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "**/*.md"
+      - "**/*.ts"
+      - ".github/workflows/test.yml"
   pull_request:
     branches:
       - main
+    paths:
+      - "**/*.md"
+      - "**/*.ts"
+      - ".github/workflows/test.yml"
 
 jobs:
   typecheck:
