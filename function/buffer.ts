@@ -1,4 +1,4 @@
-import { Denops } from "../deps.ts";
+import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
 
 export async function bufadd(
   denops: Denops,
