@@ -1,8 +1,11 @@
 name: Test
 
 env:
-  DENO_VERSION: 1.x
   DENOPS_PATH: "../denops.vim"
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -eo pipefail {0}
 
 on:
   schedule:
@@ -25,47 +28,55 @@ on:
       - ".github/workflows/test.yml"
 
 jobs:
-  typecheck:
-    runs-on: ubuntu-20.04
-
+  check:
+    strategy:
+      matrix:
+        runner:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+        version:
+          - "1.11.0"
+          - "1.x"
+    runs-on: ${{ matrix.runner }}
     steps:
+      - run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: "${{ matrix.version }}"
+      - name: Lint check
+        run: make lint
+      - name: Format check
+        run: make fmt-check
       - name: Type check
         run: make type-check
 
-  lint:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Lint
-        run: make lint
-
-  format:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: ${{ env.DENO_VERSION }}
-      - name: Format
-        run: make fmt-check
-
   test:
-    runs-on: ubuntu-20.04
-
-    defaults:
-      run:
-        working-directory: ./repo
-
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+        version:
+          - "1.11.0"
+          - "1.x"
+        host_version:
+          - vim: "v8.1.2424"
+            nvim: ""
+          - vim: "v8.2.3081"
+            nvim: ""
+          - vim: ""
+            nvim: "v0.4.4"
+          - vim: ""
+            nvim: "v0.5.0"
+    runs-on: ${{ matrix.runner }}
     steps:
+      - run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
       - uses: actions/checkout@v2
         with:
           path: "./repo"
@@ -75,29 +86,34 @@ jobs:
           path: "./denops.vim"
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ env.DENO_VERSION }}
+          deno-version: "${{ matrix.version }}"
       - uses: rhysd/action-setup-vim@v1
         id: vim
         with:
-          version: "v8.1.2424"
-      - uses: rhysd/action-setup-vim@v1
-        id: nvim
-        with:
-          neovim: true
-          version: "v0.4.4"
+          version: "${{ matrix.host_version.vim }}"
+        if: matrix.host_version.vim != ''
       - name: Check Vim
         run: |
           echo ${DENOPS_TEST_VIM}
           ${DENOPS_TEST_VIM} --version
         env:
           DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable }}
+        if: matrix.host_version.vim != ''
+      - uses: rhysd/action-setup-vim@v1
+        id: nvim
+        with:
+          neovim: true
+          version: "${{ matrix.host_version.nvim }}"
+        if: matrix.host_version.nvim != ''
       - name: Check Neovim
         run: |
           echo ${DENOPS_TEST_NVIM}
           ${DENOPS_TEST_NVIM} --version
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable }}
+        if: matrix.host_version.nvim != ''
       - name: Test
+        working-directory: ./repo
         run: make test
         env:
           DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable }}
