@@ -1,4 +1,4 @@
-import { Denops } from "../deps.ts";
+import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
 import { execute } from "../helper/execute.ts";
 import { AutocmdEvent } from "./types.ts";
 import {
