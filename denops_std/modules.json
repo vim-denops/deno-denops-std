@@ -9,7 +9,7 @@
     ]
   },
   "https://deno.land/x/denops_core": {
-    "version": "@v1.0.0-alpha.9",
+    "version": "@v1.0.0-alpha.10",
     "modules": ["/mod.ts", "/test/mod.ts"]
   },
   "https://deno.land/x/unknownutil": {
