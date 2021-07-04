@@ -76,3 +76,5 @@ export async function batch(
   const calls = BatchHelper.getCalls(helper);
   return await denops.batch(...calls);
 }
+
+export type { BatchHelper };
