@@ -16,7 +16,7 @@ export type Identifier = string;
 /**
  * Anonymous function callback
  */
-export type Callback = (...args: unknown[]) => Promise<unknown>;
+export type Callback = (...args: unknown[]) => Promise<unknown> | unknown;
 
 /**
  * Add anonymous functions as a denops API and return the identifiers
@@ -27,7 +27,9 @@ export function add<N extends number>(
 ): TupleOf<Identifier, N> {
   return callbacks.map((callback) => {
     const id = makeid();
-    denops.dispatcher[id] = callback;
+    denops.dispatcher[id] = async (...args: unknown[]) => {
+      return await callback(...args);
+    };
     return id;
     // deno-lint-ignore no-explicit-any
   }) as any;
