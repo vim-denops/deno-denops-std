@@ -26,6 +26,10 @@ type-check: FORCE	## Type check
 test: FORCE	## Test
 	@deno test --unstable -A
 
+gen: FORCE	## Generate codes
+	@deno run -A ./scripts/gen-function/gen-function.ts
+	@make fmt
+
 dlink: FORCE	## Update dlink
 	(cd denops_std; ${TOOLS}/bin/dlink)
 	@make fmt
