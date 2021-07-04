@@ -41,7 +41,7 @@ function formatDefinition({ fn, docs, vars }: Definition): string[] {
 }
 
 export function format(definitions: Definition[], root: string): string[] {
-  const denops = `${root}/vendor/https/deno.land/x/denops_core/mod.ts`;
+  const denops = `${root}/deps.ts`;
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
     "// deno-lint-ignore-file camelcase",

@@ -1,4 +1,4 @@
-import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
+import { Denops } from "../deps.ts";
 
 // https://github.com/microsoft/TypeScript/issues/26223#issuecomment-674500430
 export type TupleOf<T, N extends number> = N extends N

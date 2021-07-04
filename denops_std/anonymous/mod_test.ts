@@ -1,8 +1,5 @@
-import {
-  assertEquals,
-  assertThrowsAsync,
-} from "../vendor/https/deno.land/std/testing/asserts.ts";
-import { test } from "../vendor/https/deno.land/x/denops_core/test/mod.ts";
+import { assertEquals, assertThrowsAsync } from "../deps_test.ts";
+import { test } from "../deps_test.ts";
 import * as anonymous from "./mod.ts";
 
 test({

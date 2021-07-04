@@ -12,6 +12,8 @@ By using this module, developers can write Vim/Neovim denops plugins like:
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
+import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
 import { execute } from "https://deno.land/x/denops_std/helper/mod.ts";
 import { ensureString } from "https://deno.land/x/unknownutil/mod.ts";
 
@@ -21,9 +23,9 @@ export async function main(denops: Denops): Promise<void> {
       // Ensure that `where` is `string` here
       ensureString(where);
       // Use `call` to call Vim's function
-      const name = await denops.call("input", "Your name: ");
+      const name = await fn.input(denops, "Your name: ");
       // Use `eval` to evaluate Vim's expression
-      const progname = await denops.eval("v:progname");
+      const progname = await vars.v.get(denops, "progname");
       // Construct messages
       const messages = [
         `Hello ${where}`,
@@ -53,3 +55,13 @@ for more details.
 
 [deno]: https://deno.land/
 [denops.vim]: https://github.com/vim-denops/denops.vim
+
+## Index
+
+| Name                       | Description                                                      |
+| -------------------------- | ---------------------------------------------------------------- |
+| [`anonymous`](./anonymous) | A module to provide anonymous function                           |
+| [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`         |
+| [`function`](./function)   | A module to provide functions of Vim and Neovim native functions |
+| [`helper`](./helper)       | A module to provide helper functions                             |
+| [`variable`](./variable)   | A module to provide helper accessor functions to variables       |

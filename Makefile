@@ -9,7 +9,7 @@ help:
 
 tools: FORCE	## Install development tools
 	@mkdir -p ${TOOLS}
-	@deno install -f --allow-write --allow-read --allow-net --root ${TOOLS} https://deno.land/x/dlink/dlink.ts
+	@deno install -A -f -n udd --root ${TOOLS} https://deno.land/x/udd@0.4.0/main.ts
 
 fmt: FORCE	## Format code
 	@deno fmt
@@ -27,11 +27,11 @@ test: FORCE	## Test
 	@deno test --unstable -A
 
 gen: FORCE	## Generate codes
-	@deno run -A ./scripts/gen-function/gen-function.ts
+	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
 	@make fmt
 
-dlink: FORCE	## Update dlink
-	(cd denops_std; ${TOOLS}/bin/dlink)
+update: FORCE	## Update dependencies
+	@${TOOLS}/bin/udd $$(find ./denops_std -name '*.ts')
 	@make fmt
 
 FORCE:
