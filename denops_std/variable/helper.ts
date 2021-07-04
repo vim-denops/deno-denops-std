@@ -1,4 +1,4 @@
-import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
+import { Denops } from "../deps.ts";
 
 type VariableGroups = "g" | "b" | "w" | "t" | "v";
 

@@ -1,6 +1,6 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 // deno-lint-ignore-file camelcase
-import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
+import { Denops } from "../deps.ts";
 
 /**
  * Return the absolute value of {expr}.  When {expr} evaluates to

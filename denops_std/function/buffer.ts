@@ -1,4 +1,4 @@
-import { Denops } from "../vendor/https/deno.land/x/denops_core/mod.ts";
+import { Denops } from "../deps.ts";
 
 /**
  * Add a buffer to the buffer list with {name}.

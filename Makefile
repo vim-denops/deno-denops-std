@@ -1,15 +1,9 @@
-TOOLS := ${CURDIR}/.tools
-
 .DEFAULT_GOAL := help
 
 help:
 	@cat $(MAKEFILE_LIST) | \
 	    perl -ne 'print if /^\w+.*##/;' | \
 	    perl -pe 's/(.*):.*##\s*/sprintf("%-20s",$$1)/eg;'
-
-tools: FORCE	## Install development tools
-	@mkdir -p ${TOOLS}
-	@deno install -f --allow-write --allow-read --allow-net --root ${TOOLS} https://deno.land/x/dlink/dlink.ts
 
 fmt: FORCE	## Format code
 	@deno fmt
@@ -28,10 +22,6 @@ test: FORCE	## Test
 
 gen: FORCE	## Generate codes
 	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
-	@make fmt
-
-dlink: FORCE	## Update dlink
-	(cd denops_std; ${TOOLS}/bin/dlink)
 	@make fmt
 
 FORCE:

@@ -1,5 +1,4 @@
-import { test } from "../vendor/https/deno.land/x/denops_core/test/mod.ts";
-import { assertEquals } from "../vendor/https/deno.land/std/testing/asserts.ts";
+import { assertEquals, test } from "../deps_test.ts";
 import * as fn from "../function/mod.ts";
 import { batch } from "./batch.ts";
 

@@ -1,9 +1,4 @@
-import {
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
-} from "../vendor/https/deno.land/x/denops_core/mod.ts";
+import { Context, Denops, Dispatcher, Meta } from "../deps.ts";
 
 class BatchHelper implements Denops {
   #denops: Denops;
