@@ -27,7 +27,7 @@ test: FORCE	## Test
 	@deno test --unstable -A
 
 gen: FORCE	## Generate codes
-	@deno run -A ./scripts/gen-function/gen-function.ts
+	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
 	@make fmt
 
 dlink: FORCE	## Update dlink
