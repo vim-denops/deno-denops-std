@@ -15,6 +15,9 @@ function formatDocs(docs: string): string[] {
 }
 
 function formatVariants(fn: string, vars: Variant[]): string[] {
+  if (vars.length === 0) {
+    return formatVariants(fn, [[]]);
+  }
   const lines = vars.map((variant) => {
     const args = variant.map(({ name, optional }) => {
       name = translate[name] ?? name;
