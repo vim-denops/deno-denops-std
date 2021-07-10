@@ -149,6 +149,7 @@ export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The result is the current index in the argument list.  0 is
  * the first file.  argc() - 1 is the last one.  See |arglist|.
  */
+export function argidx(denops: Denops): Promise<unknown>;
 export function argidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("argidx", ...args);
 }
@@ -431,6 +432,7 @@ export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * redo it is the number of the redone change.  After undo it is
  * one less than the number of the undone change.
  */
+export function changenr(denops: Denops): Promise<unknown>;
 export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("changenr", ...args);
 }
@@ -603,6 +605,7 @@ export function complete_add(
  * Only to be used by the function specified with the
  * 'completefunc' option.
  */
+export function complete_check(denops: Denops): Promise<unknown>;
 export function complete_check(
   denops: Denops,
   ...args: unknown[]
@@ -983,6 +986,7 @@ export function deletebufline(
  * editing another buffer to set 'filetype' and load a syntax
  * file.
  */
+export function did_filetype(denops: Denops): Promise<unknown>;
 export function did_filetype(
   denops: Denops,
   ...args: unknown[]
@@ -1042,6 +1046,7 @@ export function diff_hlID(
  * use this:
  * 	:echo index(keys(environ()), 'HOME', 0, 1) != -1
  */
+export function environ(denops: Denops): Promise<unknown>;
 export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("environ", ...args);
 }
@@ -1105,6 +1110,7 @@ export function eval_(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * e.g., when dropping a file on Vim.  This means interactive
  * commands cannot be used.  Otherwise zero is returned.
  */
+export function eventhandler(denops: Denops): Promise<unknown>;
 export function eventhandler(
   denops: Denops,
   ...args: unknown[]
@@ -1732,6 +1738,7 @@ export function foldlevel(
  * setting.
  * {not available when compiled without the |+folding| feature}
  */
+export function foldtext(denops: Denops): Promise<unknown>;
 export function foldtext(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("foldtext", ...args);
 }
@@ -1765,6 +1772,7 @@ export function foldtextresult(
  * {only in the Win32, Athena, Motif and GTK GUI versions and the
  * Win32 console version}
  */
+export function foreground(denops: Denops): Promise<unknown>;
 export function foreground(
   denops: Denops,
   ...args: unknown[]
@@ -2129,6 +2137,7 @@ export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * character itself are obtained.  Thus Shift-a results in "A"
  * without a modifier.
  */
+export function getcharmod(denops: Denops): Promise<unknown>;
 export function getcharmod(
   denops: Denops,
   ...args: unknown[]
@@ -2154,6 +2163,7 @@ export function getcharmod(
  * 	:nnoremap <expr> , getcharsearch().forward ? ',' : ';'
  * Also see |setcharsearch()|.
  */
+export function getcharsearch(denops: Denops): Promise<unknown>;
 export function getcharsearch(
   denops: Denops,
   ...args: unknown[]
@@ -2170,6 +2180,7 @@ export function getcharsearch(
  * Returns an empty string when entering a password or using
  * |inputsecret()|.
  */
+export function getcmdline(denops: Denops): Promise<unknown>;
 export function getcmdline(
   denops: Denops,
   ...args: unknown[]
@@ -2185,6 +2196,7 @@ export function getcmdline(
  * Returns 0 otherwise.
  * Also see |getcmdtype()|, |setcmdpos()| and |getcmdline()|.
  */
+export function getcmdpos(denops: Denops): Promise<unknown>;
 export function getcmdpos(
   denops: Denops,
   ...args: unknown[]
@@ -2207,6 +2219,7 @@ export function getcmdpos(
  * Returns an empty string otherwise.
  * Also see |getcmdpos()|, |setcmdpos()| and |getcmdline()|.
  */
+export function getcmdtype(denops: Denops): Promise<unknown>;
 export function getcmdtype(
   denops: Denops,
   ...args: unknown[]
@@ -2219,6 +2232,7 @@ export function getcmdtype(
  * values are the same as |getcmdtype()|. Returns an empty string
  * when not in the command-line window.
  */
+export function getcmdwintype(denops: Denops): Promise<unknown>;
 export function getcmdwintype(
   denops: Denops,
   ...args: unknown[]
@@ -2301,6 +2315,7 @@ export function getcompletion(
  * Note that this only works within the window.  See
  * |winrestview()| for restoring more state.
  */
+export function getcurpos(denops: Denops): Promise<unknown>;
 export function getcurpos(
   denops: Denops,
   ...args: unknown[]
@@ -2562,6 +2577,7 @@ export function getmatches(
  * On Unix and MS-Windows this is a unique number, until Vim
  * exits.  On MS-DOS it's always zero.
  */
+export function getpid(denops: Denops): Promise<unknown>;
 export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getpid", ...args);
 }
@@ -2943,6 +2959,7 @@ export function getwinpos(
  * The result will be -1 if the information is not available.
  * The value can be used with `:winpos`.
  */
+export function getwinposx(denops: Denops): Promise<unknown>;
 export function getwinposx(
   denops: Denops,
   ...args: unknown[]
@@ -2957,6 +2974,7 @@ export function getwinposx(
  * The result will be -1 if the information is not available.
  * The value can be used with `:winpos`.
  */
+export function getwinposy(denops: Denops): Promise<unknown>;
 export function getwinposy(
   denops: Denops,
   ...args: unknown[]
@@ -3340,6 +3358,7 @@ export function hlID(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * which Vim is currently running.  Machine names greater than
  * 256 characters long are truncated.
  */
+export function hostname(denops: Denops): Promise<unknown>;
 export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hostname", ...args);
 }
@@ -3504,6 +3523,7 @@ export function inputlist(
  * called.  Calling it more often is harmless though.
  * Returns 1 when there is nothing to restore, 0 otherwise.
  */
+export function inputrestore(denops: Denops): Promise<unknown>;
 export function inputrestore(
   denops: Denops,
   ...args: unknown[]
@@ -3519,6 +3539,7 @@ export function inputrestore(
  * many inputrestore() calls.
  * Returns 1 when out of memory, 0 otherwise.
  */
+export function inputsave(denops: Denops): Promise<unknown>;
 export function inputsave(
   denops: Denops,
   ...args: unknown[]
@@ -3968,6 +3989,7 @@ export function lispindent(
  * Return the current time, measured as seconds since 1st Jan
  * 1970.  See also |strftime()|, |strptime()| and |getftime()|.
  */
+export function localtime(denops: Denops): Promise<unknown>;
 export function localtime(
   denops: Denops,
   ...args: unknown[]
@@ -4267,6 +4289,7 @@ export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetList()->match('word')
  */
+export function strpbrk(denops: Denops): Promise<unknown>;
 export function strpbrk(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strpbrk", ...args);
 }
@@ -4308,6 +4331,7 @@ export function strpbrk(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetList()->match('word')
  */
+export function strcasestr(denops: Denops): Promise<unknown>;
 export function strcasestr(
   denops: Denops,
   ...args: unknown[]
@@ -4507,6 +4531,7 @@ export function matchend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetText()->matchend('word')
  */
+export function strspn(denops: Denops): Promise<unknown>;
 export function strspn(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strspn", ...args);
 }
@@ -4525,6 +4550,7 @@ export function strspn(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetText()->matchend('word')
  */
+export function strcspn(denops: Denops): Promise<unknown>;
 export function strcspn(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strcspn", ...args);
 }
@@ -5025,6 +5051,7 @@ export function printf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * This can be used to avoid some things that would remove the
  * popup menu.
  */
+export function pumvisible(denops: Denops): Promise<unknown>;
 export function pumvisible(
   denops: Denops,
   ...args: unknown[]
@@ -5199,6 +5226,7 @@ export function readfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Returns an empty string when no register is being executed.
  * See |@|.
  */
+export function reg_executing(denops: Denops): Promise<unknown>;
 export function reg_executing(
   denops: Denops,
   ...args: unknown[]
@@ -5210,6 +5238,7 @@ export function reg_executing(
  * Returns the single letter name of the register being recorded.
  * Returns an empty string when not recording.  See |q|.
  */
+export function reg_recording(denops: Denops): Promise<unknown>;
 export function reg_recording(
   denops: Denops,
   ...args: unknown[]
@@ -5636,6 +5665,7 @@ export function screenchar(
  * 	nnoremap <expr> GG ":echom ".screencol()."\n"
  * 	nnoremap <silent> GG :echom screencol()<CR
  */
+export function screencol(denops: Denops): Promise<unknown>;
 export function screencol(
   denops: Denops,
   ...args: unknown[]
@@ -5682,6 +5712,7 @@ export function screenpos(
  * Alternatively you can use |winline()|.
  * Note: Same restrictions as with |screencol()|.
  */
+export function screenrow(denops: Denops): Promise<unknown>;
 export function screenrow(
   denops: Denops,
   ...args: unknown[]
@@ -5985,6 +6016,7 @@ export function server2client(
  * Example:
  * 	:echo serverlist()
  */
+export function serverlist(denops: Denops): Promise<unknown>;
 export function serverlist(
   denops: Denops,
   ...args: unknown[]
@@ -7043,6 +7075,7 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetHaystack()->stridx(needle)
  */
+export function strstr(denops: Denops): Promise<unknown>;
 export function strstr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strstr", ...args);
 }
@@ -7053,6 +7086,7 @@ export function strstr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetHaystack()->stridx(needle)
  */
+export function strchr(denops: Denops): Promise<unknown>;
 export function strchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strchr", ...args);
 }
@@ -7160,6 +7194,7 @@ export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetHaystack()->strridx(needle)
  */
+export function strrchr(denops: Denops): Promise<unknown>;
 export function strrchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strrchr", ...args);
 }
@@ -7634,6 +7669,7 @@ export function tabpagewinnr(
  * Returns a |List| with the file names used to search for tags
  * for the current buffer.  This is the 'tags' option expanded.
  */
+export function tagfiles(denops: Denops): Promise<unknown>;
 export function tagfiles(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tagfiles", ...args);
 }
@@ -7732,6 +7768,7 @@ export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * For MS-Windows forward slashes are used when the 'shellslash'
  * option is set or when 'shellcmdflag' starts with '-'.
  */
+export function tempname(denops: Denops): Promise<unknown>;
 export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tempname", ...args);
 }
@@ -7854,6 +7891,7 @@ export function timer_stop(
  * timers there is no error.
  * {only available when compiled with the |+timers| feature}
  */
+export function timer_stopall(denops: Denops): Promise<unknown>;
 export function timer_stopall(
   denops: Denops,
   ...args: unknown[]
@@ -8052,6 +8090,7 @@ export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 		blocks.  Each item may again have an "alt"
  * 		item.
  */
+export function undotree(denops: Denops): Promise<unknown>;
 export function undotree(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("undotree", ...args);
 }
@@ -8166,6 +8205,7 @@ export function visualmode(
  *     :cnoremap <expr> <C-j> wildmenumode() ? "\<Down>\<Tab>" : "\<c-j>"
  * (Note, this needs the 'wildcharm' option set appropriately).
  */
+export function wildmenumode(denops: Denops): Promise<unknown>;
 export function wildmenumode(
   denops: Denops,
   ...args: unknown[]
@@ -8294,6 +8334,7 @@ export function winbufnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * cursor in the window.  This is counting screen cells from the
  * left side of the window.  The leftmost column is one.
  */
+export function wincol(denops: Denops): Promise<unknown>;
 export function wincol(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("wincol", ...args);
 }
@@ -8361,6 +8402,7 @@ export function winlayout(
  * If the cursor was moved the view on the file will be updated
  * first, this may cause a scroll.
  */
+export function winline(denops: Denops): Promise<unknown>;
 export function winline(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("winline", ...args);
 }
@@ -8408,6 +8450,7 @@ export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	:call MessWithWindowSizes()
  * 	:exe cmd
  */
+export function winrestcmd(denops: Denops): Promise<unknown>;
 export function winrestcmd(
   denops: Denops,
   ...args: unknown[]
@@ -8461,6 +8504,7 @@ export function winrestview(
  * 	skipcol		columns skipped
  * Note that no option values are saved.
  */
+export function winsaveview(denops: Denops): Promise<unknown>;
 export function winsaveview(
   denops: Denops,
   ...args: unknown[]
@@ -8510,6 +8554,7 @@ export function winwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	visual_words    Number of words visually selected
  * 			(only in Visual mode)
  */
+export function wordcount(denops: Denops): Promise<unknown>;
 export function wordcount(
   denops: Denops,
   ...args: unknown[]

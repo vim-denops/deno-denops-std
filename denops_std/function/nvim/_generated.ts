@@ -5,6 +5,7 @@ import { Denops } from "../../deps.ts";
 /**
  * Returns Dictionary of |api-metadata|.
  */
+export function api_info(denops: Denops): Promise<unknown>;
 export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("api_info", ...args);
 }
@@ -291,6 +292,7 @@ export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Pops and restores the |context| at the top of the
  * |context-stack|.
  */
+export function ctxpop(denops: Denops): Promise<unknown>;
 export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxpop", ...args);
 }
@@ -325,6 +327,7 @@ export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Returns the size of the |context-stack|.
  */
+export function ctxsize(denops: Denops): Promise<unknown>;
 export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxsize", ...args);
 }
@@ -1161,6 +1164,7 @@ export function termopen(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * internally, and |v:testing| must have been set before calling
  * any function.
  */
+export function test_garbagecollect_now(denops: Denops): Promise<unknown>;
 export function test_garbagecollect_now(
   denops: Denops,
   ...args: unknown[]
