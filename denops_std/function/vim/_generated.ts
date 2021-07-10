@@ -6,6 +6,7 @@ import { Denops } from "../../deps.ts";
  * Return the current text in the balloon.  Only for the string,
  * not used for the List.
  */
+export function balloon_gettext(denops: Denops): Promise<unknown>;
 export function balloon_gettext(
   denops: Denops,
   ...args: unknown[]
@@ -69,6 +70,7 @@ export function balloon_split(
 /**
  *
  */
+export function buffer_exists(denops: Denops): Promise<unknown>;
 export function buffer_exists(
   denops: Denops,
   ...args: unknown[]
@@ -79,6 +81,7 @@ export function buffer_exists(
 /**
  * Obsolete name: buffer_name().
  */
+export function buffer_name(denops: Denops): Promise<unknown>;
 export function buffer_name(
   denops: Denops,
   ...args: unknown[]
@@ -89,6 +92,7 @@ export function buffer_name(
 /**
  * Obsolete name for bufnr("$"): last_buffer_nr().
  */
+export function buffer_number(denops: Denops): Promise<unknown>;
 export function buffer_number(
   denops: Denops,
   ...args: unknown[]
@@ -99,6 +103,7 @@ export function buffer_number(
 /**
  *
  */
+export function last_buffer_nr(denops: Denops): Promise<unknown>;
 export function last_buffer_nr(
   denops: Denops,
   ...args: unknown[]
@@ -170,6 +175,7 @@ export function expandcmd(
 /**
  * Obsolete name: file_readable().
  */
+export function file_readable(denops: Denops): Promise<unknown>;
 export function file_readable(
   denops: Denops,
   ...args: unknown[]
@@ -182,6 +188,7 @@ export function file_readable(
  * active.
  * See 'imstatusfunc'.
  */
+export function getimstatus(denops: Denops): Promise<unknown>;
 export function getimstatus(
   denops: Denops,
   ...args: unknown[]
@@ -212,6 +219,7 @@ export function getimstatus(
  * When using |getchar()| the Vim variables |v:mouse_lnum|,
  * |v:mouse_col| and |v:mouse_winid| also provide these values.
  */
+export function getmousepos(denops: Denops): Promise<unknown>;
 export function getmousepos(
   denops: Denops,
   ...args: unknown[]
@@ -223,6 +231,7 @@ export function getmousepos(
  * Can also be used as a |method|:
  * 	GetName()->hlexists()
  */
+export function highlight_exists(denops: Denops): Promise<unknown>;
 export function highlight_exists(
   denops: Denops,
   ...args: unknown[]
@@ -235,6 +244,7 @@ export function highlight_exists(
  * Can also be used as a |method|:
  * 	GetName()->hlID()
  */
+export function highlightID(denops: Denops): Promise<unknown>;
 export function highlightID(
   denops: Denops,
   ...args: unknown[]
@@ -284,6 +294,7 @@ export function inputdialog(
  * :endfunction
  * :au BufWritePre * call s:check_typoname(expand('<amatch>'))
  */
+export function interrupt(denops: Denops): Promise<unknown>;
 export function interrupt(
   denops: Denops,
   ...args: unknown[]
@@ -629,6 +640,7 @@ export function prompt_setprompt(
  * The values are the same as in |v:event| during
  * |CompleteChanged|.
  */
+export function pum_getpos(denops: Denops): Promise<unknown>;
 export function pum_getpos(
   denops: Denops,
   ...args: unknown[]
@@ -719,6 +731,7 @@ export function screenstring(
  * Stop playing all sounds.
  * {only available when compiled with the |+sound| feature}
  */
+export function sound_clear(denops: Denops): Promise<unknown>;
 export function sound_clear(
   denops: Denops,
   ...args: unknown[]
