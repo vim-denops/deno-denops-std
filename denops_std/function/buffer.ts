@@ -140,9 +140,10 @@ export async function bufname(
  */
 export async function bufnr(
   denops: Denops,
-  name: string | number,
+  name?: string | number,
+  create?: boolean,
 ): Promise<number> {
-  return await denops.call("bufnr", name) as number;
+  return await denops.call("bufnr", name, create) as number;
 }
 
 /**
