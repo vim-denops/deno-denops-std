@@ -121,7 +121,10 @@ export async function bufname(
   denops: Denops,
   expr?: string | number,
 ): Promise<string> {
-  return await denops.call("bufname", expr) as string;
+  if (expr != undefined) {
+    return await denops.call("bufname", expr) as string;
+  }
+  return await denops.call("bufname") as string;
 }
 
 /**
@@ -143,7 +146,13 @@ export async function bufnr(
   expr?: string | number,
   create?: boolean,
 ): Promise<number> {
-  return await denops.call("bufnr", expr, create) as number;
+  if (expr != undefined) {
+    if (create != undefined) {
+      return await denops.call("bufnr", expr, create) as number;
+    }
+    return await denops.call("bufnr", expr) as number;
+  }
+  return await denops.call("bufnr") as number;
 }
 
 /**

@@ -187,7 +187,7 @@ export async function getline(
   lnum: string | number,
   end?: string | number,
 ): Promise<string | string[]> {
-  if (end) {
+  if (end != undefined) {
     return await denops.call("getline", lnum, end) as string[];
   }
   return await denops.call("getline", lnum) as string;
