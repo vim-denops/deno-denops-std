@@ -212,6 +212,9 @@ export async function getbufline(
   lnum: string | number,
   end?: string | number,
 ): Promise<string[]> {
+  if (end == undefined) {
+    return await denops.call("getbufline", name, lnum) as string[];
+  }
   return await denops.call("getbufline", name, lnum, end) as string[];
 }
 
