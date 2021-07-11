@@ -6,6 +6,25 @@
 
 ## Usage
 
+### echo
+
+Use `echo()` to show messages on the cmdline area. It is required while Vim
+won't show messages reported from channel commands and it won't pause multi-line
+messages reported from asynchronous context (e.g. timer or job). It's same for
+`denops.cmd('echo "Hello\nWorld!"')` in Neovim.
+
+Note that there is no similar function for `echomsg` while there is no way to
+properly show multi-line messages with `echomsg` from asynchronous context.
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { echo } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await echo(denops, "Hello\nWorld!");
+}
+```
+
 ### batch
 
 Use `batch()` to call multiple denops functions sequentially without overhead
