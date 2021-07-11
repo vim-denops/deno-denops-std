@@ -87,9 +87,9 @@ import { Denops } from "../deps.ts";
  */
 export async function exists(
   denops: Denops,
-  name: string,
+  expr: string,
 ): Promise<boolean> {
-  const result = await denops.call("exists", name) as number;
+  const result = await denops.call("exists", expr) as number;
   return !!result;
 }
 
@@ -138,14 +138,14 @@ export async function exists(
  */
 export async function has(
   denops: Denops,
-  name: string,
+  feature: string,
   check?: boolean,
 ): Promise<boolean> {
   if (check) {
-    const result = await denops.call("has", name, 1) as number;
+    const result = await denops.call("has", feature, 1) as number;
     return !!result;
   }
-  const result = await denops.call("has", name) as number;
+  const result = await denops.call("has", feature) as number;
   return !!result;
 }
 

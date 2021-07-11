@@ -40,9 +40,9 @@ export async function bufadd(
  */
 export async function bufexists(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<boolean> {
-  const result = await denops.call("bufexists", name) as number;
+  const result = await denops.call("bufexists", expr) as number;
   return !!result;
 }
 
@@ -53,9 +53,9 @@ export async function bufexists(
  */
 export async function buflisted(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<boolean> {
-  const result = await denops.call("buflisted", name) as number;
+  const result = await denops.call("buflisted", expr) as number;
   return !!result;
 }
 
@@ -70,9 +70,9 @@ export async function buflisted(
  */
 export async function bufload(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<void> {
-  await denops.call("bufload", name);
+  await denops.call("bufload", expr);
 }
 
 /**
@@ -82,9 +82,9 @@ export async function bufload(
  */
 export async function bufloaded(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<boolean> {
-  const result = await denops.call("bufloaded", name) as number;
+  const result = await denops.call("bufloaded", expr) as number;
   return !!result;
 }
 
@@ -119,9 +119,9 @@ export async function bufloaded(
  */
 export async function bufname(
   denops: Denops,
-  name?: string | number,
+  expr?: string | number,
 ): Promise<string> {
-  return await denops.call("bufname", name) as string;
+  return await denops.call("bufname", expr) as string;
 }
 
 /**
@@ -140,10 +140,10 @@ export async function bufname(
  */
 export async function bufnr(
   denops: Denops,
-  name?: string | number,
+  expr?: string | number,
   create?: boolean,
 ): Promise<number> {
-  return await denops.call("bufnr", name, create) as number;
+  return await denops.call("bufnr", expr, create) as number;
 }
 
 /**
@@ -158,9 +158,9 @@ export async function bufnr(
  */
 export async function bufwinid(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<number> {
-  return await denops.call("bufwinid", name) as number;
+  return await denops.call("bufwinid", expr) as number;
 }
 
 /**
@@ -177,9 +177,9 @@ export async function bufwinid(
  */
 export async function bufwinnr(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
 ): Promise<number> {
-  return await denops.call("bufwinnr", name) as number;
+  return await denops.call("bufwinnr", expr) as number;
 }
 
 /**
@@ -208,11 +208,11 @@ export async function bufwinnr(
  */
 export async function getbufline(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
   lnum: string | number,
   end?: string | number,
 ): Promise<string[]> {
-  return await denops.call("getbufline", name, lnum, end) as string[];
+  return await denops.call("getbufline", expr, lnum, end) as string[];
 }
 
 /**
@@ -230,10 +230,10 @@ export async function getbufline(
  */
 export async function setbufline(
   denops: Denops,
-  name: string | number,
+  expr: string | number,
   lnum: string | number,
   text: string | string[],
 ): Promise<boolean> {
-  const result = await denops.call("setbufline", name, lnum, text) as number;
+  const result = await denops.call("setbufline", expr, lnum, text) as number;
   return !!result;
 }
