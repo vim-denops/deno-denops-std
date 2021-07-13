@@ -141,11 +141,7 @@ export async function has(
   feature: string,
   check?: boolean,
 ): Promise<boolean> {
-  if (check) {
-    const result = await denops.call("has", feature, 1) as number;
-    return !!result;
-  }
-  const result = await denops.call("has", feature) as number;
+  const result = await denops.call("has", feature, check) as number;
   return !!result;
 }
 
@@ -187,10 +183,7 @@ export async function getline(
   lnum: string | number,
   end?: string | number,
 ): Promise<string | string[]> {
-  if (end) {
-    return await denops.call("getline", lnum, end) as string[];
-  }
-  return await denops.call("getline", lnum) as string;
+  return await denops.call("getline", lnum, end) as string;
 }
 
 /**
