@@ -1,8 +1,9 @@
 # denops_std
 
-[![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno)](https://deno.land/x/denops_std)
-[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)
 [![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
+[![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)
+[![Documentation](https://img.shields.io/badge/denops-Documentation-yellow.svg)](https://vim-denops.github.io/denops-documentation/)
+[![deno land](http://img.shields.io/badge/available%20on-deno.land/x/denops__std-lightgrey.svg?logo=deno)](https://deno.land/x/denops_std)
 
 [Deno][deno] module for [denops.vim][denops.vim]. This module is assumed to be
 used in denops plugin and the code is assumed to be called in a worker thread
@@ -14,7 +15,8 @@ By using this module, developers can write Vim/Neovim denops plugins like:
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
 import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
 import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
-import { execute } from "https://deno.land/x/denops_std/helper/mod.ts";
+import * as helper from "https://deno.land/x/denops_std/helper/mod.ts";
+
 import { ensureString } from "https://deno.land/x/unknownutil/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
@@ -22,25 +24,18 @@ export async function main(denops: Denops): Promise<void> {
     async say(where: unknown): Promise<void> {
       // Ensure that `where` is `string` here
       ensureString(where);
-      // Use `call` to call Vim's function
       const name = await fn.input(denops, "Your name: ");
-      // Use `eval` to evaluate Vim's expression
       const progname = await vars.v.get(denops, "progname");
-      // Construct messages
       const messages = [
-        `Hello ${where}`,
-        `Your name is ${name}`,
-        `This is ${progname}`,
+        `Hello ${where}.`,
+        `Your name is ${name}.`,
+        `This is ${progname}.`,
       ];
-      // Use `cmd` to execute Vim's command
-      await denops.cmd(`redraw | echomsg message`, {
-        message: messages.join(". "),
-      });
+      await helper.echo(denops, messages.join("\n"));
     },
   };
 
-  // Use 'execute()' to execute multiline Vim script
-  await execute(
+  await helper.execute(
     denops,
     `
     command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])
@@ -50,7 +45,8 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
-See [denops-helloworld.vim](https://github.com/vim-denops/denops-helloworld.vim)
+See [Denops Documentation](https://vim-denops.github.io/denops-documentation/)
+or [denops-helloworld.vim](https://github.com/vim-denops/denops-helloworld.vim)
 for more details.
 
 [deno]: https://deno.land/
