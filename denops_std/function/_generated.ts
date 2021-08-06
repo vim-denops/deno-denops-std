@@ -140,7 +140,7 @@ export function appendbufline(
  * list is used: either the window number or the window ID.
  * Returns -1 if the {winid} argument is invalid.
  */
-export function argc(denops: Denops, winid: unknown): Promise<unknown>;
+export function argc(denops: Denops, winid?: unknown): Promise<unknown>;
 export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("argc", ...args);
 }
@@ -167,7 +167,7 @@ export function argidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function arglistid(
   denops: Denops,
-  winnr: unknown,
+  winnr?: unknown,
   tabnr?: unknown,
 ): Promise<unknown>;
 export function arglistid(
@@ -193,7 +193,7 @@ export function arglistid(
  */
 export function argv(
   denops: Denops,
-  nr: unknown,
+  nr?: unknown,
   winid?: unknown,
 ): Promise<unknown>;
 export function argv(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -468,7 +468,7 @@ export function cindent(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetWin()->clearmatches()
  */
-export function clearmatches(denops: Denops, win: unknown): Promise<unknown>;
+export function clearmatches(denops: Denops, win?: unknown): Promise<unknown>;
 export function clearmatches(
   denops: Denops,
   ...args: unknown[]
@@ -600,7 +600,7 @@ export function complete_check(
  * Can also be used as a |method|:
  * 	GetItems()->complete_info()
  */
-export function complete_info(denops: Denops, what: unknown): Promise<unknown>;
+export function complete_info(denops: Denops, what?: unknown): Promise<unknown>;
 export function complete_info(
   denops: Denops,
   ...args: unknown[]
@@ -779,8 +779,8 @@ export function count(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function cscope_connection(
   denops: Denops,
-  num: unknown,
-  dbpath: unknown,
+  num?: unknown,
+  dbpath?: unknown,
   prepend?: unknown,
 ): Promise<unknown>;
 export function cscope_connection(
@@ -1783,7 +1783,7 @@ export function function_(
  */
 export function garbagecollect(
   denops: Denops,
-  atexit: unknown,
+  atexit?: unknown,
 ): Promise<unknown>;
 export function garbagecollect(
   denops: Denops,
@@ -1861,8 +1861,8 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * To get buffer-local options use:
  * 	getbufvar({bufnr}, '&option_name')
  */
-export function getbufinfo(denops: Denops, expr: unknown): Promise<unknown>;
-export function getbufinfo(denops: Denops, dict: unknown): Promise<unknown>;
+export function getbufinfo(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getbufinfo(denops: Denops, dict?: unknown): Promise<unknown>;
 export function getbufinfo(
   denops: Denops,
   ...args: unknown[]
@@ -1922,7 +1922,7 @@ export function getbufvar(
  * Can also be used as a |method|:
  * 	GetBufnr()->getchangelist()
  */
-export function getchangelist(denops: Denops, expr: unknown): Promise<unknown>;
+export function getchangelist(denops: Denops, expr?: unknown): Promise<unknown>;
 export function getchangelist(
   denops: Denops,
   ...args: unknown[]
@@ -1997,7 +1997,7 @@ export function getchangelist(
  * 	:  return c
  * 	:endfunction
  */
-export function getchar(denops: Denops, expr: unknown): Promise<unknown>;
+export function getchar(denops: Denops, expr?: unknown): Promise<unknown>;
 export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getchar", ...args);
 }
@@ -2217,7 +2217,7 @@ export function getcompletion(
  */
 export function getcwd(
   denops: Denops,
-  winnr: unknown,
+  winnr?: unknown,
   tabnr?: unknown,
 ): Promise<unknown>;
 export function getcwd(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2252,7 +2252,7 @@ export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Note that the GTK GUI accepts any font name, thus checking for
  * a valid name does not work.
  */
-export function getfontname(denops: Denops, name: unknown): Promise<unknown>;
+export function getfontname(denops: Denops, name?: unknown): Promise<unknown>;
 export function getfontname(
   denops: Denops,
   ...args: unknown[]
@@ -2361,7 +2361,7 @@ export function getftype(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function getjumplist(
   denops: Denops,
-  winnr: unknown,
+  winnr?: unknown,
   tabnr?: unknown,
 ): Promise<unknown>;
 export function getjumplist(
@@ -2424,7 +2424,7 @@ export function getloclist(
  * 	'pattern': 'FIXME', 'priority': 10, 'id': 2}]
  * 	:unlet m
  */
-export function getmatches(denops: Denops, win: unknown): Promise<unknown>;
+export function getmatches(denops: Denops, win?: unknown): Promise<unknown>;
 export function getmatches(
   denops: Denops,
   ...args: unknown[]
@@ -2531,7 +2531,7 @@ export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	:echo getqflist({'nr': 2, 'title': 1})
  * 	:echo getqflist({'lines' : ["F1:10:L10"]})
  */
-export function getqflist(denops: Denops, what: unknown): Promise<unknown>;
+export function getqflist(denops: Denops, what?: unknown): Promise<unknown>;
 export function getqflist(
   denops: Denops,
   ...args: unknown[]
@@ -2561,7 +2561,7 @@ export function getqflist(
  */
 export function getreg(
   denops: Denops,
-  regname: unknown,
+  regname?: unknown,
   v1?: unknown,
   list?: unknown,
 ): Promise<unknown>;
@@ -2581,7 +2581,7 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetRegname()->getregtype()
  */
-export function getregtype(denops: Denops, regname: unknown): Promise<unknown>;
+export function getregtype(denops: Denops, regname?: unknown): Promise<unknown>;
 export function getregtype(
   denops: Denops,
   ...args: unknown[]
@@ -2603,7 +2603,7 @@ export function getregtype(
  * Can also be used as a |method|:
  * 	GetTabnr()->gettabinfo()
  */
-export function gettabinfo(denops: Denops, arg: unknown): Promise<unknown>;
+export function gettabinfo(denops: Denops, arg?: unknown): Promise<unknown>;
 export function gettabinfo(
   denops: Denops,
   ...args: unknown[]
@@ -2704,7 +2704,7 @@ export function gettabwinvar(
  * Can also be used as a |method|:
  * 	GetWinnr()->gettagstack()
  */
-export function gettagstack(denops: Denops, nr: unknown): Promise<unknown>;
+export function gettagstack(denops: Denops, nr?: unknown): Promise<unknown>;
 export function gettagstack(
   denops: Denops,
   ...args: unknown[]
@@ -2745,7 +2745,7 @@ export function gettagstack(
  * Can also be used as a |method|:
  * 	GetWinnr()->getwininfo()
  */
-export function getwininfo(denops: Denops, winid: unknown): Promise<unknown>;
+export function getwininfo(denops: Denops, winid?: unknown): Promise<unknown>;
 export function getwininfo(
   denops: Denops,
   ...args: unknown[]
@@ -2774,7 +2774,7 @@ export function getwininfo(
  * Can also be used as a |method|:
  * 	GetTimeout()->getwinpos()
  */
-export function getwinpos(denops: Denops, timeout: unknown): Promise<unknown>;
+export function getwinpos(denops: Denops, timeout?: unknown): Promise<unknown>;
 export function getwinpos(
   denops: Denops,
   ...args: unknown[]
@@ -2993,7 +2993,7 @@ export function has_key(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function haslocaldir(
   denops: Denops,
-  winnr: unknown,
+  winnr?: unknown,
   tabnr?: unknown,
 ): Promise<unknown>;
 export function haslocaldir(
@@ -4516,7 +4516,7 @@ export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	DoFull()->mode()
  */
-export function mode(denops: Denops, expr: unknown): Promise<unknown>;
+export function mode(denops: Denops, expr?: unknown): Promise<unknown>;
 export function mode(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mode", ...args);
 }
@@ -5030,7 +5030,7 @@ export function reg_recording(
  */
 export function reltime(
   denops: Denops,
-  start: unknown,
+  start?: unknown,
   end?: unknown,
 ): Promise<unknown>;
 export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6279,7 +6279,7 @@ export function shellescape(
  * Can also be used as a |method|:
  * 	GetColumn()->shiftwidth()
  */
-export function shiftwidth(denops: Denops, col: unknown): Promise<unknown>;
+export function shiftwidth(denops: Denops, col?: unknown): Promise<unknown>;
 export function shiftwidth(
   denops: Denops,
   ...args: unknown[]
@@ -6440,7 +6440,7 @@ export function soundfold(
  */
 export function spellbadword(
   denops: Denops,
-  sentence: unknown,
+  sentence?: unknown,
 ): Promise<unknown>;
 export function spellbadword(
   denops: Denops,
@@ -7299,7 +7299,7 @@ export function systemlist(
  * Can also be used as a |method|:
  * 	GetTabpage()->tabpagebuflist()
  */
-export function tabpagebuflist(denops: Denops, arg: unknown): Promise<unknown>;
+export function tabpagebuflist(denops: Denops, arg?: unknown): Promise<unknown>;
 export function tabpagebuflist(
   denops: Denops,
   ...args: unknown[]
@@ -7314,7 +7314,7 @@ export function tabpagebuflist(
  * page is returned (the tab page count).
  * The number can be used with the |:tab| command.
  */
-export function tabpagenr(denops: Denops, arg: unknown): Promise<unknown>;
+export function tabpagenr(denops: Denops, arg?: unknown): Promise<unknown>;
 export function tabpagenr(
   denops: Denops,
   ...args: unknown[]
@@ -7476,7 +7476,7 @@ export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	GetTimer()->timer_info()
  * {only available when compiled with the |+timers| feature}
  */
-export function timer_info(denops: Denops, id: unknown): Promise<unknown>;
+export function timer_info(denops: Denops, id?: unknown): Promise<unknown>;
 export function timer_info(
   denops: Denops,
   ...args: unknown[]
@@ -7828,7 +7828,7 @@ export function values(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * a non-empty String, then the Visual mode will be cleared and
  * the old value is returned.  See |non-zero-arg|.
  */
-export function visualmode(denops: Denops, expr: unknown): Promise<unknown>;
+export function visualmode(denops: Denops, expr?: unknown): Promise<unknown>;
 export function visualmode(
   denops: Denops,
   ...args: unknown[]
@@ -7880,7 +7880,7 @@ export function win_findbuf(
  */
 export function win_getid(
   denops: Denops,
-  win: unknown,
+  win?: unknown,
   tab?: unknown,
 ): Promise<unknown>;
 export function win_getid(
@@ -8017,7 +8017,7 @@ export function winheight(
  * Can also be used as a |method|:
  * 	GetTabnr()->winlayout()
  */
-export function winlayout(denops: Denops, tabnr: unknown): Promise<unknown>;
+export function winlayout(denops: Denops, tabnr?: unknown): Promise<unknown>;
 export function winlayout(
   denops: Denops,
   ...args: unknown[]
@@ -8053,7 +8053,7 @@ export function winlayout(
  * Can also be used as a |method|:
  * 	GetWinval()->winnr()
  */
-export function winnr(denops: Denops, arg: unknown): Promise<unknown>;
+export function winnr(denops: Denops, arg?: unknown): Promise<unknown>;
 export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("winnr", ...args);
 }
