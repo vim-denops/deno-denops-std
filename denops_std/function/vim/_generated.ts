@@ -453,7 +453,7 @@ export function listener_add(
  * Can also be used as a |method|:
  * 	GetBuffer()->listener_flush()
  */
-export function listener_flush(denops: Denops, buf: unknown): Promise<unknown>;
+export function listener_flush(denops: Denops, buf?: unknown): Promise<unknown>;
 export function listener_flush(
   denops: Denops,
   ...args: unknown[]
@@ -661,7 +661,7 @@ export function pum_getpos(
  * 	:echo rand(seed)
  * 	:echo rand(seed) % 16  " random number 0 - 15
  */
-export function rand(denops: Denops, expr: unknown): Promise<unknown>;
+export function rand(denops: Denops, expr?: unknown): Promise<unknown>;
 export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("rand", ...args);
 }
@@ -829,7 +829,7 @@ export function sound_stop(
  * 	:let seed = srand(userinput)
  * 	:echo rand(seed)
  */
-export function srand(denops: Denops, expr: unknown): Promise<unknown>;
+export function srand(denops: Denops, expr?: unknown): Promise<unknown>;
 export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("srand", ...args);
 }
@@ -868,7 +868,7 @@ export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	recursiveness up to "ccc")
  *     s	screen has scrolled for messages
  */
-export function state(denops: Denops, what: unknown): Promise<unknown>;
+export function state(denops: Denops, what?: unknown): Promise<unknown>;
 export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("state", ...args);
 }

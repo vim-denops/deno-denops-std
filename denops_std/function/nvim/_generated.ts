@@ -283,7 +283,7 @@ export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * from the top of the |context-stack| (see |context-dict|).
  * If {index} is not given, it is assumed to be 0 (i.e.: top).
  */
-export function ctxget(denops: Denops, index: unknown): Promise<unknown>;
+export function ctxget(denops: Denops, index?: unknown): Promise<unknown>;
 export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxget", ...args);
 }
@@ -304,7 +304,7 @@ export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * which |context-types| to include in the pushed context.
  * Otherwise, all context types are included.
  */
-export function ctxpush(denops: Denops, types: unknown): Promise<unknown>;
+export function ctxpush(denops: Denops, types?: unknown): Promise<unknown>;
 export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxpush", ...args);
 }
@@ -761,7 +761,10 @@ export function rpcstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	:call serverstart(tempname())
  *  		|$NVIM_LISTEN_ADDRESS| is set to {address} if not already set.
  */
-export function serverstart(denops: Denops, address: unknown): Promise<unknown>;
+export function serverstart(
+  denops: Denops,
+  address?: unknown,
+): Promise<unknown>;
 export function serverstart(
   denops: Denops,
   ...args: unknown[]
@@ -848,7 +851,7 @@ export function sign_define(
  */
 export function sign_getdefined(
   denops: Denops,
-  name: unknown,
+  name?: unknown,
 ): Promise<unknown>;
 export function sign_getdefined(
   denops: Denops,
@@ -908,7 +911,7 @@ export function sign_getdefined(
  */
 export function sign_getplaced(
   denops: Denops,
-  expr: unknown,
+  expr?: unknown,
   dict?: unknown,
 ): Promise<unknown>;
 export function sign_getplaced(
@@ -1007,7 +1010,7 @@ export function sign_place(
  * 	" Delete all the signs
  * 	call sign_undefine()
  */
-export function sign_undefine(denops: Denops, name: unknown): Promise<unknown>;
+export function sign_undefine(denops: Denops, name?: unknown): Promise<unknown>;
 export function sign_undefine(
   denops: Denops,
   ...args: unknown[]

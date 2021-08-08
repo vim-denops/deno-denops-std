@@ -103,7 +103,7 @@ function parseVariant(variant: string): Variant | undefined {
     // The {variant} does not have {args}, probabliy it's not variant (ex. `strstr`)
     return undefined;
   }
-  let optional = false;
+  let optional = m[1].startsWith("[");
   const counter = new Counter();
   const args = m[1].split(",").map((t) => {
     const name = t.replaceAll(/[{}\[\]\s]/g, "");
