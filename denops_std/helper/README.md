@@ -27,77 +27,8 @@ export async function main(denops: Denops): Promise<void> {
 
 ### batch
 
-Use `batch()` to call multiple denops functions sequentially without overhead
-and get results like:
-
-```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/helper/mod.ts";
-
-export async function main(denops: Denops): Promise<void> {
-  const results = await batch(denops, (helper) => {
-    helper.call("range", 2);
-    helper.cmd("echomsg 'Hello'");
-    helper.eval("v:version");
-  });
-
-  console.log(results);
-  // [
-  //   [0, 1],
-  //   0,
-  //   '800',
-  // ]
-}
-```
-
-The `helper` instance implement `Denops` interface thus users can use it as
-`denops` like:
-
-```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
-import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/helper/mod.ts";
-
-export async function main(denops: Denops): Promise<void> {
-  const results = await batch(denops, (helper) => {
-    fn.range(helper, 2);
-    vars.v.get(helper, "version");
-  });
-
-  console.log(results);
-  // [
-  //   [0, 1],
-  //   '800',
-  // ]
-}
-```
-
-When one of function call fails during batch process, `batch` throws
-`BatchError` which contains succeeded results as `results` like:
-
-```typescript
-import { BatchError, Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/helper/mod.ts";
-
-export async function main(denops: Denops): Promise<void> {
-  try {
-    await batch(denops, (helper) => {
-      helper.call("range", 0);
-      helper.call("range", 1);
-      helper.call("no-such-function");
-      helper.call("range", 2);
-    });
-  } catch (e) {
-    // e is an instance of BatchErro
-    if (e instanceof BatchError) {
-      // Print succeeded results
-      console.log("Succeeded:", e.results);
-    }
-    throw e;
-  }
-}
-```
+Deprecated in favor of [`batch`](./batch/README.md) module. Use `gather()`
+function on that module instead.
 
 ### execute
 
