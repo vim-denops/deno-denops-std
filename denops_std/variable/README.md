@@ -122,3 +122,22 @@ export async function main(denops: Denops): Promise<void> {
   await environment.remove(denops, "DENOPS_HELLO");
 }
 ```
+
+### register (alias r)
+
+Use `register` (or `r`) to access register like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { register } from "https://deno.land/x/denops_std/variable/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Set register
+  await register.set(denops, "a", "world");
+
+  // Get register
+  console.log(await register.get(denops, "a"));
+}
+```
+
+Note that `register.get()` returns `defaultValue` when the register is falsy.
