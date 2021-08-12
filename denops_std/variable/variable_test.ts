@@ -1,5 +1,5 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
-import { buffers, globals, tabpages, vim, windows } from "./helper.ts";
+import { assertEquals, test } from "../deps_test.ts";
+import { buffers, globals, tabpages, vim, windows } from "./variable.ts";
 
 test({
   mode: "any",
@@ -180,18 +180,5 @@ test({
       "errors",
     );
     assertEquals(result, ["world"]);
-  },
-});
-test({
-  mode: "any",
-  name: "vim.remove() throws error",
-  fn: async (denops) => {
-    await assertThrowsAsync(
-      async () => {
-        await vim.remove(denops, "errors");
-      },
-      undefined,
-      "Vim variables",
-    );
   },
 });

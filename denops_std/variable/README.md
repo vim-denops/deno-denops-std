@@ -52,7 +52,7 @@ Use `windows` (or `w`) to access window variables like:
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { buffers } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { windows } from "https://deno.land/x/denops_std/variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set window variable
@@ -72,7 +72,7 @@ Use `tabpages` (or `t`) to access tabpage variables like:
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { buffers } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { tabpages } from "https://deno.land/x/denops_std/variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set tabpage variable
@@ -100,9 +100,5 @@ export async function main(denops: Denops): Promise<void> {
 
   // Get vim variable
   console.log(await vim.get(denops, "version"));
-
-  // Remove tabpage variable
-  // Always throw an error
-  await vim.remove(denops, "version");
 }
 ```
