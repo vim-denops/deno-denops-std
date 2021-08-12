@@ -102,3 +102,23 @@ export async function main(denops: Denops): Promise<void> {
   console.log(await vim.get(denops, "version"));
 }
 ```
+
+### environment (alias e)
+
+Use `environment` (or `e`) to access environment variables like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { environment } from "https://deno.land/x/denops_std/variable/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Set environment variable
+  await environment.set(denops, "DENOPS_HELLO", "world");
+
+  // Get environment variable
+  console.log(await environment.get(denops, "DENOPS_HELLO"));
+
+  // Remove environment variable
+  await environment.remove(denops, "DENOPS_HELLO");
+}
+```
