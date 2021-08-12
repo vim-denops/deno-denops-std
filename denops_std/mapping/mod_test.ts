@@ -1,3 +1,4 @@
+import { Denops } from "../deps.ts";
 import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
 import { Mapping, Mode } from "./types.ts";
 import * as mapping from "./mod.ts";
@@ -69,6 +70,10 @@ test({
   mode: "all",
   name: `map() registers mapping (script)`,
   fn: async (denops) => {
+    if (!await isScriptSupported(denops)) {
+      console.warn("Skip");
+      return;
+    }
     await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
       script: true,
     });
@@ -276,6 +281,10 @@ test({
   mode: "all",
   name: `read() returns mapping (script)`,
   fn: async (denops) => {
+    if (!await isScriptSupported(denops)) {
+      console.warn("Skip");
+      return;
+    }
     await denops.cmd(`map <script> <Plug>(test-denops-std) Hello`);
     assertEquals(
       {
@@ -397,4 +406,12 @@ for (const mode of modes) {
       ]);
     },
   });
+}
+
+async function isScriptSupported(denops: Denops): Promise<boolean> {
+  if (denops.meta.host === "vim") {
+    return !!await denops.call("has", "patch-8.2.0491");
+  } else {
+    return !!await denops.call("has", "nvim-0.5.0");
+  }
 }

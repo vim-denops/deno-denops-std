@@ -58,6 +58,10 @@ export type ReadOptions = {
 
 /**
  * Read a mapping and return a `Mapping` instance.
+ *
+ * Note that prior to Vim 8.2.0491 or Neovim 0.5.0, `script` is
+ * not detectable by `maparg` function internally used in this
+ * function.
  */
 export async function read(
   denops: Denops,
