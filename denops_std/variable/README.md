@@ -141,3 +141,37 @@ export async function main(denops: Denops): Promise<void> {
 ```
 
 Note that `register.get()` returns `defaultValue` when the register is falsy.
+
+### options, localOptions, and globalOptions (alias o, lo, and go)
+
+Use `options` (or `o`), `localOptions` (or `lo`), or `globalOptions` (or `go`)
+to access options like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import {
+  globalOptions,
+  localOptions,
+  options,
+} from "https://deno.land/x/denops_std/variable/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Set option
+  await options.set(denops, "filetype", "world");
+  await localOptions.set(denops, "filetype", "world");
+  await globalOptions.set(denops, "filetype", "world");
+
+  // Get option
+  console.log(await options.get(denops, "filetype"));
+  console.log(await localOptions.get(denops, "filetype"));
+  console.log(await globalOption.get(denops, "filetype"));
+
+  // Reset option
+  await options.remove(denops, "filetype");
+  await localOptions.remove(denops, "filetype");
+  await globalOption.remove(denops, "filetype");
+}
+```
+
+Note that `options.get()`, `localOptions.get()`, or `globalOption.get()` returns
+`defaultValue` when the option is falsy.
