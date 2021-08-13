@@ -62,4 +62,5 @@ for more details.
 | [`function`](./function)   | A module to provide functions of Vim and Neovim native functions |
 | [`helper`](./helper)       | A module to provide helper functions                             |
 | [`mapping`](./mapping)     | A module to provide helper functions to manage mappings          |
+| [`option`](./option)       | A module to provide helper functions to manage options           |
 | [`variable`](./variable)   | A module to provide helper accessor functions to variables       |
