@@ -13,6 +13,7 @@ test({
       "must be a single character",
     );
   },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
 });
 test({
   mode: "any",
@@ -49,6 +50,7 @@ test({
       "must be a single character",
     );
   },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
 });
 test({
   mode: "any",

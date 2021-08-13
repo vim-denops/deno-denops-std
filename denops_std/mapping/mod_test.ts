@@ -210,6 +210,7 @@ test({
       "E227: mapping already exists",
     );
   },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
 });
 
 for (const mode of modes) {
@@ -231,6 +232,7 @@ for (const mode of modes) {
         "No mapping found for",
       );
     },
+    prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
   });
 }
 

@@ -58,6 +58,7 @@ test({
       `No method '${ids[2]}' exists`,
     );
   },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
 });
 
 test({
@@ -95,4 +96,5 @@ test({
       `No method '${ids[2]}' exists`,
     );
   },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
 });
