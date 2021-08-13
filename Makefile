@@ -28,6 +28,7 @@ test: FORCE	## Test
 
 gen: FORCE	## Generate codes
 	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
+	@deno run --unstable -A ./scripts/gen-option/gen-option.ts
 	@make fmt
 
 update: FORCE	## Update dependencies
