@@ -15,7 +15,7 @@ test({
 });
 test({
   mode: "any",
-  name: "gather() throws an error when 'denops.cmd()' is called.",
+  name: "gather() sequentially execute 'denops.cmd()'.",
   fn: async (denops) => {
     await denops.cmd("let g:denops_gather_test = 0");
     await denops.cmd("command! DenopsGatherTest let g:denops_gather_test += 1");
