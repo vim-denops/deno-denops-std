@@ -378,6 +378,8 @@ export const background = {
  * eol	allow backspacing over line breaks (join lines)
  * start	allow backspacing over the start of insert; CTRL-W and CTRL-U
  * 	stop once at the start of insert.
+ * nostop	like start, except CTRL-W and CTRL-U do not stop at the start of
+ * 	insert.
  */
 export const backspace = {
   async get(denops: Denops): Promise<string> {
@@ -480,9 +482,9 @@ export const backupcopy = {
  *   impossible!).  Writing may fail because of this.
  * - A directory "." means to put the backup file in the same directory
  *   as the edited file.
- * - A directory starting with "./" (or ".\" for MS-DOS et al.) means to
- *   put the backup file relative to where the edited file is.  The
- *   leading "." is replaced with the path name of the edited file.
+ * - A directory starting with "./" (or ".\" for MS-Windows) means to put
+ *   the backup file relative to where the edited file is.  The leading
+ *   "." is replaced with the path name of the edited file.
  *   ("." inside a directory name has no special meaning).
  * - Spaces after the comma are ignored, other spaces are considered part
  *   of the directory name.  To have a space at the start of a directory
@@ -2206,9 +2208,9 @@ export const digraph = {
  *   the edited file.  On Unix, a dot is prepended to the file name, so
  *   it doesn't show in a directory listing.  On MS-Windows the "hidden"
  *   attribute is set and a dot prepended if possible.
- * - A directory starting with "./" (or ".\" for MS-DOS et al.) means to
- *   put the swap file relative to where the edited file is.  The leading
- *   "." is replaced with the path name of the edited file.
+ * - A directory starting with "./" (or ".\" for MS-Windows) means to put
+ *   the swap file relative to where the edited file is.  The leading "."
+ *   is replaced with the path name of the edited file.
  * - For Unix and Win32, if a directory ends in two path separators "//",
  *   the swap file name will be built from the complete path to the file
  *   with all path separators substituted to percent '%' signs. This will
@@ -3662,12 +3664,11 @@ export const grepprg = {
 /**
  *
  * 		{only available when compiled with GUI enabled, and
- * 		for MS-DOS and Win32 console}
+ * 		for Win32 console}
  * This option tells Vim what the cursor should look like in different
- * modes.  It fully works in the GUI.  In an MSDOS or Win32 console, only
- * the height of the cursor can be changed.  This can be done by
- * specifying a block cursor, or a percentage for a vertical or
- * horizontal cursor.
+ * modes.  It fully works in the GUI.  In a Win32 console, only the
+ * height of the cursor can be changed.  This can be done by specifying a
+ * block cursor, or a percentage for a vertical or horizontal cursor.
  * For a console the 't_SI', 't_SR', and 't_EI' escape sequences are
  * used.
  */
@@ -4874,8 +4875,8 @@ export const keywordprg = {
  * be able to execute Normal mode commands.
  * This is the opposite of the 'keymap' option, where characters are
  * mapped in Insert mode.
- * Also consider resetting 'langremap' to avoid 'langmap' applies to
- * characters resulting from a mapping.
+ * Also consider setting 'langremap' to off, to prevent 'langmap' from
+ * applying to characters resulting from a mapping.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -5734,7 +5735,7 @@ export const modified = {
  * default because it makes using the pull down menus a little goofy, as
  * a pointer transit may activate a window unintentionally.
  * MS-Windows: Also see 'scrollfocus' for what window is scrolled when
- * using the mouse scroll whel.
+ * using the mouse scroll wheel.
  */
 export const mousefocus = {
   async get(denops: Denops): Promise<boolean> {
@@ -5872,7 +5873,7 @@ export const mouseshape = {
 
 /**
  *
- * Only for GUI, MS-DOS, Win32 and Unix with xterm.  Defines the maximum
+ * Only for GUI, Win32 and Unix with xterm.  Defines the maximum
  * time in msec between two mouse clicks for the second click to be
  * recognized as a multi click.
  */
@@ -6048,7 +6049,7 @@ export const omnifunc = {
 
 /**
  *
- * 		{only for MS-DOS, MS-Windows and OS/2}
+ * 		{only for MS-Windows}
  * Enable reading and writing from devices.  This may get Vim stuck on a
  * device that can be opened but doesn't actually do the I/O.  Therefore
  * it is off by default.
@@ -7078,6 +7079,7 @@ export const rulerformat = {
  *   compiler/	compiler files |:compiler|
  *   doc/		documentation |write-local-help|
  *   ftplugin/	filetype plugins |write-filetype-plugin|
+ *   import/	files that are found by `:import`
  *   indent/	indent scripts |indent-expression|
  *   keymap/	key mapping files |mbyte-keymap|
  *   lang/		menu translations |:menutrans|
@@ -7490,13 +7492,13 @@ export const shell = {
 /**
  *
  * Flag passed to the shell to execute "!" and ":!" commands; e.g.,
- * "bash.exe -c ls" or "command.com /c dir".  For the MS-DOS-like
- * systems, the default is set according to the value of 'shell', to
- * reduce the need to set this option by the user.
+ * "bash.exe -c ls" or "cmd.exe /c dir".  For MS-Windows, the default is
+ * set according to the value of 'shell', to reduce the need to set this
+ * option by the user.
  * On Unix it can have more than one flag.  Each white space separated
  * part is passed as an argument to the shell command.
  * See |option-backslash| about including spaces and backslashes.
- * Also see |dos-shell| for MS-DOS and MS-Windows.
+ * Also see |dos-shell| for MS-Windows.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -7531,8 +7533,9 @@ export const shellcmdflag = {
  * The name of the temporary file can be represented by "%s" if necessary
  * (the file name is appended automatically if no %s appears in the value
  * of this option).
- * For the Amiga and MS-DOS the default is ">".  The output is directly
- * saved in a file and not echoed to the screen.
+ * For the Amiga the default is ">".  For MS-Windows the default is
+ * ">%s 2>&1".  The output is directly saved in a file and not echoed to
+ * the screen.
  * For Unix the default it "| tee".  The stdout of the compiler is saved
  * in a file and echoed to the screen.  If the 'shell' option is "csh" or
  * "tcsh" after initializations, the default becomes "|& tee".  If the
@@ -7582,10 +7585,10 @@ export const shellpipe = {
  * quoting.  See 'shellxquote' to include the redirection.  It's
  * probably not useful to set both options.
  * This is an empty string by default.  Only known to be useful for
- * third-party shells on MS-DOS-like systems, such as the MKS Korn Shell
- * or bash, where it should be "\"".  The default is adjusted according
- * the value of 'shell', to reduce the need to set this option by the
- * user.  See |dos-shell|.
+ * third-party shells on MS-Windows-like systems, such as the MKS Korn
+ * Shell or bash, where it should be "\"".  The default is adjusted
+ * according the value of 'shell', to reduce the need to set this option
+ * by the user.  See |dos-shell|.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -7657,11 +7660,11 @@ export const shellredir = {
 
 /**
  *
- * 		{only for MSDOS, MS-Windows and OS/2}
+ * 		{only for MS-Windows}
  * When set, a forward slash is used when expanding file names.  This is
- * useful when a Unix-like shell is used instead of command.com or
- * cmd.exe.  Backward slashes can still be typed, but they are changed to
- * forward slashes by Vim.
+ * useful when a Unix-like shell is used instead of cmd.exe.  Backward
+ * slashes can still be typed, but they are changed to forward slashes by
+ * Vim.
  * Note that setting or resetting this option has no effect for some
  * existing file names, thus this option needs to be set before opening
  * any file for best results.  This might change in the future.
@@ -9778,7 +9781,7 @@ export const viewdir = {
  *    slash	backslashes in file names replaced with forward
  * 		slashes
  *    unix		with Unix end-of-line format (single <NL>), even when
- * 		on Windows or DOS
+ * 		on MS-Windows
  *    curdir	the window-local directory, if set with `:lcd`
  */
 export const viewoptions = {
@@ -10564,7 +10567,7 @@ export const writebackup = {
  *
  * The number of milliseconds to wait for each character sent to the
  * screen.  When non-zero, characters are sent to the terminal one by
- * one.  For MS-DOS pcterm this does not work.  For debugging purposes.
+ * one.  For debugging purposes.
  */
 export const writedelay = {
   async get(denops: Denops): Promise<number> {

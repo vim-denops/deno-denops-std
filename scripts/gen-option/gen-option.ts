@@ -10,7 +10,7 @@ import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { downloadString } from "./utils.ts";
 
-const VIM_VERSION = "8.1.2424";
+const VIM_VERSION = "8.2.0662";
 const NVIM_VERSION = "0.4.4";
 
 const manualOptionSet = new Set([

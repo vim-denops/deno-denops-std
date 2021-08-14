@@ -147,9 +147,9 @@ export const compatible = {
  * When this option is set it overrules 'shellslash' for completion:
  * - When this option is set to "slash", a forward slash is used for path
  *   completion in insert mode. This is useful when editing HTML tag, or
- *   Makefile with 'noshellslash' on Windows.
+ *   Makefile with 'noshellslash' on MS-Windows.
  * - When this option is set to "backslash", backslash is used. This is
- *   useful when editing a batch file with 'shellslash' set on Windows.
+ *   useful when editing a batch file with 'shellslash' set on MS-Windows.
  * - When this option is empty, same character is used as for
  *   'shellslash'.
  * For Insert mode completion the buffer-local value is used.  For
@@ -921,7 +921,7 @@ export const renderoptions = {
 
 /**
  *
- * 		{only in Windows 95/NT console version}
+ * 		{only in MS-Windows console version}
  * When set, the screen contents is restored when exiting Vim.  This also
  * happens when executing external commands.
  */
@@ -1011,11 +1011,9 @@ export const shelltype = {
  * Filenames are assumed to be 8 characters plus one extension of 3
  * characters.  Multiple dots in file names are not allowed.  When this
  * option is on, dots in file names are replaced with underscores when
- * adding an extension (".~" or ".swp").  This option is not available
- * for MS-DOS, because then it would always be on.  This option is useful
+ * adding an extension (".~" or ".swp").  This option is useful
  * when editing files on an MS-DOS compatible filesystem, e.g., messydos
- * or crossdos.  When running the Win32 GUI version under Win32s, this
- * option is always on by default.
+ * or crossdos.
  */
 export const shortname = {
   async get(denops: Denops): Promise<boolean> {
@@ -1679,7 +1677,7 @@ export const vartabstop = {
  * r	Removable media.  The argument is a string (up to the next
  * 	',').  This parameter can be given several times.  Each
  * 	specifies the start of a path for which no marks will be
- * 	stored.  This is to avoid removable media.  For MS-DOS you
+ * 	stored.  This is to avoid removable media.  For MS-Windows you
  * 	could use "ra:,rb:", for Amiga "rdf0:,rdf1:,rdf2:".  You can
  * 	also use it for temp files, e.g., for Unix: "r/tmp".  Case is
  * 	ignored.  Maximum length of each 'r' argument is 50
