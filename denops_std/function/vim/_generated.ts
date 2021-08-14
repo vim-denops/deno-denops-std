@@ -121,6 +121,7 @@ export function last_buffer_nr(
  * 	  directory (|:tcd|) then changes the tabpage local
  * 	  directory.
  * 	- Otherwise, changes the global directory.
+ * {dir} must be a String.
  * If successful, returns the previous working directory.  Pass
  * this to another chdir() to restore the directory.
  * On failure, returns an empty string.
@@ -152,6 +153,20 @@ export function debugbreak(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("debugbreak", ...args);
+}
+
+/**
+ * Output {expr} as-is, including unprintable characters.  This
+ * can be used to output a terminal code. For example, to disable
+ * modifyOtherKeys:
+ * 	call echoraw(&t_TE)
+ * and to enable it again:
+ * 	call echoraw(&t_TI)
+ * Use with care, you can mess up the terminal this way.
+ */
+export function echoraw(denops: Denops, expr: unknown): Promise<unknown>;
+export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("echoraw", ...args);
 }
 
 /**
@@ -499,6 +514,71 @@ export function luaeval(
 ): Promise<unknown>;
 export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("luaeval", ...args);
+}
+
+/**
+ * Return information about the specified menu {name} in
+ * mode {mode}. The menu name should be specified without the
+ * shortcut character ('&').
+ * {mode} can be one of these strings:
+ * 	"n"	Normal
+ * 	"v"	Visual (including Select)
+ * 	"o"	Operator-pending
+ * 	"i"	Insert
+ * 	"c"	Cmd-line
+ * 	"s"	Select
+ * 	"x"	Visual
+ * 	"t"	Terminal-Job
+ * 	""	Normal, Visual and Operator-pending
+ * 	"!"	Insert and Cmd-line
+ * When {mode} is omitted, the modes for "" are used.
+ * Returns a |Dictionary| containing the following items:
+ *   accel		menu item accelerator text |menu-text|
+ *   display	display name (name without '&')
+ *   enabled	v:true if this menu item is enabled
+ * 		Refer to |:menu-enable|
+ *   icon		name of the icon file (for toolbar)
+ * 		|toolbar-icon|
+ *   iconidx	index of a built-in icon
+ *   modes		modes for which the menu is defined. In
+ * 		addition to the modes mentioned above, these
+ * 		characters will be used:
+ * 		" "	Normal, Visual and Operator-pending
+ *   name		menu item name.
+ *   noremenu	v:true if the {rhs} of the menu item is not
+ * 		remappable else v:false.
+ *   priority	menu order priority |menu-priority|
+ *   rhs		right-hand-side of the menu item. The returned
+ * 		string has special characters translated like
+ * 		in the output of the ":menu" command listing.
+ * 		When the {rhs} of a menu item is empty, then
+ * 		"<Nop>" is returned.
+ *   script	v:true if script-local remapping of {rhs} is
+ * 		allowed else v:false.  See |:menu-script|.
+ *   shortcut	shortcut key (character after '&' in
+ * 		the menu name) |menu-shortcut|
+ *   silent	v:true if the menu item is created
+ * 		with <silent> argument |:menu-silent|
+ *   submenus	|List| containing the names of
+ * 		all the submenus.  Present only if the menu
+ * 		item has submenus.
+ * Returns an empty dictionary if the menu item is not found.
+ * Examples:
+ * 	:echo menu_info('Edit.Cut')
+ * 	:echo menu_info('File.Save', 'n')
+ * Can also be used as a |method|:
+ * 	GetMenuName()->menu_info('v')
+ */
+export function menu_info(
+  denops: Denops,
+  name: unknown,
+  mode?: unknown,
+): Promise<unknown>;
+export function menu_info(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("menu_info", ...args);
 }
 
 /**
@@ -958,11 +1038,33 @@ export function win_execute(
 }
 
 /**
+ * Return the type of the window:
+ * 	"popup"		popup window |popup|
+ * 	"command"	command-line window |cmdwin|
+ * 	(empty)		normal window
+ * 	"unknown"	window {nr} not found
+ * When {nr} is omitted return the type of the current window.
+ * When {nr} is given return the type of this window by number or
+ * |window-ID|.
+ * Also see the 'buftype' option.  When running a terminal in a
+ * popup window then 'buftype' is "terminal" and win_gettype()
+ * returns "popup".
+ */
+export function win_gettype(denops: Denops, nr?: unknown): Promise<unknown>;
+export function win_gettype(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("win_gettype", ...args);
+}
+
+/**
  * 	        Move the window {nr} to a new split of the window {target}.
  * This is similar to moving to {target}, creating a new window
  * using |:split| but having the same contents as window {nr}, and
  * then closing {nr}.
  * Both {nr} and {target} can be window numbers or |window-ID|s.
+ * Both must be in the current tab page.
  * Returns zero for success, non-zero for failure.
  * {options} is a Dictionary with the following optional entries:
  *   "vertical"	When TRUE, the split is created vertically,
@@ -986,4 +1088,18 @@ export function win_splitmove(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("win_splitmove", ...args);
+}
+
+/**
+ * The result is a String.  For MS-Windows it indicates the OS
+ * version.  E.g, Windows 10 is "10.0", Windows 8 is "6.2",
+ * Windows XP is "5.1".  For non-MS-Windows systems the result is
+ * an empty string.
+ */
+export function windowsversion(denops: Denops): Promise<unknown>;
+export function windowsversion(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("windowsversion", ...args);
 }

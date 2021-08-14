@@ -920,19 +920,6 @@ export function diff_hlID(
 }
 
 /**
- * Return all of environment variables as dictionary. You can
- * check if an environment variable exists like this:
- * 	:echo has_key(environ(), 'HOME')
- * Note that the variable name may be CamelCase; to ignore case
- * use this:
- * 	:echo index(keys(environ()), 'HOME', 0, 1) != -1
- */
-export function environ(denops: Denops): Promise<unknown>;
-export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("environ", ...args);
-}
-
-/**
  * Return the Number 1 if {expr} is empty, zero otherwise.
  * - A |List| or |Dictionary| is empty when it does not have any
  *   items.
@@ -950,6 +937,19 @@ export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function empty(denops: Denops, expr: unknown): Promise<unknown>;
 export function empty(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("empty", ...args);
+}
+
+/**
+ * Return all of environment variables as dictionary. You can
+ * check if an environment variable exists like this:
+ * 	:echo has_key(environ(), 'HOME')
+ * Note that the variable name may be CamelCase; to ignore case
+ * use this:
+ * 	:echo index(keys(environ()), 'HOME', 0, 1) != -1
+ */
+export function environ(denops: Denops): Promise<unknown>;
+export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("environ", ...args);
 }
 
 /**
@@ -1005,16 +1005,15 @@ export function eventhandler(
  * arguments.
  * executable() uses the value of $PATH and/or the normal
  * searchpath for programs.
- * On MS-DOS and MS-Windows the ".exe", ".bat", etc. can
- * optionally be included.  Then the extensions in $PATHEXT are
- * tried.  Thus if "foo.exe" does not exist, "foo.exe.bat" can be
- * found.  If $PATHEXT is not set then ".exe;.com;.bat;.cmd" is
- * used.  A dot by itself can be used in $PATHEXT to try using
- * the name without an extension.  When 'shell' looks like a
- * Unix shell, then the name is also tried without adding an
- * extension.
- * On MS-DOS and MS-Windows it only checks if the file exists and
- * is not a directory, not if it's really executable.
+ * On MS-Windows the ".exe", ".bat", etc. can optionally be
+ * included.  Then the extensions in $PATHEXT are tried.  Thus if
+ * "foo.exe" does not exist, "foo.exe.bat" can be found.  If
+ * $PATHEXT is not set then ".exe;.com;.bat;.cmd" is used.  A dot
+ * by itself can be used in $PATHEXT to try using the name
+ * without an extension.  When 'shell' looks like a Unix shell,
+ * then the name is also tried without adding an extension.
+ * On MS-Windows it only checks if the file exists and is not a
+ * directory, not if it's really executable.
  * On MS-Windows an executable in the same directory as Vim is
  * always found.  Since this directory is added to $PATH it
  * should also work to execute it |win32-PATH|.
@@ -1260,6 +1259,8 @@ export function extend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 'L'	Lowlevel input.  Only works for Unix or when using the
  * 	GUI. Keys are used as if they were coming from the
  * 	terminal.  Other flags are not used.
+ * 	When a CTRL-C interrupts and 't' is included it sets
+ * 	the internal "got_int" flag.
  * 'i'	Insert the string instead of appending (see above).
  * 'x'	Execute commands until typeahead is empty.  This is
  * 	similar to using ":normal!".  You can call feedkeys()
@@ -1835,6 +1836,8 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 			{only with the |+viminfo| feature}
  * 	listed		TRUE if the buffer is listed.
  * 	lnum		current line number in buffer.
+ * 	linecount	number of lines in the buffer (only
+ * 			valid when loaded)
  * 	loaded		TRUE if the buffer is loaded.
  * 	name		full path to the file in the buffer.
  * 	signs		list of signs placed in the buffer.
@@ -2133,6 +2136,7 @@ export function getcmdwintype(
  * command		Ex command (and arguments)
  * compiler	compilers
  * cscope		|:cscope| suboptions
+ * diff_buffer     |:diffget| and |:diffput| completion
  * dir		directory names
  * environment	environment variable names
  * event		autocommand events
@@ -2435,7 +2439,7 @@ export function getmatches(
 /**
  * Return a Number which is the process ID of the Vim process.
  * On Unix and MS-Windows this is a unique number, until Vim
- * exits.  On MS-DOS it's always zero.
+ * exits.
  */
 export function getpid(denops: Denops): Promise<unknown>;
 export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2754,7 +2758,7 @@ export function getwininfo(
 }
 
 /**
- * The result is a list with two numbers, the result of
+ * The result is a List with two numbers, the result of
  * |getwinposx()| and |getwinposy()| combined:
  * 	[x-pos, y-pos]
  * {timeout} can be used to specify how long to wait in msec for
@@ -3879,6 +3883,7 @@ export function map(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *   "rhs"	     The {rhs} of the mapping as typed.
  *   "silent"   1 for a |:map-silent| mapping, else 0.
  *   "noremap"  1 if the {rhs} of the mapping is not remappable.
+ *   "script"   1 if mapping was defined with <script>.
  *   "expr"     1 for an expression mapping (|:map-<expr>|).
  *   "buffer"   1 for a buffer local mapping (|:map-local|).
  *   "mode"     Modes for which the mapping is defined. In
@@ -4003,6 +4008,10 @@ export function mapcheck(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The 'ignorecase' option is used to set the ignore-caseness of
  * the pattern.  'smartcase' is NOT used.  The matching is always
  * done like 'magic' is set and 'cpoptions' is empty.
+ * Note that a match at the start is preferred, thus when the
+ * pattern is using "*" (any number of matches) it tends to find
+ * zero matches at the start instead of a number of matches
+ * further down in the text.
  * Can also be used as a |method|:
  * 	GetList()->match('word')
  */
@@ -4052,6 +4061,10 @@ export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The 'ignorecase' option is used to set the ignore-caseness of
  * the pattern.  'smartcase' is NOT used.  The matching is always
  * done like 'magic' is set and 'cpoptions' is empty.
+ * Note that a match at the start is preferred, thus when the
+ * pattern is using "*" (any number of matches) it tends to find
+ * zero matches at the start instead of a number of matches
+ * further down in the text.
  * Can also be used as a |method|:
  * 	GetList()->match('word')
  */
@@ -4094,6 +4107,10 @@ export function strpbrk(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The 'ignorecase' option is used to set the ignore-caseness of
  * the pattern.  'smartcase' is NOT used.  The matching is always
  * done like 'magic' is set and 'cpoptions' is empty.
+ * Note that a match at the start is preferred, thus when the
+ * pattern is using "*" (any number of matches) it tends to find
+ * zero matches at the start instead of a number of matches
+ * further down in the text.
  * Can also be used as a |method|:
  * 	GetList()->match('word')
  */
@@ -4409,9 +4426,9 @@ export function matchstrpos(
 
 /**
  * Return the maximum value of all items in {expr}.
- * {expr} can be a list or a dictionary.  For a dictionary,
- * it returns the maximum of all values in the dictionary.
- * If {expr} is neither a list nor a dictionary, or one of the
+ * {expr} can be a List or a Dictionary.  For a Dictionary,
+ * it returns the maximum of all values in the Dictionary.
+ * If {expr} is neither a List nor a Dictionary, or one of the
  * items in {expr} cannot be used as a Number this results in
  * an error.  An empty |List| or |Dictionary| results in zero.
  * Can also be used as a |method|:
@@ -4423,9 +4440,9 @@ export function max(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * {expr} can be a list or a dictionary.  For a dictionary,
- * it returns the minimum of all values in the dictionary.
- * If {expr} is neither a list nor a dictionary, or one of the
+ * {expr} can be a List or a Dictionary.  For a Dictionary,
+ * it returns the minimum of all values in the Dictionary.
+ * If {expr} is neither a List nor a Dictionary, or one of the
  * items in {expr} cannot be used as a Number this results in
  * an error.  An empty |List| or |Dictionary| results in zero.
  * Can also be used as a |method|:
@@ -5861,8 +5878,8 @@ export function setloclist(
 }
 
 /**
- * Restores a list of matches saved by |getmatches() for the
- * current window|.  Returns 0 if successful, otherwise -1.  All
+ * Restores a list of matches saved by |getmatches()| for the
+ * current window.  Returns 0 if successful, otherwise -1.  All
  * current matches are cleared before the list is restored.  See
  * example for |getmatches()|.
  * If {win} is specified, use the window with this number or
@@ -5884,7 +5901,11 @@ export function setmatches(
 
 /**
  * Create or replace or add to the quickfix list.
- * When {what} is not present, use the items in {list}.  Each
+ * If the optional {what} dictionary argument is supplied, then
+ * only the items listed in {what} are set. The first {list}
+ * argument is ignored.  See below for the supported items in
+ * {what}.
+ * When {what} is not present, the items in {list} or used.  Each
  * item must be a dictionary.  Non-dictionary items in {list} are
  * ignored.  Each dictionary item can contain the following
  * entries:
@@ -5932,10 +5953,7 @@ export function setmatches(
  * quickfix list in the stack and all the following lists are
  * freed. To add a new quickfix list at the end of the stack,
  * set "nr" in {what} to "$".
- * If the optional {what} dictionary argument is supplied, then
- * only the items listed in {what} are set. The first {list}
- * argument is ignored.  The following items can be specified in
- * {what}:
+ * The following items can be specified in dictionary {what}:
  *     context	quickfix list context. See |quickfix-context|
  *     efm		errorformat to use when parsing text from
  * 		"lines". If this is not present, then the
@@ -5990,6 +6008,7 @@ export function setqflist(
 
 /**
  * Set the register {regname} to {value}.
+ * If {regname} is "" or "@", the unnamed register '"' is used.
  * {value} may be any value returned by |getreg()|, including
  * a |List|.
  * If {options} contains "a" or {regname} is upper case,
@@ -6105,20 +6124,23 @@ export function settabwinvar(
  * Modify the tag stack of the window {nr} using {dict}.
  * {nr} can be the window number or the |window-ID|.
  * For a list of supported items in {dict}, refer to
- * |gettagstack()|
- * If {action} is not present or is set to 'r', then the tag
- * stack is replaced. If {action} is set to 'a', then new entries
- * from {dict} are pushed onto the tag stack.
+ * |gettagstack()|. "curidx" takes effect before changing the tag
+ * stack.
+ * How the tag stack is modified depends on the {action}
+ * argument:
+ * - If {action} is not present or is set to 'r', then the tag
+ *   stack is replaced.
+ * - If {action} is set to 'a', then new entries from {dict} are
+ *   pushed (added) onto the tag stack.
+ * - If {action} is set to 't', then all the entries from the
+ *   current entry in the tag stack or "curidx" in {dict} are
+ *   removed and then new entries are pushed to the stack.
+ * The current index is set to one after the length of the tag
+ * stack after the modification.
  * Returns zero for success, -1 for failure.
- * Examples:
- *     Set current index of the tag stack to 4:
- * 	call settagstack(1005, {'curidx' : 4})
+ * Examples (for more examples see |tagstack-examples||):
  *     Empty the tag stack of window 3:
  * 	call settagstack(3, {'items' : []})
- *     Push a new item onto the tag stack:
- * 	let pos = [bufnr('myfile.txt'), 10, 1, 0]
- * 	let newtag = [{'tagname' : 'mytag', 'from' : pos}]
- * 	call settagstack(2, {'items' : newtag}, 'a')
  *     Save and restore the tag stack:
  * 	let stack = gettagstack(1003)
  * 	" do something else
@@ -6250,6 +6272,8 @@ export function shiftwidth(
  * removed when "dir" is a symbolic link within the same
  * directory.  In order to resolve all the involved symbolic
  * links before simplifying the path name, use |resolve()|.
+ * Can also be used as a |method|:
+ * 	GetName()->simplify()
  */
 export function simplify(denops: Denops, filename: unknown): Promise<unknown>;
 export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7184,7 +7208,7 @@ export function synstack(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The command executed is constructed using several options:
  * 	'shell' 'shellcmdflag' 'shellxquote' {expr} 'shellredir' {tmp} 'shellxquote'
  * ({tmp} is an automatically generated file name).
- * For Unix and OS/2 braces are put around {expr} to allow for
+ * For Unix, braces are put around {expr} to allow for
  * concatenated commands.
  * The command will be executed in "cooked" mode, so that a
  * CTRL-C will interrupt the command (on Unix at least).
@@ -7958,11 +7982,12 @@ export function winheight(
  * 	" Two horizontally split windows
  * 	:echo winlayout()
  * 	['col', [['leaf', 1000], ['leaf', 1001]]]
- * 	" Three horizontally split windows, with two
- * 	" vertically split windows in the middle window
+ * 	" The second tab page, with three horizontally split
+ * 	" windows, with two vertically split windows in the
+ * 	" middle window
  * 	:echo winlayout(2)
- * 	['col', [['leaf', 1002], ['row', ['leaf', 1003],
- * 			     ['leaf', 1001]]], ['leaf', 1000]]
+ * 	['col', [['leaf', 1002], ['row', [['leaf', 1003],
+ * 			    ['leaf', 1001]]], ['leaf', 1000]]]
  * Can also be used as a |method|:
  * 	GetTabnr()->winlayout()
  */
@@ -7977,6 +8002,7 @@ export function winlayout(
 /**
  * The result is a Number, which is the number of the current
  * window.  The top window has number 1.
+ * Returns zero for a popup window.
  * The optional argument {arg} supports the following values:
  * 	$	the number of the last window (the window
  * 		count).
