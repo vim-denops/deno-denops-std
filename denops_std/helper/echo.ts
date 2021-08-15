@@ -27,13 +27,6 @@ async function echoVim(denops: Denops, message: string): Promise<void> {
   await load(denops, new URL("./echo.vim", import.meta.url));
   const waiter = deferred<void>();
   const id = anonymous.once(denops, () => waiter.resolve())[0];
-  await denops.cmd(
-    `call timer_start(0, { -> DenopsStdHelperEcho(l:message, l:name, l:id) })`,
-    {
-      message,
-      name: denops.name,
-      id,
-    },
-  );
+  await denops.call("DenopsStdHelperEcho", message, denops.name, id);
   await waiter;
 }
