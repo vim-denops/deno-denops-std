@@ -28,7 +28,10 @@ const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);
 const nvimHelp = await downloadString(
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/eval.txt`,
 );
-const nvimDefs = parse(nvimHelp);
+const nvimHelp2 = await downloadString(
+  `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/api.txt`,
+);
+const nvimDefs = parse(nvimHelp).concat(parse(nvimHelp2));
 const nvimFnSet = difference(
   new Set(nvimDefs.map((def) => def.fn)),
   manualFnSet,
