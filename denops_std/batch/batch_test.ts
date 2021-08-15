@@ -1,5 +1,5 @@
 import { assertEquals, test } from "../deps_test.ts";
-import { batch } from "./batch.ts";
+import { batch, BatchHelper } from "./batch.ts";
 
 test({
   mode: "any",
@@ -127,6 +127,36 @@ test({
       "7",
       "8",
       "9",
+    ]);
+  },
+});
+test({
+  mode: "any",
+  name:
+    "The 'helper' instance passed in batch block is available outside of the block",
+  fn: async (denops) => {
+    await denops.cmd("let g:denops_batch_test = []");
+    await denops.cmd(
+      "command! -nargs=1 DenopsBatchTest let g:denops_batch_test += [<f-args>]",
+    );
+
+    let helper: BatchHelper;
+    await batch(denops, (denops) => {
+      helper = denops;
+      return Promise.resolve();
+    });
+    await helper!.call("execute", "DenopsBatchTest 1");
+    await helper!.batch(["execute", "DenopsBatchTest 1"]);
+    await helper!.cmd("DenopsBatchTest 1");
+    assertEquals(
+      await helper!.eval("add(g:denops_batch_test, string(1))"),
+      ["1", "1", "1", "1"],
+    );
+    assertEquals(await denops.eval("g:denops_batch_test") as string[], [
+      "1",
+      "1",
+      "1",
+      "1",
     ]);
   },
 });
