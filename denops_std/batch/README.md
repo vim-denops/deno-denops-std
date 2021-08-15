@@ -88,8 +88,8 @@ export async function main(denops: Denops): Promise<void> {
 
 Not like `batch`, the function can NOT be nested.
 
-Note that `denops.call()`, `denops.batch()`, or `denops.eval()` always return
-falsy value in `gather()`, indicating that you **cannot** write code like below:
+Note that `denops.call()` or `denops.eval()` always return falsy value in
+`gather()`, indicating that you **cannot** write code like below:
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
@@ -106,3 +106,7 @@ export async function main(denops: Denops): Promise<void> {
   });
 }
 ```
+
+The `denops` instance passed to the `gather` block is NOT available outside of
+the block. An error is thrown when `denops.call()`, `denops.cmd()`, or
+`denops.eval()` is called.

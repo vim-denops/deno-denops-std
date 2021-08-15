@@ -3,14 +3,20 @@ import { Context, Denops, Dispatcher, Meta } from "../deps.ts";
 class GatherHelper implements Denops {
   #denops: Denops;
   #calls: [string, ...unknown[]][];
+  #closed: boolean;
 
   constructor(denops: Denops) {
     this.#denops = denops;
     this.#calls = [];
+    this.#closed = false;
   }
 
   static getCalls(helper: GatherHelper): [string, ...unknown[]][] {
     return helper.#calls;
+  }
+
+  static close(helper: GatherHelper): void {
+    helper.#closed = true;
   }
 
   get name(): string {
@@ -30,6 +36,11 @@ class GatherHelper implements Denops {
   }
 
   call(fn: string, ...args: unknown[]): Promise<unknown> {
+    if (this.#closed) {
+      throw new Error(
+        "GatherHelper instance is not available outside of 'gather' block",
+      );
+    }
     this.#calls.push([fn, ...args]);
     return Promise.resolve();
   }
@@ -39,11 +50,21 @@ class GatherHelper implements Denops {
   }
 
   cmd(cmd: string, ctx: Context = {}): Promise<void> {
+    if (this.#closed) {
+      throw new Error(
+        "GatherHelper instance is not available outside of 'gather' block",
+      );
+    }
     this.call("denops#api#cmd", cmd, ctx);
     return Promise.resolve();
   }
 
   eval(expr: string, ctx: Context = {}): Promise<unknown> {
+    if (this.#closed) {
+      throw new Error(
+        "GatherHelper instance is not available outside of 'gather' block",
+      );
+    }
     this.call("denops#api#eval", expr, ctx);
     return Promise.resolve();
   }
@@ -61,7 +82,11 @@ export async function gather(
   main: (helper: GatherHelper) => Promise<void>,
 ): Promise<unknown[]> {
   const helper = new GatherHelper(denops);
-  await main(helper);
+  try {
+    await main(helper);
+  } finally {
+    GatherHelper.close(helper);
+  }
   const calls = GatherHelper.getCalls(helper);
   return await denops.batch(...calls);
 }

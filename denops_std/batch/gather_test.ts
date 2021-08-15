@@ -1,5 +1,5 @@
 import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
-import { gather } from "./gather.ts";
+import { gather, GatherHelper } from "./gather.ts";
 
 test({
   mode: "any",
@@ -56,4 +56,40 @@ test({
     );
   },
   prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
+});
+test({
+  mode: "any",
+  name:
+    "The 'helper' instance passed in gather block is NOT available outside of the block",
+  fn: async (denops) => {
+    await denops.cmd("let g:denops_gather_test = 0");
+    await denops.cmd("command! DenopsGatherTest let g:denops_gather_test += 1");
+
+    let helper: GatherHelper;
+    await gather(denops, (denops) => {
+      helper = denops;
+      return Promise.resolve();
+    });
+    await assertThrowsAsync(
+      async () => {
+        await helper!.call("execute", "DenopsGatherTest");
+      },
+      undefined,
+      "not available outside",
+    );
+    await assertThrowsAsync(
+      async () => {
+        await helper.cmd("DenopsGatherTest");
+      },
+      undefined,
+      "not available outside",
+    );
+    await assertThrowsAsync(
+      async () => {
+        const _ = await helper.eval("v:version");
+      },
+      undefined,
+      "not available outside",
+    );
+  },
 });
