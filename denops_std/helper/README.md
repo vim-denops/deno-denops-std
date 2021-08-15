@@ -25,6 +25,92 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+### input
+
+Use `input()` which is a wrapper function of `input()` in
+[`function` module](../function/README.md) to show a prompt to get user input
+like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  console.log(
+    await input(denops, {
+      prompt: "> ",
+      text: "This is default value",
+    }),
+  );
+}
+```
+
+Not like native `input()` function, it returns `null` instead of an empty string
+when user press `<Esc>` or `<C-c>` so that developers can distinguish if user
+cancelled or input an empty string.
+
+It accepts a TypeScript callback as a completion function addition to built-in
+completions and Vim script custom completion like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Built-in completions
+  console.log(
+    await input(denops, {
+      prompt: "> ",
+      text: "This is default value",
+      completion: "command",
+    }),
+  );
+
+  // Vim script custom completion (assume 'MyVimScriptCompletion' is defined in Vim script)
+  console.log(
+    await input(denops, {
+      prompt: "> ",
+      text: "This is default value",
+      completion: "custom,MyVimScriptCompletion",
+    }),
+  );
+
+  // TypeScript custom completion
+  console.log(
+    await input(denops, {
+      prompt: "> ",
+      text: "This is default value",
+      completion: (
+        arglead: string,
+        cmdline: string,
+        cursorpos: number,
+      ): Promise<string[]> => {
+        return ["Hello", "World"];
+      },
+    }),
+  );
+}
+```
+
+If you'd like to guard input by `inputsave()` and `inputrestore()`, use
+`inputsave` option like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  denops.dispatch = {
+    say: async () => {
+      return await input(denops, {
+        prompt: "> ",
+        inputsave: true,
+      });
+    },
+  };
+}
+```
+
 ### batch
 
 Deprecated in favor of [`batch`](./batch/README.md) module. Use `gather()`

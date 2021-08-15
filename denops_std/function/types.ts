@@ -59,3 +59,55 @@ export function isPosition(x: unknown): x is Position {
 export function ensurePosition(x: unknown): asserts x is Position {
   return ensure(x, isPosition, "The value must be Position");
 }
+
+const validBuiltinCompletions = [
+  "arglist",
+  "augroup",
+  "buffer",
+  "behave",
+  "color",
+  "command",
+  "compiler",
+  "cscope",
+  "dir",
+  "environment",
+  "event",
+  "expression",
+  "file",
+  "file_in_path",
+  "filetype",
+  "function",
+  "help",
+  "highlight",
+  "history",
+  "locale",
+  "mapclear",
+  "mapping",
+  "menu",
+  "messages",
+  "option",
+  "packadd",
+  "shellcmd",
+  "sign",
+  "syntax",
+  "syntime",
+  "tag",
+  "tag_listfiles",
+  "user",
+  "var",
+] as const;
+
+/**
+ * Builtin completion
+ */
+export type BuiltinCompletion = typeof validBuiltinCompletions[number];
+
+/**
+ * Check if the `value` is valid BuiltinCompletion
+ */
+export function isValidBuiltinCompletion(
+  value: string,
+): value is BuiltinCompletion {
+  // deno-lint-ignore no-explicit-any
+  return validBuiltinCompletions.includes(value as any);
+}
