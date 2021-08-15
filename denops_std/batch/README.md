@@ -67,6 +67,33 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+The `denops` instance passed to the `batch` block is available even outside of
+the block. It works like a real `denops` instance, mean that you can write code
+like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
+import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await batch(denops, async (denops) => {
+    const [id] = anonymous.add(denops, () => {
+      // This code is called outside of 'batch' block
+      // thus the 'denops' instance works like a real one.
+      // That's why you can write code like below
+      if (await denops.eval("&verbose")) {
+        await denops.cmd("echomsg 'VERBOSE'");
+      }
+      await denops.cmd("echomsg 'Hello world'");
+    });
+    await denops.cmd(
+      `command! Test call denops#request('${denops.name}', '${id}', [])`,
+    );
+  });
+}
+```
+
 ### gather
 
 Use `gather()` to call multiple denops functions sequentially without overhead
@@ -88,8 +115,8 @@ export async function main(denops: Denops): Promise<void> {
 
 Not like `batch`, the function can NOT be nested.
 
-Note that `denops.call()`, `denops.batch()`, or `denops.eval()` always return
-falsy value in `gather()`, indicating that you **cannot** write code like below:
+Note that `denops.call()` or `denops.eval()` always return falsy value in
+`gather()`, indicating that you **cannot** write code like below:
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
@@ -106,3 +133,7 @@ export async function main(denops: Denops): Promise<void> {
   });
 }
 ```
+
+The `denops` instance passed to the `gather` block is NOT available outside of
+the block. An error is thrown when `denops.call()`, `denops.cmd()`, or
+`denops.eval()` is called.
