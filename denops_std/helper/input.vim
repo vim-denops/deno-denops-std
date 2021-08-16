@@ -50,12 +50,13 @@ if has('nvim')
   endfunction
 else
   function! s:input(prompt, text, completion) abort
-    keepjumps keepalt botright 0new
+    let original = maparg('<Esc>', 'n')
     execute printf('cnoremap <nowait><buffer> <Esc> <C-u>%s<CR>', s:escape_token)
     try
       let result = a:completion is# v:null
             \ ? input(a:prompt, a:text)
             \ : input(a:prompt, a:text, a:completion)
+      redraw | echo ""
       if result ==# s:escape_token
         return v:null
       endif
@@ -63,7 +64,11 @@ else
     catch /^Vim:Interrupt$/
       return v:null
     finally
-      bwipeout!
+      if empty(original)
+        cunmap <buffer> <Esc>
+      else
+        execute printf('cmap <buffer> %s', original)
+      endif
     endtry
   endfunction
 endif
