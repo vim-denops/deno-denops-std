@@ -940,6 +940,35 @@ export const bufhidden = {
 
 /**
  *
+ * When this option is set, the buffer shows up in the buffer list.  If
+ * it is reset it is not used for ":bnext", "ls", the Buffers menu, etc.
+ * This option is reset by Vim for buffers that are only used to remember
+ * a file name or marks.  Vim sets it when starting to edit a buffer.
+ * But not when moving to a buffer with ":buffer".
+ */
+export const buflisted = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "buflisted") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "buflisted", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "buflisted");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    return await localOptions.get(denops, "buflisted") ?? false;
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "buflisted", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "buflisted");
+  },
+};
+
+/**
+ *
  * The value of this option specifies the type of a buffer:
  *   <empty>	normal buffer
  *   nofile	buffer which is not related to a file and will not be
