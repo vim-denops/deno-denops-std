@@ -22,6 +22,19 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+Users can specify multiple `mode` value like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+    mode: ["n", "i", "x"],
+  });
+}
+```
+
 ### unmap
 
 Use `unmap()` to unregister a mapping like:
@@ -39,6 +52,23 @@ export async function main(denops: Denops): Promise<void> {
   await mapping.unmap(denops, "<Plug>(test-denops-std)");
   await mapping.unmap(denops, "<Plug>(test-denops-std)", {
     mode: "i",
+  });
+}
+```
+
+Users can specify multiple `mode` value like:
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+    mode: ["n", "i", "x"],
+  });
+
+  await mapping.unmap(denops, "<Plug>(test-denops-std)", {
+    mode: ["n", "i", "x"],
   });
 }
 ```

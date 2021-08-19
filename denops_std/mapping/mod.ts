@@ -1,10 +1,11 @@
 import { Denops } from "../deps.ts";
 import * as fn from "../function/mod.ts";
+import * as batch from "../batch/mod.ts";
 import { Mapping, Mode } from "./types.ts";
 import { parse } from "./parser.ts";
 
 export type MapOptions = {
-  mode?: Mode;
+  mode?: Mode | Mode[];
   noremap?: boolean;
   script?: boolean;
   buffer?: boolean;
@@ -23,7 +24,7 @@ export async function map(
   rhs: string,
   options: MapOptions = {},
 ): Promise<void> {
-  const mode = options.mode ?? "";
+  const modes = forceArray(options.mode ?? "");
   const prefix = options.noremap ? "nore" : "";
   const arg = [
     options.buffer ? "<buffer>" : "",
@@ -33,11 +34,15 @@ export async function map(
     options.expr ? "<expr>" : "",
     options.unique ? "<unique>" : "",
   ].filter((v) => v).join("");
-  await denops.cmd(`${mode}${prefix}map ${arg} ${lhs} ${rhs}`);
+  await batch.batch(denops, async (denops) => {
+    for (const mode of modes) {
+      await denops.cmd(`${mode}${prefix}map ${arg} ${lhs} ${rhs}`);
+    }
+  });
 }
 
 export type UnmapOptions = {
-  mode?: Mode;
+  mode?: Mode | Mode[];
 };
 
 /**
@@ -48,8 +53,12 @@ export async function unmap(
   lhs: string,
   options: UnmapOptions = {},
 ): Promise<void> {
-  const mode = options.mode ?? "";
-  await denops.cmd(`${mode}unmap ${lhs}`);
+  const modes = forceArray(options.mode ?? "");
+  await batch.batch(denops, async (denops) => {
+    for (const mode of modes) {
+      await denops.cmd(`${mode}unmap ${lhs}`);
+    }
+  });
 }
 
 export type ReadOptions = {
@@ -108,4 +117,8 @@ export async function list(
   const mode = options.mode ?? "";
   const result = await fn.execute(denops, `${mode}map ${lhs}`) as string;
   return result.split(/\r?\n/).filter((v) => v).map(parse);
+}
+
+function forceArray<T>(v: T | T[]): T[] {
+  return Array.isArray(v) ? v : [v];
 }
