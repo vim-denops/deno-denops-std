@@ -68,6 +68,58 @@ for (const mode of modes) {
 }
 test({
   mode: "all",
+  name: `map() registers multiple mappings (Xmap)`,
+  fn: async (denops) => {
+    const modes: Mode[] = ["n", "i", "x"];
+    await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+      mode: modes,
+    });
+    for (const mode of modes) {
+      assertEquals(
+        {
+          ...await mapping.read(denops, "<Plug>(test-denops-std)", { mode }),
+          sid: 0,
+          lnum: 0,
+        },
+        {
+          ...skeleton,
+          mode,
+          lhs: "<Plug>(test-denops-std)",
+          rhs: "Hello",
+        },
+      );
+    }
+  },
+});
+test({
+  mode: "all",
+  name: `map() registers mapping (Xnoremap)`,
+  fn: async (denops) => {
+    const modes: Mode[] = ["n", "i", "x"];
+    await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+      mode: modes,
+      noremap: true,
+    });
+    for (const mode of modes) {
+      assertEquals(
+        {
+          ...await mapping.read(denops, "<Plug>(test-denops-std)", { mode }),
+          sid: 0,
+          lnum: 0,
+        },
+        {
+          ...skeleton,
+          mode,
+          lhs: "<Plug>(test-denops-std)",
+          rhs: "Hello",
+          noremap: true,
+        },
+      );
+    }
+  },
+});
+test({
+  mode: "all",
   name: `map() registers mapping (script)`,
   fn: async (denops) => {
     if (!await isScriptSupported(denops)) {
@@ -235,6 +287,29 @@ for (const mode of modes) {
     prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
   });
 }
+test({
+  mode: "all",
+  name: `unmap() removes multiple mappings (Xunmap)`,
+  fn: async (denops) => {
+    const modes: Mode[] = ["n", "i", "x"];
+    await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+      mode: modes,
+    });
+    await mapping.unmap(denops, "<Plug>(test-denops-std)", {
+      mode: modes,
+    });
+    for (const mode of modes) {
+      await assertThrowsAsync(
+        async () => {
+          await mapping.read(denops, "<Plug>(test-denops-std)", { mode });
+        },
+        undefined,
+        "No mapping found for",
+      );
+    }
+  },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
+});
 
 for (const mode of modes) {
   test({
