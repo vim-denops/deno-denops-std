@@ -28,6 +28,7 @@ async function ensureLocalFile(url: URL): Promise<string> {
   }
   const response = await fetch(url);
   if (response.status !== 200) {
+    await response.body?.cancel();
     throw new Error(`Failed to fetch '${url}'`);
   }
   const content = await response.arrayBuffer();
