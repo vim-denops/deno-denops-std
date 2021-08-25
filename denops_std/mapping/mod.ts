@@ -42,6 +42,7 @@ export async function map(
 }
 
 export type UnmapOptions = {
+  buffer?: boolean;
   mode?: Mode | Mode[];
 };
 
@@ -53,10 +54,11 @@ export async function unmap(
   lhs: string,
   options: UnmapOptions = {},
 ): Promise<void> {
+  const buffer = options.buffer ? "<buffer>" : "";
   const modes = forceArray(options.mode ?? "");
   await batch.batch(denops, async (denops) => {
     for (const mode of modes) {
-      await denops.cmd(`${mode}unmap ${lhs}`);
+      await denops.cmd(`${mode}unmap ${buffer} ${lhs}`);
     }
   });
 }

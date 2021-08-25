@@ -314,6 +314,37 @@ test({
 for (const mode of modes) {
   test({
     mode: "all",
+    name: `unmap() removes buffer local mapping (${mode}unmap)`,
+    fn: async (denops) => {
+      await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+        mode,
+      });
+      await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
+        buffer: true,
+        mode,
+      });
+      assertEquals(
+        (await mapping.read(denops, "<Plug>(test-denops-std)", { mode }))
+          .buffer,
+        true,
+      );
+      await mapping.unmap(denops, "<Plug>(test-denops-std)", {
+        buffer: true,
+        mode,
+      });
+      assertEquals(
+        (await mapping.read(denops, "<Plug>(test-denops-std)", { mode }))
+          .buffer,
+        false,
+      );
+    },
+    prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
+  });
+}
+
+for (const mode of modes) {
+  test({
+    mode: "all",
     name: `read() returns mapping (${mode}map)`,
     fn: async (denops) => {
       await denops.cmd(`${mode}map <Plug>(test-denops-std) Hello`);
