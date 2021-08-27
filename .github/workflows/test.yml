@@ -119,6 +119,7 @@ jobs:
         working-directory: ./repo
         run: make test
         env:
+          DENO_DIR: ../.deno
           DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable_path }}
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
         timeout-minutes: 10
