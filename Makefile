@@ -24,7 +24,7 @@ type-check: FORCE	## Type check
 	@deno test --unstable --no-run $$(find . -name '*.ts' -not -name '.deno')
 
 test: FORCE	## Test
-	@deno test --unstable -A --jobs
+	@deno test --unstable -A
 
 gen: FORCE	## Generate codes
 	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
