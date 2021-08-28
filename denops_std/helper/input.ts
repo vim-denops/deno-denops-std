@@ -34,19 +34,23 @@ export async function input(
   await helper.load(denops, new URL("./input.vim", import.meta.url));
   const completion = options.completion ?? null;
   if (completion && typeof completion !== "string") {
-    const [id] = anonymous.once(denops, async (arglead, cmdline, cursorpos) => {
+    const [id] = anonymous.add(denops, async (arglead, cmdline, cursorpos) => {
       ensureString(arglead);
       ensureString(cmdline);
       ensureNumber(cursorpos);
       return await completion(arglead, cmdline, cursorpos);
     });
-    return await denops.call(
-      "DenopsStdHelperInput",
-      options.prompt ?? "",
-      options.text ?? "",
-      { plugin: denops.name, id },
-      options.inputsave ?? false,
-    ) as Promise<string | null>;
+    try {
+      return await denops.call(
+        "DenopsStdHelperInput",
+        options.prompt ?? "",
+        options.text ?? "",
+        { plugin: denops.name, id },
+        options.inputsave ?? false,
+      ) as Promise<string | null>;
+    } finally {
+      anonymous.remove(denops, id);
+    }
   }
   if (completion && !fn.isValidBuiltinCompletion(completion)) {
     if (
