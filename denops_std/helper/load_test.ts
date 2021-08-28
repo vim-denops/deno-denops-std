@@ -2,7 +2,7 @@ import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
 import { load } from "./load.ts";
 
 const loadScriptUrlBase =
-  "https://raw.githubusercontent.com/vim-denops/deno-denops-std/4df988237b3ea04aaa665974b44c8e7df8e237cb/denops_std/helper/";
+  "https://raw.githubusercontent.com/vim-denops/deno-denops-std/v1.8.0/denops_std/helper/";
 
 test({
   mode: "any",
