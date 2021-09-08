@@ -1,19 +1,34 @@
 import { Denops, fs, hash, path } from "../deps.ts";
 import { execute } from "./execute.ts";
 
+const loaded = new Set<URL>();
+
+export type LoadOptions = {
+  force?: boolean;
+};
+
 /**
- * Load Vim script in local/remote URL
+ * Load a Vim script in a local/remote URL
+ *
+ * It does nothing if the `url` is already loaded unless `force` option is specified.
+ * It returns `true` when the script is loaded. Otherwise, it returns `false`.
  */
 export async function load(
   denops: Denops,
   url: URL,
-): Promise<void> {
+  options: LoadOptions = {},
+): Promise<boolean> {
+  if (!options.force && loaded.has(url)) {
+    return false;
+  }
   const scriptPath = await ensureLocalFile(url);
   await execute(
     denops,
     "execute printf('source %s', fnameescape(scriptPath)) ",
     { scriptPath },
   );
+  loaded.add(url);
+  return true;
 }
 
 async function ensureLocalFile(url: URL): Promise<string> {
