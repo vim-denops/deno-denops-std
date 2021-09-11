@@ -12,7 +12,10 @@ export type CustomCompletion = (
 export type InputOptions = {
   prompt?: string;
   text?: string;
-  completion?: fn.BuiltinCompletion | string | CustomCompletion;
+  completion?:
+    | fn.BuiltinCompletion
+    | (string & { _?: never })
+    | CustomCompletion;
   // Guard `input` by `inputsave` and `inputrestore`
   inputsave?: boolean;
 };
