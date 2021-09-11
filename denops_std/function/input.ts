@@ -48,7 +48,7 @@ export function input(
   denops: Denops,
   prompt: string,
   text = "",
-  completion?: BuiltinCompletion | string,
+  completion?: BuiltinCompletion | (string & { _?: never }),
 ): Promise<string> {
   if (completion && !isValidBuiltinCompletion(completion)) {
     if (
