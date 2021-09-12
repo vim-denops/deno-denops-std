@@ -137,6 +137,18 @@ Deno.test("format encodes ';' and '#' in 'expr'", () => {
   const exp = "denops:///hello%3Bworld%23hello";
   assertEquals(dst, exp);
 });
+Deno.test("format encodes '#' in 'params'", () => {
+  const src = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "#foo",
+    },
+  };
+  const dst = format(src);
+  const exp = "denops:///absolute/path/to/worktree;foo=%23foo";
+  assertEquals(dst, exp);
+});
 
 Deno.test("parse throws exception when 'expr' contains unusable characters", () => {
   const src = "denops:///<>|?*";
@@ -259,6 +271,18 @@ Deno.test("parse decode percent-encoded characters (';' and '#') in 'expr'", () 
   const exp = {
     scheme: "denops",
     expr: "/hello;world#hello",
+  };
+  assertEquals(dst, exp);
+});
+Deno.test("parse decode percent-encoded characters ('#') in 'params'", () => {
+  const src = "denops:///absolute/path/to/worktree;foo=%23foo";
+  const dst = parse(src);
+  const exp = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "#foo",
+    },
   };
   assertEquals(dst, exp);
 });
