@@ -60,10 +60,10 @@ Deno.test("format returns buffer name string from Bufname instance", () => {
 Deno.test("format encodes unusable characters in 'path'", () => {
   const src = {
     scheme: "denops",
-    path: "<>|?*",
+    path: "/<>|?*",
   };
   const dst = format(src);
-  const exp = "denops://%3c%3e%7c%3f%2a";
+  const exp = "denops:///%3c%3e%7c%3f%2a";
   assertEquals(dst, exp);
 });
 Deno.test("format returns buffer name string from Bufname instance (with URLSearchParams)", () => {
@@ -131,15 +131,15 @@ Deno.test("format returns buffer name string from Bufname instance (with URLSear
 Deno.test("format encodes ';' and '#' in 'path'", () => {
   const src = {
     scheme: "denops",
-    path: "hello;world#hello",
+    path: "/hello;world#hello",
   };
   const dst = format(src);
-  const exp = "denops://hello%3bworld%23hello";
+  const exp = "denops:///hello%3bworld%23hello";
   assertEquals(dst, exp);
 });
 
 Deno.test("parse throws exception when 'expr' contains unusable characters", () => {
-  const src = "denops://<>|?*";
+  const src = "denops:///<>|?*";
   assertThrows(
     () => {
       parse(src);
@@ -185,11 +185,11 @@ Deno.test("parse returns Bufname instance from buffer name", () => {
   assertEquals(dst, exp);
 });
 Deno.test("parse decodes percent-encoded characters in 'path'", () => {
-  const src = "denops://%3c%3e%7c%3f%2a";
+  const src = "denops:///%3c%3e%7c%3f%2a";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "<>|?*",
+    path: "/<>|?*",
   };
   assertEquals(dst, exp);
 });
@@ -254,11 +254,11 @@ Deno.test("parse returns Bufname instance from buffer name (with params and frag
   assertEquals(dst, exp);
 });
 Deno.test("parse decode percent-encoded characters (';' and '#') in 'path'", () => {
-  const src = "denops://hello%3bworld%23hello";
+  const src = "denops:///hello%3bworld%23hello";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "hello;world#hello",
+    path: "/hello;world#hello",
   };
   assertEquals(dst, exp);
 });
