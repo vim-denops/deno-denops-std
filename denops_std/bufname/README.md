@@ -18,14 +18,14 @@ import { format } from "https://deno.land/x/denops_std/bufname/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   assertEquals(
-    format({ scheme: "denops", path: "/Users/johntitor/.vimrc" }),
+    format({ scheme: "denops", expr: "/Users/johntitor/.vimrc" }),
     "denops:///Users/johntitor/.vimrc",
   );
 
   assertEquals(
     format({
       scheme: "denops",
-      path: "/Users/johntitor/.vimrc",
+      expr: "/Users/johntitor/.vimrc",
       params: {
         foo: "foo",
         bar: ["bar", "bar"],
@@ -38,7 +38,7 @@ export async function main(denops: Denops): Promise<void> {
   assertEquals(
     format({
       scheme: "denops",
-      path: "/Users/johntitor/.vimrc",
+      expr: "/Users/johntitor/.vimrc",
       params: {
         foo: "foo",
         bar: ["bar", "bar"],
@@ -66,14 +66,14 @@ import { parse } from "https://deno.land/x/denops_std/bufname/mod.ts";
 export async function main(denops: Denops): Promise<void> {
   assertEquals(parse("denops:///Users/johntitor/.vimrc"), {
     scheme: "denops",
-    path: "/Users/johntitor/.vimrc",
+    expr: "/Users/johntitor/.vimrc",
   });
 
   assertEquals(
     parse("denops:///Users/johntitor/.vimrc;foo=foo&bar=bar&bar=bar"),
     {
       scheme: "denops",
-      path: "/Users/johntitor/.vimrc",
+      expr: "/Users/johntitor/.vimrc",
       params: {
         foo: "foo",
         bar: ["bar", "bar"],
@@ -85,7 +85,7 @@ export async function main(denops: Denops): Promise<void> {
     parse("denops:///Users/johntitor/.vimrc;foo=foo&bar=bar&bar=bar#README.md"),
     {
       scheme: "denops",
-      path: "/Users/johntitor/.vimrc",
+      expr: "/Users/johntitor/.vimrc",
       params: {
         foo: "foo",
         bar: ["bar", "bar"],
