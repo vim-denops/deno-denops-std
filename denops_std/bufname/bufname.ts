@@ -27,7 +27,14 @@ const schemePattern = /^(\S+):\/\//;
 const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
 
 /**
- * Format Bufname instance to construct Vim's buffer name.
+ * Format a `Bufname` instance and return a safe string as Vim's buffer name.
+ *
+ * It throws errors when `scheme` contains unusable characters (non-alphabet characters).
+ *
+ * All unusable characters ("<>|?*) are replaced with percent-encoded characters.
+ * In addition to the above, all semicolons (;) and sharps (#) in `path` are replaced with
+ * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
+ * ```
  */
 export function format(
   { scheme, expr, params, fragment }: Bufname,
@@ -49,7 +56,10 @@ export function format(
 }
 
 /**
- * Parse Vim's buffer name to construct Bufname instance.
+ * Parse Vim's buffer name and return a `Bufname` instance.
+ *
+ * It throws errors when a given `bufname` is not valid Vim's buffer name.
+ * For example, if it contains unusable characters ("<>|?*).
  */
 export function parse(bufname: string): Bufname {
   if (bufnameUnusablePattern.test(bufname)) {
