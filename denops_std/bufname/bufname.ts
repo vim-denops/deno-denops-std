@@ -35,7 +35,7 @@ export function format({ scheme, path, params, fragment }: Bufname): string {
       `Scheme '${scheme}' contains unusable characters. Only alphabets are allowed.`,
     );
   }
-  const encodedPath = encode(path).replaceAll(";", "%3b").replaceAll(
+  const encodedPath = encode(path).replaceAll(";", "%3B").replaceAll(
     "#",
     "%23",
   );
@@ -68,7 +68,7 @@ export function parse(expr: string): Bufname {
     );
   }
   const remain = decode(expr.substring(`${scheme}://`.length), [
-    "%3b", // ;
+    "%3B", // ;
     "%23", // #
   ]);
   const m2 = remain.match(pathPattern)!;
