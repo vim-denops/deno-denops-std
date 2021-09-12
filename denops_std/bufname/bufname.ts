@@ -34,7 +34,6 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * All unusable characters ("<>|?*) are replaced with percent-encoded characters.
  * In addition to the above, all semicolons (;) and sharps (#) in `path` are replaced with
  * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
- * ```
  */
 export function format(
   { scheme, expr, params, fragment }: Bufname,
