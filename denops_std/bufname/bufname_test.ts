@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "../deps_test.ts";
+import { path } from "../deps.ts";
 import { format, parse } from "./bufname.ts";
 
 Deno.test("format throws exception when 'scheme' contains unusable characters", () => {
@@ -191,6 +192,14 @@ Deno.test("format pass example in README.md", () => {
     }),
     "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
   );
+
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: path.win32.toFileUrl("C:\\Users\\John Titor\\test.git").pathname,
+    }),
+    "denops:///C:/Users/John%20Titor/test.git",
+  );
 });
 
 Deno.test("parse throws exception when 'expr' contains unusable characters", () => {
@@ -372,5 +381,18 @@ Deno.test("parse pass example in README.md", () => {
       },
       fragment: "README.md",
     },
+  );
+
+  const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
+  assertEquals(
+    bufname,
+    {
+      scheme: "denops",
+      expr: "/C:/Users/John Titor/test.git",
+    },
+  );
+  assertEquals(
+    path.win32.fromFileUrl(`file://${bufname.expr}`),
+    "C:\\Users\\John Titor\\test.git",
   );
 });

@@ -99,6 +99,27 @@ assertEquals(
 );
 ```
 
+This function does not handle path separator differences among platforms (Unix
+uses `/` but Windows uses `\`). That's why it's recommended to normalize the
+`expr` with [`toFileUrl`](https://deno.land/std/path#tofileurl) before when
+constructing a buffer name from a real path. For example
+
+```typescript
+import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import * as path from "https://deno.land/std/path/mod.ts";
+import { format } from "https://deno.land/x/denops_std/bufname/mod.ts";
+
+// NOTE:
+// Works only on Windows (Use path.win32.toFileUrl instead on other platforms)
+assertEquals(
+  format({
+    scheme: "denops",
+    expr: path.toFileUrl("C:\\Users\John Titor\test.git").pathname,
+  }),
+  "denops:///C:/Users/John%20Titor/test.git",
+);
+```
+
 ### parse
 
 Use `parse()` to parse Vim's buffer name and get a `Bufname` instance like
@@ -149,5 +170,28 @@ assertEquals(
     },
     fragment: "README.md",
   },
+);
+```
+
+This function does not handle path separator differences among platforms. That's
+why it's recommended to restore the `expr` with
+[`fromFileUrl`](https://deno.land/std/path#fromfileurl) after if a buffer name
+was constructed from a real path. For example
+
+```typescript
+import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import * as path from "https://deno.land/std/path/mod.ts";
+import { parse } from "https://deno.land/x/denops_std/bufname/mod.ts";
+
+const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
+assertEquals(bufname, {
+  scheme: "denops",
+  expr: "/C:/Users/John Titor/test.git",
+});
+// NOTE:
+// Works only on Windows (Use path.win32.fromFileUrl instead on other platforms)
+assertEquals(
+  path.fromFileUrl(`file://${bufname.expr}`),
+  "C:\\Users\\John Titor\\test.git",
 );
 ```
