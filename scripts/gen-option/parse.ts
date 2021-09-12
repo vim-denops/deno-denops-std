@@ -7,7 +7,7 @@ import { regexIndexOf } from "./utils.ts";
  * It extract a option definition block like below and return
  * a list of `Definition`.
  *
- * ```
+ * ```text
  * 					*'aleph'* *'al'* *aleph* *Aleph*
  * 'aleph' 'al'		number	(default 224)
  * 			global
