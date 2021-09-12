@@ -16,7 +16,7 @@ Deno.test("encode does nothing on numeric characters", () => {
 Deno.test('encode encodes some symbol characters ("<>|?*)', () => {
   const src = " !\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~";
   const dst = encode(src);
-  const exp = " !%22#$%&'()%2a+,-./:;%3c=%3e%3f@[\\]^`{%7c}~";
+  const exp = " !%22#$%&'()%2A+,-./:;%3C=%3E%3F@[\\]^`{%7C}~";
   assertEquals(dst, exp);
 });
 Deno.test("encode does nothing on 日本語", () => {
@@ -45,7 +45,7 @@ Deno.test("decode does nothing on numeric characters", () => {
   assertEquals(dst, exp);
 });
 Deno.test('decode decodes encoded characters ("<>|?*)', () => {
-  const src = " !%22#$%&'()%2a+,-./:;%3c=%3e%3f@[\\]^`{%7c}~";
+  const src = " !%22#$%&'()%2A+,-./:;%3C=%3E%3F@[\\]^`{%7C}~";
   const dst = decode(src);
   const exp = " !\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~";
   assertEquals(dst, exp);

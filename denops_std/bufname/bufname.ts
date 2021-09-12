@@ -5,8 +5,8 @@ export type BufnameParams = Record<string, string | string[] | undefined>;
 export type Bufname = {
   // Scheme part of a buffer name. Note that Vim supports only alphabets in scheme part.
   scheme: string;
-  // Path part of a buffer name. Note that '<>|?*' are not supported in Vim on Windows.
-  path: string;
+  // Expression part of a buffer name. Note that '<>|?*' are not supported in Vim on Windows.
+  expr: string;
   // Params part of a buffer name. While '?' is not supported, the params part are splitted by ';' instead.
   params?: BufnameParams;
   // Fragment part of a buffer name. This is mainly used to regulate the suffix of the buffer name.
@@ -23,19 +23,28 @@ const schemeUnusablePattern = /[^a-zA-Z]/;
 // https://github.com/vim/vim/blob/36698e34aacee4186e6f5f87f431626752fcb337/src/misc1.c#L2567-L2580
 const schemePattern = /^(\S+):\/\//;
 
-// The path part might contains query and/or fragment
-const pathPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
+// The expr part might contains query and/or fragment
+const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
 
 /**
- * Format Bufname instance to construct Vim's buffer name.
+ * Format a `Bufname` instance and return a safe string as Vim's buffer name.
+ *
+ * It throws errors when `scheme` contains unusable characters (non-alphabet characters).
+ *
+ * All unusable characters ("<>|?*) are replaced with percent-encoded characters.
+ * In addition to the above, all semicolons (;) and sharps (#) in `path` are replaced with
+ * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
+ * ```
  */
-export function format({ scheme, path, params, fragment }: Bufname): string {
+export function format(
+  { scheme, expr, params, fragment }: Bufname,
+): string {
   if (schemeUnusablePattern.test(scheme)) {
     throw new Error(
       `Scheme '${scheme}' contains unusable characters. Only alphabets are allowed.`,
     );
   }
-  const encodedPath = encode(path).replaceAll(";", "%3b").replaceAll(
+  const encodedPath = encode(expr).replaceAll(";", "%3B").replaceAll(
     "#",
     "%23",
   );
@@ -47,18 +56,23 @@ export function format({ scheme, path, params, fragment }: Bufname): string {
 }
 
 /**
- * Parse Vim's buffer name to construct Bufname instance.
+ * Parse Vim's buffer name and return a `Bufname` instance.
+ *
+ * It throws errors when a given `bufname` is not valid Vim's buffer name.
+ * For example, if it contains unusable characters ("<>|?*).
  */
-export function parse(expr: string): Bufname {
-  if (bufnameUnusablePattern.test(expr)) {
+export function parse(bufname: string): Bufname {
+  if (bufnameUnusablePattern.test(bufname)) {
     throw new Error(
-      `Expression '${expr}' contains unusable characters. Vim (on Windows) does not support '<>|?*' in a buffer name.`,
+      `A buffer name '${bufname}' contains unusable characters. Vim (on Windows) does not support '<>|?*' in a buffer name.`,
     );
   }
   // Check if the bufname is remote
-  const m1 = expr.match(schemePattern);
+  const m1 = bufname.match(schemePattern);
   if (!m1) {
-    throw new Error(`Expression '${expr}' does not start from '{scheme}://'.`);
+    throw new Error(
+      `A buffer name '${bufname}' does not start from '{scheme}://'.`,
+    );
   }
   const scheme = m1[1];
   // Vim (less than 8.2.3153) only supports alphabets in scheme part
@@ -67,19 +81,19 @@ export function parse(expr: string): Bufname {
       `Scheme '${scheme}' contains unusable characters. Only alphabets are allowed.`,
     );
   }
-  const remain = decode(expr.substring(`${scheme}://`.length), [
-    "%3b", // ;
+  const remain = decode(bufname.substring(`${scheme}://`.length), [
+    "%3B", // ;
     "%23", // #
   ]);
-  const m2 = remain.match(pathPattern)!;
-  const path = decode(m2[1]);
+  const m2 = remain.match(exprPattern)!;
+  const expr = decode(m2[1]);
   const params = m2[2]
     ? fromURLSearchParams(new URLSearchParams(decode(m2[2])))
     : undefined;
   const fragment = m2[3] ? decode(m2[3]) : undefined;
   return {
     scheme,
-    path,
+    expr,
     ...(params ? { params } : {}),
     ...(fragment ? { fragment } : {}),
   };

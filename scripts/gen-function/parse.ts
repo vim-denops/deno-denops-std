@@ -7,7 +7,7 @@ import { Counter, regexIndexOf } from "./utils.ts";
  * It extract a function definition block like below and return
  * a list of `Definition`.
  *
- * ```
+ * ```text
  * cursor({lnum}, {col} [, {off}])                    *cursor()*
  * cursor({list})
  * 		Positions the cursor at the column ...
@@ -38,7 +38,7 @@ export function parse(content: string): Definition[] {
  *
  * A function definition block is constrcuted with following parts
  *
- * ```
+ * ```text
  * cursor({lnum}, {col} [, {off}])                        <- variant
  * cursor({list})                                         <- variant
  * 		Positions the cursor at the column ...    <- document
@@ -84,7 +84,7 @@ function parseBlock(fn: string, body: string): Definition {
  *
  * A variant is constructed with following parts
  *
- * ```
+ * ```text
  *   fn            args
  * ~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~
  * cursor({lnum}, {col} [, {off}])

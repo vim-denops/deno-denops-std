@@ -1,4 +1,5 @@
 import { assertEquals, assertThrows } from "../deps_test.ts";
+import { path } from "../deps.ts";
 import { format, parse } from "./bufname.ts";
 
 Deno.test("format throws exception when 'scheme' contains unusable characters", () => {
@@ -6,7 +7,7 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
     () =>
       format({
         scheme: "denops0number",
-        path: "/absolute/path/to/worktree",
+        expr: "/absolute/path/to/worktree",
       }),
     undefined,
     "contains unusable characters",
@@ -15,7 +16,7 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
     () =>
       format({
         scheme: "denops+plus",
-        path: "/absolute/path/to/worktree",
+        expr: "/absolute/path/to/worktree",
       }),
     undefined,
     "contains unusable characters",
@@ -24,7 +25,7 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
     () =>
       format({
         scheme: "denops-minus",
-        path: "/absolute/path/to/worktree",
+        expr: "/absolute/path/to/worktree",
       }),
     undefined,
     "contains unusable characters",
@@ -33,7 +34,7 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
     () =>
       format({
         scheme: "denops.dot",
-        path: "/absolute/path/to/worktree",
+        expr: "/absolute/path/to/worktree",
       }),
     undefined,
     "contains unusable characters",
@@ -42,7 +43,7 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
     () =>
       format({
         scheme: "denops_underscore",
-        path: "/absolute/path/to/worktree",
+        expr: "/absolute/path/to/worktree",
       }),
     undefined,
     "contains unusable characters",
@@ -51,25 +52,25 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
 Deno.test("format returns buffer name string from Bufname instance", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
   };
   const dst = format(src);
   const exp = "denops:///absolute/path/to/worktree";
   assertEquals(dst, exp);
 });
-Deno.test("format encodes unusable characters in 'path'", () => {
+Deno.test("format encodes unusable characters in 'expr'", () => {
   const src = {
     scheme: "denops",
-    path: "<>|?*",
+    expr: "/<>|?*",
   };
   const dst = format(src);
-  const exp = "denops://%3c%3e%7c%3f%2a";
+  const exp = "denops:///%3C%3E%7C%3F%2A";
   assertEquals(dst, exp);
 });
 Deno.test("format returns buffer name string from Bufname instance (with URLSearchParams)", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "foo",
       bar: ["bar", "bar"],
@@ -83,19 +84,19 @@ Deno.test("format returns buffer name string from Bufname instance (with URLSear
 Deno.test("format encodes unusable characters in 'params'", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "<>|?*",
     },
   };
   const dst = format(src);
-  const exp = "denops:///absolute/path/to/worktree;foo=%3C%3E%7C%3F%2a";
+  const exp = "denops:///absolute/path/to/worktree;foo=%3C%3E%7C%3F%2A";
   assertEquals(dst, exp);
 });
 Deno.test("format returns buffer name string from Bufname instance (with fragment)", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     fragment: "Hello World.md",
   };
   const dst = format(src);
@@ -105,17 +106,17 @@ Deno.test("format returns buffer name string from Bufname instance (with fragmen
 Deno.test("format encodes unusable characters in 'fragment'", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     fragment: "<>|?*",
   };
   const dst = format(src);
-  const exp = "denops:///absolute/path/to/worktree#%3c%3e%7c%3f%2a";
+  const exp = "denops:///absolute/path/to/worktree#%3C%3E%7C%3F%2A";
   assertEquals(dst, exp);
 });
 Deno.test("format returns buffer name string from Bufname instance (with URLSearchParams and fragment)", () => {
   const src = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "foo",
       bar: ["bar", "bar"],
@@ -128,18 +129,81 @@ Deno.test("format returns buffer name string from Bufname instance (with URLSear
     "denops:///absolute/path/to/worktree;foo=foo&bar=bar&bar=bar#Hello World.md";
   assertEquals(dst, exp);
 });
-Deno.test("format encodes ';' and '#' in 'path'", () => {
+Deno.test("format encodes ';' and '#' in 'expr'", () => {
   const src = {
     scheme: "denops",
-    path: "hello;world#hello",
+    expr: "/hello;world#hello",
   };
   const dst = format(src);
-  const exp = "denops://hello%3bworld%23hello";
+  const exp = "denops:///hello%3Bworld%23hello";
   assertEquals(dst, exp);
+});
+Deno.test("format encodes '#' in 'params'", () => {
+  const src = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "#foo",
+    },
+  };
+  const dst = format(src);
+  const exp = "denops:///absolute/path/to/worktree;foo=%23foo";
+  assertEquals(dst, exp);
+});
+Deno.test("format pass example in README.md", () => {
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+    }),
+    "denops:///Users/John Titor/test.git",
+  );
+
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      params: {
+        foo: "foo",
+        bar: ["bar1", "bar2"],
+      },
+    }),
+    "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2",
+  );
+
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      fragment: "README.md",
+    }),
+    "denops:///Users/John Titor/test.git#README.md",
+  );
+
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      params: {
+        foo: "foo",
+        bar: ["bar1", "bar2"],
+      },
+      fragment: "README.md",
+    }),
+    "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+  );
+
+  assertEquals(
+    format({
+      scheme: "denops",
+      expr: path.win32.toFileUrl("C:\\Users\\John Titor\\test.git").pathname,
+    }),
+    "denops:///C:/Users/John%20Titor/test.git",
+  );
 });
 
 Deno.test("parse throws exception when 'expr' contains unusable characters", () => {
-  const src = "denops://<>|?*";
+  const src = "denops:///<>|?*";
   assertThrows(
     () => {
       parse(src);
@@ -180,16 +244,16 @@ Deno.test("parse returns Bufname instance from buffer name", () => {
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
   };
   assertEquals(dst, exp);
 });
-Deno.test("parse decodes percent-encoded characters in 'path'", () => {
-  const src = "denops://%3c%3e%7c%3f%2a";
+Deno.test("parse decodes percent-encoded characters in 'expr'", () => {
+  const src = "denops:///%3C%3E%7C%3F%2A";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "<>|?*",
+    expr: "/<>|?*",
   };
   assertEquals(dst, exp);
 });
@@ -198,7 +262,7 @@ Deno.test("parse returns Bufname instance from buffer name (with params)", () =>
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "foo",
       bar: ["bar", "bar"],
@@ -207,11 +271,11 @@ Deno.test("parse returns Bufname instance from buffer name (with params)", () =>
   assertEquals(dst, exp);
 });
 Deno.test("parse decodes percent-encoded characters in 'params'", () => {
-  const src = "denops:///absolute/path/to/worktree;foo=%3C%3E%7C%3F%2a";
+  const src = "denops:///absolute/path/to/worktree;foo=%3C%3E%7C%3F%2A";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "<>|?*",
     },
@@ -223,17 +287,17 @@ Deno.test("parse returns Bufname instance from buffer name (with fragment)", () 
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     fragment: "Hello World.md",
   };
   assertEquals(dst, exp);
 });
 Deno.test("parse decodes percent-encoded characters in 'fragment'", () => {
-  const src = "denops:///absolute/path/to/worktree#%3c%3e%7c%3f%2a";
+  const src = "denops:///absolute/path/to/worktree#%3C%3E%7C%3F%2A";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     fragment: "<>|?*",
   };
   assertEquals(dst, exp);
@@ -244,7 +308,7 @@ Deno.test("parse returns Bufname instance from buffer name (with params and frag
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "/absolute/path/to/worktree",
+    expr: "/absolute/path/to/worktree",
     params: {
       foo: "foo",
       bar: ["bar", "bar"],
@@ -253,12 +317,82 @@ Deno.test("parse returns Bufname instance from buffer name (with params and frag
   };
   assertEquals(dst, exp);
 });
-Deno.test("parse decode percent-encoded characters (';' and '#') in 'path'", () => {
-  const src = "denops://hello%3bworld%23hello";
+Deno.test("parse decode percent-encoded characters (';' and '#') in 'expr'", () => {
+  const src = "denops:///hello%3Bworld%23hello";
   const dst = parse(src);
   const exp = {
     scheme: "denops",
-    path: "hello;world#hello",
+    expr: "/hello;world#hello",
   };
   assertEquals(dst, exp);
+});
+Deno.test("parse decode percent-encoded characters ('#') in 'params'", () => {
+  const src = "denops:///absolute/path/to/worktree;foo=%23foo";
+  const dst = parse(src);
+  const exp = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "#foo",
+    },
+  };
+  assertEquals(dst, exp);
+});
+Deno.test("parse pass example in README.md", () => {
+  assertEquals(
+    parse("denops:///Users/John Titor/test.git"),
+    {
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+    },
+  );
+
+  assertEquals(
+    parse("denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2"),
+    {
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      params: {
+        foo: "foo",
+        bar: ["bar1", "bar2"],
+      },
+    },
+  );
+
+  assertEquals(
+    parse("denops:///Users/John Titor/test.git#README.md"),
+    {
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      fragment: "README.md",
+    },
+  );
+
+  assertEquals(
+    parse(
+      "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+    ),
+    {
+      scheme: "denops",
+      expr: "/Users/John Titor/test.git",
+      params: {
+        foo: "foo",
+        bar: ["bar1", "bar2"],
+      },
+      fragment: "README.md",
+    },
+  );
+
+  const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
+  assertEquals(
+    bufname,
+    {
+      scheme: "denops",
+      expr: "/C:/Users/John Titor/test.git",
+    },
+  );
+  assertEquals(
+    path.win32.fromFileUrl(`file://${bufname.expr}`),
+    "C:\\Users\\John Titor\\test.git",
+  );
 });
