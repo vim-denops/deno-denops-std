@@ -3,7 +3,6 @@ import { Denops } from "../../deps.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
- *
  * 		{only available when compiled with the |+farsi|
  * 		feature}
  * This option was for using Farsi, which has been removed.  See
@@ -31,7 +30,6 @@ export const altkeymap = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled
  * 		on Mac OS X}
  * This option only has an effect in the GUI version of Vim on Mac OS X
@@ -63,7 +61,6 @@ export const antialias = {
 };
 
 /**
- *
  * 		{only available when compiled with the
  * 		|+balloon_eval_term| feature}
  * Switch on the |balloon-eval| functionality for the terminal.
@@ -90,7 +87,6 @@ export const balloonevalterm = {
 };
 
 /**
- *
  * 		{only for MS-DOS}
  * This was for MS-DOS and is no longer supported.
  */
@@ -116,7 +112,6 @@ export const bioskey = {
 };
 
 /**
- *
  * This option has the effect of making Vim either more Vi-compatible, or
  * make Vim behave in a more useful way.
  */
@@ -142,7 +137,6 @@ export const compatible = {
 };
 
 /**
- *
  * 		{only for MS-Windows}
  * When this option is set it overrules 'shellslash' for completion:
  * - When this option is set to "slash", a forward slash is used for path
@@ -177,7 +171,6 @@ export const completeslash = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+textprop|
  * 		or |+quickfix| feature}
  * When 'completeopt' contains "popup" then this option is used for the
@@ -207,7 +200,6 @@ export const completepopup = {
 };
 
 /**
- *
  * This was for MS-DOS and is no longer supported.
  */
 export const conskey = {
@@ -232,7 +224,6 @@ export const conskey = {
 };
 
 /**
- *
  * Method used for encryption when the buffer is written to a file:
  *    zip		PkZip compatible method.  A weak kind of encryption.
  * 		Backwards compatible with Vim 7.2 and older.
@@ -279,7 +270,6 @@ export const cryptmethod = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * Give messages when adding a cscope database.  See |cscopeverbose|.
@@ -307,7 +297,6 @@ export const cscopeverbose = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Comma separated list of settings for how 'cursorline' is displayed.
@@ -341,7 +330,6 @@ export const cursorlineopt = {
 };
 
 /**
- *
  * Makes the 'g' and 'c' flags of the ":substitute" command to be
  * toggled each time the flag is given.  See |complex-change|.  See
  * also 'gdefault' option.
@@ -369,7 +357,6 @@ export const edcompatible = {
 };
 
 /**
- *
  * Function keys that start with an <Esc> are recognized in Insert
  * mode.  When this option is off, the cursor and function keys cannot be
  * used in Insert mode if they start with an <Esc>.  The advantage of
@@ -406,7 +393,6 @@ export const esckeys = {
 };
 
 /**
- *
  * Enables the reading of .vimrc, .exrc and .gvimrc in the current
  * directory.
  */
@@ -432,7 +418,6 @@ export const exrc = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * This option was for using Farsi, which has been removed.  See
@@ -460,7 +445,6 @@ export const fkmap = {
 };
 
 /**
- *
  * 		{only for GTK and X11 GUI}
  * The number of pixels subtracted from the screen height when fitting
  * the GUI window on the screen.  Set this before the GUI is started,
@@ -492,7 +476,6 @@ export const guiheadroom = {
 };
 
 /**
- *
  * This option can be used to set highlighting mode for various
  * occasions.  It is a comma separated list of character pairs.  The
  * first character in a pair gives the occasion, the second the mode to
@@ -568,7 +551,6 @@ export const highlight = {
 };
 
 /**
- *
  * This option specifies a function that will be called to
  * activate or deactivate the Input Method.
  * It is not used in the GUI.
@@ -597,7 +579,6 @@ export const imactivatefunc = {
 };
 
 /**
- *
  * 		{only available when compiled with |+xim| and
  * 		|+GUI_GTK|}
  * Specifies the key that your Input Method in X-Windows uses for
@@ -630,7 +611,6 @@ export const imactivatekey = {
 };
 
 /**
- *
  * This option specifies a function that is called to obtain the status
  * of Input Method.  It must return a positive number when IME is active.
  * It is not used in the GUI.
@@ -657,7 +637,6 @@ export const imstatusfunc = {
 };
 
 /**
- *
  * 		{only available when compiled with |+xim| and
  * 		|+GUI_GTK|}
  * This option specifies the input style of Input Method:
@@ -687,7 +666,6 @@ export const imstyle = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+langmap|
  * 		feature}
  * This is just like 'langremap' but with the value inverted.  It only
@@ -716,7 +694,6 @@ export const langnoremap = {
 };
 
 /**
- *
  * Maximum amount of memory (in Kbyte) to use for one buffer.  When this
  * limit is reached allocating extra memory for a buffer will cause
  * other memory to be freed.
@@ -747,7 +724,6 @@ export const maxmem = {
 };
 
 /**
- *
  * Maximum amount of memory in Kbyte to use for all buffers together.
  * The maximum usable value is about 2000000 (2 Gbyte).  Use this to work
  * without a limit.
@@ -781,7 +757,6 @@ export const maxmemtot = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+mzscheme|
  * 		feature}
  * The number of milliseconds between polls for MzScheme threads.
@@ -811,7 +786,6 @@ export const mzquantum = {
 };
 
 /**
- *
  * This option was supported on RISC OS, which has been removed.
  */
 export const osfiletype = {
@@ -836,7 +810,6 @@ export const osfiletype = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+textprop|
  * 		or |+quickfix| feature}
  * When not empty a popup window is used for commands that would open a
@@ -866,7 +839,6 @@ export const previewpopup = {
 };
 
 /**
- *
  * Determines the minimum width to use for the popup menu for Insert mode
  * completion.  |ins-completion-menu|.
  */
@@ -892,7 +864,6 @@ export const pumwidth = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI and DIRECTX on
  * 		MS-Windows}
  * Select a text renderer and set its options.  The options depend on the
@@ -920,7 +891,6 @@ export const renderoptions = {
 };
 
 /**
- *
  * 		{only in MS-Windows console version}
  * When set, the screen contents is restored when exiting Vim.  This also
  * happens when executing external commands.
@@ -947,7 +917,6 @@ export const restorescreen = {
 };
 
 /**
- *
  * 		{only for MS-Windows GUI}
  * When using the scroll wheel and this option is set, the window under
  * the mouse pointer is scrolled.  With this option off the current
@@ -976,7 +945,6 @@ export const scrollfocus = {
 };
 
 /**
- *
  * 		{only for the Amiga}
  * On the Amiga this option influences the way how the commands work
  * which use a shell.
@@ -1007,7 +975,6 @@ export const shelltype = {
 };
 
 /**
- *
  * Filenames are assumed to be 8 characters plus one extension of 3
  * characters.  Multiple dots in file names are not allowed.  When this
  * option is on, dots in file names are replaced with underscores when
@@ -1037,7 +1004,6 @@ export const shortname = {
 };
 
 /**
- *
  * When this option is not empty a swap file is synced to disk after
  * writing to it.  This takes some time, especially on busy unix systems.
  * When this option is empty parts of the swap file may be in memory and
@@ -1071,7 +1037,6 @@ export const swapsync = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+eval|
  * 		feature}
  * This option specifies a function to be used to perform tag searches.
@@ -1101,7 +1066,6 @@ export const tagfunc = {
 };
 
 /**
- *
  * Encoding used for the terminal.  This specifies what character
  * encoding the keyboard produces and the display will understand.  For
  * the GUI it only applies to the keyboard ('encoding' is used for the
@@ -1148,7 +1112,6 @@ export const termencoding = {
 };
 
 /**
- *
  * The key that starts a CTRL-W command in a terminal window.  Other keys
  * are sent to the job running in the window.
  * The <> notation can be used, e.g.: >
@@ -1180,7 +1143,6 @@ export const termwinkey = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+terminal| feature}
  * Number of scrollback lines to keep.  When going over this limit the
@@ -1209,7 +1171,6 @@ export const termwinscroll = {
 };
 
 /**
- *
  * Size of the |terminal| window.  Format: {rows}x{columns} or
  * {rows}*{columns}.
  * - When empty the terminal gets the size from the window.
@@ -1245,7 +1206,6 @@ export const termwinsize = {
 };
 
 /**
- *
  * 		{only available when compiled with the |terminal|
  * 		feature on MS-Windows}
  * Specify the virtual console (pty) used when opening the terminal
@@ -1273,7 +1233,6 @@ export const termwintype = {
 };
 
 /**
- *
  * This option is obsolete.  Use 'fileformats'.
  * For backwards compatibility, when 'textauto' is set, 'fileformats' is
  * set to the default value for the current system.  When 'textauto' is
@@ -1303,7 +1262,6 @@ export const textauto = {
 };
 
 /**
- *
  * This option is obsolete.  Use 'fileformat'.
  * For backwards compatibility, when 'textmode' is set, 'fileformat' is
  * set to "dos".  When 'textmode' is reset, 'fileformat' is set to
@@ -1331,7 +1289,6 @@ export const textmode = {
 };
 
 /**
- *
  * 		{only for |+GUI_GTK|, |+GUI_Athena|, |+GUI_Motif| and
  * 		|+GUI_Photon|}
  * The contents of this option controls various toolbar settings.  The
@@ -1366,7 +1323,6 @@ export const toolbar = {
 };
 
 /**
- *
  * 			global
  * 			{only in the GTK+ GUI}
  * Controls the size of toolbar icons.  The possible values are:
@@ -1402,7 +1358,6 @@ export const toolbariconsize = {
 };
 
 /**
- *
  * When on, the builtin termcaps are searched before the external ones.
  * When off the builtin termcaps are searched after the external ones.
  * When this option is changed, you should set the 'term' option next for
@@ -1435,7 +1390,6 @@ export const ttybuiltin = {
 };
 
 /**
- *
  * 		{only in Unix and VMS, doesn't work in the GUI; not
  * 		available when compiled without |+mouse|}
  * Name of the terminal type for which mouse codes are to be recognized.
@@ -1495,7 +1449,6 @@ export const ttymouse = {
 };
 
 /**
- *
  * Maximum number of lines to scroll the screen.  If there are more lines
  * to scroll the window is redrawn.  For terminals where scrolling is
  * very slow and redrawing is not slow this can be set to a small number,
@@ -1523,7 +1476,6 @@ export const ttyscroll = {
 };
 
 /**
- *
  * Alias for 'term', see above.
  */
 export const ttytype = {
@@ -1548,7 +1500,6 @@ export const ttytype = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+vartabs|
  * 		feature}
  * A list of the number of spaces that a <Tab> counts for while editing,
@@ -1579,7 +1530,6 @@ export const varsofttabstop = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+vartabs|
  * 		feature}
  * A list of the number of spaces that a <Tab> in the file counts for,
@@ -1611,7 +1561,6 @@ export const vartabstop = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+viminfo|
  * 		feature}
  * When non-empty, the viminfo file is read upon startup and written
@@ -1709,7 +1658,6 @@ export const viminfo = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+viminfo|
  * 		feature}
  * When non-empty, overrides the file name used for viminfo.
@@ -1741,7 +1689,6 @@ export const viminfofile = {
 };
 
 /**
- *
  * This option has the same effect as the 't_xs' terminal option.
  * It is provided for backwards compatibility with version 4.x.
  * Setting 'weirdinvert' has the effect of making 't_xs' non-empty, and
@@ -1769,7 +1716,6 @@ export const weirdinvert = {
 };
 
 /**
- *
  * Highlight group name to use for this window instead of the Normal
  * color |hl-Normal|.
  */

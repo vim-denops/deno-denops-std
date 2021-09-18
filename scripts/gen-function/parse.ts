@@ -46,7 +46,6 @@ export function parse(content: string): Definition[] {
  * ```
  *
  * This function parse content like above and return `Definition`.
- *
  */
 function parseBlock(fn: string, body: string): Definition {
   // Remove '\n' in {variant} to make {variant} single line (ex. `searchpairpos`)
@@ -94,7 +93,6 @@ function parseBlock(fn: string, body: string): Definition {
  * ```
  *
  * This function parse content like above and return `Variant`.
- *
  */
 function parseVariant(variant: string): Variant | undefined {
   // Extract {args} part from {variant}
