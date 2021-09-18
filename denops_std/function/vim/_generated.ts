@@ -67,9 +67,7 @@ export function balloon_split(
   return denops.call("balloon_split", ...args);
 }
 
-/**
- *
- */
+/**/
 export function buffer_exists(denops: Denops): Promise<unknown>;
 export function buffer_exists(
   denops: Denops,
@@ -100,9 +98,7 @@ export function buffer_number(
   return denops.call("buffer_number", ...args);
 }
 
-/**
- *
- */
+/**/
 export function last_buffer_nr(denops: Denops): Promise<unknown>;
 export function last_buffer_nr(
   denops: Denops,

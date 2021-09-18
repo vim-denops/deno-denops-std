@@ -3,7 +3,6 @@ import { Denops } from "./../deps.ts";
 import { globalOptions, localOptions, options } from "./../variable/mod.ts";
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * The ASCII code for the first letter of the Hebrew alphabet.  The
@@ -35,7 +34,6 @@ export const aleph = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * Allow CTRL-_ in Insert and Command-line mode.  This is default off, to
@@ -66,7 +64,6 @@ export const allowrevins = {
 };
 
 /**
- *
  * Only effective when 'encoding' is "utf-8" or another Unicode encoding.
  * Tells Vim what to do with characters with East Asian Width Class
  * Ambiguous (such as Euro, Registered Sign, Copyright Sign, Greek
@@ -94,7 +91,6 @@ export const ambiwidth = {
 };
 
 /**
- *
  * 		{only available when compiled with it, use
  * 		exists("+autochdir") to check}
  * When on, Vim will change the current working directory whenever you
@@ -125,7 +121,6 @@ export const autochdir = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+arabic|
  * 		feature}
  * This option can be set to start editing Arabic text.
@@ -159,7 +154,6 @@ export const arabic = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+arabic|
  * 		feature}
  * When on and 'termbidi' is off, the required visual character
@@ -198,7 +192,6 @@ export const arabicshape = {
 };
 
 /**
- *
  * Copy indent from current line when starting a new line (typing <CR>
  * in Insert mode or when using the "o" or "O" command).  If you do not
  * type anything on the new line except <BS> or CTRL-D and then type
@@ -235,7 +228,6 @@ export const autoindent = {
 };
 
 /**
- *
  * When a file has been detected to have been changed outside of Vim and
  * it has not been changed inside of Vim, automatically read it again.
  * When the file has been deleted this is not done, so you have the text
@@ -277,7 +269,6 @@ export const autoread = {
 };
 
 /**
- *
  * Write the contents of the file, if it has been modified, on each
  * :next, :rewind, :last, :first, :previous, :stop, :suspend, :tag, :!,
  * :make, CTRL-] and CTRL-^ command; and when a :buffer, CTRL-O, CTRL-I,
@@ -309,7 +300,6 @@ export const autowrite = {
 };
 
 /**
- *
  * Like 'autowrite', but also used for commands ":edit", ":enew", ":quit",
  * ":qall", ":exit", ":xit", ":recover" and closing the Vim window.
  * Setting this option also implies that Vim behaves like 'autowrite' has
@@ -337,7 +327,6 @@ export const autowriteall = {
 };
 
 /**
- *
  * When set to "dark", Vim will try to use colors that look good on a
  * dark background.  When set to "light", Vim will try to use colors that
  * look good on a light background.  Any other value is illegal.
@@ -369,7 +358,6 @@ export const background = {
 };
 
 /**
- *
  * Influences the working of <BS>, <Del>, CTRL-W and CTRL-U in Insert
  * mode.  This is a list of items, separated by commas.  Each item allows
  * a way to backspace over something:
@@ -403,7 +391,6 @@ export const backspace = {
 };
 
 /**
- *
  * Make a backup before overwriting a file.  Leave it around after the
  * file has been successfully written.  If you do not want to keep the
  * backup file, but you do want a backup while the file is being
@@ -438,7 +425,6 @@ export const backup = {
 };
 
 /**
- *
  * When writing a file and a backup is made, this option tells how it's
  * done.  This is a comma separated list of words.
  */
@@ -473,7 +459,6 @@ export const backupcopy = {
 };
 
 /**
- *
  * List of directories for the backup file, separated with commas.
  * - The backup file will be created in the first directory in the list
  *   where this is possible.  The directory must exist, Vim will not
@@ -538,7 +523,6 @@ export const backupdir = {
 };
 
 /**
- *
  * String which is appended to a file name to make the name of the
  * backup file.  The default is quite unusual, because this avoids
  * accidentally overwriting existing files with a backup file.  You might
@@ -568,7 +552,6 @@ export const backupext = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+wildignore|
  * 		feature}
  * A list of file patterns.  When one of the patterns matches with the
@@ -601,7 +584,6 @@ export const backupskip = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+balloon_eval|
  * 		feature}
  * Delay in milliseconds before a balloon may pop up.  See |balloon-eval|.
@@ -628,7 +610,6 @@ export const balloondelay = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+balloon_eval|
  * 		feature}
  * Switch on the |balloon-eval| functionality for the GUI.
@@ -655,7 +636,6 @@ export const ballooneval = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+balloon_eval|
  * 		feature}
  * Expression for text to show in evaluation balloon.  It is only used
@@ -693,7 +673,6 @@ export const balloonexpr = {
 };
 
 /**
- *
  * Specifies for which events the bell will not be rung. It is a comma
  * separated list of items. For each item that is present, the bell
  * will be silenced. This is most useful to specify specific events in
@@ -721,7 +700,6 @@ export const belloff = {
 };
 
 /**
- *
  * This option should be set before editing a binary file.  You can also
  * use the |-b| Vim argument.  When this option is switched on a few
  * options will be changed (also when it already was on):
@@ -771,7 +749,6 @@ export const binary = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+linebreak|
  * 		feature}
  * This option lets you choose which characters might cause a line
@@ -800,7 +777,6 @@ export const breakat = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+linebreak|
  * 		feature}
  * Every wrapped line will continue visually indented (same amount of
@@ -830,7 +806,6 @@ export const breakindent = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+linebreak|
  * 		feature}
  * Settings for 'breakindent'. It can consist of the following optional
@@ -871,7 +846,6 @@ export const breakindentopt = {
 };
 
 /**
- *
  * 		{only for Motif, Athena, GTK, Mac and Win32 GUI}
  * Which directory to use for the file browser:
  *    last		Use same directory as with last file browser, where a
@@ -902,7 +876,6 @@ export const browsedir = {
 };
 
 /**
- *
  * This option specifies what happens when a buffer is no longer
  * displayed in a window:
  *   <empty>	follow the global 'hidden' option
@@ -939,7 +912,6 @@ export const bufhidden = {
 };
 
 /**
- *
  * When this option is set, the buffer shows up in the buffer list.  If
  * it is reset it is not used for ":bnext", "ls", the Buffers menu, etc.
  * This option is reset by Vim for buffers that are only used to remember
@@ -968,7 +940,6 @@ export const buflisted = {
 };
 
 /**
- *
  * The value of this option specifies the type of a buffer:
  *   <empty>	normal buffer
  *   nofile	buffer which is not related to a file and will not be
@@ -1010,7 +981,6 @@ export const buftype = {
 };
 
 /**
- *
  * Specifies details about changing the case of letters.  It may contain
  * these words, separated by a comma:
  * internal	Use internal case mapping functions, the current
@@ -1045,7 +1015,6 @@ export const casemap = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+file_in_path| feature}
  * This is a list of directories which will be searched when using the
@@ -1086,7 +1055,6 @@ export const cdpath = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+eval| feature}
  * An expression that is used for character encoding conversion.  It is
  * evaluated when a file that is to be read or has been written has a
@@ -1149,7 +1117,6 @@ export const charconvert = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cindent|
  * 		feature}
  * Enables automatic C program indenting.  See 'cinkeys' to set the keys
@@ -1187,7 +1154,6 @@ export const cindent = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cindent|
  * 		feature}
  * A list of keys that, when typed in Insert mode, cause reindenting of
@@ -1218,7 +1184,6 @@ export const cinkeys = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cindent|
  * 		feature}
  * The 'cinoptions' affect the way 'cindent' reindents lines in a C
@@ -1247,7 +1212,6 @@ export const cinoptions = {
 };
 
 /**
- *
  * 		{not available when compiled without both the
  * 		|+cindent| and the |+smartindent| features}
  * These keywords start an extra indent in the next line when
@@ -1279,7 +1243,6 @@ export const cinwords = {
 };
 
 /**
- *
  * 		{only in GUI versions or when the |+xterm_clipboard|
  * 		feature is included}
  * This option is a list of comma separated names.
@@ -1307,7 +1270,6 @@ export const clipboard = {
 };
 
 /**
- *
  * Number of screen lines to use for the command-line.  Helps avoiding
  * |hit-enter| prompts.
  * The value of this option is stored with the tab page, so that each tab
@@ -1335,7 +1297,6 @@ export const cmdheight = {
 };
 
 /**
- *
  * Number of screen lines to use for the command-line window. |cmdwin|
  */
 export const cmdwinheight = {
@@ -1360,7 +1321,6 @@ export const cmdwinheight = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * 'colorcolumn' is a comma separated list of screen columns that are
@@ -1391,7 +1351,6 @@ export const colorcolumn = {
 };
 
 /**
- *
  * Number of columns of the screen.  Normally this is set by the terminal
  * initialization and does not have to be set by hand.  Also see
  * |posix-screen-size|.
@@ -1428,7 +1387,6 @@ export const columns = {
 };
 
 /**
- *
  * A comma separated list of strings that can start a comment line.  See
  * |format-comments|.  See |option-backslash| about using backslashes to
  * insert a space.
@@ -1455,7 +1413,6 @@ export const comments = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * A template for a comment.  The "%s" in the value is replaced with the
@@ -1484,7 +1441,6 @@ export const commentstring = {
 };
 
 /**
- *
  * This option specifies how keyword completion |ins-completion| works
  * when CTRL-P or CTRL-N are used.  It is also used for whole-line
  * completion |i_CTRL-X_CTRL-L|.  It indicates the type of completion
@@ -1530,7 +1486,6 @@ export const complete = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+eval|
  * 		feature}
  * This option specifies a function to be used for Insert mode completion
@@ -1562,7 +1517,6 @@ export const completefunc = {
 };
 
 /**
- *
  * A comma separated list of options for Insert mode completion
  * |ins-completion|.  The supported values are:
  */
@@ -1588,7 +1542,6 @@ export const completeopt = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+conceal|
  * 		feature}
  * Sets the modes in which text in the cursor line can also be concealed.
@@ -1621,7 +1574,6 @@ export const concealcursor = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+conceal|
  * 		feature}
  * Determine how text with the "conceal" syntax attribute |:syn-conceal|
@@ -1649,7 +1601,6 @@ export const conceallevel = {
 };
 
 /**
- *
  * When 'confirm' is on, certain operations that would normally
  * fail because of unsaved changes to a buffer, e.g. ":q" and ":e",
  * instead raise a |dialog| asking if you wish to save the current
@@ -1681,7 +1632,6 @@ export const confirm = {
 };
 
 /**
- *
  * Copy the structure of the existing lines indent when autoindenting a
  * new line.  Normally the new indent is reconstructed by a series of
  * tabs followed by spaces as required (unless |'expandtab'| is enabled,
@@ -1715,7 +1665,6 @@ export const copyindent = {
 };
 
 /**
- *
  * A sequence of single character flags.  When a character is present
  * this indicates Vi-compatible behavior.  This is used for things where
  * not being Vi-compatible is mostly or sometimes preferred.
@@ -1752,7 +1701,6 @@ export const cpoptions = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * Determines how many components of the path to show in a list of tags.
@@ -1781,7 +1729,6 @@ export const cscopepathcomp = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * Specifies the command to execute cscope.  See |cscopeprg|.
@@ -1810,7 +1757,6 @@ export const cscopeprg = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		or |+quickfix| features}
  * Specifies whether to use quickfix window to show cscope results.
@@ -1838,7 +1784,6 @@ export const cscopequickfix = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * In the absence of a prefix (-P) for cscope. setting this option enables
@@ -1868,7 +1813,6 @@ export const cscoperelative = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * Use cscope for tag commands.  See |cscope-options|.
@@ -1896,7 +1840,6 @@ export const cscopetag = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cscope|
  * 		feature}
  * Determines the order in which ":cstag" performs a search.  See
@@ -1925,7 +1868,6 @@ export const cscopetagorder = {
 };
 
 /**
- *
  * When this option is set, as the cursor in the current
  * window moves other cursorbound windows (windows that also have
  * this option set) move their cursors to the corresponding line and
@@ -1956,7 +1898,6 @@ export const cursorbind = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Highlight the screen column of the cursor with CursorColumn
@@ -1990,7 +1931,6 @@ export const cursorcolumn = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Highlight the text line of the cursor with CursorLine |hl-CursorLine|.
@@ -2020,7 +1960,6 @@ export const cursorline = {
 };
 
 /**
- *
  * Pattern to be used to find a macro definition.  It is a search
  * pattern, just like for the "/" command.  This option is used for the
  * commands like "[i" and "[d" |include-search|.  The 'isident' option is
@@ -2073,7 +2012,6 @@ export const define = {
 };
 
 /**
- *
  * If editing Unicode and this option is set, backspace and Normal mode
  * "x" delete each combining character on its own.  When it is off (the
  * default) the character along with its combining characters are
@@ -2102,7 +2040,6 @@ export const delcombine = {
 };
 
 /**
- *
  * List of file names, separated by commas, that are used to lookup words
  * for keyword completion commands |i_CTRL-X_CTRL-K|.  Each file should
  * contain a list of words.  This can be one word per line, or several
@@ -2140,7 +2077,6 @@ export const dictionary = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+diff|
  * 		feature}
  * Expression which is evaluated to obtain a diff file (either ed-style
@@ -2170,7 +2106,6 @@ export const diffexpr = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+diff|
  * 		feature}
  * Option settings for diff mode.  It can consist of the following items.
@@ -2198,7 +2133,6 @@ export const diffopt = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+digraphs|
  * 		feature}
  * Enable the entering of digraphs in Insert mode with {char1} <BS>
@@ -2227,7 +2161,6 @@ export const digraph = {
 };
 
 /**
- *
  * List of directory names for the swap file, separated with commas.
  * - The swap file will be created in the first directory where this is
  *   possible.
@@ -2294,7 +2227,6 @@ export const directory = {
 };
 
 /**
- *
  * Change the way text is displayed.  This is comma separated list of
  * flags:
  * lastline	When included, as much as possible of the last line
@@ -2328,7 +2260,6 @@ export const display = {
 };
 
 /**
- *
  * Tells when the 'equalalways' option applies:
  * 	ver	vertically, width of windows is not affected
  * 	hor	horizontally, height of windows is not affected
@@ -2356,7 +2287,6 @@ export const eadirection = {
 };
 
 /**
- *
  * When on all Unicode emoji characters are considered to be full width.
  */
 export const emoji = {
@@ -2381,7 +2311,6 @@ export const emoji = {
 };
 
 /**
- *
  * Sets the character encoding used inside Vim.  It applies to text in
  * the buffers, registers, Strings in expressions, text stored in the
  * viminfo file, etc.  It sets the kind of characters which Vim can work
@@ -2409,7 +2338,6 @@ export const encoding = {
 };
 
 /**
- *
  * When writing a file and this option is off and the 'binary' option
  * is on, or 'fixeol' option is off, no <EOL> will be written for the
  * last line in the file.  This option is automatically set or reset when
@@ -2444,7 +2372,6 @@ export const endofline = {
 };
 
 /**
- *
  * When on, all the windows are automatically made the same size after
  * splitting or closing a window.  This also happens the moment the
  * option is switched on.  When off, splitting a window will reduce the
@@ -2482,7 +2409,6 @@ export const equalalways = {
 };
 
 /**
- *
  * External program to use for "=" command.  When this option is empty
  * the internal formatting functions are used; either 'lisp', 'cindent'
  * or 'indentexpr'.  When Vim was compiled without internal formatting,
@@ -2523,7 +2449,6 @@ export const equalprg = {
 };
 
 /**
- *
  * Ring the bell (beep or screen flash) for error messages.  This only
  * makes a difference for error messages, the bell will be used always
  * for a lot of errors without a message (e.g., hitting <Esc> in Normal
@@ -2553,7 +2478,6 @@ export const errorbells = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * Name of the errorfile for the QuickFix mode (see |:cf|).
@@ -2587,7 +2511,6 @@ export const errorfile = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * Scanf-like description of the format for the lines in the error file
@@ -2624,7 +2547,6 @@ export const errorformat = {
 };
 
 /**
- *
  * A list of autocommand event names, which are to be ignored.
  * When set to "all" or when "all" is one of the items, all autocommand
  * events are ignored, autocommands will not be executed.
@@ -2654,7 +2576,6 @@ export const eventignore = {
 };
 
 /**
- *
  * In Insert mode: Use the appropriate number of spaces to insert a
  * <Tab>.  Spaces are used in indents with the '>' and '<' commands and
  * when 'autoindent' is on.  To insert a real tab when 'expandtab' is
@@ -2685,7 +2606,6 @@ export const expandtab = {
 };
 
 /**
- *
  * Sets the character encoding for the file of this buffer.
  */
 export const fileencoding = {
@@ -2710,7 +2630,6 @@ export const fileencoding = {
 };
 
 /**
- *
  * This is a list of character encodings considered when starting to edit
  * an existing file.  When a file is read, Vim tries to use the first
  * mentioned character encoding.  If an error is detected, the next one
@@ -2785,7 +2704,6 @@ export const fileencodings = {
 };
 
 /**
- *
  * This gives the <EOL> of the current buffer, which is used for
  * reading/writing the buffer from/to a file:
  *     dos	    <CR> <NL>
@@ -2826,7 +2744,6 @@ export const fileformat = {
 };
 
 /**
- *
  * This gives the end-of-line (<EOL>) formats that will be tried when
  * starting to edit a new buffer and when reading a file into an existing
  * buffer:
@@ -2881,7 +2798,6 @@ export const fileformats = {
 };
 
 /**
- *
  * When set case is ignored when using file names and directories.
  * See 'wildignorecase' for only ignoring case when doing completion.
  */
@@ -2907,7 +2823,6 @@ export const fileignorecase = {
 };
 
 /**
- *
  * When this option is set, the FileType autocommand event is triggered.
  * All autocommands that match with the value of this option will be
  * executed.  Thus the value of 'filetype' is used in place of the file
@@ -2952,7 +2867,6 @@ export const filetype = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Characters to fill the statuslines and vertical separators.
@@ -2980,7 +2894,6 @@ export const fillchars = {
 };
 
 /**
- *
  * When writing a file and this option is on, <EOL> at the end of file
  * will be restored if missing. Turn this option off if you want to
  * preserve the situation from the original file.
@@ -3010,7 +2923,6 @@ export const fixendofline = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * When set to "all", a fold is closed when the cursor isn't in it and
@@ -3039,7 +2951,6 @@ export const foldclose = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * When non-zero, a column with the specified width is shown at the side
@@ -3069,7 +2980,6 @@ export const foldcolumn = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * When off, all folds are open.  This option can be used to quickly
@@ -3102,7 +3012,6 @@ export const foldenable = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		or |+eval| features}
  * The expression used for when 'foldmethod' is "expr".  It is evaluated
@@ -3130,7 +3039,6 @@ export const foldexpr = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Used only when 'foldmethod' is "indent".  Lines starting with
@@ -3160,7 +3068,6 @@ export const foldignore = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Sets the fold level: Folds with a higher level will be closed.
@@ -3191,7 +3098,6 @@ export const foldlevel = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Sets 'foldlevel' when starting to edit another buffer in a window.
@@ -3226,7 +3132,6 @@ export const foldlevelstart = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * The start and end marker used when 'foldmethod' is "marker".  There
@@ -3256,7 +3161,6 @@ export const foldmarker = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * The kind of folding used for the current window.  Possible values:
@@ -3289,7 +3193,6 @@ export const foldmethod = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Sets the number of screen lines above which a fold can be displayed
@@ -3322,7 +3225,6 @@ export const foldminlines = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Sets the maximum nesting of folds for the "indent" and "syntax"
@@ -3351,7 +3253,6 @@ export const foldnestmax = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Specifies for which type of commands folds will be opened, if the
@@ -3383,7 +3284,6 @@ export const foldopen = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * An expression which is used to specify the text displayed for a closed
@@ -3411,7 +3311,6 @@ export const foldtext = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+eval|
  * 		feature}
  * Expression which is evaluated to format a range of lines for the |gq|
@@ -3440,7 +3339,6 @@ export const formatexpr = {
 };
 
 /**
- *
  * A pattern that is used to recognize a list header.  This is used for
  * the "n" flag in 'formatoptions'.
  * The pattern must match exactly the text that will be the indent for
@@ -3473,7 +3371,6 @@ export const formatlistpat = {
 };
 
 /**
- *
  * This is a sequence of letters which describes how automatic
  * formatting is to be done.  See |fo-table|.  When the 'paste' option is
  * on, no formatting is done (like 'formatoptions' is empty).  Commas can
@@ -3505,7 +3402,6 @@ export const formatoptions = {
 };
 
 /**
- *
  * The name of an external program that will be used to format the lines
  * selected with the |gq| operator.  The program must take the input on
  * stdin and produce the output on stdout.  The Unix program "fmt" is
@@ -3549,7 +3445,6 @@ export const formatprg = {
 };
 
 /**
- *
  * When on, the library function fsync() will be called after writing a
  * file.  This will flush a file to disk, ensuring that it is safely
  * written even on filesystems which do metadata-only journaling.  This
@@ -3586,7 +3481,6 @@ export const fsync = {
 };
 
 /**
- *
  * When on, the ":substitute" flag 'g' is default on.  This means that
  * all matches in a line are substituted instead of one.  When a 'g' flag
  * is given to a ":substitute" command, this will toggle the substitution
@@ -3614,7 +3508,6 @@ export const gdefault = {
 };
 
 /**
- *
  * Format to recognize for the ":grep" command output.
  * This is a scanf-like string that uses the same format as the
  * 'errorformat' option: see |errorformat|.
@@ -3641,7 +3534,6 @@ export const grepformat = {
 };
 
 /**
- *
  * Program to use for the |:grep| command.  This option may contain '%'
  * and '#' characters, which are expanded like when used in a command-
  * line.  The placeholder "$*" is allowed to specify where the arguments
@@ -3691,7 +3583,6 @@ export const grepprg = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled, and
  * 		for Win32 console}
  * This option tells Vim what the cursor should look like in different
@@ -3723,7 +3614,6 @@ export const guicursor = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled}
  * This is a list of fonts which will be used for the GUI version of Vim.
  * In its simplest form the value is just one font name.
@@ -3751,7 +3641,6 @@ export const guifont = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled and
  * 		with the |+xfontset| feature}
  * 		{not available in the GTK+ GUI}
@@ -3781,7 +3670,6 @@ export const guifontset = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled}
  * When not empty, specifies a comma-separated list of fonts to be used
  * for double-width characters.  The first font that can be loaded is
@@ -3809,7 +3697,6 @@ export const guifontwide = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled}
  * This option only has an effect in the GUI version of Vim.  It is a
  * sequence of letters which describes what components and options of the
@@ -3839,7 +3726,6 @@ export const guioptions = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled}
  * When nonempty describes the text to use in a label of the GUI tab
  * pages line.  When empty and when the result is empty Vim will use a
@@ -3867,7 +3753,6 @@ export const guitablabel = {
 };
 
 /**
- *
  * 		{only available when compiled with GUI enabled}
  * When nonempty describes the text to use in a tooltip for the GUI tab
  * pages line.  When empty Vim will use a default tooltip.
@@ -3898,7 +3783,6 @@ export const guitabtooltip = {
 };
 
 /**
- *
  * Name of the main help file.  All distributed help files should be
  * placed together in one directory.  Additionally, all "doc" directories
  * in 'runtimepath' will be used.
@@ -3931,7 +3815,6 @@ export const helpfile = {
 };
 
 /**
- *
  * Minimal initial height of the help window when it is opened with the
  * ":help" command.  The initial height of the help window is half of the
  * current window, or (when the 'ea' option is on) the same as other
@@ -3960,7 +3843,6 @@ export const helpheight = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+multi_lang|
  * 		feature}
  * Comma separated list of languages.  Vim will use the first language
@@ -3998,7 +3880,6 @@ export const helplang = {
 };
 
 /**
- *
  * When off a buffer is unloaded when it is |abandon|ed.  When on a
  * buffer becomes hidden when it is |abandon|ed.  If the buffer is still
  * displayed in another window, it does not become hidden, of course.
@@ -4033,7 +3914,6 @@ export const hidden = {
 };
 
 /**
- *
  * A history of ":" commands, and a history of previous search patterns
  * is remembered.  This option decides how many entries may be stored in
  * each of these histories (see |cmdline-editing|).
@@ -4063,7 +3943,6 @@ export const history = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * When on, the keyboard is mapped for the Hebrew character set.
@@ -4093,7 +3972,6 @@ export const hkmap = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * When on, phonetic keyboard mapping is used.  'hkmap' must also be on.
@@ -4123,7 +4001,6 @@ export const hkmapp = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+extra_search| feature}
  * When there is a previous search pattern, highlight all its matches.
@@ -4167,7 +4044,6 @@ export const hlsearch = {
 };
 
 /**
- *
  * Ignore case in search patterns.  Also used when searching in the tags
  * file.
  * Also see 'smartcase' and 'tagcase'.
@@ -4196,7 +4072,6 @@ export const ignorecase = {
 };
 
 /**
- *
  * When set the Input Method is always on when starting to edit a command
  * line, unless entering a search pattern (see 'imsearch' for that).
  * Setting this option is useful when your input method allows entering
@@ -4225,7 +4100,6 @@ export const imcmdline = {
 };
 
 /**
- *
  * When set the Input Method is never used.  This is useful to disable
  * the IM when it doesn't work properly.
  * Currently this option is on by default for SGI/IRIX machines.  This
@@ -4253,7 +4127,6 @@ export const imdisable = {
 };
 
 /**
- *
  * Specifies whether :lmap or an Input Method (IM) is to be used in
  * Insert mode.  Valid values:
  * 	0	:lmap is off and IM is off
@@ -4293,7 +4166,6 @@ export const iminsert = {
 };
 
 /**
- *
  * Specifies whether :lmap or an Input Method (IM) is to be used when
  * entering a search pattern.  Valid values:
  * 	-1	the value of 'iminsert' is used, makes it look like
@@ -4330,7 +4202,6 @@ export const imsearch = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+find_in_path| feature}
  * Pattern to be used to find an include command.  It is a search
@@ -4376,7 +4247,6 @@ export const include = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+find_in_path| or |+eval| features}
  * Expression to be used to transform the string found with the 'include'
@@ -4406,7 +4276,6 @@ export const includeexpr = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+extra_search| features}
  * While typing a search command, show where the pattern, as it was typed
@@ -4476,7 +4345,6 @@ export const incsearch = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cindent|
  * 		or |+eval| features}
  * Expression which is evaluated to obtain the proper indent for a line.
@@ -4526,7 +4394,6 @@ export const indentexpr = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+cindent|
  * 		feature}
  * A list of keys that, when typed in Insert mode, cause reindenting of
@@ -4556,7 +4423,6 @@ export const indentkeys = {
 };
 
 /**
- *
  * When doing keyword completion in insert mode |ins-completion|, and
  * 'ignorecase' is also on, the case of the match is adjusted depending
  * on the typed text.  If the typed text contains a lowercase letter
@@ -4588,7 +4454,6 @@ export const infercase = {
 };
 
 /**
- *
  * Makes Vim work in a way that Insert mode is the default mode.  Useful
  * if you want to use Vim as a modeless editor.  Used for |evim|.
  * These Insert mode commands will be useful:
@@ -4622,7 +4487,6 @@ export const insertmode = {
 };
 
 /**
- *
  * The characters specified by this option are included in file names and
  * path names.  Filenames are used for commands like "gf", "[i" and in
  * the tags file.  It is also used for "\f" in a |pattern|.
@@ -4656,7 +4520,6 @@ export const isfname = {
 };
 
 /**
- *
  * The characters given by this option are included in identifiers.
  * Identifiers are used in recognizing environment variables and after a
  * match of the 'define' option.  It is also used for "\i" in a
@@ -4688,7 +4551,6 @@ export const isident = {
 };
 
 /**
- *
  * Keywords are used in searching and recognizing with many commands:
  * "w", "*", "[i", etc.  It is also used for "\k" in a |pattern|.  See
  * 'isfname' for a description of the format of this option.  For '@'
@@ -4725,7 +4587,6 @@ export const iskeyword = {
 };
 
 /**
- *
  * The characters given by this option are displayed directly on the
  * screen.  It is also used for "\p" in a |pattern|.  The characters from
  * space (ASCII 32) to '~' (ASCII 126) are always displayed directly,
@@ -4754,7 +4615,6 @@ export const isprint = {
 };
 
 /**
- *
  * Insert two spaces after a '.', '?' and '!' with a join command.
  * When 'cpoptions' includes the 'j' flag, only do this after a '.'.
  * Otherwise only one space is inserted.
@@ -4782,7 +4642,6 @@ export const joinspaces = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+keymap|
  * 		feature}
  * Name of a keyboard mapping.  See |mbyte-keymap|.
@@ -4813,7 +4672,6 @@ export const keymap = {
 };
 
 /**
- *
  * List of comma separated words, which enable special things that keys
  * can do.  These values can be used:
  *    startsel	Using a shifted special key starts selection (either
@@ -4846,7 +4704,6 @@ export const keymodel = {
 };
 
 /**
- *
  * Program to use for the |K| command.  Environment variables are
  * expanded |:set_env|.  ":help" may be used to access the Vim internal
  * help.  (Note that previously setting the global option to the empty
@@ -4893,7 +4750,6 @@ export const keywordprg = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+langmap|
  * 		feature}
  * This option allows switching your keyboard into a special language
@@ -4931,7 +4787,6 @@ export const langmap = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+menu| and
  * 		|+multi_lang| features}
  * Language to use for menu translation.  Tells which file is loaded
@@ -4975,7 +4830,6 @@ export const langmenu = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+langmap|
  * 		feature}
  * When off, setting 'langmap' does not apply to characters resulting from
@@ -5006,7 +4860,6 @@ export const langremap = {
 };
 
 /**
- *
  * The value of this option influences when the last window will have a
  * status line:
  * 	0: never
@@ -5037,7 +4890,6 @@ export const laststatus = {
 };
 
 /**
- *
  * When this option is set, the screen will not be redrawn while
  * executing macros, registers and other commands that have not been
  * typed.  Also, updating the window title is postponed.  To force an
@@ -5065,7 +4917,6 @@ export const lazyredraw = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+linebreak|
  * 		feature}
  * If on, Vim will wrap long lines at a character in 'breakat' rather
@@ -5100,7 +4951,6 @@ export const linebreak = {
 };
 
 /**
- *
  * 		{only in the GUI}
  * Number of pixel lines inserted between characters.  Useful if the font
  * uses the full character cell height, making lines touch each other.
@@ -5132,7 +4982,6 @@ export const linespace = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+lispindent|
  * 		feature}
  * Comma separated list of words that influence the Lisp indenting.
@@ -5169,7 +5018,6 @@ export const lispwords = {
 };
 
 /**
- *
  * Strings to use in 'list' mode and for the |:list| command.  It is a
  * comma separated list of string settings.
  *   eol:c		Character to show at the end of each line.  When
@@ -5200,7 +5048,6 @@ export const listchars = {
 };
 
 /**
- *
  * When on the plugin scripts are loaded when starting up |load-plugins|.
  * This option can be reset in your |vimrc| file to disable the loading
  * of plugins.
@@ -5229,7 +5076,6 @@ export const loadplugins = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * Name of the errorfile for the |:make| command (see |:make_makeprg|)
@@ -5266,7 +5112,6 @@ export const makeef = {
 };
 
 /**
- *
  * Encoding used for reading the output of external commands.  When empty,
  * encoding is not converted.
  * This is used for `:make`, `:lmake`, `:grep`, `:lgrep`, `:grepadd`,
@@ -5304,7 +5149,6 @@ export const makeencoding = {
 };
 
 /**
- *
  * Program to use for the ":make" command.  See |:make_makeprg|.
  * This option may contain '%' and '#' characters (see  |:_%| and |:_#|),
  * which are expanded to the current and alternate file name.  Use |::S|
@@ -5352,7 +5196,6 @@ export const makeprg = {
 };
 
 /**
- *
  * Characters that form pairs.  The |%| command jumps from one to the
  * other.
  * Only character pairs are allowed that are different, thus you cannot
@@ -5384,7 +5227,6 @@ export const matchpairs = {
 };
 
 /**
- *
  * Tenths of a second to show the matching paren, when 'showmatch' is
  * set.  Note that this is not in milliseconds, like other options that
  * set a time.  This is to be compatible with Nvi.
@@ -5411,7 +5253,6 @@ export const matchtime = {
 };
 
 /**
- *
  * The maximum number of combining characters supported for displaying.
  * Only used when 'encoding' is "utf-8".
  * The default is OK for most languages.  Hebrew may require 4.
@@ -5442,7 +5283,6 @@ export const maxcombine = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+eval|
  * 		feature}
  * Maximum depth of function calls for user functions.  This normally
@@ -5475,7 +5315,6 @@ export const maxfuncdepth = {
 };
 
 /**
- *
  * Maximum number of times a mapping is done without resulting in a
  * character to be used.  This normally catches endless mappings, like
  * ":map x y" with ":map y x".  It still does not catch ":map g wg",
@@ -5504,7 +5343,6 @@ export const maxmapdepth = {
 };
 
 /**
- *
  * Maximum amount of memory (in Kbyte) to use for pattern matching.
  * The maximum value is about 2000000.  Use this to work without a limit.
  * When Vim runs into the limit it gives an error message and mostly
@@ -5539,7 +5377,6 @@ export const maxmempattern = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+menu|
  * 		feature}
  * Maximum number of items to use in a menu.  Used for menus that are
@@ -5568,7 +5405,6 @@ export const menuitems = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Parameters for |:mkspell|.  This tunes when to start compressing the
@@ -5599,7 +5435,6 @@ export const mkspellmem = {
 };
 
 /**
- *
  * If 'modeline' is on 'modelines' gives the number of lines that is
  * checked for set commands.  If 'modeline' is off or 'modelines' is zero
  * no lines are checked.  See |modeline|.
@@ -5626,7 +5461,6 @@ export const modeline = {
 };
 
 /**
- *
  * When on allow some options that are an expression to be set in the
  * modeline.  Check the option for whether it is affected by
  * 'modelineexpr'.  Also see |modeline|.
@@ -5655,7 +5489,6 @@ export const modelineexpr = {
 };
 
 /**
- *
  * If 'modeline' is on 'modelines' gives the number of lines that is
  * checked for set commands.  If 'modeline' is off or 'modelines' is zero
  * no lines are checked.  See |modeline|.
@@ -5684,7 +5517,6 @@ export const modelines = {
 };
 
 /**
- *
  * When off the buffer contents cannot be changed.  The 'fileformat' and
  * 'fileencoding' options also can't be changed.
  * Can be reset on startup with the |-M| command line argument.
@@ -5711,7 +5543,6 @@ export const modifiable = {
 };
 
 /**
- *
  * When on, the buffer is considered to be modified.  This option is set
  * when:
  * 1. A change was made to the text since it was last written.  Using the
@@ -5756,7 +5587,6 @@ export const modified = {
 };
 
 /**
- *
  * 		{only works in the GUI}
  * The window that the mouse pointer is on is automatically activated.
  * When changing the window layout or window focus in another way, the
@@ -5788,7 +5618,6 @@ export const mousefocus = {
 };
 
 /**
- *
  * 		{only works in the GUI}
  * When on, the mouse pointer is hidden when characters are typed.
  * The mouse pointer is restored when the mouse is moved.
@@ -5815,7 +5644,6 @@ export const mousehide = {
 };
 
 /**
- *
  * Sets the model to use for the mouse.  The name mostly specifies what
  * the right mouse button is used for:
  *    extend	Right mouse button extends a selection.  This works
@@ -5861,7 +5689,6 @@ export const mousemodel = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+mouseshape|
  * 		feature}
  * This option tells Vim what the mouse pointer should look like in
@@ -5901,7 +5728,6 @@ export const mouseshape = {
 };
 
 /**
- *
  * Only for GUI, Win32 and Unix with xterm.  Defines the maximum
  * time in msec between two mouse clicks for the second click to be
  * recognized as a multi click.
@@ -5928,7 +5754,6 @@ export const mousetime = {
 };
 
 /**
- *
  * This defines what bases Vim will consider for numbers when using the
  * CTRL-A and CTRL-X commands for adding to and subtracting from a number
  * respectively; see |CTRL-A| for more info on these commands.
@@ -5969,7 +5794,6 @@ export const nrformats = {
 };
 
 /**
- *
  * Print the line number in front of each line.  When the 'n' option is
  * excluded from 'cpoptions' a wrapped line will not use the column of
  * line numbers (this is the default when 'compatible' isn't set).
@@ -6005,7 +5829,6 @@ export const number = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+linebreak|
  * 		feature}
  * Minimal number of columns to use for the line number.  Only relevant
@@ -6043,7 +5866,6 @@ export const numberwidth = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+eval|
  * 		feature}
  * This option specifies a function to be used for Insert mode omni
@@ -6077,7 +5899,6 @@ export const omnifunc = {
 };
 
 /**
- *
  * 		{only for MS-Windows}
  * Enable reading and writing from devices.  This may get Vim stuck on a
  * device that can be opened but doesn't actually do the I/O.  Therefore
@@ -6107,7 +5928,6 @@ export const opendevice = {
 };
 
 /**
- *
  * This option specifies a function to be called by the |g@| operator.
  * See |:map-operator| for more info and an example.
  */
@@ -6133,7 +5953,6 @@ export const operatorfunc = {
 };
 
 /**
- *
  * Directories used to find packages.  See |packages|.
  */
 export const packpath = {
@@ -6158,7 +5977,6 @@ export const packpath = {
 };
 
 /**
- *
  * Specifies the nroff macros that separate paragraphs.  These are pairs
  * of two letters (see |object-motions|).
  */
@@ -6184,7 +6002,6 @@ export const paragraphs = {
 };
 
 /**
- *
  * When non-empty, specifies the key sequence that toggles the 'paste'
  * option.  This is like specifying a mapping: >
  *     :map {keys} :set invpaste<CR>
@@ -6228,7 +6045,6 @@ export const pastetoggle = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+diff|
  * 		feature}
  * Expression which is evaluated to apply a patch to a file and generate
@@ -6256,7 +6072,6 @@ export const patchexpr = {
 };
 
 /**
- *
  * When non-empty the oldest version of a file is kept.  This can be used
  * to keep the original version of a file if you are changing files in a
  * source distribution.  Only the first time that a file is written a
@@ -6296,7 +6111,6 @@ export const patchmode = {
 };
 
 /**
- *
  * This is a list of directories which will be searched when using the
  * |gf|, [f, ]f, ^Wf, |:find|, |:sfind|, |:tabfind| and other commands,
  * provided that the file being searched for has a relative path (not
@@ -6377,7 +6191,6 @@ export const path = {
 };
 
 /**
- *
  * When changing the indent of the current line, preserve as much of the
  * indent structure as possible.  Normally the indent is replaced by a
  * series of tabs followed by spaces as required (unless |'expandtab'| is
@@ -6414,7 +6227,6 @@ export const preserveindent = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * Default height for a preview window.  Used for |:ptag| and associated
@@ -6443,7 +6255,6 @@ export const previewheight = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * Identifies the preview window.  Only one window can have this option
@@ -6472,7 +6283,6 @@ export const previewwindow = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		feature}
  * The name of the printer to be used for |:hardcopy|.
@@ -6502,7 +6312,6 @@ export const printdevice = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		and |+postscript| features}
  * Sets the character encoding used when printing.
@@ -6530,7 +6339,6 @@ export const printencoding = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		and |+postscript| features}
  * Expression used to print the PostScript produced with |:hardcopy|.
@@ -6560,7 +6368,6 @@ export const printexpr = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		feature}
  * The name of the font that will be used for |:hardcopy|.
@@ -6588,7 +6395,6 @@ export const printfont = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		feature}
  * The format of the header produced in |:hardcopy| output.
@@ -6616,7 +6422,6 @@ export const printheader = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		and |+postscript| features}
  * The CJK character set to be used for CJK output from |:hardcopy|.
@@ -6644,7 +6449,6 @@ export const printmbcharset = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+printer|
  * 		and |+postscript| features}
  * List of font names to be used for CJK output from |:hardcopy|.
@@ -6672,7 +6476,6 @@ export const printmbfont = {
 };
 
 /**
- *
  * 		{only available when compiled with |+printer| feature}
  * List of items that control the format of the output of |:hardcopy|.
  * See |popt-option|.
@@ -6699,7 +6502,6 @@ export const printoptions = {
 };
 
 /**
- *
  * Determines the maximum number of items to show in the popup menu for
  * Insert mode completion.  When zero as much space as available is used.
  * |ins-completion-menu|.
@@ -6726,7 +6528,6 @@ export const pumheight = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+python| or
  * 		the |+python3| feature}
  * Specifies the python version used for pyx* functions and commands
@@ -6754,7 +6555,6 @@ export const pyxversion = {
 };
 
 /**
- *
  * The characters that are used to escape quotes in a string.  Used for
  * objects like a', a" and a` |a'|.
  * When one of the characters in this option is found inside a string,
@@ -6783,7 +6583,6 @@ export const quoteescape = {
 };
 
 /**
- *
  * If on, writes fail unless you use a '!'.  Protects you from
  * accidentally overwriting a file.  Default on when Vim is started
  * in read-only mode ("vim -R") or when the executable is called "view".
@@ -6815,7 +6614,6 @@ export const readonly = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+reltime|
  * 		feature}
  * The time in milliseconds for redrawing the display.  This applies to
@@ -6850,7 +6648,6 @@ export const redrawtime = {
 };
 
 /**
- *
  * This selects the default regexp engine. |two-engines|
  * The possible values are:
  * 	0	automatic selection
@@ -6886,7 +6683,6 @@ export const regexpengine = {
 };
 
 /**
- *
  * Show the line number relative to the line with the cursor in front of
  * each line. Relative line numbers help you use the |count| you can
  * precede some vertical motion commands (e.g. j k + -) with, without
@@ -6924,7 +6720,6 @@ export const relativenumber = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * Inserting characters in Insert mode will work backwards.  See "typing
@@ -6956,7 +6751,6 @@ export const revins = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * When on, display orientation becomes right-to-left, i.e., characters
@@ -6991,7 +6785,6 @@ export const rightleft = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+rightleft|
  * 		feature}
  * Each word in this option enables the command line editing to work in
@@ -7019,7 +6812,6 @@ export const rightleftcmd = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+cmdline_info| feature}
  * Show the line and column number of the cursor position, separated by a
@@ -7068,7 +6860,6 @@ export const ruler = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+statusline|
  * 		feature}
  * When this option is not empty, it determines the content of the ruler
@@ -7098,7 +6889,6 @@ export const rulerformat = {
 };
 
 /**
- *
  * This is a list of directories which will be searched for runtime
  * files:
  *   filetype.vim	filetypes by file name |new-filetype|
@@ -7142,7 +6932,6 @@ export const runtimepath = {
 };
 
 /**
- *
  * Number of lines to scroll with CTRL-U and CTRL-D commands.  Will be
  * set to half the number of lines in the window when the window size
  * changes.  If you give a count to the CTRL-U or CTRL-D command it will
@@ -7171,7 +6960,6 @@ export const scroll = {
 };
 
 /**
- *
  * See also |scroll-binding|.  When this option is set, the current
  * window scrolls as other scrollbind windows (windows that also have
  * this option set) scroll.  This option is useful for viewing the
@@ -7204,7 +6992,6 @@ export const scrollbind = {
 };
 
 /**
- *
  * Minimal number of lines to scroll when the cursor gets off the
  * screen (e.g., with "j").  Not used for scroll commands (e.g., CTRL-E,
  * CTRL-D).  Useful if your terminal scrolls very slowly.
@@ -7235,7 +7022,6 @@ export const scrolljump = {
 };
 
 /**
- *
  * Minimal number of screen lines to keep above and below the cursor.
  * This will make some context visible around where you are working.  If
  * you set it to a very large value (999) the cursor line will always be
@@ -7279,7 +7065,6 @@ export const scrolloff = {
 };
 
 /**
- *
  * This is a comma-separated list of words that specifies how
  * 'scrollbind' windows should behave.  'sbo' stands for ScrollBind
  * Options.
@@ -7330,7 +7115,6 @@ export const scrollopt = {
 };
 
 /**
- *
  * Specifies the nroff macros that separate sections.  These are pairs of
  * two letters (See |object-motions|).  The default makes a section start
  * at the nroff macros ".SH", ".NH", ".H", ".HU", ".nh" and ".sh".
@@ -7357,7 +7141,6 @@ export const sections = {
 };
 
 /**
- *
  * This option defines the behavior of the selection.  It is only used
  * in Visual and Select mode.
  * Possible values:
@@ -7398,7 +7181,6 @@ export const selection = {
 };
 
 /**
- *
  * This is a comma separated list of words, which specifies when to start
  * Select mode instead of Visual mode, when a selection is started.
  * Possible values:
@@ -7430,7 +7212,6 @@ export const selectmode = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+mksession|
  * 		feature}
  * Changes the effect of the |:mksession| command.  It is a comma
@@ -7489,7 +7270,6 @@ export const sessionoptions = {
 };
 
 /**
- *
  * Name of the shell to use for ! and :! commands.  When changing the
  * value also check these options: 'shelltype', 'shellpipe', 'shellslash'
  * 'shellredir', 'shellquote', 'shellxquote' and 'shellcmdflag'.
@@ -7519,7 +7299,6 @@ export const shell = {
 };
 
 /**
- *
  * Flag passed to the shell to execute "!" and ":!" commands; e.g.,
  * "bash.exe -c ls" or "cmd.exe /c dir".  For MS-Windows, the default is
  * set according to the value of 'shell', to reduce the need to set this
@@ -7553,7 +7332,6 @@ export const shellcmdflag = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+quickfix|
  * 		feature}
  * String to be used to put the output of the ":make" command in the
@@ -7608,7 +7386,6 @@ export const shellpipe = {
 };
 
 /**
- *
  * Quoting character(s), put around the command passed to the shell, for
  * the "!" and ":!" commands.  The redirection is kept outside of the
  * quoting.  See 'shellxquote' to include the redirection.  It's
@@ -7643,7 +7420,6 @@ export const shellquote = {
 };
 
 /**
- *
  * String to be used to put the output of a filter command in a temporary
  * file.  See also |:!|.  See |option-backslash| about including spaces
  * and backslashes.
@@ -7688,7 +7464,6 @@ export const shellredir = {
 };
 
 /**
- *
  * 		{only for MS-Windows}
  * When set, a forward slash is used when expanding file names.  This is
  * useful when a Unix-like shell is used instead of cmd.exe.  Backward
@@ -7724,7 +7499,6 @@ export const shellslash = {
 };
 
 /**
- *
  * When on, use temp files for shell commands.  When off use a pipe.
  * When using a pipe is not possible temp files are used anyway.
  * Currently a pipe is only supported on Unix and MS-Windows 2K and
@@ -7764,7 +7538,6 @@ export const shelltemp = {
 };
 
 /**
- *
  * When 'shellxquote' is set to "(" then the characters listed in this
  * option will be escaped with a '^' character.  This makes it possible
  * to execute most external commands with cmd.exe.
@@ -7791,7 +7564,6 @@ export const shellxescape = {
 };
 
 /**
- *
  * Quoting character(s), put around the command passed to the shell, for
  * the "!" and ":!" commands.  Includes the redirection.  See
  * 'shellquote' to exclude the redirection.  It's probably not useful
@@ -7830,7 +7602,6 @@ export const shellxquote = {
 };
 
 /**
- *
  * Round indent to multiple of 'shiftwidth'.  Applies to > and <
  * commands.  CTRL-T and CTRL-D in Insert mode always round the indent to
  * a multiple of 'shiftwidth' (this is Vi compatible).
@@ -7858,7 +7629,6 @@ export const shiftround = {
 };
 
 /**
- *
  * Number of spaces to use for each step of (auto)indent.  Used for
  * |'cindent'|, |>>|, |<<|, etc.
  * When zero the 'ts' value will be used.  Use the |shiftwidth()|
@@ -7886,7 +7656,6 @@ export const shiftwidth = {
 };
 
 /**
- *
  * This option helps to avoid all the |hit-enter| prompts caused by file
  * messages, for example  with CTRL-G, and to avoid some other messages.
  * It is a list of flags:
@@ -7925,7 +7694,6 @@ export const shortmess = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+linebreak|
  * 		feature}
  * String to put at the start of lines that have been wrapped.  Useful
@@ -7978,7 +7746,6 @@ export const showbreak = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+cmdline_info| feature}
  * Show (partial) command in the last line of the screen.  Set this
@@ -8015,7 +7782,6 @@ export const showcmd = {
 };
 
 /**
- *
  * When completing a word in insert mode (see |ins-completion|) from the
  * tags file, show both the tag name and a tidied-up form of the search
  * pattern (if there is one) as possible matches.  Thus, if you have
@@ -8047,7 +7813,6 @@ export const showfulltag = {
 };
 
 /**
- *
  * When a bracket is inserted, briefly jump to the matching one.  The
  * jump is only done if the match can be seen on the screen.  The time to
  * show the match can be set with 'matchtime'.
@@ -8088,7 +7853,6 @@ export const showmatch = {
 };
 
 /**
- *
  * If in Insert, Replace or Visual mode put a message on the last line.
  * Use the 'M' flag in 'highlight' to set the type of highlighting for
  * this message.
@@ -8120,7 +7884,6 @@ export const showmode = {
 };
 
 /**
- *
  * The value of this option specifies when the line with tab page labels
  * will be displayed:
  * 	0: never
@@ -8152,7 +7915,6 @@ export const showtabline = {
 };
 
 /**
- *
  * The minimal number of columns to scroll horizontally.  Used only when
  * the 'wrap' option is off and the cursor is moved off of the screen.
  * When it is zero the cursor will be put in the middle of the screen.
@@ -8182,7 +7944,6 @@ export const sidescroll = {
 };
 
 /**
- *
  * The minimal number of screen columns to keep to the left and to the
  * right of the cursor if 'nowrap' is set.  Setting this option to a
  * value greater than 0 while having |'sidescroll'| also at a non-zero
@@ -8228,7 +7989,6 @@ export const sidescrolloff = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+signs|
  * 		feature}
  * Whether or not to draw the signcolumn. Valid values are:
@@ -8260,7 +8020,6 @@ export const signcolumn = {
 };
 
 /**
- *
  * Override the 'ignorecase' option if the search pattern contains upper
  * case characters.  Only used when the search pattern is typed and
  * 'ignorecase' option is on.  Used for the commands "/", "?", "n", "N",
@@ -8291,7 +8050,6 @@ export const smartcase = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+smartindent| feature}
  * Do smart autoindenting when starting a new line.  Works for C-like
@@ -8339,7 +8097,6 @@ export const smartindent = {
 };
 
 /**
- *
  * When on, a <Tab> in front of a line inserts blanks according to
  * 'shiftwidth'.  'tabstop' or 'softtabstop' is used in other places.  A
  * <BS> will delete a 'shiftwidth' worth of space at the start of the
@@ -8376,7 +8133,6 @@ export const smarttab = {
 };
 
 /**
- *
  * Number of spaces that a <Tab> counts for while performing editing
  * operations, like inserting a <Tab> or using <BS>.  It "feels" like
  * <Tab>s are being inserted, while in fact a mix of spaces and <Tab>s is
@@ -8415,7 +8171,6 @@ export const softtabstop = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Pattern to locate the end of a sentence.  The following word will be
@@ -8450,7 +8205,6 @@ export const spellcapcheck = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Name of the word list file where words are added for the |zg| and |zw|
@@ -8495,7 +8249,6 @@ export const spellfile = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * A comma separated list of word list names.  When the 'spell' option is
@@ -8548,7 +8301,6 @@ export const spelllang = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Methods used for spelling suggestions.  Both for the |z=| command and
@@ -8577,7 +8329,6 @@ export const spellsuggest = {
 };
 
 /**
- *
  * When on, splitting a window will put the new window below the current
  * one. |:split|
  */
@@ -8603,7 +8354,6 @@ export const splitbelow = {
 };
 
 /**
- *
  * When on, splitting a window will put the new window right of the
  * current one. |:vsplit|
  */
@@ -8629,7 +8379,6 @@ export const splitright = {
 };
 
 /**
- *
  * When "on" the commands listed below move the cursor to the first
  * non-blank of the line.  When off the cursor is kept in the same column
  * (if possible).  This applies to the commands: CTRL-D, CTRL-U, CTRL-B,
@@ -8663,7 +8412,6 @@ export const startofline = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+statusline|
  * 		feature}
  * When nonempty, this option determines the content of the status line.
@@ -8700,7 +8448,6 @@ export const statusline = {
 };
 
 /**
- *
  * Files with these suffixes get a lower priority when multiple files
  * match a wildcard.  See |suffixes|.  Commas can be used to separate the
  * suffixes.  Spaces after the comma are ignored.  A dot is also seen as
@@ -8734,7 +8481,6 @@ export const suffixes = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+file_in_path| feature}
  * Comma separated list of suffixes, which are used when searching for a
@@ -8764,7 +8510,6 @@ export const suffixesadd = {
 };
 
 /**
- *
  * Use a swapfile for the buffer.  This option can be reset when a
  * swapfile is not wanted for a specific buffer.  For example, with
  * confidential information that even root must not be able to access.
@@ -8803,7 +8548,6 @@ export const swapfile = {
 };
 
 /**
- *
  * This option controls the behavior when switching between buffers.
  * Possible values (comma separated list):
  *    useopen	If included, jump to the first open window that
@@ -8848,7 +8592,6 @@ export const switchbuf = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * Maximum column in which to search for syntax items.  In long lines the
@@ -8880,7 +8623,6 @@ export const synmaxcol = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+syntax|
  * 		feature}
  * When this option is set, the syntax with this name is loaded, unless
@@ -8929,7 +8671,6 @@ export const syntax = {
 };
 
 /**
- *
  * When nonempty, this option determines the content of the tab pages
  * line at the top of the Vim window.  When empty Vim will use a default
  * tab pages line.  See |setting-tabline| for more info.
@@ -8956,7 +8697,6 @@ export const tabline = {
 };
 
 /**
- *
  * Maximum number of tab pages to be opened by the |-p| command line
  * argument or the ":tab all" command. |tabpage|
  */
@@ -8982,7 +8722,6 @@ export const tabpagemax = {
 };
 
 /**
- *
  * Number of spaces that a <Tab> in the file counts for.  Also see
  * |:retab| command, and 'softtabstop' option.
  */
@@ -9008,7 +8747,6 @@ export const tabstop = {
 };
 
 /**
- *
  * When searching for a tag (e.g., for the |:ta| command), Vim can either
  * use a binary search or a linear search in a tags file.  Binary
  * searching makes searching for a tag a LOT faster, but a linear search
@@ -9039,7 +8777,6 @@ export const tagbsearch = {
 };
 
 /**
- *
  * This option specifies how case is handled when searching the tags
  * file:
  *    followic	Follow the 'ignorecase' option
@@ -9081,7 +8818,6 @@ export const tagcase = {
 };
 
 /**
- *
  * If non-zero, tags are significant up to this number of characters.
  */
 export const taglength = {
@@ -9106,7 +8842,6 @@ export const taglength = {
 };
 
 /**
- *
  * If on and using a tags file in another directory, file names in that
  * tags file are relative to the directory where the tags file is.
  * NOTE: This option is set to the Vi default value when 'compatible' is
@@ -9134,7 +8869,6 @@ export const tagrelative = {
 };
 
 /**
- *
  * Filenames for the tag command, separated by spaces or commas.  To
  * include a space or comma in a file name, precede it with a backslash
  * (see |option-backslash| about including spaces and backslashes).
@@ -9189,7 +8923,6 @@ export const tags = {
 };
 
 /**
- *
  * When on, the |tagstack| is used normally.  When off, a ":tag" or
  * ":tselect" command with an argument will not push the tag onto the
  * tagstack.  A following ":tag" without an argument, a ":pop" command or
@@ -9220,7 +8953,6 @@ export const tagstack = {
 };
 
 /**
- *
  * 		{only available when compiled with the |+arabic|
  * 		feature}
  * The terminal is in charge of Bi-directionality of text (as specified
@@ -9255,7 +8987,6 @@ export const termbidi = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+termguicolors| feature}
  * When on, uses |highlight-guifg| and |highlight-guibg| attributes in
@@ -9283,7 +9014,6 @@ export const termguicolors = {
 };
 
 /**
- *
  * Maximum width of text that is being inserted.  A longer line will be
  * broken after white space to get this width.  A zero value disables
  * this.
@@ -9316,7 +9046,6 @@ export const textwidth = {
 };
 
 /**
- *
  * List of file names, separated by commas, that are used to lookup words
  * for thesaurus completion commands |i_CTRL-X_CTRL-T|.
  */
@@ -9351,7 +9080,6 @@ export const thesaurus = {
 };
 
 /**
- *
  * When on: The tilde command "~" behaves like an operator.
  * NOTE: This option is reset when 'compatible' is set.
  */
@@ -9377,7 +9105,6 @@ export const tildeop = {
 };
 
 /**
- *
  * 		global
  */
 export const timeout = {
@@ -9402,7 +9129,6 @@ export const timeout = {
 };
 
 /**
- *
  * 		global
  */
 export const timeoutlen = {
@@ -9427,7 +9153,6 @@ export const timeoutlen = {
 };
 
 /**
- *
  * The time in milliseconds that is waited for a key code or mapped key
  * sequence to complete.  Also used for CTRL-\ CTRL-N and CTRL-\ CTRL-G
  * when part of a command has been typed.
@@ -9457,7 +9182,6 @@ export const ttimeoutlen = {
 };
 
 /**
- *
  * Indicates a fast terminal connection.  More characters will be sent to
  * the screen for redrawing, instead of using insert/delete line
  * commands.  Improves smoothness of redrawing when there are multiple
@@ -9488,7 +9212,6 @@ export const ttyfast = {
 };
 
 /**
- *
  * 		{only when compiled with the |+persistent_undo| feature}
  * List of directory names for undo files, separated with commas.
  * See |'backupdir'| for details of the format.
@@ -9527,7 +9250,6 @@ export const undodir = {
 };
 
 /**
- *
  * 		{only when compiled with the |+persistent_undo| feature}
  * When on, Vim automatically saves undo history to an undo file when
  * writing a buffer to a file, and restores undo history from the same
@@ -9561,7 +9283,6 @@ export const undofile = {
 };
 
 /**
- *
  * Maximum number of changes that can be undone.  Since undo information
  * is kept in memory, higher numbers will cause more memory to be used.
  * Nevertheless, a single change can already use a large amount of memory.
@@ -9607,7 +9328,6 @@ export const undolevels = {
 };
 
 /**
- *
  * Save the whole buffer for undo when reloading it.  This applies to the
  * ":e!" command and reloading for when the buffer changed outside of
  * Vim. |FileChangedShell|
@@ -9637,7 +9357,6 @@ export const undoreload = {
 };
 
 /**
- *
  * After typing this many characters the swap file will be written to
  * disk.  When zero, no swap file will be created at all (see chapter on
  * recovery |crash-recovery|).  'updatecount' is set to zero by starting
@@ -9673,7 +9392,6 @@ export const updatecount = {
 };
 
 /**
- *
  * If this many milliseconds nothing is typed the swap file will be
  * written to disk (see |crash-recovery|).  Also used for the
  * |CursorHold| autocommand event.
@@ -9700,7 +9418,6 @@ export const updatetime = {
 };
 
 /**
- *
  * When bigger than zero, Vim will give messages about what it is doing.
  * Currently, these messages are given:
  * >= 1	When the viminfo file is read or written.
@@ -9735,7 +9452,6 @@ export const verbose = {
 };
 
 /**
- *
  * When not empty all messages are written in a file with this name.
  * When the file exists messages are appended.
  * Writing to the file ends when Vim exits or when 'verbosefile' is made
@@ -9766,7 +9482,6 @@ export const verbosefile = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+mksession|
  * 		feature}
  * Name of the directory where to store files for |:mkview|.
@@ -9795,7 +9510,6 @@ export const viewdir = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+mksession|
  * 		feature}
  * Changes the effect of the |:mkview| command.  It is a comma separated
@@ -9835,7 +9549,6 @@ export const viewoptions = {
 };
 
 /**
- *
  * 		{not available when compiled without the
  * 		|+virtualedit| feature}
  * A comma separated list of these words:
@@ -9866,7 +9579,6 @@ export const virtualedit = {
 };
 
 /**
- *
  * Use a visual bell instead of beeping.  The terminal code to display the
  * visual bell is given with 't_vb'.  When no beep or flash is wanted,
  * use: >
@@ -9898,7 +9610,6 @@ export const visualbell = {
 };
 
 /**
- *
  * Allow specified keys that move the cursor left/right to move to the
  * previous/next line when the cursor is on the first/last character in
  * the line.  Concatenate characters to allow this for these keys:
@@ -9950,7 +9661,6 @@ export const whichwrap = {
 };
 
 /**
- *
  * Character you have to type to start wildcard expansion in the
  * command-line, as specified with 'wildmode'.
  * More info here: |cmdline-completion|.
@@ -9983,7 +9693,6 @@ export const wildchar = {
 };
 
 /**
- *
  * 'wildcharm' works exactly like 'wildchar', except that it is
  * recognized when used inside a macro.  You can find "spare" command-line
  * keys suitable for this option by looking at |ex-edit-index|.  Normally
@@ -10015,7 +9724,6 @@ export const wildcharm = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+wildignore|
  * 		feature}
  * A list of file patterns.  A file that matches with one of these
@@ -10052,7 +9760,6 @@ export const wildignore = {
 };
 
 /**
- *
  * When set case is ignored when completing file names and directories.
  * Has no effect when 'fileignorecase' is set.
  * Does not apply when the shell is used to expand wildcards, which
@@ -10080,7 +9787,6 @@ export const wildignorecase = {
 };
 
 /**
- *
  * 		{not available if compiled without the |+wildmenu|
  * 		feature}
  * When 'wildmenu' is on, command-line completion operates in an enhanced
@@ -10122,7 +9828,6 @@ export const wildmenu = {
 };
 
 /**
- *
  * Completion mode that is used for the character specified with
  * 'wildchar'.  It is a comma separated list of up to four parts.  Each
  * part specifies what to do for each consecutive use of 'wildchar'.  The
@@ -10168,7 +9873,6 @@ export const wildmode = {
 };
 
 /**
- *
  * 		{not available when compiled without the |+wildignore|
  * 		feature}
  * A list of words that change how command line completion is done.
@@ -10202,7 +9906,6 @@ export const wildoptions = {
 };
 
 /**
- *
  * 		{only used in Win32, Motif, GTK and Photon GUI}
  * Some GUI versions allow the access to menu entries by using the ALT
  * key in combination with a character that appears underlined in the
@@ -10243,7 +9946,6 @@ export const winaltkeys = {
 };
 
 /**
- *
  * Window height.  Do not confuse this with the height of the Vim window,
  * use 'lines' for that.
  * Used for |CTRL-F| and |CTRL-B| when there is only one window and the
@@ -10276,7 +9978,6 @@ export const window = {
 };
 
 /**
- *
  * Minimal number of lines for the current window.  This is not a hard
  * minimum, Vim will use fewer lines if there is not enough room.  If the
  * focus goes to a window that is smaller, its size is increased, at the
@@ -10316,7 +10017,6 @@ export const winheight = {
 };
 
 /**
- *
  * Keep the window height when windows are opened or closed and
  * 'equalalways' is set.  Also for |CTRL-W_=|.  Set by default for the
  * |preview-window| and |quickfix-window|.
@@ -10344,7 +10044,6 @@ export const winfixheight = {
 };
 
 /**
- *
  * Keep the window width when windows are opened or closed and
  * 'equalalways' is set.  Also for |CTRL-W_=|.
  * The width may be changed anyway when running out of room.
@@ -10371,7 +10070,6 @@ export const winfixwidth = {
 };
 
 /**
- *
  * The minimal height of a window, when it's not the current window.
  * This is a hard minimum, windows will never become smaller.
  * When set to zero, windows may be "squashed" to zero lines (i.e. just a
@@ -10404,7 +10102,6 @@ export const winminheight = {
 };
 
 /**
- *
  * The minimal width of a window, when it's not the current window.
  * This is a hard minimum, windows will never become smaller.
  * When set to zero, windows may be "squashed" to zero columns (i.e. just
@@ -10438,7 +10135,6 @@ export const winminwidth = {
 };
 
 /**
- *
  * Minimal number of columns for the current window.  This is not a hard
  * minimum, Vim will use fewer columns if there is not enough room.  If
  * the current window is smaller, its size is increased, at the cost of
@@ -10471,7 +10167,6 @@ export const winwidth = {
 };
 
 /**
- *
  * Number of characters from the right window border where wrapping
  * starts.  When typing text beyond this limit, an <EOL> will be inserted
  * and inserting continues on the next line.
@@ -10504,7 +10199,6 @@ export const wrapmargin = {
 };
 
 /**
- *
  * Searches wrap around the end of the file.  Also applies to |]s| and
  * |[s|, searching for spelling mistakes.
  */
@@ -10530,7 +10224,6 @@ export const wrapscan = {
 };
 
 /**
- *
  * Allows writing to any file with no need for "!" override.
  */
 export const writeany = {
@@ -10555,7 +10248,6 @@ export const writeany = {
 };
 
 /**
- *
  * Make a backup before overwriting a file.  The backup is removed after
  * the file was successfully written, unless the 'backup' option is
  * also on.
@@ -10593,7 +10285,6 @@ export const writebackup = {
 };
 
 /**
- *
  * The number of milliseconds to wait for each character sent to the
  * screen.  When non-zero, characters are sent to the terminal one by
  * one.  For debugging purposes.

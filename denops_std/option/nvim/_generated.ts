@@ -3,7 +3,6 @@ import { Denops } from "../../deps.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
- *
  * "nosplit": Shows the effects of a command incrementally, as you type.
  * "split"	 : Also shows partial off-screen results in a preview window.
  */
@@ -29,7 +28,6 @@ export const inccommand = {
 };
 
 /**
- *
  * Enables pseudo-transparency for the |popup-menu|. Valid values are in
  * the range of 0 for fully opaque popupmenu (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.
@@ -56,7 +54,6 @@ export const pumblend = {
 };
 
 /**
- *
  * Flags to change the way redrawing works, for debugging purposes.
  * Most useful with 'writedelay' set to some reasonable value.
  * Supports the following flags:
@@ -105,7 +102,6 @@ export const redrawdebug = {
 };
 
 /**
- *
  * Maximum number of lines kept beyond the visible screen. Lines at the
  * top are deleted if new lines exceed this limit.
  * Minimum is 1, maximum is 100000.
@@ -133,7 +129,6 @@ export const scrollback = {
 };
 
 /**
- *
  * When non-empty, the shada file is read upon startup and written
  * when exiting Vim (see |shada-file|).  The string should be a comma
  * separated list of parameters, each consisting of a single character
@@ -230,7 +225,6 @@ export const shada = {
 };
 
 /**
- *
  * When non-empty, overrides the file name used for |shada| (viminfo).
  * When equal to "NONE" no shada file will be read or written.
  * This option can be set with the |-i| command line flag.  The |--clean|
@@ -260,7 +254,6 @@ export const shadafile = {
 };
 
 /**
- *
  * Enables pseudo-transparency for a floating window. Valid values are in
  * the range of 0 for fully opaque window (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.
@@ -287,7 +280,6 @@ export const winblend = {
 };
 
 /**
- *
  * Window-local highlights.  Comma-delimited list of highlight
  * |group-name| pairs "{hl-builtin}:{hl},..." where each {hl-builtin} is
  * a built-in |highlight-groups| item to be overridden by {hl} group in
