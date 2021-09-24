@@ -10,8 +10,8 @@ import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { downloadString } from "./utils.ts";
 
-const VIM_VERSION = "8.2.0662";
-const NVIM_VERSION = "0.4.4";
+const VIM_VERSION = "8.2.3081";
+const NVIM_VERSION = "0.5.0";
 
 const manualFnSet = new Set([
   ...Object.keys(commonManual),

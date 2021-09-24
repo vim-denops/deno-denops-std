@@ -3,8 +3,7 @@ import { Denops } from "../../deps.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
- * "nosplit": Shows the effects of a command incrementally, as you type.
- * "split"	 : Also shows partial off-screen results in a preview window.
+ * 		global
  */
 export const inccommand = {
   async get(denops: Denops): Promise<string> {
@@ -24,6 +23,36 @@ export const inccommand = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "inccommand");
+  },
+};
+
+/**
+ * List of words that change the behavior of the |jumplist|.
+ *   stack         Make the jumplist behave like the tagstack or like a
+ *                 web browser.  Relative location of entries in the
+ * 		jumplist is preserved at the cost of discarding
+ * 		subsequent entries when navigating backwards in the
+ * 		jumplist and then jumping to a location.
+ * 		|jumplist-stack|
+ */
+export const jumpoptions = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "jumpoptions") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "jumpoptions", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "jumpoptions");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "jumpoptions") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "jumpoptions", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "jumpoptions");
   },
 };
 
@@ -254,6 +283,32 @@ export const shadafile = {
 };
 
 /**
+ * A comma separated list of options for specifying control characters
+ * to be removed from the text pasted into the terminal window. The
+ * supported values are:
+ */
+export const termpastefilter = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "termpastefilter") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "termpastefilter", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "termpastefilter");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "termpastefilter") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "termpastefilter", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "termpastefilter");
+  },
+};
+
+/**
  * Enables pseudo-transparency for a floating window. Valid values are in
  * the range of 0 for fully opaque window (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.
@@ -285,11 +340,6 @@ export const winblend = {
  * a built-in |highlight-groups| item to be overridden by {hl} group in
  * the window.  Only built-in |highlight-groups| are supported, not
  * syntax highlighting (use |:ownsyntax| for that).
- * Highlights of vertical separators are determined by the window to the
- * left of the separator.  The 'tabline' highlight of a tabpage is
- * decided by the last-focused window of the tabpage.  Highlights of
- * the popupmenu are determined by the current window.  Highlights in the
- * message area cannot be overridden.
  */
 export const winhighlight = {
   async get(denops: Denops): Promise<string> {
