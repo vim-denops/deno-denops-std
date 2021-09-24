@@ -108,6 +108,39 @@ export function last_buffer_nr(
 }
 
 /**
+ * Return the character class of the first character in {string}.
+ * The character class is one of:
+ * 	0	blank
+ * 	1	punctuation
+ * 	2	word character
+ * 	3	emoji
+ * 	other	specific Unicode class
+ * The class is used in patterns and word motions.
+ */
+export function charclass(denops: Denops, string: unknown): Promise<unknown>;
+export function charclass(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("charclass", ...args);
+}
+
+/**
+ * Same as |col()| but returns the character index of the column
+ * position given with {expr} instead of the byte position.
+ * Example:
+ * With the cursor on '세' in line 5 with text "여보세요":
+ * 	charcol('.')		returns 3
+ * 	col('.')		returns 7
+ * Can also be used as a |method|:
+ * 	GetPos()->col()
+ */
+export function charcol(denops: Denops, expr: unknown): Promise<unknown>;
+export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("charcol", ...args);
+}
+
+/**
  * Change the current working directory to {dir}.  The scope of
  * the directory change depends on the directory of the current
  * window:
@@ -136,22 +169,6 @@ export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Specifically used to interrupt a program being debugged.  It
- * will cause process {pid} to get a SIGTRAP.  Behavior for other
- * processes is undefined. See |terminal-debugger|.
- * {only available on MS-Windows}
- * Can also be used as a |method|:
- * 	GetPid()->debugbreak()
- */
-export function debugbreak(denops: Denops, pid: unknown): Promise<unknown>;
-export function debugbreak(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("debugbreak", ...args);
-}
-
-/**
  * Output {expr} as-is, including unprintable characters.  This
  * can be used to output a terminal code. For example, to disable
  * modifyOtherKeys:
@@ -166,21 +183,22 @@ export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Expand special items in {expr} like what is done for an Ex
- * command such as `:edit`.  This expands special keywords, like
- * with |expand()|, and environment variables, anywhere in
- * {expr}.  "~user" and "~/path" are only expanded at the start.
- * Returns the expanded string.  Example:
- * 	:echo expandcmd('make %<.o')
- * Can also be used as a |method|:
- * 	GetCommand()->expandcmd()
+ * Like |extend()| but instead of adding items to {expr1} a new
+ * List or Dictionary is created and returned.  {expr1} remains
+ * unchanged.  Items can still be changed by {expr2}, if you
+ * don't want that use |deepcopy()| first.
  */
-export function expandcmd(denops: Denops, expr: unknown): Promise<unknown>;
-export function expandcmd(
+export function extendnew(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+  expr3?: unknown,
+): Promise<unknown>;
+export function extendnew(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("expandcmd", ...args);
+  return denops.call("extendnew", ...args);
 }
 
 /**
@@ -192,6 +210,104 @@ export function file_readable(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("file_readable", ...args);
+}
+
+/**
+ * Like |flatten()| but first make a copy of {list}.
+ */
+export function flattennew(
+  denops: Denops,
+  list: unknown,
+  maxdepth?: unknown,
+): Promise<unknown>;
+export function flattennew(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("flattennew", ...args);
+}
+
+/**
+ * Get the full command name from a short abbreviated command
+ * name; see |20.2| for details on command abbreviations.
+ * {name} may start with a `:` and can include a [range], these
+ * are skipped and not returned.
+ * Returns an empty string if a command doesn't exist or if it's
+ * ambiguous (for user-defined functions).
+ * For example `fullcommand('s')`, `fullcommand('sub')`,
+ * `fullcommand(':%substitute')` all return "substitute".
+ * Can also be used as a |method|:
+ * 	GetName()->fullcommand()
+ */
+export function fullcommand(denops: Denops, name: unknown): Promise<unknown>;
+export function fullcommand(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("fullcommand", ...args);
+}
+
+/**
+ * Get the position for {expr}. Same as |getpos()| but the column
+ * number in the returned List is a character index instead of
+ * a byte index.
+ * If |getpos()| returns a very large column number, such as
+ * 2147483647, then getcharpos() will return the character index
+ * of the last character.
+ * Example:
+ * With the cursor on '세' in line 5 with text "여보세요":
+ * 	getcharpos('.')		returns [0, 5, 3, 0]
+ * 	getpos('.')		returns [0, 5, 7, 0]
+ * Can also be used as a |method|:
+ * 	GetMark()->getcharpos()
+ */
+export function getcharpos(denops: Denops, expr: unknown): Promise<unknown>;
+export function getcharpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcharpos", ...args);
+}
+
+/**
+ * Get a single character from the user or input stream as a
+ * string.
+ * If [expr] is omitted, wait until a character is available.
+ * If [expr] is 0 or false, only get a character when one is
+ * 	available.  Return an empty string otherwise.
+ * If [expr] is 1 or true, only check if a character is
+ * 	available, it is not consumed.  Return an empty string
+ * 	if no character is available.
+ * Otherwise this works like |getchar()|, except that a number
+ * result is converted to a string.
+ */
+export function getcharstr(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getcharstr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcharstr", ...args);
+}
+
+/**
+ * Same as |getcurpos()| but the column number in the returned
+ * List is a character index instead of a byte index.
+ * Example:
+ * With the cursor on '보' in line 3 with text "여보세요":
+ * 	getcursorcharpos()	returns [0, 3, 2, 0, 3]
+ * 	getcurpos()		returns [0, 3, 4, 0, 3]
+ * Can also be used as a |method|:
+ * 	GetWinid()->getcursorcharpos()
+ */
+export function getcursorcharpos(
+  denops: Denops,
+  winid?: unknown,
+): Promise<unknown>;
+export function getcursorcharpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcursorcharpos", ...args);
 }
 
 /**
@@ -208,7 +324,7 @@ export function getimstatus(
 }
 
 /**
- * Returns a Dictionary with the last known position of the
+ * Returns a |Dictionary| with the last known position of the
  * mouse.  This can be used in a mapping for a mouse click or in
  * a filter of a popup window.  The items are:
  * 	screenrow	screen row
@@ -222,7 +338,7 @@ export function getimstatus(
  * If not over a window, e.g. when in the command line, then only
  * "screenrow" and "screencol" are valid, the others are zero.
  * When on the status line below a window or the vertical
- * separater right of a window, the "line" and "column" values
+ * separator right of a window, the "line" and "column" values
  * are zero.
  * When the position is after the text then "column" is the
  * length of the text in bytes.
@@ -236,6 +352,56 @@ export function getmousepos(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getmousepos", ...args);
+}
+
+/**
+ * Returns detailed information about register {regname} as a
+ * Dictionary with the following entries:
+ * 	regcontents	List of lines contained in register
+ * 			{regname}, like
+ * 			|getreg|({regname}, 1, 1).
+ * 	regtype		the type of register {regname}, as in
+ * 			|getregtype()|.
+ * 	isunnamed	Boolean flag, v:true if this register
+ * 			is currently pointed to by the unnamed
+ * 			register.
+ * 	points_to	for the unnamed register, gives the
+ * 			single letter name of the register
+ * 			currently pointed to (see |quotequote|).
+ * 			For example, after deleting a line
+ * 			with `dd`, this field will be "1",
+ * 			which is the register that got the
+ * 			deleted text.
+ * If {regname} is invalid or not set, an empty Dictionary
+ * will be returned.
+ * If {regname} is not specified, |v:register| is used.
+ * The returned Dictionary can be passed to |setreg()|.
+ * In |Vim9-script| {regname} must be one character.
+ * Can also be used as a |method|:
+ * 	GetRegname()->getreginfo()
+ */
+export function getreginfo(denops: Denops, regname?: unknown): Promise<unknown>;
+export function getreginfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getreginfo", ...args);
+}
+
+/**
+ * Translate {text} if possible.
+ * This is mainly for use in the distributed Vim scripts.  When
+ * generating message translations the {text} is extracted by
+ * xgettext, the translator can add the translated message in the
+ * .po file and Vim will lookup the translation when gettext() is
+ * called.
+ * For {text} double quoted strings are preferred, because
+ * xgettext does not understand escaping in single quoted
+ * strings.
+ */
+export function gettext(denops: Denops, text: unknown): Promise<unknown>;
+export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("gettext", ...args);
 }
 
 /**
@@ -293,27 +459,6 @@ export function inputdialog(
 }
 
 /**
- * Interrupt script execution.  It works more or less like the
- * user typing CTRL-C, most commands won't execute and control
- * returns to the user.  This is useful to abort execution
- * from lower down, e.g. in an autocommand.  Example:
- * :function s:check_typoname(file)
- * :   if fnamemodify(a:file, ':t') == '['
- * :       echomsg 'Maybe typo'
- * :       call interrupt()
- * :   endif
- * :endfunction
- * :au BufWritePre * call s:check_typoname(expand('<amatch>'))
- */
-export function interrupt(denops: Denops): Promise<unknown>;
-export function interrupt(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("interrupt", ...args);
-}
-
-/**
  * This is similar to |json_decode()| with these differences:
  * - Object key names do not have to be in quotes.
  * - Strings can be in single quotes.
@@ -352,30 +497,6 @@ export function js_encode(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("js_encode", ...args);
-}
-
-/**
- * Convert each number in {list} to a character string can
- * concatenate them all.  Examples:
- * 	list2str([32])		returns " "
- * 	list2str([65, 66, 67])	returns "ABC"
- * The same can be done (slowly) with:
- * 	join(map(list, {nr, val -> nr2char(val)}), '')
- * |str2list()| does the opposite.
- * When {utf8} is omitted or zero, the current 'encoding' is used.
- * With {utf8} is 1, always return utf-8 characters.
- * With utf-8 composing characters work as expected:
- * 	list2str([97, 769])	returns "á"
- * Can also be used as a |method|:
- * 	GetList()->list2str()
- */
-export function list2str(
-  denops: Denops,
-  list: unknown,
-  utf8?: unknown,
-): Promise<unknown>;
-export function list2str(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("list2str", ...args);
 }
 
 /**
@@ -474,7 +595,7 @@ export function listener_flush(
 
 /**
  * Remove a listener previously added with listener_add().
- * Returns zero when {id} could not be found, one when {id} was
+ * Returns FALSE when {id} could not be found, TRUE when {id} was
  * removed.
  * Can also be used as a |method|:
  * 	GetListenerId()->listener_remove()
@@ -510,6 +631,142 @@ export function luaeval(
 ): Promise<unknown>;
 export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("luaeval", ...args);
+}
+
+/**
+ * Like |map()| but instead of replacing items in {expr1} a new
+ * List or Dictionary is created and returned.  {expr1} remains
+ * unchanged.  Items can still be changed by {expr2}, if you
+ * don't want that use |deepcopy()| first.
+ */
+export function mapnew(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+): Promise<unknown>;
+export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("mapnew", ...args);
+}
+
+/**
+ * Restore a mapping from a dictionary returned by |maparg()|.
+ * {mode} and {abbr} should be the same as for the call to
+ * |maparg()|.
+ * {mode} is used to define the mode in which the mapping is set,
+ * not the "mode" entry in {dict}.
+ * Example for saving and restoring a mapping:
+ * 	let save_map = maparg('K', 'n', 0, 1)
+ * 	nnoremap K somethingelse
+ * 	...
+ * 	call mapset('n', 0, save_map)
+ * Note that if you are going to replace a map in several modes,
+ * e.g. with `:map!`, you need to save the mapping for all of
+ * them, since they can differ.
+ */
+export function mapset(
+  denops: Denops,
+  mode: unknown,
+  abbr: unknown,
+  dict: unknown,
+): Promise<unknown>;
+export function mapset(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("mapset", ...args);
+}
+
+/**
+ * If {list} is a list of strings, then returns a |List| with all
+ * the strings in {list} that fuzzy match {str}. The strings in
+ * the returned list are sorted based on the matching score.
+ * The optional {dict} argument always supports the following
+ * items:
+ *     matchseq	When this item is present and {str} contains
+ * 		multiple words separated by white space, then
+ * 		returns only matches that contain the words in
+ * 		the given sequence.
+ * If {list} is a list of dictionaries, then the optional {dict}
+ * argument supports the following additional items:
+ *     key		key of the item which is fuzzy matched against
+ * 		{str}. The value of this item should be a
+ * 		string.
+ *     text_cb	|Funcref| that will be called for every item
+ * 		in {list} to get the text for fuzzy matching.
+ * 		This should accept a dictionary item as the
+ * 		argument and return the text for that item to
+ * 		use for fuzzy matching.
+ * {str} is treated as a literal string and regular expression
+ * matching is NOT supported.  The maximum supported {str} length
+ * is 256.
+ * When {str} has multiple words each separated by white space,
+ * then the list of strings that have all the words is returned.
+ * If there are no matching strings or there is an error, then an
+ * empty list is returned. If length of {str} is greater than
+ * 256, then returns an empty list.
+ * Refer to |fuzzy-match| for more information about fuzzy
+ * matching strings.
+ * Example:
+ *    :echo matchfuzzy(["clay", "crow"], "cay")
+ * results in ["clay"].
+ *    :echo getbufinfo()->map({_, v -> v.name})->matchfuzzy("ndl")
+ * results in a list of buffer names fuzzy matching "ndl".
+ *    :echo getbufinfo()->matchfuzzy("ndl", {'key' : 'name'})
+ * results in a list of buffer information dicts with buffer
+ * names fuzzy matching "ndl".
+ *    :echo getbufinfo()->matchfuzzy("spl",
+ * 				\ {'text_cb' : {v -> v.name}})
+ * results in a list of buffer information dicts with buffer
+ * names fuzzy matching "spl".
+ *    :echo v:oldfiles->matchfuzzy("test")
+ * results in a list of file names fuzzy matching "test".
+ *    :let l = readfile("buffer.c")->matchfuzzy("str")
+ * results in a list of lines in "buffer.c" fuzzy matching "str".
+ *    :echo ['one two', 'two one']->matchfuzzy('two one')
+ * results in ['two one', 'one two'].
+ *    :echo ['one two', 'two one']->matchfuzzy('two one',
+ * 				\ {'matchseq': 1})
+ * results in ['two one'].
+ */
+export function matchfuzzy(
+  denops: Denops,
+  list: unknown,
+  str: unknown,
+  dict?: unknown,
+): Promise<unknown>;
+export function matchfuzzy(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchfuzzy", ...args);
+}
+
+/**
+ * Same as |matchfuzzy()|, but returns the list of matched
+ * strings, the list of character positions where characters
+ * in {str} matches and a list of matching scores.  You can
+ * use |byteidx()| to convert a character position to a byte
+ * position.
+ * If {str} matches multiple times in a string, then only the
+ * positions for the best match is returned.
+ * If there are no matching strings or there is an error, then a
+ * list with three empty list items is returned.
+ * Example:
+ * 	:echo matchfuzzypos(['testing'], 'tsg')
+ * results in [['testing'], [[0, 2, 6]], [99]]
+ * 	:echo matchfuzzypos(['clay', 'lacy'], 'la')
+ * results in [['lacy', 'clay'], [[0, 1], [1, 2]], [153, 133]]
+ * 	:echo [{'text': 'hello', 'id' : 10}]->matchfuzzypos('ll', {'key' : 'text'})
+ * results in [[{'id': 10, 'text': 'hello'}], [[2, 3]], [127]]
+ */
+export function matchfuzzypos(
+  denops: Denops,
+  list: unknown,
+  str: unknown,
+  dict?: unknown,
+): Promise<unknown>;
+export function matchfuzzypos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchfuzzypos", ...args);
 }
 
 /**
@@ -601,130 +858,6 @@ export function mzeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Evaluate Perl expression {expr} in scalar context and return
- * its result converted to Vim data structures. If value can't be
- * converted, it is returned as a string Perl representation.
- * Note: If you want an array or hash, {expr} must return a
- * reference to it.
- * Example:
- * 	:echo perleval('[1 .. 4]')
- * 	[1, 2, 3, 4]
- * Can also be used as a |method|:
- * 	GetExpr()->perleval()
- * {only available when compiled with the |+perl| feature}
- */
-export function perleval(denops: Denops, expr: unknown): Promise<unknown>;
-export function perleval(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("perleval", ...args);
-}
-
-/**
- * Set prompt callback for buffer {buf} to {expr}.  When {expr}
- * is an empty string the callback is removed.  This has only
- * effect if {buf} has 'buftype' set to "prompt".
- * The callback is invoked when pressing Enter.  The current
- * buffer will always be the prompt buffer.  A new line for a
- * prompt is added before invoking the callback, thus the prompt
- * for which the callback was invoked will be in the last but one
- * line.
- * If the callback wants to add text to the buffer, it must
- * insert it above the last line, since that is where the current
- * prompt is.  This can also be done asynchronously.
- * The callback is invoked with one argument, which is the text
- * that was entered at the prompt.  This can be an empty string
- * if the user only typed Enter.
- * Example:
- *    call prompt_setcallback(bufnr(), function('s:TextEntered'))
- *    func s:TextEntered(text)
- *      if a:text == 'exit' || a:text == 'quit'
- *        stopinsert
- *        close
- *      else
- *        call append(line('$') - 1, 'Entered: "' . a:text . '"')
- *        " Reset 'modified' to allow the buffer to be closed.
- *        set nomodified
- *      endif
- *    endfunc
- * Can also be used as a |method|:
- * 	GetBuffer()->prompt_setcallback(callback)
- */
-export function prompt_setcallback(
-  denops: Denops,
-  buf: unknown,
-  expr: unknown,
-): Promise<unknown>;
-export function prompt_setcallback(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prompt_setcallback", ...args);
-}
-
-/**
- * Set a callback for buffer {buf} to {expr}.  When {expr} is an
- * empty string the callback is removed.  This has only effect if
- * {buf} has 'buftype' set to "prompt".
- * This callback will be invoked when pressing CTRL-C in Insert
- * mode.  Without setting a callback Vim will exit Insert mode,
- * as in any buffer.
- * Can also be used as a |method|:
- * 	GetBuffer()->prompt_setinterrupt(callback)
- */
-export function prompt_setinterrupt(
-  denops: Denops,
-  buf: unknown,
-  expr: unknown,
-): Promise<unknown>;
-export function prompt_setinterrupt(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prompt_setinterrupt", ...args);
-}
-
-/**
- * Set prompt for buffer {buf} to {text}.  You most likely want
- * {text} to end in a space.
- * The result is only visible if {buf} has 'buftype' set to
- * "prompt".  Example:
- * 	call prompt_setprompt(bufnr(), 'command: ')
- * Can also be used as a |method|:
- * 	GetBuffer()->prompt_setprompt('command: ')
- */
-export function prompt_setprompt(
-  denops: Denops,
-  buf: unknown,
-  text: unknown,
-): Promise<unknown>;
-export function prompt_setprompt(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prompt_setprompt", ...args);
-}
-
-/**
- * If the popup menu (see |ins-completion-menu|) is not visible,
- * returns an empty |Dictionary|, otherwise, returns a
- * |Dictionary| with the following keys:
- * 	height		nr of items visible
- * 	width		screen cells
- * 	row		top screen row (0 first row)
- * 	col		leftmost screen column (0 first col)
- * 	size		total nr of items
- * 	scrollbar	|TRUE| if scrollbar is visible
- * The values are the same as in |v:event| during
- * |CompleteChanged|.
- */
-export function pum_getpos(denops: Denops): Promise<unknown>;
-export function pum_getpos(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("pum_getpos", ...args);
-}
-
-/**
  * Return a pseudo-random Number generated with an xoshiro128**
  * algorithm using seed {expr}.  The returned number is 32 bits,
  * also on 64 bits systems, for consistency.
@@ -743,25 +876,112 @@ export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Evaluate Ruby expression {expr} and return its result
- * converted to Vim data structures.
- * Numbers, floats and strings are returned as they are (strings
- * are copied though).
- * Arrays are represented as Vim |List| type.
- * Hashes are represented as Vim |Dictionary| type.
- * Other objects are represented as strings resulted from their
- * "Object#to_s" method.
- * Can also be used as a |method|:
- * 	GetRubyExpr()->rubyeval()
- * {only available when compiled with the |+ruby| feature}
+ * Read file {fname} in binary mode and return a |Blob|.
+ * When the file can't be opened an error message is given and
+ * the result is an empty |Blob|.
+ * Also see |readfile()| and |writefile()|.
  */
-export function rubyeval(denops: Denops, expr: unknown): Promise<unknown>;
-export function rubyeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("rubyeval", ...args);
+export function readblob(denops: Denops, fname: unknown): Promise<unknown>;
+export function readblob(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("readblob", ...args);
 }
 
 /**
- * The result is a List of Numbers.  The first number is the same
+ * Extended version of |readdir()|.
+ * Return a list of Dictionaries with file and directory
+ * information in {directory}.
+ * This is useful if you want to get the attributes of file and
+ * directory at the same time as getting a list of a directory.
+ * This is much faster than calling |readdir()| then calling
+ * |getfperm()|, |getfsize()|, |getftime()| and |getftype()| for
+ * each file and directory especially on MS-Windows.
+ * The list will by default be sorted by name (case sensitive),
+ * the sorting can be changed by using the optional {dict}
+ * argument, see |readdir()|.
+ * The Dictionary for file and directory information has the
+ * following items:
+ * 	group	Group name of the entry. (Only on Unix)
+ * 	name	Name of the entry.
+ * 	perm	Permissions of the entry. See |getfperm()|.
+ * 	size	Size of the entry. See |getfsize()|.
+ * 	time	Timestamp of the entry. See |getftime()|.
+ * 	type	Type of the entry.
+ * 		On Unix, almost same as |getftype()| except:
+ * 		    Symlink to a dir	"linkd"
+ * 		    Other symlink	"link"
+ * 		On MS-Windows:
+ * 		    Normal file		"file"
+ * 		    Directory		"dir"
+ * 		    Junction		"junction"
+ * 		    Symlink to a dir	"linkd"
+ * 		    Other symlink	"link"
+ * 		    Other reparse point	"reparse"
+ * 	user	User name of the entry's owner. (Only on Unix)
+ * On Unix, if the entry is a symlink, the Dictionary includes
+ * the information of the target (except the "type" item).
+ * On MS-Windows, it includes the information of the symlink
+ * itself because of performance reasons.
+ * When {expr} is omitted all entries are included.
+ * When {expr} is given, it is evaluated to check what to do:
+ * 	If {expr} results in -1 then no further entries will
+ * 	be handled.
+ * 	If {expr} results in 0 then this entry will not be
+ * 	added to the list.
+ * 	If {expr} results in 1 then this entry will be added
+ * 	to the list.
+ * The entries "." and ".." are always excluded.
+ * Each time {expr} is evaluated |v:val| is set to a |Dictionary|
+ * of the entry.
+ * When {expr} is a function the entry is passed as the argument.
+ * For example, to get a list of files ending in ".txt":
+ *   readdirex(dirname, {e -> e.name =~ '.txt$'})
+ * For example, to get a list of all files in the current
+ * directory without sorting the individual entries:
+ *   readdirex(dirname, '1', #{sort: 'none'})
+ * Can also be used as a |method|:
+ * 	GetDirName()->readdirex()
+ */
+export function readdirex(
+  denops: Denops,
+  directory: unknown,
+  expr?: unknown,
+  dict?: unknown,
+): Promise<unknown>;
+export function readdirex(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("readdirex", ...args);
+}
+
+/**
+ * {func} is called for every item in {object}, which can be a
+ * |List| or a |Blob|.  {func} is called with two arguments: the
+ * result so far and current item.  After processing all items
+ * the result is returned.
+ * {initial} is the initial result.  When omitted, the first item
+ * in {object} is used and {func} is first called for the second
+ * item.  If {initial} is not given and {object} is empty no
+ * result can be computed, an E998 error is given.
+ * Examples:
+ * 	echo reduce([1, 3, 5], { acc, val -> acc + val })
+ * 	echo reduce(['x', 'y'], { acc, val -> acc .. val }, 'a')
+ * 	echo reduce(0z1122, { acc, val -> 2 * acc + val })
+ * Can also be used as a |method|:
+ * 	echo mylist->reduce({ acc, val -> acc + val }, 0)
+ */
+export function reduce(
+  denops: Denops,
+  object: unknown,
+  func: unknown,
+  initial?: unknown,
+): Promise<unknown>;
+export function reduce(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("reduce", ...args);
+}
+
+/**
+ * The result is a |List| of Numbers.  The first number is the same
  * as what |screenchar()| returns.  Further numbers are
  * composing characters on top of the base character.
  * This is mainly to be used for testing.
@@ -801,6 +1021,107 @@ export function screenstring(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("screenstring", ...args);
+}
+
+/**
+ * Specify overrides for cell widths of character ranges.  This
+ * tells Vim how wide characters are, counted in screen cells.
+ * This overrides 'ambiwidth'.  Example:
+ *    setcellwidths([[0xad, 0xad, 1],
+ *    		\ [0x2194, 0x2199, 2]])
+ * The {list} argument is a list of lists with each three
+ * numbers. These three numbers are [low, high, width].  "low"
+ * and "high" can be the same, in which case this refers to one
+ * character. Otherwise it is the range of characters from "low"
+ * to "high" (inclusive).  "width" is either 1 or 2, indicating
+ * the character width in screen cells.
+ * An error is given if the argument is invalid, also when a
+ * range overlaps with another.
+ * Only characters with value 0x100 and higher can be used.
+ * To clear the overrides pass an empty list:
+ *    setcellwidths([]);
+ * You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
+ * the effect for known emoji characters.
+ */
+export function setcellwidths(denops: Denops, list: unknown): Promise<unknown>;
+export function setcellwidths(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("setcellwidths", ...args);
+}
+
+/**
+ * Same as |setpos()| but uses the specified column number as the
+ * character index instead of the byte index in the line.
+ * Example:
+ * With the text "여보세요" in line 8:
+ * 	call setcharpos('.', [0, 8, 4, 0])
+ * positions the cursor on the fourth character '요'.
+ * 	call setpos('.', [0, 8, 4, 0])
+ * positions the cursor on the second character '보'.
+ * Can also be used as a |method|:
+ * 	GetPosition()->setcharpos('.')
+ */
+export function setcharpos(
+  denops: Denops,
+  expr: unknown,
+  list: unknown,
+): Promise<unknown>;
+export function setcharpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("setcharpos", ...args);
+}
+
+/**
+ * Same as |cursor()| but uses the specified column number as the
+ * character index instead of the byte index in the line.
+ * Example:
+ * With the text "여보세요" in line 4:
+ * 	call setcursorcharpos(4, 3)
+ * positions the cursor on the third character '세'.
+ * 	call cursor(4, 3)
+ * positions the cursor on the first character '여'.
+ * Can also be used as a |method|:
+ * 	GetCursorPos()->setcursorcharpos()
+ */
+export function setcursorcharpos(
+  denops: Denops,
+  lnum: unknown,
+  col: unknown,
+  off?: unknown,
+): Promise<unknown>;
+export function setcursorcharpos(
+  denops: Denops,
+  list: unknown,
+): Promise<unknown>;
+export function setcursorcharpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("setcursorcharpos", ...args);
+}
+
+/**
+ * Similar to using a |slice| "expr[start : end]", but "end" is
+ * used exclusive.  And for a string the indexes are used as
+ * character indexes instead of byte indexes, like in
+ * |vim9script|.  Also, composing characters are not counted.
+ * When {end} is omitted the slice continues to the last item.
+ * When {end} is -1 the last item is omitted.
+ * Can also be used as a |method|:
+ * 	GetList()->slice(offset)
+ */
+export function slice(
+  denops: Denops,
+  expr: unknown,
+  start: unknown,
+  end?: unknown,
+): Promise<unknown>;
+export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("slice", ...args);
 }
 
 /**
@@ -933,13 +1254,13 @@ export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * something is busy:
  *     m	halfway a mapping, :normal command, feedkeys() or
  * 	stuffed command
- *     o	operator pending or waiting for a command argument,
- *         e.g. after |f|
+ *     o	operator pending, e.g. after |d|
  *     a	Insert mode autocomplete active
  *     x	executing an autocommand
  *     w	blocked on waiting, e.g. ch_evalexpr(), ch_read() and
- * 	ch_readraw() when reading json.
- *     S	not triggering SafeState or SafeStateAgain
+ * 	ch_readraw() when reading json
+ *     S	not triggering SafeState or SafeStateAgain, e.g. after
+ *     	|f| or a count
  *     c	callback invoked, including timer (repeats for
  * 	recursiveness up to "ccc")
  *     s	screen has scrolled for messages
@@ -950,152 +1271,64 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Return a list containing the number values which represent
- * each character in String {expr}.  Examples:
- * 	str2list(" ")		returns [32]
- * 	str2list("ABC")		returns [65, 66, 67]
- * |list2str()| does the opposite.
- * When {utf8} is omitted or zero, the current 'encoding' is used.
- * With {utf8} set to 1, always treat the String as utf-8
- * characters.  With utf-8 composing characters are handled
- * properly:
- * 	str2list("á")		returns [97, 769]
+ * The result is a Number, which is the number of characters
+ * in String {expr}.  Composing characters are ignored.
+ * |strchars()| can count the number of characters, counting
+ * composing characters separately.
+ * Also see |strlen()|, |strdisplaywidth()| and |strwidth()|.
  * Can also be used as a |method|:
- * 	GetString()->str2list()
+ * 	GetText()->strcharlen()
  */
-export function str2list(
+export function strcharlen(denops: Denops, expr: unknown): Promise<unknown>;
+export function strcharlen(
   denops: Denops,
-  expr: unknown,
-  utf8?: unknown,
-): Promise<unknown>;
-export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("str2list", ...args);
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("strcharlen", ...args);
 }
 
 /**
- * The result is a Number, which is a unix timestamp representing
- * the date and time in {timestring}, which is expected to match
- * the format specified in {format}.
- * The accepted {format} depends on your system, thus this is not
- * portable!  See the manual page of the C function strptime()
- * for the format.  Especially avoid "%c".  The value of $TZ also
- * matters.
- * If the {timestring} cannot be parsed with {format} zero is
- * returned.  If you do not know the format of {timestring} you
- * can try different {format} values until you get a non-zero
- * result.
- * See also |strftime()|.
- * Examples:
- *   :echo strptime("%Y %b %d %X", "1997 Apr 27 11:49:23")
- *   862156163
- *   :echo strftime("%c", strptime("%y%m%d %T", "970427 11:53:55"))
- *   Sun Apr 27 11:53:55 1997
- *   :echo strftime("%c", strptime("%Y%m%d%H%M%S", "19970427115355") + 3600)
- *   Sun Apr 27 12:53:55 1997
- * Not available on all systems.  To check use:
- * 	:if exists("*strptime")
+ * Returns a |Dictionary| with properties of the terminal that Vim
+ * detected from the response to |t_RV| request.  See
+ * |v:termresponse| for the response itself.  If |v:termresponse|
+ * is empty most values here will be 'u' for unknown.
+ *    cursor_style		whether sending |t_RS| works  **
+ *    cursor_blink_mode	whether sending |t_RC| works  **
+ *    underline_rgb	whether |t_8u| works **
+ *    mouse		mouse type supported
+ * ** value 'u' for unknown, 'y' for yes, 'n' for no
+ * If the |+termresponse| feature is missing then the result is
+ * an empty dictionary.
+ * If "cursor_style" is 'y' then |t_RS| will be sent to request the
+ * current cursor style.
+ * If "cursor_blink_mode" is 'y' then |t_RC| will be sent to
+ * request the cursor blink status.
+ * "cursor_style" and "cursor_blink_mode" are also set if |t_u7|
+ * is not empty, Vim will detect the working of sending |t_RS|
+ * and |t_RC| on startup.
+ * When "underline_rgb" is not 'y', then |t_8u| will be made empty.
+ * This avoids sending it to xterm, which would clear the colors.
+ * For "mouse" the value 'u' is unknown
+ * Also see:
+ * - 'ambiwidth' - detected by using |t_u7|.
+ * - |v:termstyleresp| and |v:termblinkresp| for the response to
+ *   |t_RS| and |t_RC|.
  */
-export function strptime(
+export function terminalprops(denops: Denops): Promise<unknown>;
+export function terminalprops(
   denops: Denops,
-  format: unknown,
-  timestring: unknown,
-): Promise<unknown>;
-export function strptime(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strptime", ...args);
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("terminalprops", ...args);
 }
 
 /**
- * Like `execute()` but in the context of window {id}.
- * The window will temporarily be made the current window,
- * without triggering autocommands.  When executing {command}
- * autocommands will be triggered, this may have unexpected side
- * effects.  Use |:noautocmd| if needed.
+ * Return a string representation of the type of {expr}.
  * Example:
- * 	call win_execute(winid, 'set syntax=python')
- * Doing the same with `setwinvar()` would not trigger
- * autocommands and not actually show syntax highlighting.
- * Not all commands are allowed in popup windows.
- * When window {id} does not exist then no error is given.
- * Can also be used as a |method|, the base is passed as the
- * second argument:
- * 	GetCommand()->win_execute(winid)
+ * 	echo typename([1, 2, 3])
+ * 	list<number>
  */
-export function win_execute(
-  denops: Denops,
-  id: unknown,
-  command: unknown,
-  silent?: unknown,
-): Promise<unknown>;
-export function win_execute(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("win_execute", ...args);
-}
-
-/**
- * Return the type of the window:
- * 	"popup"		popup window |popup|
- * 	"command"	command-line window |cmdwin|
- * 	(empty)		normal window
- * 	"unknown"	window {nr} not found
- * When {nr} is omitted return the type of the current window.
- * When {nr} is given return the type of this window by number or
- * |window-ID|.
- * Also see the 'buftype' option.  When running a terminal in a
- * popup window then 'buftype' is "terminal" and win_gettype()
- * returns "popup".
- */
-export function win_gettype(denops: Denops, nr?: unknown): Promise<unknown>;
-export function win_gettype(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("win_gettype", ...args);
-}
-
-/**
- * 	        Move the window {nr} to a new split of the window {target}.
- * This is similar to moving to {target}, creating a new window
- * using |:split| but having the same contents as window {nr}, and
- * then closing {nr}.
- * Both {nr} and {target} can be window numbers or |window-ID|s.
- * Both must be in the current tab page.
- * Returns zero for success, non-zero for failure.
- * {options} is a Dictionary with the following optional entries:
- *   "vertical"	When TRUE, the split is created vertically,
- * 		like with |:vsplit|.
- *   "rightbelow"	When TRUE, the split is made below or to the
- * 		right (if vertical).  When FALSE, it is done
- * 		above or to the left (if vertical).  When not
- * 		present, the values of 'splitbelow' and
- * 		'splitright' are used.
- * Can also be used as a |method|:
- * 	GetWinid()->win_splitmove(target)
- */
-export function win_splitmove(
-  denops: Denops,
-  nr: unknown,
-  target: unknown,
-  options?: unknown,
-): Promise<unknown>;
-export function win_splitmove(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("win_splitmove", ...args);
-}
-
-/**
- * The result is a String.  For MS-Windows it indicates the OS
- * version.  E.g, Windows 10 is "10.0", Windows 8 is "6.2",
- * Windows XP is "5.1".  For non-MS-Windows systems the result is
- * an empty string.
- */
-export function windowsversion(denops: Denops): Promise<unknown>;
-export function windowsversion(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("windowsversion", ...args);
+export function typename(denops: Denops, expr: unknown): Promise<unknown>;
+export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("typename", ...args);
 }
