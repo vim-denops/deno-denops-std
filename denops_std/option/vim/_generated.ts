@@ -31,8 +31,8 @@ export const altkeymap = {
 
 /**
  * 		{only available when compiled with GUI enabled
- * 		on Mac OS X}
- * This option only has an effect in the GUI version of Vim on Mac OS X
+ * 		on macOS}
+ * This option only has an effect in the GUI version of Vim on macOS
  * v10.2 or later.  When on, Vim will use smooth ("antialiased") fonts,
  * which can be easier to read at certain sizes on certain displays.
  * Setting this option can sometimes cause problems if 'guifont' is set
@@ -57,6 +57,34 @@ export const antialias = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "antialias");
+  },
+};
+
+/**
+ * When on, Vim will change the current working directory whenever you
+ * change the directory of the shell running in a terminal window. You
+ * need proper setting-up, so whenever the shell's pwd changes an OSC 7
+ * escape sequence will be emitted. For example, on Linux, you can source
+ * /etc/profile.d/vte.sh in your shell profile if you use bash or zsh.
+ */
+export const autoshelldir = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "autoshelldir") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "autoshelldir", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "autoshelldir");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "autoshelldir") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "autoshelldir", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "autoshelldir");
   },
 };
 
@@ -137,46 +165,14 @@ export const compatible = {
 };
 
 /**
- * 		{only for MS-Windows}
- * When this option is set it overrules 'shellslash' for completion:
- * - When this option is set to "slash", a forward slash is used for path
- *   completion in insert mode. This is useful when editing HTML tag, or
- *   Makefile with 'noshellslash' on MS-Windows.
- * - When this option is set to "backslash", backslash is used. This is
- *   useful when editing a batch file with 'shellslash' set on MS-Windows.
- * - When this option is empty, same character is used as for
- *   'shellslash'.
- * For Insert mode completion the buffer-local value is used.  For
- * command line completion the global value is used.
- */
-export const completeslash = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "completeslash") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "completeslash", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "completeslash");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "completeslash") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "completeslash", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "completeslash");
-  },
-};
-
-/**
  * 		{not available when compiled without the |+textprop|
  * 		or |+quickfix| feature}
  * When 'completeopt' contains "popup" then this option is used for the
- * properties of the info popup when it is created.  You can also use
- * |popup_findinfo()| and then set properties for an existing info popup
- * with |popup_setoptions()|.  See |complete-popup|.
+ * properties of the info popup when it is created.  If an info popup
+ * window already exists it is closed, so that the option value is
+ * applied when it is created again.
+ * You can also use |popup_findinfo()| and then set properties for an
+ * existing info popup with |popup_setoptions()|.  See |complete-popup|.
  */
 export const completepopup = {
   async get(denops: Denops): Promise<string> {
@@ -238,6 +234,21 @@ export const conskey = {
  * 		you write the file the encrypted bytes will be
  * 		different.  The whole undo file is encrypted, not just
  * 		the pieces of text.
+ *    xchacha20	XChaCha20 Cipher with Poly1305 Message Authentication
+ * 		Code.  Medium strong till strong encryption.
+ * 		Encryption is provided by the libsodium library, it
+ * 		requires Vim to be built with |+sodium|
+ * 		It adds a seed and a message authentication code (MAC)
+ * 		to the file.  This needs at least a Vim 8.2.3022 to
+ * 		read the encrypted file.
+ * 		Encryption of swap files is not supported, therefore
+ * 		no swap file will be used when xchacha20 encryption is
+ * 		enabled.
+ * 		Encryption of undo files is not yet supported,
+ * 		therefore no undo file will currently be written.
+ * 		CURRENTLY EXPERIMENTAL: Files written with this method
+ * 		might have to be read back with the same version of
+ * 		Vim if the binary format changes later.
  */
 export const cryptmethod = {
   async get(denops: Denops): Promise<string> {
@@ -334,6 +345,7 @@ export const cursorlineopt = {
  * toggled each time the flag is given.  See |complex-change|.  See
  * also 'gdefault' option.
  * Switching this option on may break plugins!
+ * This option is not used in |Vim9| script.
  */
 export const edcompatible = {
   async get(denops: Denops): Promise<boolean> {
@@ -441,6 +453,35 @@ export const fkmap = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "fkmap");
+  },
+};
+
+/**
+ * 		{only available when compiled with GUI enabled and
+ * 		with the |+xfontset| feature}
+ * 		{not available in the GTK+ GUI}
+ * When not empty, specifies two (or more) fonts to be used.  The first
+ * one for normal English, the second one for your special language.  See
+ * |xfontset|.
+ */
+export const guifontset = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "guifontset") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "guifontset", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "guifontset");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "guifontset") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "guifontset", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "guifontset");
   },
 };
 
@@ -553,7 +594,7 @@ export const highlight = {
 /**
  * This option specifies a function that will be called to
  * activate or deactivate the Input Method.
- * It is not used in the GUI.
+ * It is not used in the MS-Windows GUI version.
  * The expression will be evaluated in the |sandbox| when set from a
  * modeline, see |sandbox-option|.
  */
@@ -613,7 +654,7 @@ export const imactivatekey = {
 /**
  * This option specifies a function that is called to obtain the status
  * of Input Method.  It must return a positive number when IME is active.
- * It is not used in the GUI.
+ * It is not used in the MS-Windows GUI version.
  */
 export const imstatusfunc = {
   async get(denops: Denops): Promise<string> {
@@ -839,31 +880,6 @@ export const previewpopup = {
 };
 
 /**
- * Determines the minimum width to use for the popup menu for Insert mode
- * completion.  |ins-completion-menu|.
- */
-export const pumwidth = {
-  async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "pumwidth") ?? 0;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "pumwidth", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "pumwidth");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "pumwidth") ?? 0;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "pumwidth", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "pumwidth");
-  },
-};
-
-/**
  * 		{only available when compiled with GUI and DIRECTX on
  * 		MS-Windows}
  * Select a text renderer and set its options.  The options depend on the
@@ -1037,40 +1053,10 @@ export const swapsync = {
 };
 
 /**
- * 		{not available when compiled without the |+eval|
- * 		feature}
- * This option specifies a function to be used to perform tag searches.
- * The function gets the tag pattern and should return a List of matching
- * tags.  See |tag-function| for an explanation of how to write the
- * function and an example.
- */
-export const tagfunc = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "tagfunc") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "tagfunc", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "tagfunc");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "tagfunc") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "tagfunc", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "tagfunc");
-  },
-};
-
-/**
  * Encoding used for the terminal.  This specifies what character
  * encoding the keyboard produces and the display will understand.  For
  * the GUI it only applies to the keyboard ('encoding' is used for the
- * display).  Except for the Mac when 'macatsui' is off, then
- * 'termencoding' should be "macroman".
+ * display).
  * Note: This does not apply to the GTK+ GUI.  After the GUI has been
  * successfully initialized, 'termencoding' is forcibly set to "utf-8".
  * Any attempts to set a different value will be rejected, and an error
@@ -1171,8 +1157,8 @@ export const termwinscroll = {
 };
 
 /**
- * Size of the |terminal| window.  Format: {rows}x{columns} or
- * {rows}*{columns}.
+ * Size used when opening the |terminal| window.  Format:
+ * 	{rows}x{columns} or {rows}*{columns}.
  * - When empty the terminal gets the size from the window.
  * - When set with a "x" (e.g., "24x80") the terminal size is not
  *   adjusted to the window size.  If the window is smaller only the
@@ -1183,6 +1169,8 @@ export const termwinscroll = {
  * - When rows is zero then use the height of the window.
  * - When columns is zero then use the width of the window.
  * - Using "0x0" or "0*0" is the same as empty.
+ * - Can be overruled in the |term_start()| options with "term_rows" and
+ *   "term_cols".
  */
 export const termwinsize = {
   async get(denops: Denops): Promise<string> {
@@ -1496,67 +1484,6 @@ export const ttytype = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "ttytype");
-  },
-};
-
-/**
- * 		{only available when compiled with the |+vartabs|
- * 		feature}
- * A list of the number of spaces that a <Tab> counts for while editing,
- * such as inserting a <Tab> or using <BS>.  It "feels" like variable-
- * width <Tab>s are being inserted, while in fact a mixture of spaces
- * and <Tab>s is used.  Tab widths are separated with commas, with the
- * final value applying to all subsequent tabs.
- */
-export const varsofttabstop = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "varsofttabstop") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "varsofttabstop", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "varsofttabstop");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "varsofttabstop") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "varsofttabstop", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "varsofttabstop");
-  },
-};
-
-/**
- * 		{only available when compiled with the |+vartabs|
- * 		feature}
- * A list of the number of spaces that a <Tab> in the file counts for,
- * separated by commas.  Each value corresponds to one tab, with the
- * final value applying to all subsequent tabs. For example: >
- * 	:set vartabstop=4,20,10,8
- * <	This will make the first tab 4 spaces wide, the second 20 spaces,
- * the third 10 spaces, and all following tabs 8 spaces.
- */
-export const vartabstop = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "vartabstop") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "vartabstop", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "vartabstop");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "vartabstop") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "vartabstop", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "vartabstop");
   },
 };
 

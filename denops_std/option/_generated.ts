@@ -1246,7 +1246,11 @@ export const cinwords = {
  * 		{only in GUI versions or when the |+xterm_clipboard|
  * 		feature is included}
  * This option is a list of comma separated names.
- * These names are recognized:
+ * Note: if one of the items is "exclude:", then you can't add an item
+ * after that.  Therefore do append an item with += but use ^= to
+ * prepend, e.g.: >
+ * 	set clipboard^=unnamed
+ * <	These names are recognized:
  */
 export const clipboard = {
   async get(denops: Denops): Promise<string> {
@@ -1513,6 +1517,40 @@ export const completefunc = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "completefunc");
+  },
+};
+
+/**
+ * 		{only for MS-Windows}
+ * When this option is set it overrules 'shellslash' for completion:
+ * - When this option is set to "slash", a forward slash is used for path
+ *   completion in insert mode. This is useful when editing HTML tag, or
+ *   Makefile with 'noshellslash' on MS-Windows.
+ * - When this option is set to "backslash", backslash is used. This is
+ *   useful when editing a batch file with 'shellslash' set on MS-Windows.
+ * - When this option is empty, same character is used as for
+ *   'shellslash'.
+ * For Insert mode completion the buffer-local value is used.  For
+ * command line completion the global value is used.
+ */
+export const completeslash = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "completeslash") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "completeslash", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "completeslash");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "completeslash") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "completeslash", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "completeslash");
   },
 };
 
@@ -2016,7 +2054,7 @@ export const define = {
  * "x" delete each combining character on its own.  When it is off (the
  * default) the character along with its combining characters are
  * deleted.
- * Note: When 'delcombine' is set "xx" may work different from "2x"!
+ * Note: When 'delcombine' is set "xx" may work differently from "2x"!
  */
 export const delcombine = {
   async get(denops: Denops): Promise<boolean> {
@@ -2162,48 +2200,9 @@ export const digraph = {
 
 /**
  * List of directory names for the swap file, separated with commas.
- * - The swap file will be created in the first directory where this is
- *   possible.
- * - Empty means that no swap file will be used (recovery is
- *   impossible!) and no |E303| error will be given.
- * - A directory "." means to put the swap file in the same directory as
- *   the edited file.  On Unix, a dot is prepended to the file name, so
- *   it doesn't show in a directory listing.  On MS-Windows the "hidden"
- *   attribute is set and a dot prepended if possible.
- * - A directory starting with "./" (or ".\" for MS-Windows) means to put
- *   the swap file relative to where the edited file is.  The leading "."
- *   is replaced with the path name of the edited file.
- * - For Unix and Win32, if a directory ends in two path separators "//",
- *   the swap file name will be built from the complete path to the file
- *   with all path separators substituted to percent '%' signs. This will
- *   ensure file name uniqueness in the preserve directory.
- *   On Win32, it is also possible to end with "\\".  However, When a
- *   separating comma is following, you must use "//", since "\\" will
- *   include the comma in the file name. Therefore it is recommended to
- *   use '//', instead of '\\'.
- * - Spaces after the comma are ignored, other spaces are considered part
- *   of the directory name.  To have a space at the start of a directory
- *   name, precede it with a backslash.
- * - To include a comma in a directory name precede it with a backslash.
- * - A directory name may end in an ':' or '/'.
- * - Environment variables are expanded |:set_env|.
- * - Careful with '\' characters, type one before a space, type two to
- *   get one in the option (see |option-backslash|), for example: >
- *     :set dir=c:\\tmp,\ dir\\,with\\,commas,\\\ dir\ with\ spaces
- * <	- For backwards compatibility with Vim version 3.0 a '>' at the start
- *   of the option is removed.
- * Using "." first in the list is recommended.  This means that editing
- * the same file twice will result in a warning.  Using "/tmp" on Unix is
- * discouraged: When the system crashes you lose the swap file.
- * "/var/tmp" is often not cleared when rebooting, thus is a better
- * choice than "/tmp".  But it can contain a lot of files, your swap
- * files get lost in the crowd.  That is why a "tmp" directory in your
- * home directory is tried first.
- * The use of |:set+=| and |:set-=| is preferred when adding or removing
- * directories from the list.  This avoids problems when a future version
- * uses another default.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
- * security reasons.
+ * Recommended value:  ".,~/vimswap//" - this will put the swap file next
+ * to the edited file if possible, and in your personal swap directory
+ * otherwise.  Make sure "~/vimswap//" is only readable for you.
  */
 export const directory = {
   async get(denops: Denops): Promise<string> {
@@ -2288,6 +2287,10 @@ export const eadirection = {
 
 /**
  * When on all Unicode emoji characters are considered to be full width.
+ * This excludes "text emoji" characters, which are normally displayed as
+ * single width.  Unfortunately there is no good specification for this
+ * and it has been determined on trial-and-error basis.  Use the
+ * |setcellwidths()| function to change the behavior.
  */
 export const emoji = {
   async get(denops: Denops): Promise<boolean> {
@@ -2666,9 +2669,10 @@ export const fileencoding = {
  * because Vim cannot detect an error, thus the encoding is always
  * accepted.
  * The special value "default" can be used for the encoding from the
- * environment.  This is the default value for 'encoding'.  It is useful
- * when 'encoding' is set to "utf-8" and your environment uses a
- * non-latin1 encoding, such as Russian.
+ * environment.  On MS-Windows this is the system encoding.  Otherwise
+ * this is the default value for 'encoding'.  It is useful when
+ * 'encoding' is set to "utf-8" and your environment uses a non-latin1
+ * encoding, such as Russian.
  * When 'encoding' is "utf-8" and a file contains an illegal byte
  * sequence it won't be recognized as UTF-8.  You can use the |8g8|
  * command to find the illegal byte sequence.
@@ -2706,7 +2710,7 @@ export const fileencodings = {
 /**
  * This gives the <EOL> of the current buffer, which is used for
  * reading/writing the buffer from/to a file:
- *     dos	    <CR> <NL>
+ *     dos	    <CR><NL>
  *     unix    <NL>
  *     mac	    <CR>
  * When "dos" is used, CTRL-Z at the end of a file is ignored.
@@ -3641,35 +3645,6 @@ export const guifont = {
 };
 
 /**
- * 		{only available when compiled with GUI enabled and
- * 		with the |+xfontset| feature}
- * 		{not available in the GTK+ GUI}
- * When not empty, specifies two (or more) fonts to be used.  The first
- * one for normal English, the second one for your special language.  See
- * |xfontset|.
- */
-export const guifontset = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guifontset") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "guifontset", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "guifontset");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guifontset") ?? "";
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "guifontset", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "guifontset");
-  },
-};
-
-/**
  * 		{only available when compiled with GUI enabled}
  * When not empty, specifies a comma-separated list of fonts to be used
  * for double-width characters.  The first font that can be loaded is
@@ -4554,7 +4529,8 @@ export const isident = {
  * Keywords are used in searching and recognizing with many commands:
  * "w", "*", "[i", etc.  It is also used for "\k" in a |pattern|.  See
  * 'isfname' for a description of the format of this option.  For '@'
- * characters above 255 check the "word" character class.
+ * characters above 255 check the "word" character class (any character
+ * that is not white space or punctuation).
  * For C programs you could use "a-z,A-Z,48-57,_,.,-,>".
  * For a help file it is set to all non-blank printable characters except
  * '*', '"' and '|' (so that CTRL-] on a command finds the help for that
@@ -5045,6 +5021,15 @@ export const listchars = {
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "listchars");
   },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "listchars") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "listchars", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "listchars");
+  },
 };
 
 /**
@@ -5202,7 +5187,7 @@ export const makeprg = {
  * jump between two double quotes.
  * The characters must be separated by a colon.
  * The pairs must be separated by a comma.  Example for including '<' and
- * '>' (HTML): >
+ * '>' (for HTML): >
  * 	:set mps+=<:>
  */
 export const matchpairs = {
@@ -5768,6 +5753,15 @@ export const mousetime = {
  * bin	If included, numbers starting with "0b" or "0B" will be
  * 	considered to be binary.  Example: Using CTRL-X on
  * 	"0b1000" subtracts one, resulting in "0b0111".
+ * unsigned    If included, numbers are recognized as unsigned. Thus a
+ * 	leading dash or negative sign won't be considered as part of
+ * 	the number.  Examples:
+ * 	    Using CTRL-X on "2020" in "9-2020" results in "9-2019"
+ * 	    (without "unsigned" it would become "9-2021").
+ * 	    Using CTRL-A on "2020" in "9-2020" results in "9-2021"
+ * 	    (without "unsigned" it would become "9-2019").
+ * 	    Using CTRL-X on "0" or CTRL-A on "18446744073709551615"
+ * 	    (2^64 - 1) has no effect, overflow is prevented.
  * Numbers which simply begin with a digit in the range 1-9 are always
  * considered decimal.  This also happens for numbers that are not
  * recognized as octal or hex.
@@ -6528,6 +6522,31 @@ export const pumheight = {
 };
 
 /**
+ * Determines the minimum width to use for the popup menu for Insert mode
+ * completion.  |ins-completion-menu|.
+ */
+export const pumwidth = {
+  async get(denops: Denops): Promise<number> {
+    return await options.get(denops, "pumwidth") ?? 0;
+  },
+  set(denops: Denops, value: number): Promise<void> {
+    return options.set(denops, "pumwidth", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "pumwidth");
+  },
+  async getGlobal(denops: Denops): Promise<number> {
+    return await globalOptions.get(denops, "pumwidth") ?? 0;
+  },
+  setGlobal(denops: Denops, value: number): Promise<void> {
+    return globalOptions.set(denops, "pumwidth", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "pumwidth");
+  },
+};
+
+/**
  * 		{only available when compiled with the |+python| or
  * 		the |+python3| feature}
  * Specifies the python version used for pyx* functions and commands
@@ -6551,6 +6570,38 @@ export const pyxversion = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "pyxversion");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+quickfix|
+ * 		feature}
+ * This option specifies a function to be used to get the text to display
+ * in the quickfix and location list windows.  This can be used to
+ * customize the information displayed in the quickfix or location window
+ * for each entry in the corresponding quickfix or location list.  See
+ * |quickfix-window-function| for an explanation of how to write the
+ * function and an example. The value can be the name of a function or a
+ * lambda.
+ */
+export const quickfixtextfunc = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "quickfixtextfunc") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "quickfixtextfunc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "quickfixtextfunc");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "quickfixtextfunc") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "quickfixtextfunc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "quickfixtextfunc");
   },
 };
 
@@ -6827,7 +6878,7 @@ export const rightleftcmd = {
  * screen.  If the statusline is given by 'statusline' (i.e. not empty),
  * this option takes precedence over 'ruler' and 'rulerformat'
  * If the number of characters displayed is different from the number of
- * bytes in the text (e.g., for a TAB or a multi-byte character), both
+ * bytes in the text (e.g., for a TAB or a multibyte character), both
  * the text column (byte number) and the screen column are shown,
  * separated with a dash.
  * For an empty line "0-1" is shown.
@@ -6934,7 +6985,9 @@ export const runtimepath = {
 /**
  * Number of lines to scroll with CTRL-U and CTRL-D commands.  Will be
  * set to half the number of lines in the window when the window size
- * changes.  If you give a count to the CTRL-U or CTRL-D command it will
+ * changes.  This may happen when enabling the |status-line| or
+ * 'tabline' option after setting the 'scroll' option.
+ * If you give a count to the CTRL-U or CTRL-D command it will
  * be used as the new value for 'scroll'.  Reset to half the window
  * height with ":set scroll=0".
  */
@@ -7231,6 +7284,7 @@ export const selectmode = {
  * 		global values for local options)
  *    options	all options and mappings (also global values for local
  * 		options)
+ *    skiprtp	exclude 'runtimepath' and 'packpath' from the options
  *    resize	size of the Vim window: 'lines' and 'columns'
  *    sesdir	the directory in which the session file is located
  * 		will become the current directory (useful with
@@ -7300,13 +7354,13 @@ export const shell = {
 
 /**
  * Flag passed to the shell to execute "!" and ":!" commands; e.g.,
- * "bash.exe -c ls" or "cmd.exe /c dir".  For MS-Windows, the default is
- * set according to the value of 'shell', to reduce the need to set this
- * option by the user.
+ * "bash.exe -c ls", "powershell.exe -Command dir", or "cmd.exe /c dir".
+ * For MS-Windows, the default is set according to the value of 'shell',
+ * to reduce the need to set this option by the user.
  * On Unix it can have more than one flag.  Each white space separated
  * part is passed as an argument to the shell command.
  * See |option-backslash| about including spaces and backslashes.
- * Also see |dos-shell| for MS-Windows.
+ * Also see |dos-shell| and |dos-powershell| for MS-Windows.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -7340,16 +7394,19 @@ export const shellcmdflag = {
  * The name of the temporary file can be represented by "%s" if necessary
  * (the file name is appended automatically if no %s appears in the value
  * of this option).
- * For the Amiga the default is ">".  For MS-Windows the default is
- * ">%s 2>&1".  The output is directly saved in a file and not echoed to
- * the screen.
- * For Unix the default it "| tee".  The stdout of the compiler is saved
+ * For the Amiga the default is ">".  For MS-Windows using powershell the
+ * default is "2>&1 | Out-File -Encoding default", otherwise the default
+ * is ">%s 2>&1".  The output is directly saved in a file and not echoed
+ * to the screen.
+ * For Unix the default is "| tee".  The stdout of the compiler is saved
  * in a file and echoed to the screen.  If the 'shell' option is "csh" or
  * "tcsh" after initializations, the default becomes "|& tee".  If the
  * 'shell' option is "sh", "ksh", "mksh", "pdksh", "zsh", "zsh-beta",
- * "bash" or "fish" the default becomes "2>&1| tee".  This means that
- * stderr is also included.  Before using the 'shell' option a path is
- * removed, thus "/bin/sh" uses "sh".
+ * "bash", "fish", "ash" or "dash" the default becomes "2>&1| tee".  This
+ * means that stderr is also included.  Before using the 'shell' option a
+ * path is removed, thus "/bin/sh" uses "sh".
+ * For Unix and MS-Windows, when the 'shell' option is "pwsh" the default
+ * becomes ">%s 2>&1" and the output is not echoed to the screen.
  * The initialization of this option is done after reading the ".vimrc"
  * and the other initializations, so that when the 'shell' option is set
  * there, the 'shellpipe' option changes automatically, unless it was
@@ -7392,9 +7449,7 @@ export const shellpipe = {
  * probably not useful to set both options.
  * This is an empty string by default.  Only known to be useful for
  * third-party shells on MS-Windows-like systems, such as the MKS Korn
- * Shell or bash, where it should be "\"".  The default is adjusted
- * according the value of 'shell', to reduce the need to set this option
- * by the user.  See |dos-shell|.
+ * Shell or bash, where it should be "\"".  See |dos-shell|.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -7429,10 +7484,12 @@ export const shellquote = {
  * The default is ">".  For Unix, if the 'shell' option is "csh" or
  * "tcsh" during initializations, the default becomes ">&".  If the
  * 'shell' option is "sh", "ksh", "mksh", "pdksh", "zsh", "zsh-beta",
- * "bash" or "fish", the default becomes ">%s 2>&1".  This means that
- * stderr is also included.  For Win32, the Unix checks are done and
- * additionally "cmd" is checked for, which makes the default ">%s 2>&1".
- * Also, the same names with ".exe" appended are checked for.
+ * "bash", "fish", or "pwsh", the default becomes ">%s 2>&1".  This means
+ * that stderr is also included.  For Win32, the Unix checks are done and
+ * additionally "cmd" is checked for, which makes the default ">%s 2>&1",
+ * and "powershell" is checked for which makes the default
+ * "2>&1 | Out-File -Encoding default" (see |dos-powershell|).  Also, the
+ * same names with ".exe" appended are checked for.
  * The initialization of this option is done after reading the ".vimrc"
  * and the other initializations, so that when the 'shell' option is set
  * there, the 'shellredir' option changes automatically unless it was
@@ -7466,9 +7523,9 @@ export const shellredir = {
 /**
  * 		{only for MS-Windows}
  * When set, a forward slash is used when expanding file names.  This is
- * useful when a Unix-like shell is used instead of cmd.exe.  Backward
- * slashes can still be typed, but they are changed to forward slashes by
- * Vim.
+ * useful when a Unix-like shell is used instead of cmd.exe, pwsh.exe, or
+ * powershell.exe.  Backward slashes can still be typed, but they are
+ * changed to forward slashes by Vim.
  * Note that setting or resetting this option has no effect for some
  * existing file names, thus this option needs to be set before opening
  * any file for best results.  This might change in the future.
@@ -7572,11 +7629,12 @@ export const shellxescape = {
  * then ')"' is appended.
  * When the value is '(' then also see 'shellxescape'.
  * This is an empty string by default on most systems, but is known to be
- * useful for on Win32 version, either for cmd.exe which automatically
- * strips off the first and last quote on a command, or 3rd-party shells
- * such as the MKS Korn Shell or bash, where it should be "\"".  The
- * default is adjusted according the value of 'shell', to reduce the need
- * to set this option by the user.  See |dos-shell|.
+ * useful for on Win32 version, either for cmd.exe, powershell.exe, or
+ * pwsh.exe which automatically strips off the first and last quote on a
+ * command, or 3rd-party shells such as the MKS Korn Shell or bash, where
+ * it should be "\"".  The default is adjusted according the value of
+ * 'shell', to reduce the need to set this option by the user.  See
+ * |dos-shell|.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -7662,7 +7720,7 @@ export const shiftwidth = {
  *  flag	meaning when present	~
  *   f	use "(3 of 5)" instead of "(file 3 of 5)"
  *   i	use "[noeol]" instead of "[Incomplete last line]"
- *   l	use "999L, 888C" instead of "999 lines, 888 characters"
+ *   l	use "999L, 888B" instead of "999 lines, 888 bytes"
  *   m	use "[+]" instead of "[Modified]"
  *   n	use "[New]" instead of "[New File]"
  *   r	use "[RO]" instead of "[readonly]"
@@ -8303,6 +8361,36 @@ export const spelllang = {
 /**
  * 		{not available when compiled without the |+syntax|
  * 		feature}
+ * A comma separated list of options for spell checking:
+ *    camel	When a word is CamelCased, assume "Cased" is a
+ * 		separate word: every upper-case character in a word
+ * 		that comes after a lower case character indicates the
+ * 		start of a new word.
+ */
+export const spelloptions = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "spelloptions") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "spelloptions", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "spelloptions");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "spelloptions") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "spelloptions", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "spelloptions");
+  },
+};
+
+/**
+ * 		{not available when compiled without the |+syntax|
+ * 		feature}
  * Methods used for spelling suggestions.  Both for the |z=| command and
  * the |spellsuggest()| function.  This is a comma-separated list of
  * items:
@@ -8549,6 +8637,8 @@ export const swapfile = {
 
 /**
  * This option controls the behavior when switching between buffers.
+ * Mostly for |quickfix| commands some values are also used for other
+ * commands, as mentioned below.
  * Possible values (comma separated list):
  *    useopen	If included, jump to the first open window that
  * 		contains the specified buffer (if there is one).
@@ -8814,6 +8904,35 @@ export const tagcase = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "tagcase");
+  },
+};
+
+/**
+ * 		{not available when compiled without the |+eval|
+ * 		feature}
+ * This option specifies a function to be used to perform tag searches.
+ * The function gets the tag pattern and should return a List of matching
+ * tags.  See |tag-function| for an explanation of how to write the
+ * function and an example.
+ */
+export const tagfunc = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "tagfunc") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "tagfunc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "tagfunc");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "tagfunc") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "tagfunc", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "tagfunc");
   },
 };
 
@@ -9418,17 +9537,82 @@ export const updatetime = {
 };
 
 /**
+ * 		{only available when compiled with the |+vartabs|
+ * 		feature}
+ * A list of the number of spaces that a <Tab> counts for while editing,
+ * such as inserting a <Tab> or using <BS>.  It "feels" like variable-
+ * width <Tab>s are being inserted, while in fact a mixture of spaces
+ * and <Tab>s is used.  Tab widths are separated with commas, with the
+ * final value applying to all subsequent tabs.
+ */
+export const varsofttabstop = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "varsofttabstop") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "varsofttabstop", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "varsofttabstop");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "varsofttabstop") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "varsofttabstop", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "varsofttabstop");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+vartabs|
+ * 		feature}
+ * A list of the number of spaces that a <Tab> in the file counts for,
+ * separated by commas.  Each value corresponds to one tab, with the
+ * final value applying to all subsequent tabs. For example: >
+ * 	:set vartabstop=4,20,10,8
+ * <	This will make the first tab 4 spaces wide, the second 20 spaces,
+ * the third 10 spaces, and all following tabs 8 spaces.
+ */
+export const vartabstop = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "vartabstop") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "vartabstop", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "vartabstop");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "vartabstop") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "vartabstop", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "vartabstop");
+  },
+};
+
+/**
  * When bigger than zero, Vim will give messages about what it is doing.
  * Currently, these messages are given:
  * >= 1	When the viminfo file is read or written.
  * >= 2	When a file is ":source"'ed.
+ * >= 4	Shell commands.
  * >= 5	Every searched tags file and include file.
  * >= 8	Files for which a group of autocommands is executed.
  * >= 9	Every executed autocommand.
+ * >= 11	Finding items in a path
  * >= 12	Every executed function.
  * >= 13	When an exception is thrown, caught, finished, or discarded.
  * >= 14	Anything pending in a ":finally" clause.
- * >= 15	Every executed Ex command (truncated at 200 characters).
+ * >= 15	Every executed Ex command from a script (truncated at 200
+ * 	characters).
+ * >= 16	Every executed Ex command.
  */
 export const verbose = {
   async get(denops: Denops): Promise<number> {
@@ -9549,8 +9733,6 @@ export const viewoptions = {
 };
 
 /**
- * 		{not available when compiled without the
- * 		|+virtualedit| feature}
  * A comma separated list of these words:
  *     block	Allow virtual editing in Visual block mode.
  *     insert	Allow virtual editing in Insert mode.
@@ -9833,23 +10015,6 @@ export const wildmenu = {
  * part specifies what to do for each consecutive use of 'wildchar'.  The
  * first part specifies the behavior for the first use of 'wildchar',
  * The second part for the second use, etc.
- * These are the possible values for each part:
- * ""		Complete only the first match.
- * "full"		Complete the next full match.  After the last match,
- * 		the original string is used and then the first match
- * 		again.
- * "longest"	Complete till longest common string.  If this doesn't
- * 		result in a longer string, use the next part.
- * "longest:full"	Like "longest", but also start 'wildmenu' if it is
- * 		enabled.
- * "list"		When more than one match, list all matches.
- * "list:full"	When more than one match, list all matches and
- * 		complete first match.
- * "list:longest"	When more than one match, list all matches and
- * 		complete till longest common string.
- * "list:lastused" When more than one buffer matches, sort buffers
- * 		by time last used (other than the current buffer).
- * When there is only a single match, it is fully completed in all cases.
  */
 export const wildmode = {
   async get(denops: Denops): Promise<string> {
@@ -9946,15 +10111,15 @@ export const winaltkeys = {
 };
 
 /**
- * Window height.  Do not confuse this with the height of the Vim window,
- * use 'lines' for that.
- * Used for |CTRL-F| and |CTRL-B| when there is only one window and the
- * value is smaller than 'lines' minus one.  The screen will scroll
- * 'window' minus two lines, with a minimum of one.
+ * Window height used for |CTRL-F| and |CTRL-B| when there is only one
+ * window and the value is smaller than 'lines' minus one.  The screen
+ * will scroll 'window' minus two lines, with a minimum of one.
  * When 'window' is equal to 'lines' minus one CTRL-F and CTRL-B scroll
  * in a much smarter way, taking care of wrapping lines.
  * When resizing the Vim window, the value is smaller than 1 or more than
  * or equal to 'lines' it will be set to 'lines' minus 1.
+ * Note: Do not confuse this with the height of the Vim window, use
+ * 'lines' for that.
  */
 export const window = {
   async get(denops: Denops): Promise<number> {
