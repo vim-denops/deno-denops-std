@@ -1,4 +1,4 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { input, inputlist, inputsecret } from "./input.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import { execute } from "../helper/execute.ts";
@@ -72,7 +72,7 @@ test({
   mode: "all",
   name: "input() throws an error when invalid completion is specified",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await input(denops, "Test: ", "", "custom:Invalid");
       },

@@ -1,4 +1,4 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { execute } from "./execute.ts";
 
 test({
@@ -31,7 +31,7 @@ test({
   mode: "any",
   name: "execute() executes multi-line Vim script but stop on errors",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await execute(
           denops,
