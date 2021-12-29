@@ -1,4 +1,4 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { gather, GatherHelper } from "./gather.ts";
 
 test({
@@ -45,7 +45,7 @@ test({
   mode: "any",
   name: "gather() throws an error when 'denops.batch()' is called.",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await gather(denops, async (denops) => {
           await denops.batch();
@@ -70,21 +70,21 @@ test({
       helper = denops;
       return Promise.resolve();
     });
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await helper!.call("execute", "DenopsGatherTest");
       },
       undefined,
       "not available outside",
     );
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await helper.cmd("DenopsGatherTest");
       },
       undefined,
       "not available outside",
     );
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         const _ = await helper.eval("v:version");
       },

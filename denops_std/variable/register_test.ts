@@ -1,11 +1,11 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { register } from "./register.ts";
 
 test({
   mode: "any",
   name: "register.get() throws an error when 'prop' is invalid",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await register.get(denops, "aa");
       },
@@ -42,7 +42,7 @@ test({
   mode: "any",
   name: "register.set() throws an error when 'prop' is invalid",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await register.set(denops, "aa", "world");
       },

@@ -1,4 +1,4 @@
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { load } from "./load.ts";
 
 const loadScriptUrlBase =
@@ -30,7 +30,7 @@ test({
   mode: "any",
   name: "load() load not exists local Vim script file",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await load(
           denops,
@@ -47,7 +47,7 @@ test({
   mode: "any",
   name: "load() load not exists remote Vim script file",
   fn: async (denops) => {
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         const loadScriptUrl = new URL(
           "load_test_not_exists.vim",

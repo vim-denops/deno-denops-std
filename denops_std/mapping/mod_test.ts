@@ -1,5 +1,5 @@
 import { Denops } from "../deps.ts";
-import { assertEquals, assertThrowsAsync, test } from "../deps_test.ts";
+import { assertEquals, assertRejects, test } from "../deps_test.ts";
 import { Mapping, Mode } from "./types.ts";
 import * as mapping from "./mod.ts";
 
@@ -252,7 +252,7 @@ test({
         rhs: "Hello",
       },
     );
-    await assertThrowsAsync(
+    await assertRejects(
       async () => {
         await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
           unique: true,
@@ -276,7 +276,7 @@ for (const mode of modes) {
       await mapping.unmap(denops, "<Plug>(test-denops-std)", {
         mode,
       });
-      await assertThrowsAsync(
+      await assertRejects(
         async () => {
           await mapping.read(denops, "<Plug>(test-denops-std)", { mode });
         },
@@ -299,7 +299,7 @@ test({
       mode: modes,
     });
     for (const mode of modes) {
-      await assertThrowsAsync(
+      await assertRejects(
         async () => {
           await mapping.read(denops, "<Plug>(test-denops-std)", { mode });
         },
