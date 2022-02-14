@@ -1,5 +1,6 @@
 import { deferred, Denops } from "../deps.ts";
 import * as anonymous from "../anonymous/mod.ts";
+import { batch } from "../batch/mod.ts";
 import { load } from "./load.ts";
 
 /**
@@ -21,6 +22,20 @@ export function echo(denops: Denops, message: string): Promise<void> {
   } else {
     return denops.cmd("redraw | echo message", { message });
   }
+}
+
+/**
+ * Echo message as an error message.
+ *
+ * Note that this function just use ErrorMsg highlight and is not equivalent
+ * to `echoerr` command in Vim/Neovim.
+ */
+export async function echoerr(denops: Denops, message: string): Promise<void> {
+  await batch(denops, async (denops) => {
+    await denops.cmd("echohl ErrorMsg");
+    await echo(denops, message);
+    await denops.cmd("echohl None");
+  });
 }
 
 async function echoVim(denops: Denops, message: string): Promise<void> {
