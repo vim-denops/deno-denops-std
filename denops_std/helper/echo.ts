@@ -38,6 +38,30 @@ export async function echoerr(denops: Denops, message: string): Promise<void> {
   });
 }
 
+/**
+ * Call given function and print a friendly error message (without stack trace) on failure.
+ *
+ * Print a stack trace when denops is running in debug mode.
+ */
+export async function friendlyCall(
+  denops: Denops,
+  fn: () => Promise<unknown>,
+): Promise<unknown> {
+  if (denops.meta.mode === "debug") {
+    return await fn();
+  }
+  try {
+    return await fn();
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      const err: Error = e;
+      await echoerr(denops, `[${denops.name}]: ${err.message}`);
+    } else {
+      throw e;
+    }
+  }
+}
+
 async function echoVim(denops: Denops, message: string): Promise<void> {
   await load(denops, new URL("./echo.vim", import.meta.url));
   const waiter = deferred<void>();

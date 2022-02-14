@@ -26,6 +26,30 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+### friendlyCall
+
+Use `friendlyCall()` to call given function and print a friendly error message
+(without stack trace) on failure. It's mainly designed for `dispatcher`
+functions.
+
+Note that it prints a stack trace when denops is running in debug mode.
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { friendlyCall } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  denops.dispatcher = {
+    "say": () => {
+      return friendlyCall(denops, async () => {
+        // Do whatever you want.
+        throw new Error("Some error occured");
+      });
+    },
+  };
+}
+```
+
 ### input
 
 Use `input()` which is a wrapper function of `input()` in
