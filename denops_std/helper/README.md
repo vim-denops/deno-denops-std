@@ -6,7 +6,7 @@
 
 ## Usage
 
-### echo
+### echo / echoerr
 
 Use `echo()` to show messages on the cmdline area. It is required while Vim
 won't show messages reported from channel commands and it won't pause multi-line
@@ -18,10 +18,35 @@ properly show multi-line messages with `echomsg` from asynchronous context.
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { echo } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { echo, echoerr } from "https://deno.land/x/denops_std/helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await echo(denops, "Hello\nWorld!");
+  await echoerr(denops, "This is error message");
+}
+```
+
+### friendlyCall
+
+Use `friendlyCall()` to call given function and print a friendly error message
+(without stack trace) on failure. It's mainly designed for `dispatcher`
+functions.
+
+Note that it prints a stack trace when denops is running in debug mode.
+
+```typescript
+import { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import { friendlyCall } from "https://deno.land/x/denops_std/helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  denops.dispatcher = {
+    "say": () => {
+      return friendlyCall(denops, async () => {
+        // Do whatever you want.
+        throw new Error("Some error occured");
+      });
+    },
+  };
 }
 ```
 
