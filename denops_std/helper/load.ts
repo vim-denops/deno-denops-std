@@ -59,7 +59,7 @@ function getLocalFilename(url: URL): string {
   const h = hash.createHash("sha256");
   h.update(url.href);
   const basename = path.basename(url.pathname);
-  return `${h.digest()}-${basename}`;
+  return `${h.toString()}-${basename}`;
 }
 
 async function getOrCreateCacheDir(): Promise<string> {
