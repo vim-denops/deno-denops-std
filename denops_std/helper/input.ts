@@ -1,4 +1,4 @@
-import { Denops, ensureNumber, ensureString } from "../deps.ts";
+import { assertNumber, assertString, Denops } from "../deps.ts";
 import * as fn from "../function/mod.ts";
 import * as anonymous from "../anonymous/mod.ts";
 import * as helper from "../helper/mod.ts";
@@ -38,9 +38,9 @@ export async function input(
   const completion = options.completion ?? null;
   if (completion && typeof completion !== "string") {
     const [id] = anonymous.add(denops, async (arglead, cmdline, cursorpos) => {
-      ensureString(arglead);
-      ensureString(cmdline);
-      ensureNumber(cursorpos);
+      assertString(arglead);
+      assertString(cmdline);
+      assertNumber(cursorpos);
       return await completion(arglead, cmdline, cursorpos);
     });
     try {

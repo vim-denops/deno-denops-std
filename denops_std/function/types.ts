@@ -1,4 +1,4 @@
-import { ensure, isLike } from "../deps.ts";
+import { AssertError, isLike } from "../deps.ts";
 
 /**
  * Type of `screenpos()` result.
@@ -28,10 +28,24 @@ export function isScreenPos(x: unknown): x is ScreenPos {
 }
 
 /**
- * Ensure if `x` is ScreenPos by raising an `EnsureError` when it's not.
+ * Assert if `x` is ScreenPos by raising an `AssertError` when it's not.
+ */
+export function assertScreenPos(x: unknown): asserts x is ScreenPos {
+  if (!isScreenPos(x)) {
+    throw new AssertError("The value must be ScreenPos");
+  }
+}
+
+/**
+ * Ensure if `x` is ScreenPos by raising an `AssertError` when it's not.
+ *
+ * @deprecated
  */
 export function ensureScreenPos(x: unknown): asserts x is ScreenPos {
-  return ensure(x, isScreenPos, "The value must be ScreenPos");
+  console.warn(
+    "The 'ensureScreenPos' is deprecated. Use 'assertScreenPos' instead.",
+  );
+  assertScreenPos(x);
 }
 
 /**
@@ -54,10 +68,24 @@ export function isPosition(x: unknown): x is Position {
 }
 
 /**
- * Ensure if `x` is Position by raising an `EnsureError` when it's not.
+ * Assert if `x` is Position by raising an `AssertError` when it's not.
+ */
+export function assertPosition(x: unknown): asserts x is Position {
+  if (!isPosition(x)) {
+    throw new AssertError("The value must be Position");
+  }
+}
+
+/**
+ * Ensure if `x` is Position by raising an `AssertError` when it's not.
+ *
+ * @deprecated
  */
 export function ensurePosition(x: unknown): asserts x is Position {
-  return ensure(x, isPosition, "The value must be Position");
+  console.warn(
+    "The 'ensurePosition' is deprecated. Use 'assertPosition' instead.",
+  );
+  assertPosition(x);
 }
 
 const validBuiltinCompletions = [
