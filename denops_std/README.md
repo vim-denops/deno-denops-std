@@ -17,13 +17,13 @@ import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
 import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
 import * as helper from "https://deno.land/x/denops_std/helper/mod.ts";
 
-import { ensureString } from "https://deno.land/x/unknownutil/mod.ts";
+import { assertString } from "https://deno.land/x/unknownutil/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
     async say(where: unknown): Promise<void> {
       // Ensure that `where` is `string` here
-      ensureString(where);
+      assertString(where);
       const name = await fn.input(denops, "Your name: ");
       const progname = await vars.v.get(denops, "progname");
       const messages = [
