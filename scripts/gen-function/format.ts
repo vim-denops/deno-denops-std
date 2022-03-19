@@ -5,6 +5,7 @@ const translate: Record<string, string> = {
   "delete": "delete_",
   "eval": "eval_",
   "function": "function_",
+  "lnum-end": "lnum_end",
 };
 
 function formatDocs(docs: string): string[] {
