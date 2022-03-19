@@ -106,7 +106,7 @@ export async function main(denops: Denops): Promise<void> {
         cmdline: string,
         cursorpos: number,
       ): Promise<string[]> => {
-        return ["Hello", "World"];
+        return Promise.resolve(["Hello", "World"]);
       },
     }),
   );
@@ -121,7 +121,7 @@ import { Denops } from "https://deno.land/x/denops_std/mod.ts";
 import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
-  denops.dispatch = {
+  denops.dispatcher = {
     say: async () => {
       return await input(denops, {
         prompt: "> ",
