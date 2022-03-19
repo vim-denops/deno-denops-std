@@ -2258,3 +2258,595 @@ export function term_wait(
 ): Promise<unknown> {
   return denops.call("term_wait", ...args);
 }
+
+/**
+ * Return non-zero when there is something to read from {handle}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * This is useful to read from a channel at a convenient time,
+ * e.g. from a timer.
+ * Note that messages are dropped when the channel does not have
+ * a callback.  Add a close callback to avoid that.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_canread()
+ */
+export function ch_canread(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_canread(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_canread", ...args);
+}
+
+/**
+ * Close {handle}.  See |channel-close|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * A close callback is not invoked.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_close()
+ */
+export function ch_close(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_close", ...args);
+}
+
+/**
+ * Close the "in" part of {handle}.  See |channel-close-in|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * A close callback is not invoked.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_close_in()
+ */
+export function ch_close_in(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close_in(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_close_in", ...args);
+}
+
+/**
+ * Send {expr} over {handle}.  The {expr} is encoded
+ * according to the type of channel.  The function cannot be used
+ * with a raw channel.  See |channel-use|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * {options} must be a Dictionary.  It must not have a "callback"
+ * entry.  It can have a "timeout" entry to specify the timeout
+ * for this specific request.
+ * ch_evalexpr() waits for a response and returns the decoded
+ * expression.  When there is an error or timeout it returns an
+ * empty string.
+ * Note that while waiting for the response, Vim handles other
+ * messages.  You need to make sure this doesn't cause trouble.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_evalexpr(expr)
+ */
+export function ch_evalexpr(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_evalexpr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_evalexpr", ...args);
+}
+
+/**
+ * Send {string} over {handle}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Works like |ch_evalexpr()|, but does not encode the request or
+ * decode the response.  The caller is responsible for the
+ * correct contents.  Also does not add a newline for a channel
+ * in NL mode, the caller must do that.  The NL in the response
+ * is removed.
+ * Note that Vim does not know when the text received on a raw
+ * channel is complete, it may only return the first part and you
+ * need to use |ch_readraw()| to fetch the rest.
+ * See |channel-use|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_evalraw(rawstring)
+ */
+export function ch_evalraw(
+  denops: Denops,
+  handle: unknown,
+  string: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_evalraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_evalraw", ...args);
+}
+
+/**
+ * Get the buffer number that {handle} is using for {what}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * {what} can be "err" for stderr, "out" for stdout or empty for
+ * socket output.
+ * Returns -1 when there is no buffer.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_getbufnr(what)
+ */
+export function ch_getbufnr(
+  denops: Denops,
+  handle: unknown,
+  what: unknown,
+): Promise<unknown>;
+export function ch_getbufnr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_getbufnr", ...args);
+}
+
+/**
+ * Get the Job associated with {channel}.
+ * If there is no job calling |job_status()| on the returned Job
+ * will result in "fail".
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_getjob()
+ */
+export function ch_getjob(denops: Denops, channel: unknown): Promise<unknown>;
+export function ch_getjob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_getjob", ...args);
+}
+
+/**
+ * Returns a Dictionary with information about {handle}.  The
+ * items are:
+ *    "id"		  number of the channel
+ *    "status"	  "open", "buffered" or "closed", like
+ * 		  ch_status()
+ * When opened with ch_open():
+ *    "hostname"	  the hostname of the address
+ *    "port"	  the port of the address
+ *    "sock_status"  "open" or "closed"
+ *    "sock_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "sock_io"	  "socket"
+ *    "sock_timeout" timeout in msec
+ * When opened with job_start():
+ *    "out_status"	  "open", "buffered" or "closed"
+ *    "out_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "out_io"	  "null", "pipe", "file" or "buffer"
+ *    "out_timeout"  timeout in msec
+ *    "err_status"	  "open", "buffered" or "closed"
+ *    "err_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "err_io"	  "out", "null", "pipe", "file" or "buffer"
+ *    "err_timeout"  timeout in msec
+ *    "in_status"	  "open" or "closed"
+ *    "in_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "in_io"	  "null", "pipe", "file" or "buffer"
+ *    "in_timeout"	  timeout in msec
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_info()
+ */
+export function ch_info(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_info", ...args);
+}
+
+/**
+ * Write {msg} in the channel log file, if it was opened with
+ * |ch_logfile()|.
+ * When {handle} is passed the channel number is used for the
+ * message.
+ * {handle} can be a Channel or a Job that has a Channel.  The
+ * Channel must be open for the channel number to be used.
+ * Can also be used as a |method|:
+ * 	'did something'->ch_log()
+ */
+export function ch_log(
+  denops: Denops,
+  msg: unknown,
+  handle?: unknown,
+): Promise<unknown>;
+export function ch_log(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_log", ...args);
+}
+
+/**
+ * Start logging channel activity to {fname}.
+ * When {fname} is an empty string: stop logging.
+ * When {mode} is omitted or "a" append to the file.
+ * When {mode} is "w" start with an empty file.
+ * Use |ch_log()| to write log messages.  The file is flushed
+ * after every message, on Unix you can use "tail -f" to see what
+ * is going on in real time.
+ * To enable the log very early, to see what is received from a
+ * terminal during startup, use |--cmd|:
+ * 	vim --cmd "call ch_logfile('logfile', 'w')"
+ * This function is not available in the |sandbox|.
+ * NOTE: the channel communication is stored in the file, be
+ * aware that this may contain confidential and privacy sensitive
+ * information, e.g. a password you type in a terminal window.
+ * Can also be used as a |method|:
+ * 	'logfile'->ch_logfile('w')
+ */
+export function ch_logfile(
+  denops: Denops,
+  fname: unknown,
+  mode?: unknown,
+): Promise<unknown>;
+export function ch_logfile(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_logfile", ...args);
+}
+
+/**
+ * Open a channel to {address}.  See |channel|.
+ * Returns a Channel.  Use |ch_status()| to check for failure.
+ * {address} has the form "hostname:port", e.g.,
+ * "localhost:8765".
+ * When using an IPv6 address, enclose it within square brackets.
+ * E.g., "[2001:db8::1]:8765".
+ * If {options} is given it must be a |Dictionary|.
+ * See |channel-open-options|.
+ * Can also be used as a |method|:
+ * 	GetAddress()->ch_open()
+ */
+export function ch_open(
+  denops: Denops,
+  address: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_open(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_open", ...args);
+}
+
+/**
+ * Read from {handle} and return the received message.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * For a NL channel this waits for a NL to arrive, except when
+ * there is nothing more to read (channel was closed).
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_read()
+ */
+export function ch_read(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_read(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_read", ...args);
+}
+
+/**
+ * Like ch_read() but reads binary data and returns a |Blob|.
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_readblob()
+ */
+export function ch_readblob(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_readblob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_readblob", ...args);
+}
+
+/**
+ * Like ch_read() but for a JS and JSON channel does not decode
+ * the message.  For a NL channel it does not block waiting for
+ * the NL to arrive, but otherwise works like ch_read().
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_readraw()
+ */
+export function ch_readraw(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_readraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_readraw", ...args);
+}
+
+/**
+ * Send {expr} over {handle}.  The {expr} is encoded
+ * according to the type of channel.  The function cannot be used
+ * with a raw channel.
+ * See |channel-use|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_sendexpr(expr)
+ */
+export function ch_sendexpr(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_sendexpr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_sendexpr", ...args);
+}
+
+/**
+ * Send |String| or |Blob| {expr} over {handle}.
+ * Works like |ch_sendexpr()|, but does not encode the request or
+ * decode the response.  The caller is responsible for the
+ * correct contents.  Also does not add a newline for a channel
+ * in NL mode, the caller must do that.  The NL in the response
+ * is removed.
+ * See |channel-use|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_sendraw(rawexpr)
+ */
+export function ch_sendraw(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_sendraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_sendraw", ...args);
+}
+
+/**
+ * Set options on {handle}:
+ * 	"callback"	the channel callback
+ * 	"timeout"	default read timeout in msec
+ * 	"mode"		mode for the whole channel
+ * See |ch_open()| for more explanation.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Note that changing the mode may cause queued messages to be
+ * lost.
+ * These options cannot be changed:
+ * 	"waittime"	only applies to |ch_open()|
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_setoptions(options)
+ */
+export function ch_setoptions(
+  denops: Denops,
+  handle: unknown,
+  options: unknown,
+): Promise<unknown>;
+export function ch_setoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_setoptions", ...args);
+}
+
+/**
+ * Return the status of {handle}:
+ * 	"fail"		failed to open the channel
+ * 	"open"		channel can be used
+ * 	"buffered"	channel can be read, not written to
+ * 	"closed"	channel can not be used
+ * {handle} can be a Channel or a Job that has a Channel.
+ * "buffered" is used when the channel was closed but there is
+ * still data that can be obtained with |ch_read()|.
+ * If {options} is given it can contain a "part" entry to specify
+ * the part of the channel to return the status for: "out" or
+ * "err".  For example, to get the error status:
+ * 	ch_status(job, {"part": "err"})
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_status()
+ */
+export function ch_status(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_status(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_status", ...args);
+}
+
+/**
+ * Get the channel handle that {job} is using.
+ * To check if the job has no channel:
+ * 	if string(job_getchannel()) == 'channel fail'
+ * Can also be used as a |method|:
+ * 	GetJob()->job_getchannel()
+ */
+export function job_getchannel(denops: Denops, job: unknown): Promise<unknown>;
+export function job_getchannel(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_getchannel", ...args);
+}
+
+/**
+ * Returns a Dictionary with information about {job}:
+ *    "status"	what |job_status()| returns
+ *    "channel"	what |job_getchannel()| returns
+ *    "cmd"	List of command arguments used to start the job
+ *    "process"	process ID
+ *    "tty_in"	terminal input name, empty when none
+ *    "tty_out"	terminal output name, empty when none
+ *    "exitval"	only valid when "status" is "dead"
+ *    "exit_cb"	function to be called on exit
+ *    "stoponexit"	|job-stoponexit|
+ *    Only in Unix:
+ *    "termsig"	the signal which terminated the process
+ * 		(See |job_stop()| for the values)
+ * 		only valid when "status" is "dead"
+ *    Only in MS-Windows:
+ *    "tty_type"	Type of virtual console in use.
+ * 		Values are "winpty" or "conpty".
+ * 		See 'termwintype'.
+ * Without any arguments, returns a List with all Job objects.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_info()
+ */
+export function job_info(denops: Denops, job?: unknown): Promise<unknown>;
+export function job_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("job_info", ...args);
+}
+
+/**
+ * Change options for {job}.  Supported are:
+ *    "stoponexit"	|job-stoponexit|
+ *    "exit_cb"	|job-exit_cb|
+ * Can also be used as a |method|:
+ * 	GetJob()->job_setoptions(options)
+ */
+export function job_setoptions(
+  denops: Denops,
+  job: unknown,
+  options: unknown,
+): Promise<unknown>;
+export function job_setoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_setoptions", ...args);
+}
+
+/**
+ * Start a job and return a Job object.  Unlike |system()| and
+ * |:!cmd| this does not wait for the job to finish.
+ * To start a job in a terminal window see |term_start()|.
+ * If the job fails to start then |job_status()| on the returned
+ * Job object results in "fail" and none of the callbacks will be
+ * invoked.
+ * {command} can be a String.  This works best on MS-Windows.  On
+ * Unix it is split up in white-separated parts to be passed to
+ * execvp().  Arguments in double quotes can contain white space.
+ * {command} can be a List, where the first item is the executable
+ * and further items are the arguments.  All items are converted
+ * to String.  This works best on Unix.
+ * On MS-Windows, job_start() makes a GUI application hidden. If
+ * want to show it, Use |:!start| instead.
+ * The command is executed directly, not through a shell, the
+ * 'shell' option is not used.  To use the shell:
+ * 	let job = job_start(["/bin/sh", "-c", "echo hello"])
+ * Or:
+ * 	let job = job_start('/bin/sh -c "echo hello"')
+ * Note that this will start two processes, the shell and the
+ * command it executes.  If you don't want this use the "exec"
+ * shell command.
+ * On Unix $PATH is used to search for the executable only when
+ * the command does not contain a slash.
+ * The job will use the same terminal as Vim.  If it reads from
+ * stdin the job and Vim will be fighting over input, that
+ * doesn't work.  Redirect stdin and stdout to avoid problems:
+ * 	let job = job_start(['sh', '-c', "myserver </dev/null >/dev/null"])
+ * The returned Job object can be used to get the status with
+ * |job_status()| and stop the job with |job_stop()|.
+ * Note that the job object will be deleted if there are no
+ * references to it.  This closes the stdin and stderr, which may
+ * cause the job to fail with an error.  To avoid this keep a
+ * reference to the job.  Thus instead of:
+ * 	call job_start('my-command')
+ * use:
+ * 	let myjob = job_start('my-command')
+ * and unlet "myjob" once the job is not needed or is past the
+ * point where it would fail (e.g. when it prints a message on
+ * startup).  Keep in mind that variables local to a function
+ * will cease to exist if the function returns.  Use a
+ * script-local variable if needed:
+ * 	let s:myjob = job_start('my-command')
+ * {options} must be a Dictionary.  It can contain many optional
+ * items, see |job-options|.
+ * Can also be used as a |method|:
+ * 	BuildCommand()->job_start()
+ */
+export function job_start(
+  denops: Denops,
+  command: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function job_start(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_start", ...args);
+}
+
+/**
+ * Returns a String with the status of {job}:
+ * 	"run"	job is running
+ * 	"fail"	job failed to start
+ * 	"dead"	job died or was stopped after running
+ * On Unix a non-existing command results in "dead" instead of
+ * "fail", because a fork happens before the failure can be
+ * detected.
+ * If in Vim9 script a variable is declared with type "job" but
+ * never assigned to, passing that variable to job_status()
+ * returns "fail".
+ * If an exit callback was set with the "exit_cb" option and the
+ * job is now detected to be "dead" the callback will be invoked.
+ * For more information see |job_info()|.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_status()
+ */
+export function job_status(denops: Denops, job: unknown): Promise<unknown>;
+export function job_status(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_status", ...args);
+}
+
+/**
+ * Stop the {job}.  This can also be used to signal the job.
+ * When {how} is omitted or is "term" the job will be terminated.
+ * For Unix SIGTERM is sent.  On MS-Windows the job will be
+ * terminated forcedly (there is no "gentle" way).
+ * This goes to the process group, thus children may also be
+ * affected.
+ * Effect for Unix:
+ * 	"term"	 SIGTERM (default)
+ * 	"hup"	 SIGHUP
+ * 	"quit"	 SIGQUIT
+ * 	"int"	 SIGINT
+ * 	"kill"	 SIGKILL (strongest way to stop)
+ * 	number	 signal with that number
+ * Effect for MS-Windows:
+ * 	"term"	 terminate process forcedly (default)
+ * 	"hup"	 CTRL_BREAK
+ * 	"quit"	 CTRL_BREAK
+ * 	"int"	 CTRL_C
+ * 	"kill"	 terminate process forcedly
+ * 	Others	 CTRL_BREAK
+ * On Unix the signal is sent to the process group.  This means
+ * that when the job is "sh -c command" it affects both the shell
+ * and the command.
+ * The result is a Number: 1 if the operation could be executed,
+ * 0 if "how" is not supported on the system.
+ * Note that even when the operation was executed, whether the
+ * job was actually stopped needs to be checked with
+ * |job_status()|.
+ * If the status of the job is "dead", the signal will not be
+ * sent.  This is to avoid to stop the wrong job (esp. on Unix,
+ * where process numbers are recycled).
+ * When using "kill" Vim will assume the job will die and close
+ * the channel.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_stop()
+ */
+export function job_stop(
+  denops: Denops,
+  job: unknown,
+  how?: unknown,
+): Promise<unknown>;
+export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("job_stop", ...args);
+}
