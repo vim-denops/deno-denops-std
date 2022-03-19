@@ -164,12 +164,12 @@ export async function main(denops: Denops): Promise<void> {
   // Get option
   console.log(await options.get(denops, "filetype"));
   console.log(await localOptions.get(denops, "filetype"));
-  console.log(await globalOption.get(denops, "filetype"));
+  console.log(await globalOptions.get(denops, "filetype"));
 
   // Reset option
   await options.remove(denops, "filetype");
   await localOptions.remove(denops, "filetype");
-  await globalOption.remove(denops, "filetype");
+  await globalOptions.remove(denops, "filetype");
 }
 ```
 

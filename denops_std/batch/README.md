@@ -32,7 +32,7 @@ import { Denops } from "https://deno.land/x/denops_std/mod.ts";
 import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
 
 async function replace(denops: Denops, content: string): Promise<void> {
-  await batch(denops, (denops) => {
+  await batch(denops, async (denops) => {
     await denops.cmd("setlocal modifiable");
     await denops.cmd("setlocal foldmethod=manual");
     await denops.call("setline", 1, content.split(/\r?\n/));
@@ -78,7 +78,7 @@ import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await batch(denops, async (denops) => {
-    const [id] = anonymous.add(denops, () => {
+    const [id] = anonymous.add(denops, async () => {
       // This code is called outside of 'batch' block
       // thus the 'denops' instance works like a real one.
       // That's why you can write code like below
@@ -120,13 +120,14 @@ Note that `denops.call()` or `denops.eval()` always return falsy value in
 
 ```typescript
 import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { gather } from "https://deno.land/x/denops_std/batch/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const results = await gather(denops, async (denops) => {
     // !!! DON'T DO THIS !!!
     if (await denops.call("has", "nvim")) {
-      await denops.call("api_info").version;
+      // deno-lint-ignore no-explicit-any
+      await (denops.call("api_info") as any).version;
     } else {
       await denops.eval("v:version");
     }
