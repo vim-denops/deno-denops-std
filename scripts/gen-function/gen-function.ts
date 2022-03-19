@@ -19,19 +19,21 @@ const manualFnSet = new Set([
   ...Object.keys(nvimManual),
 ]);
 
-const vimHelp = await downloadString(
+const vimHelps = await Promise.all([
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/eval.txt`,
-);
-const vimDefs = parse(vimHelp);
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/textprop.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/terminal.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/channel.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/testing.txt`,
+].map(downloadString));
+const vimDefs = vimHelps.map(parse).flat();
 const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);
 
-const nvimHelp = await downloadString(
+const nvimHelps = await Promise.all([
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/eval.txt`,
-);
-const nvimHelp2 = await downloadString(
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/api.txt`,
-);
-const nvimDefs = parse(nvimHelp).concat(parse(nvimHelp2));
+].map(downloadString));
+const nvimDefs = nvimHelps.map(parse).flat();
 const nvimFnSet = difference(
   new Set(nvimDefs.map((def) => def.fn)),
   manualFnSet,

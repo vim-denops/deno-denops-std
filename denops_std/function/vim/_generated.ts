@@ -67,7 +67,7 @@ export function balloon_split(
   return denops.call("balloon_split", ...args);
 }
 
-/**/
+/** */
 export function buffer_exists(denops: Denops): Promise<unknown>;
 export function buffer_exists(
   denops: Denops,
@@ -98,7 +98,7 @@ export function buffer_number(
   return denops.call("buffer_number", ...args);
 }
 
-/**/
+/** */
 export function last_buffer_nr(denops: Denops): Promise<unknown>;
 export function last_buffer_nr(
   denops: Denops,
@@ -1331,4 +1331,2659 @@ export function terminalprops(
 export function typename(denops: Denops, expr: unknown): Promise<unknown>;
 export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("typename", ...args);
+}
+
+/**
+ * Attach a text property at position {lnum}, {col}.  {col} is
+ * counted in bytes, use one for the first column.
+ * If {lnum} is invalid an error is given.
+ * If {col} is invalid an error is given.
+ * {props} is a dictionary with these fields:
+ *    length	length of text in bytes, can only be used
+ * 		for a property that does not continue in
+ * 		another line; can be zero
+ *    end_lnum	line number for the end of text (inclusive)
+ *    end_col	column just after the text; not used when
+ * 		"length" is present; when {col} and "end_col"
+ * 		are equal, and "end_lnum" is omitted or equal
+ * 		to {lnum}, this is a zero-width text property
+ *    bufnr	buffer to add the property to; when omitted
+ * 		the current buffer is used
+ *    id		user defined ID for the property; must be a
+ * 		number; when omitted zero is used
+ *    type		name of the text property type
+ * All fields except "type" are optional.
+ * It is an error when both "length" and "end_lnum" or "end_col"
+ * are given.  Either use "length" or "end_col" for a property
+ * within one line, or use "end_lnum" and "end_col" for a
+ * property that spans more than one line.
+ * When neither "length" nor "end_col" are given the property
+ * will be zero-width.  That means it will move with the text, as
+ * a kind of mark.  One character will be highlighted, if the
+ * type specifies highlighting.
+ * The property can end exactly at the last character of the
+ * text, or just after it.  In the last case, if text is appended
+ * to the line, the text property size will increase, also when
+ * the property type does not have "end_incl" set.
+ * "type" will first be looked up in the buffer the property is
+ * added to. When not found, the global property types are used.
+ * If not found an error is given.
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_add(col, props)
+ */
+export function prop_add(
+  denops: Denops,
+  lnum: unknown,
+  col: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_add(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("prop_add", ...args);
+}
+
+/**
+ * Remove all text properties from line {lnum}.
+ * When {lnum-end} is given, remove all text properties from line
+ * {lnum} to {lnum-end} (inclusive).
+ * When {props} contains a "bufnr" item use this buffer,
+ * otherwise use the current buffer.
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_clear()
+ */
+export function prop_clear(
+  denops: Denops,
+  lnum: unknown,
+  lnum_end?: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_clear(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_clear", ...args);
+}
+
+/**
+ * Search for a text property as specified with {props}:
+ *    id		property with this ID
+ *    type		property with this type name
+ *    both		"id" and "type" must both match
+ *    bufnr	buffer to search in; when present a
+ * 		start position with "lnum" and "col"
+ * 		must be given; when omitted the
+ * 		current buffer is used
+ *    lnum		start in this line (when omitted start
+ * 		at the cursor)
+ *    col		start at this column (when omitted
+ * 		and "lnum" is given: use column 1,
+ * 		otherwise start at the cursor)
+ *    skipstart	do not look for a match at the start
+ * 		position
+ * A property matches when either "id" or "type" matches.
+ * {direction} can be "f" for forward and "b" for backward.  When
+ * omitted forward search is performed.
+ * If a match is found then a Dict is returned with the entries
+ * as with prop_list(), and additionally an "lnum" entry.
+ * If no match is found then an empty Dict is returned.
+ */
+export function prop_find(
+  denops: Denops,
+  props: unknown,
+  direction?: unknown,
+): Promise<unknown>;
+export function prop_find(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_find", ...args);
+}
+
+/**
+ * Return a List with all text properties in line {lnum}.
+ * When {props} contains a "bufnr" item, use this buffer instead
+ * of the current buffer.
+ * The properties are ordered by starting column and priority.
+ * Each property is a Dict with these entries:
+ *    col		starting column
+ *    length	length in bytes, one more if line break is
+ * 		included
+ *    id		property ID
+ *    type		name of the property type, omitted if
+ * 		the type was deleted
+ *    start	when TRUE property starts in this line
+ *    end		when TRUE property ends in this line
+ * When "start" is zero the property started in a previous line,
+ * the current one is a continuation.
+ * When "end" is zero the property continues in the next line.
+ * The line break after this line is included.
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_list()
+ */
+export function prop_list(
+  denops: Denops,
+  lnum: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_list", ...args);
+}
+
+/**
+ * Remove a matching text property from line {lnum}.  When
+ * {lnum-end} is given, remove matching text properties from line
+ * {lnum} to {lnum-end} (inclusive).
+ * When {lnum} is omitted remove matching text properties from
+ * all lines (this requires going over all lines, thus will be a
+ * bit slow for a buffer with many lines).
+ * {props} is a dictionary with these fields:
+ *    id		remove text properties with this ID
+ *    type		remove text properties with this type name
+ *    both		"id" and "type" must both match
+ *    bufnr	use this buffer instead of the current one
+ *    all		when TRUE remove all matching text properties,
+ * 		not just the first one
+ * A property matches when either "id" or "type" matches.
+ * If buffer "bufnr" does not exist you get an error message.
+ * If buffer "bufnr" is not loaded then nothing happens.
+ * Returns the number of properties that were removed.
+ * Can also be used as a |method|:
+ * 	GetProps()->prop_remove()
+ */
+export function prop_remove(
+  denops: Denops,
+  props: unknown,
+  lnum?: unknown,
+  lnum_end?: unknown,
+): Promise<unknown>;
+export function prop_remove(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_remove", ...args);
+}
+
+/**
+ * Add a text property type {name}.  If a property type with this
+ * name already exists an error is given.  Nothing is returned.
+ * {props} is a dictionary with these optional fields:
+ *    bufnr	define the property only for this buffer; this
+ * 		avoids name collisions and automatically
+ * 		clears the property types when the buffer is
+ * 		deleted.
+ *    highlight	name of highlight group to use
+ *    priority	when a character has multiple text
+ * 		properties the one with the highest priority
+ * 		will be used; negative values can be used, the
+ * 		default priority is zero
+ *    combine	when omitted or TRUE combine the highlight
+ * 		with any syntax highlight; when FALSE syntax
+ * 		highlight will not be used
+ *    start_incl	when TRUE inserts at the start position will
+ * 		be included in the text property
+ *    end_incl	when TRUE inserts at the end position will be
+ * 		included in the text property
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_add(props)
+ */
+export function prop_type_add(
+  denops: Denops,
+  name: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_type_add(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_add", ...args);
+}
+
+/**
+ * Change properties of an existing text property type.  If a
+ * property with this name does not exist an error is given.
+ * The {props} argument is just like |prop_type_add()|.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_change(props)
+ */
+export function prop_type_change(
+  denops: Denops,
+  name: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_type_change(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_change", ...args);
+}
+
+/**
+ * Remove the text property type {name}.  When text properties
+ * using the type {name} are still in place, they will not have
+ * an effect and can no longer be removed by name.
+ * {props} can contain a "bufnr" item.  When it is given, delete
+ * a property type from this buffer instead of from the global
+ * property types.
+ * When text property type {name} is not found there is no error.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_delete()
+ */
+export function prop_type_delete(
+  denops: Denops,
+  name: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_delete(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_delete", ...args);
+}
+
+/**
+ * Returns the properties of property type {name}.  This is a
+ * dictionary with the same fields as was given to
+ * prop_type_add().
+ * When the property type {name} does not exist, an empty
+ * dictionary is returned.
+ * {props} can contain a "bufnr" item.  When it is given, use
+ * this buffer instead of the global property types.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_get()
+ */
+export function prop_type_get(
+  denops: Denops,
+  name: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_get(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_get", ...args);
+}
+
+/**
+ * Returns a list with all property type names.
+ * {props} can contain a "bufnr" item.  When it is given, use
+ * this buffer instead of the global property types.
+ */
+export function prop_type_list(
+  denops: Denops,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_list", ...args);
+}
+
+/**
+ * Open a new window displaying the difference between the two
+ * files.  The files must have been created with
+ * |term_dumpwrite()|.
+ * Returns the buffer number or zero when the diff fails.
+ * Also see |terminal-diff|.
+ * NOTE: this does not work with double-width characters yet.
+ * The top part of the buffer contains the contents of the first
+ * file, the bottom part of the buffer contains the contents of
+ * the second file.  The middle part shows the differences.
+ * The parts are separated by a line of equals.
+ * If the {options} argument is present, it must be a Dict with
+ * these possible members:
+ *    "term_name"	     name to use for the buffer name, instead
+ * 		     of the first file name.
+ *    "term_rows"	     vertical size to use for the terminal,
+ * 		     instead of using 'termwinsize', but
+ * 		     respecting the minimal size
+ *    "term_cols"	     horizontal size to use for the terminal,
+ * 		     instead of using 'termwinsize', but
+ * 		     respecting the minimal size
+ *    "vertical"	     split the window vertically
+ *    "curwin"	     use the current window, do not split the
+ * 		     window; fails if the current buffer
+ * 		     cannot be |abandon|ed
+ *    "bufnr"	     do not create a new buffer, use the
+ * 		     existing buffer "bufnr".  This buffer
+ * 		     must have been previously created with
+ * 		     term_dumpdiff() or term_dumpload() and
+ * 		     visible in a window.
+ *    "norestore"	     do not add the terminal window to a
+ * 		     session file
+ * Each character in the middle part indicates a difference. If
+ * there are multiple differences only the first in this list is
+ * used:
+ * 	X	different character
+ * 	w	different width
+ * 	f	different foreground color
+ * 	b	different background color
+ * 	a	different attribute
+ * 	+	missing position in first file
+ * 	-	missing position in second file
+ * 	>	cursor position in first file, not in second
+ * 	<	cursor position in second file, not in first
+ * Using the "s" key the top and bottom parts are swapped.  This
+ * makes it easy to spot a difference.
+ * Can also be used as a |method|:
+ * 	GetFilename()->term_dumpdiff(otherfile)
+ */
+export function term_dumpdiff(
+  denops: Denops,
+  filename1: unknown,
+  filename2: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpdiff(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpdiff", ...args);
+}
+
+/**
+ * Open a new window displaying the contents of {filename}
+ * The file must have been created with |term_dumpwrite()|.
+ * Returns the buffer number or zero when it fails.
+ * Also see |terminal-diff|.
+ * For {options} see |term_dumpdiff()|.
+ * Can also be used as a |method|:
+ * 	GetFilename()->term_dumpload()
+ */
+export function term_dumpload(
+  denops: Denops,
+  filename: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpload(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpload", ...args);
+}
+
+/**
+ * Dump the contents of the terminal screen of {buf} in the file
+ * {filename}.  This uses a format that can be used with
+ * |term_dumpload()| and |term_dumpdiff()|.
+ * If the job in the terminal already finished an error is given:
+ * If {filename} already exists an error is given:
+ * Also see |terminal-diff|.
+ * {options} is a dictionary with these optional entries:
+ * 	"rows"		maximum number of rows to dump
+ * 	"columns"	maximum number of columns to dump
+ * Can also be used as a |method|, the base is used for the file
+ * name:
+ * 	GetFilename()->term_dumpwrite(bufnr)
+ */
+export function term_dumpwrite(
+  denops: Denops,
+  buf: unknown,
+  filename: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpwrite(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpwrite", ...args);
+}
+
+/**
+ * Returns 1 if the terminal of {buf} is using the alternate
+ * screen.
+ * {buf} is used as with |term_getsize()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getaltscreen()
+ */
+export function term_getaltscreen(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getaltscreen(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getaltscreen", ...args);
+}
+
+/**
+ * Get the ANSI color palette in use by terminal {buf}.
+ * Returns a List of length 16 where each element is a String
+ * representing a color in hexadecimal "#rrggbb" format.
+ * Also see |term_setansicolors()| and |g:terminal_ansi_colors|.
+ * If neither was used returns the default colors.
+ * {buf} is used as with |term_getsize()|.  If the buffer does not
+ * exist or is not a terminal window, an empty list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getansicolors()
+ * {only available when compiled with GUI enabled and/or the
+ * |+termguicolors| feature}
+ */
+export function term_getansicolors(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getansicolors(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getansicolors", ...args);
+}
+
+/**
+ * Given {attr}, a value returned by term_scrape() in the "attr"
+ * item, return whether {what} is on.  {what} can be one of:
+ * 	bold
+ * 	italic
+ * 	underline
+ * 	strike
+ * 	reverse
+ * Can also be used as a |method|:
+ * 	GetAttr()->term_getattr()
+ */
+export function term_getattr(
+  denops: Denops,
+  attr: unknown,
+  what: unknown,
+): Promise<unknown>;
+export function term_getattr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getattr", ...args);
+}
+
+/**
+ * Get the cursor position of terminal {buf}. Returns a list with
+ * two numbers and a dictionary: [row, col, dict].
+ * "row" and "col" are one based, the first screen cell is row
+ * 1, column 1.  This is the cursor position of the terminal
+ * itself, not of the Vim window.
+ * "dict" can have these members:
+ *    "visible"	one when the cursor is visible, zero when it
+ * 		is hidden.
+ *    "blink"	one when the cursor is blinking, zero when it
+ * 		is not blinking.
+ *    "shape"	1 for a block cursor, 2 for underline and 3
+ * 		for a vertical bar.
+ *    "color"	color of the cursor, e.g. "green"
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getcursor()
+ */
+export function term_getcursor(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getcursor(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getcursor", ...args);
+}
+
+/**
+ * Get the Job associated with terminal window {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * Returns |v:null| when there is no job.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getjob()
+ */
+export function term_getjob(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getjob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getjob", ...args);
+}
+
+/**
+ * Get a line of text from the terminal window of {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * The first line has {row} one.  When {row} is "." the cursor
+ * line is used.  When {row} is invalid an empty string is
+ * returned.
+ * To get attributes of each character use |term_scrape()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getline(row)
+ */
+export function term_getline(
+  denops: Denops,
+  buf: unknown,
+  row: unknown,
+): Promise<unknown>;
+export function term_getline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getline", ...args);
+}
+
+/**
+ * Return the number of lines that scrolled to above the top of
+ * terminal {buf}.  This is the offset between the row number
+ * used for |term_getline()| and |getline()|, so that:
+ * 	term_getline(buf, N)
+ * is equal to:
+ * 	getline(N + term_getscrolled(buf))
+ * (if that line exists).
+ * {buf} is used as with |term_getsize()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getscrolled()
+ */
+export function term_getscrolled(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getscrolled(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getscrolled", ...args);
+}
+
+/**
+ * Get the size of terminal {buf}. Returns a list with two
+ * numbers: [rows, cols].  This is the size of the terminal, not
+ * the window containing the terminal.
+ * {buf} must be the buffer number of a terminal window.  Use an
+ * empty string for the current buffer.  If the buffer does not
+ * exist or is not a terminal window, an empty list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getsize()
+ */
+export function term_getsize(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getsize(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getsize", ...args);
+}
+
+/**
+ * Get the status of terminal {buf}. This returns a String with
+ * a comma separated list of these items:
+ * 	running		job is running
+ * 	finished	job has finished
+ * 	normal		in Terminal-Normal mode
+ * One of "running" or "finished" is always present.
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * string is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getstatus()
+ */
+export function term_getstatus(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getstatus(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getstatus", ...args);
+}
+
+/**
+ * Get the title of terminal {buf}. This is the title that the
+ * job in the terminal has set.
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * string is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_gettitle()
+ */
+export function term_gettitle(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_gettitle(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_gettitle", ...args);
+}
+
+/**
+ * Get the name of the controlling terminal associated with
+ * terminal window {buf}.  {buf} is used as with |term_getsize()|.
+ * When {input} is omitted or 0, return the name for writing
+ * (stdout). When {input} is 1 return the name for reading
+ * (stdin). On UNIX, both return same name.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_gettty()
+ */
+export function term_gettty(
+  denops: Denops,
+  buf: unknown,
+  input?: unknown,
+): Promise<unknown>;
+export function term_gettty(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_gettty", ...args);
+}
+
+/**
+ * Return a list with the buffer numbers of all buffers for
+ * terminal windows.
+ */
+export function term_list(denops: Denops): Promise<unknown>;
+export function term_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_list", ...args);
+}
+
+/**
+ * Get the contents of {row} of terminal screen of {buf}.
+ * For {buf} see |term_getsize()|.
+ * The first line has {row} one.  When {row} is "." the cursor
+ * line is used.  When {row} is invalid an empty string is
+ * returned.
+ * Return a List containing a Dict for each screen cell:
+ *     "chars"	character(s) at the cell
+ *     "fg"	foreground color as #rrggbb
+ *     "bg"	background color as #rrggbb
+ *     "attr"	attributes of the cell, use |term_getattr()|
+ * 		to get the individual flags
+ *     "width"	cell width: 1 or 2
+ * For a double-width cell there is one item, thus the list can
+ * be shorter than the width of the terminal.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_scrape(row)
+ */
+export function term_scrape(
+  denops: Denops,
+  buf: unknown,
+  row: unknown,
+): Promise<unknown>;
+export function term_scrape(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_scrape", ...args);
+}
+
+/**
+ * Send keystrokes {keys} to terminal {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * {keys} are translated as key sequences. For example, "\<c-x>"
+ * means the character CTRL-X.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_sendkeys(keys)
+ */
+export function term_sendkeys(
+  denops: Denops,
+  buf: unknown,
+  keys: unknown,
+): Promise<unknown>;
+export function term_sendkeys(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_sendkeys", ...args);
+}
+
+/**
+ * Set the function name prefix to be used for the |terminal-api|
+ * function in terminal {buf}.  For example:
+ *     :call term_setapi(buf, "Myapi_")
+ *     :call term_setapi(buf, "")
+ * The default is "Tapi_".  When {expr} is an empty string then
+ * no |terminal-api| function can be used for {buf}.
+ * When used as a method the base is used for {buf}:
+ * 	GetBufnr()->term_setapi({expr})
+ */
+export function term_setapi(
+  denops: Denops,
+  buf: unknown,
+  expr: unknown,
+): Promise<unknown>;
+export function term_setapi(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setapi", ...args);
+}
+
+/**
+ * Set the ANSI color palette used by terminal {buf}.
+ * {colors} must be a List of 16 valid color names or hexadecimal
+ * color codes, like those accepted by |highlight-guifg|.
+ * Also see |term_getansicolors()| and |g:terminal_ansi_colors|.
+ * The colors normally are:
+ * 	0    black
+ * 	1    dark red
+ * 	2    dark green
+ * 	3    brown
+ * 	4    dark blue
+ * 	5    dark magenta
+ * 	6    dark cyan
+ * 	7    light grey
+ * 	8    dark grey
+ * 	9    red
+ * 	10   green
+ * 	11   yellow
+ * 	12   blue
+ * 	13   magenta
+ * 	14   cyan
+ * 	15   white
+ * These colors are used in the GUI and in the terminal when
+ * 'termguicolors' is set.  When not using GUI colors (GUI mode
+ * or 'termguicolors'), the terminal window always uses the 16
+ * ANSI colors of the underlying terminal.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setansicolors(colors)
+ * {only available with GUI enabled and/or the |+termguicolors|
+ * feature}
+ */
+export function term_setansicolors(
+  denops: Denops,
+  buf: unknown,
+  colors: unknown,
+): Promise<unknown>;
+export function term_setansicolors(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setansicolors", ...args);
+}
+
+/**
+ * When exiting Vim or trying to close the terminal window in
+ * another way, {how} defines whether the job in the terminal can
+ * be stopped.
+ * When {how} is empty (the default), the job will not be
+ * stopped, trying to exit will result in |E947|.
+ * Otherwise, {how} specifies what signal to send to the job.
+ * See |job_stop()| for the values.
+ * After sending the signal Vim will wait for up to a second to
+ * check that the job actually stopped.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setkill(how)
+ */
+export function term_setkill(
+  denops: Denops,
+  buf: unknown,
+  how: unknown,
+): Promise<unknown>;
+export function term_setkill(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setkill", ...args);
+}
+
+/**
+ * Set the command to write in a session file to restore the job
+ * in this terminal.  The line written in the session file is:
+ * 	terminal ++curwin ++cols=%d ++rows=%d {command}
+ * Make sure to escape the command properly.
+ * Use an empty {command} to run 'shell'.
+ * Use "NONE" to not restore this window.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setrestore(command)
+ */
+export function term_setrestore(
+  denops: Denops,
+  buf: unknown,
+  command: unknown,
+): Promise<unknown>;
+export function term_setrestore(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setrestore", ...args);
+}
+
+/**
+ * Set the size of terminal {buf}. The size of the window
+ * containing the terminal will also be adjusted, if possible.
+ * If {rows} or {cols} is zero or negative, that dimension is not
+ * changed.
+ * {buf} must be the buffer number of a terminal window.  Use an
+ * empty string for the current buffer.  If the buffer does not
+ * exist or is not a terminal window, an error is given.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setsize(rows, cols)
+ */
+export function term_setsize(
+  denops: Denops,
+  buf: unknown,
+  rows: unknown,
+  cols: unknown,
+): Promise<unknown>;
+export function term_setsize(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setsize", ...args);
+}
+
+/**
+ * Open a terminal window and run {cmd} in it.
+ * {cmd} can be a string or a List, like with |job_start()|. The
+ * string "NONE" can be used to open a terminal window without
+ * starting a job, the pty of the terminal can be used by a
+ * command like gdb.
+ * Returns the buffer number of the terminal window.  If {cmd}
+ * cannot be executed the window does open and shows an error
+ * message.
+ * If opening the window fails zero is returned.
+ * {options} are similar to what is used for |job_start()|, see
+ * |job-options|.  However, not all options can be used.  These
+ * are supported:
+ *    all timeout options
+ *    "stoponexit", "cwd", "env"
+ *    "callback", "out_cb", "err_cb", "exit_cb", "close_cb"
+ *    "in_io", "in_top", "in_bot", "in_name", "in_buf"
+ *    "out_io", "out_name", "out_buf", "out_modifiable", "out_msg"
+ *    "err_io", "err_name", "err_buf", "err_modifiable", "err_msg"
+ * However, at least one of stdin, stdout or stderr must be
+ * connected to the terminal.  When I/O is connected to the
+ * terminal then the callback function for that part is not used.
+ * There are extra options:
+ *    "term_name"	     name to use for the buffer name, instead
+ * 		     of the command name.
+ *    "term_rows"	     vertical size to use for the terminal,
+ * 		     instead of using 'termwinsize'
+ *    "term_cols"	     horizontal size to use for the terminal,
+ * 		     instead of using 'termwinsize'
+ *    "vertical"	     split the window vertically; note that
+ * 		     other window position can be defined with
+ * 		     command modifiers, such as |:belowright|.
+ *    "curwin"	     use the current window, do not split the
+ * 		     window; fails if the current buffer
+ * 		     cannot be |abandon|ed
+ *    "hidden"	     do not open a window
+ *    "norestore"	     do not add the terminal window to a
+ * 		     session file
+ *    "term_kill"	     what to do when trying to close the
+ * 		     terminal window, see |term_setkill()|
+ *    "term_finish"     What to do when the job is finished:
+ * 			"close": close any windows
+ * 			"open": open window if needed
+ * 		     Note that "open" can be interruptive.
+ * 		     See |term++close| and |term++open|.
+ *    "term_opencmd"    command to use for opening the window when
+ * 		     "open" is used for "term_finish"; must
+ * 		     have "%d" where the buffer number goes,
+ * 		     e.g. "10split|buffer %d"; when not
+ * 		     specified "botright sbuf %d" is used
+ *    "term_highlight"  highlight group to use instead of
+ * 		     "Terminal"
+ *    "eof_chars"	     Text to send after all buffer lines were
+ * 		     written to the terminal.  When not set
+ * 		     CTRL-D is used on MS-Windows. For Python
+ * 		     use CTRL-Z or "exit()". For a shell use
+ * 		     "exit".  A CR is always added.
+ *    "ansi_colors"     A list of 16 color names or hex codes
+ * 		     defining the ANSI palette used in GUI
+ * 		     color modes.  See |g:terminal_ansi_colors|.
+ *    "tty_type"	     (MS-Windows only): Specify which pty to
+ * 		     use.  See 'termwintype' for the values.
+ *    "term_api"	     function name prefix for the
+ * 		     |terminal-api| function.  See
+ * 		     |term_setapi()|.
+ * Can also be used as a |method|:
+ * 	GetCommand()->term_start()
+ */
+export function term_start(
+  denops: Denops,
+  cmd: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_start(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_start", ...args);
+}
+
+/**
+ * Wait for pending updates of {buf} to be handled.
+ * {buf} is used as with |term_getsize()|.
+ * {time} is how long to wait for updates to arrive in msec.  If
+ * not set then 10 msec will be used.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_wait()
+ */
+export function term_wait(
+  denops: Denops,
+  buf: unknown,
+  time?: unknown,
+): Promise<unknown>;
+export function term_wait(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_wait", ...args);
+}
+
+/**
+ * Return non-zero when there is something to read from {handle}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * This is useful to read from a channel at a convenient time,
+ * e.g. from a timer.
+ * Note that messages are dropped when the channel does not have
+ * a callback.  Add a close callback to avoid that.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_canread()
+ */
+export function ch_canread(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_canread(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_canread", ...args);
+}
+
+/**
+ * Close {handle}.  See |channel-close|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * A close callback is not invoked.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_close()
+ */
+export function ch_close(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_close", ...args);
+}
+
+/**
+ * Close the "in" part of {handle}.  See |channel-close-in|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * A close callback is not invoked.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_close_in()
+ */
+export function ch_close_in(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close_in(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_close_in", ...args);
+}
+
+/**
+ * Send {expr} over {handle}.  The {expr} is encoded
+ * according to the type of channel.  The function cannot be used
+ * with a raw channel.  See |channel-use|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * {options} must be a Dictionary.  It must not have a "callback"
+ * entry.  It can have a "timeout" entry to specify the timeout
+ * for this specific request.
+ * ch_evalexpr() waits for a response and returns the decoded
+ * expression.  When there is an error or timeout it returns an
+ * empty string.
+ * Note that while waiting for the response, Vim handles other
+ * messages.  You need to make sure this doesn't cause trouble.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_evalexpr(expr)
+ */
+export function ch_evalexpr(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_evalexpr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_evalexpr", ...args);
+}
+
+/**
+ * Send {string} over {handle}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Works like |ch_evalexpr()|, but does not encode the request or
+ * decode the response.  The caller is responsible for the
+ * correct contents.  Also does not add a newline for a channel
+ * in NL mode, the caller must do that.  The NL in the response
+ * is removed.
+ * Note that Vim does not know when the text received on a raw
+ * channel is complete, it may only return the first part and you
+ * need to use |ch_readraw()| to fetch the rest.
+ * See |channel-use|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_evalraw(rawstring)
+ */
+export function ch_evalraw(
+  denops: Denops,
+  handle: unknown,
+  string: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_evalraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_evalraw", ...args);
+}
+
+/**
+ * Get the buffer number that {handle} is using for {what}.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * {what} can be "err" for stderr, "out" for stdout or empty for
+ * socket output.
+ * Returns -1 when there is no buffer.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_getbufnr(what)
+ */
+export function ch_getbufnr(
+  denops: Denops,
+  handle: unknown,
+  what: unknown,
+): Promise<unknown>;
+export function ch_getbufnr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_getbufnr", ...args);
+}
+
+/**
+ * Get the Job associated with {channel}.
+ * If there is no job calling |job_status()| on the returned Job
+ * will result in "fail".
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_getjob()
+ */
+export function ch_getjob(denops: Denops, channel: unknown): Promise<unknown>;
+export function ch_getjob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_getjob", ...args);
+}
+
+/**
+ * Returns a Dictionary with information about {handle}.  The
+ * items are:
+ *    "id"		  number of the channel
+ *    "status"	  "open", "buffered" or "closed", like
+ * 		  ch_status()
+ * When opened with ch_open():
+ *    "hostname"	  the hostname of the address
+ *    "port"	  the port of the address
+ *    "sock_status"  "open" or "closed"
+ *    "sock_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "sock_io"	  "socket"
+ *    "sock_timeout" timeout in msec
+ * When opened with job_start():
+ *    "out_status"	  "open", "buffered" or "closed"
+ *    "out_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "out_io"	  "null", "pipe", "file" or "buffer"
+ *    "out_timeout"  timeout in msec
+ *    "err_status"	  "open", "buffered" or "closed"
+ *    "err_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "err_io"	  "out", "null", "pipe", "file" or "buffer"
+ *    "err_timeout"  timeout in msec
+ *    "in_status"	  "open" or "closed"
+ *    "in_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "in_io"	  "null", "pipe", "file" or "buffer"
+ *    "in_timeout"	  timeout in msec
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_info()
+ */
+export function ch_info(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_info", ...args);
+}
+
+/**
+ * Write {msg} in the channel log file, if it was opened with
+ * |ch_logfile()|.
+ * When {handle} is passed the channel number is used for the
+ * message.
+ * {handle} can be a Channel or a Job that has a Channel.  The
+ * Channel must be open for the channel number to be used.
+ * Can also be used as a |method|:
+ * 	'did something'->ch_log()
+ */
+export function ch_log(
+  denops: Denops,
+  msg: unknown,
+  handle?: unknown,
+): Promise<unknown>;
+export function ch_log(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_log", ...args);
+}
+
+/**
+ * Start logging channel activity to {fname}.
+ * When {fname} is an empty string: stop logging.
+ * When {mode} is omitted or "a" append to the file.
+ * When {mode} is "w" start with an empty file.
+ * Use |ch_log()| to write log messages.  The file is flushed
+ * after every message, on Unix you can use "tail -f" to see what
+ * is going on in real time.
+ * To enable the log very early, to see what is received from a
+ * terminal during startup, use |--cmd|:
+ * 	vim --cmd "call ch_logfile('logfile', 'w')"
+ * This function is not available in the |sandbox|.
+ * NOTE: the channel communication is stored in the file, be
+ * aware that this may contain confidential and privacy sensitive
+ * information, e.g. a password you type in a terminal window.
+ * Can also be used as a |method|:
+ * 	'logfile'->ch_logfile('w')
+ */
+export function ch_logfile(
+  denops: Denops,
+  fname: unknown,
+  mode?: unknown,
+): Promise<unknown>;
+export function ch_logfile(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_logfile", ...args);
+}
+
+/**
+ * Open a channel to {address}.  See |channel|.
+ * Returns a Channel.  Use |ch_status()| to check for failure.
+ * {address} has the form "hostname:port", e.g.,
+ * "localhost:8765".
+ * When using an IPv6 address, enclose it within square brackets.
+ * E.g., "[2001:db8::1]:8765".
+ * If {options} is given it must be a |Dictionary|.
+ * See |channel-open-options|.
+ * Can also be used as a |method|:
+ * 	GetAddress()->ch_open()
+ */
+export function ch_open(
+  denops: Denops,
+  address: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_open(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_open", ...args);
+}
+
+/**
+ * Read from {handle} and return the received message.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * For a NL channel this waits for a NL to arrive, except when
+ * there is nothing more to read (channel was closed).
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_read()
+ */
+export function ch_read(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_read(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ch_read", ...args);
+}
+
+/**
+ * Like ch_read() but reads binary data and returns a |Blob|.
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_readblob()
+ */
+export function ch_readblob(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_readblob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_readblob", ...args);
+}
+
+/**
+ * Like ch_read() but for a JS and JSON channel does not decode
+ * the message.  For a NL channel it does not block waiting for
+ * the NL to arrive, but otherwise works like ch_read().
+ * See |channel-more|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_readraw()
+ */
+export function ch_readraw(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_readraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_readraw", ...args);
+}
+
+/**
+ * Send {expr} over {handle}.  The {expr} is encoded
+ * according to the type of channel.  The function cannot be used
+ * with a raw channel.
+ * See |channel-use|.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_sendexpr(expr)
+ */
+export function ch_sendexpr(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_sendexpr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_sendexpr", ...args);
+}
+
+/**
+ * Send |String| or |Blob| {expr} over {handle}.
+ * Works like |ch_sendexpr()|, but does not encode the request or
+ * decode the response.  The caller is responsible for the
+ * correct contents.  Also does not add a newline for a channel
+ * in NL mode, the caller must do that.  The NL in the response
+ * is removed.
+ * See |channel-use|.
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_sendraw(rawexpr)
+ */
+export function ch_sendraw(
+  denops: Denops,
+  handle: unknown,
+  expr: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_sendraw(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_sendraw", ...args);
+}
+
+/**
+ * Set options on {handle}:
+ * 	"callback"	the channel callback
+ * 	"timeout"	default read timeout in msec
+ * 	"mode"		mode for the whole channel
+ * See |ch_open()| for more explanation.
+ * {handle} can be a Channel or a Job that has a Channel.
+ * Note that changing the mode may cause queued messages to be
+ * lost.
+ * These options cannot be changed:
+ * 	"waittime"	only applies to |ch_open()|
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_setoptions(options)
+ */
+export function ch_setoptions(
+  denops: Denops,
+  handle: unknown,
+  options: unknown,
+): Promise<unknown>;
+export function ch_setoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_setoptions", ...args);
+}
+
+/**
+ * Return the status of {handle}:
+ * 	"fail"		failed to open the channel
+ * 	"open"		channel can be used
+ * 	"buffered"	channel can be read, not written to
+ * 	"closed"	channel can not be used
+ * {handle} can be a Channel or a Job that has a Channel.
+ * "buffered" is used when the channel was closed but there is
+ * still data that can be obtained with |ch_read()|.
+ * If {options} is given it can contain a "part" entry to specify
+ * the part of the channel to return the status for: "out" or
+ * "err".  For example, to get the error status:
+ * 	ch_status(job, {"part": "err"})
+ * Can also be used as a |method|:
+ * 	GetChannel()->ch_status()
+ */
+export function ch_status(
+  denops: Denops,
+  handle: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function ch_status(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("ch_status", ...args);
+}
+
+/**
+ * Get the channel handle that {job} is using.
+ * To check if the job has no channel:
+ * 	if string(job_getchannel()) == 'channel fail'
+ * Can also be used as a |method|:
+ * 	GetJob()->job_getchannel()
+ */
+export function job_getchannel(denops: Denops, job: unknown): Promise<unknown>;
+export function job_getchannel(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_getchannel", ...args);
+}
+
+/**
+ * Returns a Dictionary with information about {job}:
+ *    "status"	what |job_status()| returns
+ *    "channel"	what |job_getchannel()| returns
+ *    "cmd"	List of command arguments used to start the job
+ *    "process"	process ID
+ *    "tty_in"	terminal input name, empty when none
+ *    "tty_out"	terminal output name, empty when none
+ *    "exitval"	only valid when "status" is "dead"
+ *    "exit_cb"	function to be called on exit
+ *    "stoponexit"	|job-stoponexit|
+ *    Only in Unix:
+ *    "termsig"	the signal which terminated the process
+ * 		(See |job_stop()| for the values)
+ * 		only valid when "status" is "dead"
+ *    Only in MS-Windows:
+ *    "tty_type"	Type of virtual console in use.
+ * 		Values are "winpty" or "conpty".
+ * 		See 'termwintype'.
+ * Without any arguments, returns a List with all Job objects.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_info()
+ */
+export function job_info(denops: Denops, job?: unknown): Promise<unknown>;
+export function job_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("job_info", ...args);
+}
+
+/**
+ * Change options for {job}.  Supported are:
+ *    "stoponexit"	|job-stoponexit|
+ *    "exit_cb"	|job-exit_cb|
+ * Can also be used as a |method|:
+ * 	GetJob()->job_setoptions(options)
+ */
+export function job_setoptions(
+  denops: Denops,
+  job: unknown,
+  options: unknown,
+): Promise<unknown>;
+export function job_setoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_setoptions", ...args);
+}
+
+/**
+ * Start a job and return a Job object.  Unlike |system()| and
+ * |:!cmd| this does not wait for the job to finish.
+ * To start a job in a terminal window see |term_start()|.
+ * If the job fails to start then |job_status()| on the returned
+ * Job object results in "fail" and none of the callbacks will be
+ * invoked.
+ * {command} can be a String.  This works best on MS-Windows.  On
+ * Unix it is split up in white-separated parts to be passed to
+ * execvp().  Arguments in double quotes can contain white space.
+ * {command} can be a List, where the first item is the executable
+ * and further items are the arguments.  All items are converted
+ * to String.  This works best on Unix.
+ * On MS-Windows, job_start() makes a GUI application hidden. If
+ * want to show it, Use |:!start| instead.
+ * The command is executed directly, not through a shell, the
+ * 'shell' option is not used.  To use the shell:
+ * 	let job = job_start(["/bin/sh", "-c", "echo hello"])
+ * Or:
+ * 	let job = job_start('/bin/sh -c "echo hello"')
+ * Note that this will start two processes, the shell and the
+ * command it executes.  If you don't want this use the "exec"
+ * shell command.
+ * On Unix $PATH is used to search for the executable only when
+ * the command does not contain a slash.
+ * The job will use the same terminal as Vim.  If it reads from
+ * stdin the job and Vim will be fighting over input, that
+ * doesn't work.  Redirect stdin and stdout to avoid problems:
+ * 	let job = job_start(['sh', '-c', "myserver </dev/null >/dev/null"])
+ * The returned Job object can be used to get the status with
+ * |job_status()| and stop the job with |job_stop()|.
+ * Note that the job object will be deleted if there are no
+ * references to it.  This closes the stdin and stderr, which may
+ * cause the job to fail with an error.  To avoid this keep a
+ * reference to the job.  Thus instead of:
+ * 	call job_start('my-command')
+ * use:
+ * 	let myjob = job_start('my-command')
+ * and unlet "myjob" once the job is not needed or is past the
+ * point where it would fail (e.g. when it prints a message on
+ * startup).  Keep in mind that variables local to a function
+ * will cease to exist if the function returns.  Use a
+ * script-local variable if needed:
+ * 	let s:myjob = job_start('my-command')
+ * {options} must be a Dictionary.  It can contain many optional
+ * items, see |job-options|.
+ * Can also be used as a |method|:
+ * 	BuildCommand()->job_start()
+ */
+export function job_start(
+  denops: Denops,
+  command: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function job_start(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_start", ...args);
+}
+
+/**
+ * Returns a String with the status of {job}:
+ * 	"run"	job is running
+ * 	"fail"	job failed to start
+ * 	"dead"	job died or was stopped after running
+ * On Unix a non-existing command results in "dead" instead of
+ * "fail", because a fork happens before the failure can be
+ * detected.
+ * If in Vim9 script a variable is declared with type "job" but
+ * never assigned to, passing that variable to job_status()
+ * returns "fail".
+ * If an exit callback was set with the "exit_cb" option and the
+ * job is now detected to be "dead" the callback will be invoked.
+ * For more information see |job_info()|.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_status()
+ */
+export function job_status(denops: Denops, job: unknown): Promise<unknown>;
+export function job_status(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("job_status", ...args);
+}
+
+/**
+ * Stop the {job}.  This can also be used to signal the job.
+ * When {how} is omitted or is "term" the job will be terminated.
+ * For Unix SIGTERM is sent.  On MS-Windows the job will be
+ * terminated forcedly (there is no "gentle" way).
+ * This goes to the process group, thus children may also be
+ * affected.
+ * Effect for Unix:
+ * 	"term"	 SIGTERM (default)
+ * 	"hup"	 SIGHUP
+ * 	"quit"	 SIGQUIT
+ * 	"int"	 SIGINT
+ * 	"kill"	 SIGKILL (strongest way to stop)
+ * 	number	 signal with that number
+ * Effect for MS-Windows:
+ * 	"term"	 terminate process forcedly (default)
+ * 	"hup"	 CTRL_BREAK
+ * 	"quit"	 CTRL_BREAK
+ * 	"int"	 CTRL_C
+ * 	"kill"	 terminate process forcedly
+ * 	Others	 CTRL_BREAK
+ * On Unix the signal is sent to the process group.  This means
+ * that when the job is "sh -c command" it affects both the shell
+ * and the command.
+ * The result is a Number: 1 if the operation could be executed,
+ * 0 if "how" is not supported on the system.
+ * Note that even when the operation was executed, whether the
+ * job was actually stopped needs to be checked with
+ * |job_status()|.
+ * If the status of the job is "dead", the signal will not be
+ * sent.  This is to avoid to stop the wrong job (esp. on Unix,
+ * where process numbers are recycled).
+ * When using "kill" Vim will assume the job will die and close
+ * the channel.
+ * Can also be used as a |method|:
+ * 	GetJob()->job_stop()
+ */
+export function job_stop(
+  denops: Denops,
+  job: unknown,
+  how?: unknown,
+): Promise<unknown>;
+export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("job_stop", ...args);
+}
+
+/**
+ * This is for testing: If the memory allocation with {id} is
+ * called, then decrement {countdown}, and when it reaches zero
+ * let memory allocation fail {repeat} times.  When {repeat} is
+ * smaller than one it fails one time.
+ * Can also be used as a |method|:
+ * 	GetAllocId()->test_alloc_fail()
+ */
+export function test_alloc_fail(
+  denops: Denops,
+  id: unknown,
+  countdown: unknown,
+  repeat: unknown,
+): Promise<unknown>;
+export function test_alloc_fail(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_alloc_fail", ...args);
+}
+
+/**
+ * Set a flag to enable the effect of 'autochdir' before Vim
+ * startup has finished.
+ */
+export function test_autochdir(denops: Denops): Promise<unknown>;
+export function test_autochdir(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_autochdir", ...args);
+}
+
+/**
+ * Characters in {string} are queued for processing as if they
+ * were typed by the user. This uses a low level input buffer.
+ * This function works only when with |+unix| or GUI is running.
+ * Can also be used as a |method|:
+ * 	GetText()->test_feedinput()
+ */
+export function test_feedinput(
+  denops: Denops,
+  string: unknown,
+): Promise<unknown>;
+export function test_feedinput(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_feedinput", ...args);
+}
+
+/**
+ * Like garbagecollect(), but executed right away.  This must
+ * only be called directly to avoid any structure to exist
+ * internally, and |v:testing| must have been set before calling
+ * any function.
+ */
+export function test_garbagecollect_now(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_now(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_garbagecollect_now", ...args);
+}
+
+/**
+ * Set the flag to call the garbagecollector as if in the main
+ * loop.  Only to be used in tests.
+ */
+export function test_garbagecollect_soon(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_soon(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_garbagecollect_soon", ...args);
+}
+
+/**
+ * Get the value of an internal variable.  These values for
+ * {name} are supported:
+ * 	need_fileinfo
+ * Can also be used as a |method|:
+ * 	GetName()->test_getvalue()
+ */
+export function test_getvalue(denops: Denops, name: unknown): Promise<unknown>;
+export function test_getvalue(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_getvalue", ...args);
+}
+
+/**
+ * Drop one or more files in {list} in the window at {row}, {col}.
+ * This function only works when the GUI is running.
+ * The supported values for {mods} are:
+ * 	0x4	Shift
+ * 	0x8	Alt
+ * 	0x10	Ctrl
+ * The files are added to the argument list and the first file in
+ * {list} is edited in the window.  See |drag-n-drop| for more
+ * information.
+ */
+export function test_gui_drop_files(
+  denops: Denops,
+  list: unknown,
+  row: unknown,
+  col: unknown,
+  mods: unknown,
+): Promise<unknown>;
+export function test_gui_drop_files(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_gui_drop_files", ...args);
+}
+
+/**
+ * Inject a mouse button click event.  This function only works
+ * when the GUI is running.
+ * The supported values for {button} are:
+ * 	0	right mouse button
+ * 	1	middle mouse button
+ * 	2	left mouse button
+ * 	3	mouse button release
+ * 	4	scroll wheel down
+ * 	5	scroll wheel up
+ * 	6	scroll wheel left
+ * 	7	scroll wheel right
+ * {row} and {col} specify the location of the mouse click. The
+ * first row of the Vim window is 1 and the last row is 'lines'.
+ * The maximum value of {col} is 'columns'.
+ * To inject a multiclick event, set {multiclick} to 1.
+ * The supported values for {modifiers} are:
+ * 	4	shift is pressed
+ * 	8	alt is pressed
+ * 	16	ctrl is pressed
+ * After injecting the mouse event you probably should call
+ * |feedkeys()| to have them processed, e.g.:
+ * 	call feedkeys("y", 'Lx!')
+ */
+export function test_gui_mouse_event(
+  denops: Denops,
+  button: unknown,
+  row: unknown,
+  col: unknown,
+  multiclick: unknown,
+  modifiers: unknown,
+): Promise<unknown>;
+export function test_gui_mouse_event(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_gui_mouse_event", ...args);
+}
+
+/**
+ * Ignore any error containing {expr}.  A normal message is given
+ * instead.
+ * This is only meant to be used in tests, where catching the
+ * error with try/catch cannot be used (because it skips over
+ * following code).
+ * {expr} is used literally, not as a pattern.
+ * When the {expr} is the string "RESET" then the list of ignored
+ * errors is made empty.
+ * Can also be used as a |method|:
+ * 	GetErrorText()->test_ignore_error()
+ */
+export function test_ignore_error(
+  denops: Denops,
+  expr: unknown,
+): Promise<unknown>;
+export function test_ignore_error(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_ignore_error", ...args);
+}
+
+/**
+ * Return a |Blob| that is null. Only useful for testing.
+ */
+export function test_null_blob(denops: Denops): Promise<unknown>;
+export function test_null_blob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_blob", ...args);
+}
+
+/**
+ * Return a |Channel| that is null. Only useful for testing.
+ * {only available when compiled with the +channel feature}
+ */
+export function test_null_channel(denops: Denops): Promise<unknown>;
+export function test_null_channel(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_channel", ...args);
+}
+
+/**
+ * Return a |Dict| that is null. Only useful for testing.
+ */
+export function test_null_dict(denops: Denops): Promise<unknown>;
+export function test_null_dict(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_dict", ...args);
+}
+
+/**
+ * Return a |Funcref| that is null. Only useful for testing.
+ */
+export function test_null_function(denops: Denops): Promise<unknown>;
+export function test_null_function(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_function", ...args);
+}
+
+/**
+ * Return a |Job| that is null. Only useful for testing.
+ * {only available when compiled with the +job feature}
+ */
+export function test_null_job(denops: Denops): Promise<unknown>;
+export function test_null_job(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_job", ...args);
+}
+
+/**
+ * Return a |List| that is null. Only useful for testing.
+ */
+export function test_null_list(denops: Denops): Promise<unknown>;
+export function test_null_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_list", ...args);
+}
+
+/**
+ * Return a |Partial| that is null. Only useful for testing.
+ */
+export function test_null_partial(denops: Denops): Promise<unknown>;
+export function test_null_partial(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_partial", ...args);
+}
+
+/**
+ * Return a |String| that is null. Only useful for testing.
+ */
+export function test_null_string(denops: Denops): Promise<unknown>;
+export function test_null_string(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_string", ...args);
+}
+
+/**
+ * Return a value with unknown type. Only useful for testing.
+ */
+export function test_unknown(denops: Denops): Promise<unknown>;
+export function test_unknown(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_unknown", ...args);
+}
+
+/**
+ * Return a value with void type. Only useful for testing.
+ */
+export function test_void(denops: Denops): Promise<unknown>;
+export function test_void(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_void", ...args);
+}
+
+/**
+ * Reset the flag that indicates option {name} was set.  Thus it
+ * looks like it still has the default value. Use like this:
+ * 	set ambiwidth=double
+ * 	call test_option_not_set('ambiwidth')
+ * Now the 'ambiwidth' option behaves like it was never changed,
+ * even though the value is "double".
+ * Only to be used for testing!
+ * Can also be used as a |method|:
+ * 	GetOptionName()->test_option_not_set()
+ */
+export function test_option_not_set(
+  denops: Denops,
+  name: unknown,
+): Promise<unknown>;
+export function test_option_not_set(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_option_not_set", ...args);
+}
+
+/**
+ * Overrides certain parts of Vim's internal processing to be able
+ * to run tests. Only to be used for testing Vim!
+ * The override is enabled when {val} is non-zero and removed
+ * when {val} is zero.
+ * Current supported values for name are:
+ * name	     effect when {val} is non-zero ~
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * char_avail   disable the char_avail() function
+ * starting     reset the "starting" variable, see below
+ * nfa_fail     makes the NFA regexp engine fail to force a
+ * 	     fallback to the old engine
+ * no_query_mouse  do not query the mouse position for "dec"
+ * 		terminals
+ * no_wait_return	set the "no_wait_return" flag.  Not restored
+ * 		with "ALL".
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
+ * term_props   reset all terminal properties when the version
+ * 	     string is detected
+ * uptime 	     overrules sysinfo.uptime
+ * ALL	     clear all overrides ({val} is not used)
+ * "starting" is to be used when a test should behave like
+ * startup was done.  Since the tests are run by sourcing a
+ * script the "starting" variable is non-zero. This is usually a
+ * good thing (tests run faster), but sometimes changes behavior
+ * in a way that the test doesn't work properly.
+ * When using:
+ * 	call test_override('starting', 1)
+ * The value of "starting" is saved.  It is restored by:
+ * 	call test_override('starting', 0)
+ * Can also be used as a |method|:
+ * 	GetOverrideVal()-> test_override('starting')
+ */
+export function test_override(
+  denops: Denops,
+  name: unknown,
+  val: unknown,
+): Promise<unknown>;
+export function test_override(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_override", ...args);
+}
+
+/**
+ * Return the reference count of {expr}.  When {expr} is of a
+ * type that does not have a reference count, returns -1.  Only
+ * to be used for testing.
+ * Can also be used as a |method|:
+ * 	GetVarname()->test_refcount()
+ */
+export function test_refcount(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_refcount(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_refcount", ...args);
+}
+
+/**
+ * Pretend using scrollbar {which} to move it to position
+ * {value}.  {which} can be:
+ * 	left	Left scrollbar of the current window
+ * 	right	Right scrollbar of the current window
+ * 	hor	Horizontal scrollbar
+ * For the vertical scrollbars {value} can be 1 to the
+ * line-count of the buffer.  For the horizontal scrollbar the
+ * {value} can be between 1 and the maximum line length, assuming
+ * 'wrap' is not set.
+ * When {dragging} is non-zero it's like dragging the scrollbar,
+ * otherwise it's like clicking in the scrollbar.
+ * Only works when the {which} scrollbar actually exists,
+ * obviously only when using the GUI.
+ * Can also be used as a |method|:
+ * 	GetValue()->test_scrollbar('right', 0)
+ */
+export function test_scrollbar(
+  denops: Denops,
+  which: unknown,
+  value: unknown,
+  dragging: unknown,
+): Promise<unknown>;
+export function test_scrollbar(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_scrollbar", ...args);
+}
+
+/**
+ * Set the mouse position to be used for the next mouse action.
+ * {row} and {col} are one based.
+ * For example:
+ * 	call test_setmouse(4, 20)
+ * 	call feedkeys("\<LeftMouse>", "xt")
+ */
+export function test_setmouse(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function test_setmouse(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_setmouse", ...args);
+}
+
+/**
+ * Set the time Vim uses internally.  Currently only used for
+ * timestamps in the history, as they are used in viminfo, and
+ * for undo.
+ * Using a value of 1 makes Vim not sleep after a warning or
+ * error message.
+ * {expr} must evaluate to a number.  When the value is zero the
+ * normal behavior is restored.
+ * Can also be used as a |method|:
+ * 	GetTime()->test_settime()
+ */
+export function test_settime(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_settime(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_settime", ...args);
+}
+
+/**
+ * When [seed] is given this sets the seed value used by
+ * `srand()`.  When omitted the test seed is removed.
+ */
+export function test_srand_seed(
+  denops: Denops,
+  seed?: unknown,
+): Promise<unknown>;
+export function test_srand_seed(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_srand_seed", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce a beep or visual bell.
+ * Also see |assert_fails()|, |assert_nobeep()| and
+ * |assert-return|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_beeps()
+ */
+export function assert_beeps(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_beeps(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_beeps", ...args);
+}
+
+/**
+ * When {expected} and {actual} are not equal an error message is
+ * added to |v:errors| and 1 is returned.  Otherwise zero is
+ * returned |assert-return|.
+ * There is no automatic conversion, the String "4" is different
+ * from the Number 4.  And the number 4 is different from the
+ * Float 4.0.  The value of 'ignorecase' is not used here, case
+ * always matters.
+ * When {msg} is omitted an error in the form "Expected
+ * {expected} but got {actual}" is produced.
+ * Example:
+ * 	assert_equal('foo', 'bar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Expected 'foo' but got 'bar' ~
+ * Can also be used as a |method|, the base is passed as the
+ * second argument:
+ * 	mylist->assert_equal([1, 2, 3])
+ */
+export function assert_equal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_equal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equal", ...args);
+}
+
+/**
+ * When the files {fname-one} and {fname-two} do not contain
+ * exactly the same text an error message is added to |v:errors|.
+ * Also see |assert-return|.
+ * When {fname-one} or {fname-two} does not exist the error will
+ * mention that.
+ * Mainly useful with |terminal-diff|.
+ * Can also be used as a |method|:
+ * 	GetLog()->assert_equalfile('expected.log')
+ */
+export function assert_equalfile(
+  denops: Denops,
+  fname_one: unknown,
+  fname_two: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_equalfile(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equalfile", ...args);
+}
+
+/**
+ * When v:exception does not contain the string {error} an error
+ * message is added to |v:errors|.  Also see |assert-return|.
+ * This can be used to assert that a command throws an exception.
+ * Using the error number, followed by a colon, avoids problems
+ * with translations:
+ * 	try
+ * 	  commandthatfails
+ * 	  call assert_false(1, 'command should have failed')
+ * 	catch
+ * 	  call assert_exception('E492:')
+ * 	endtry
+ */
+export function assert_exception(
+  denops: Denops,
+  error: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_exception(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_exception", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce an error or when {error} is not found in the
+ * error message.  Also see |assert-return|.
+ * When {error} is a string it must be found literally in the
+ * first reported error. Most often this will be the error code,
+ * including the colon, e.g. "E123:".
+ * 	assert_fails('bad cmd', 'E987:')
+ * When {error} is a |List| with one or two strings, these are
+ * used as patterns.  The first pattern is matched against the
+ * first reported error:
+ * 	assert_fails('cmd', ['E987:.*expected bool'])
+ * The second pattern, if present, is matched against the last
+ * reported error.
+ * If there is only one error then both patterns must match. This
+ * can be used to check that there is only one error.
+ * To only match the last error use an empty string for the first
+ * error:
+ * 	assert_fails('cmd', ['', 'E987:'])
+ * If {msg} is empty then it is not used.  Do this to get the
+ * default message when passing the {lnum} argument.
+ * When {lnum} is present and not negative, and the {error}
+ * argument is present and matches, then this is compared with
+ * the line number at which the error was reported. That can be
+ * the line number in a function or in a script.
+ * When {context} is present it is used as a pattern and matched
+ * against the context (script name or function name) where
+ * {lnum} is located in.
+ * Note that beeping is not considered an error, and some failing
+ * commands only beep.  Use |assert_beeps()| for those.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_fails('E99:')
+ */
+export function assert_fails(
+  denops: Denops,
+  cmd: unknown,
+  error?: unknown,
+  msg?: unknown,
+  lnum?: unknown,
+  context?: unknown,
+): Promise<unknown>;
+export function assert_fails(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_fails", ...args);
+}
+
+/**
+ * When {actual} is not false an error message is added to
+ * |v:errors|, like with |assert_equal()|.
+ * Also see |assert-return|.
+ * A value is false when it is zero. When {actual} is not a
+ * number the assert fails.
+ * When {msg} is omitted an error in the form
+ * "Expected False but got {actual}" is produced.
+ * Can also be used as a |method|:
+ * 	GetResult()->assert_false()
+ */
+export function assert_false(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_false(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_false", ...args);
+}
+
+/**
+ * This asserts number and |Float| values.  When {actual}  is lower
+ * than {lower} or higher than {upper} an error message is added
+ * to |v:errors|.  Also see |assert-return|.
+ * When {msg} is omitted an error in the form
+ * "Expected range {lower} - {upper}, but got {actual}" is
+ * produced.
+ */
+export function assert_inrange(
+  denops: Denops,
+  lower: unknown,
+  upper: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_inrange(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_inrange", ...args);
+}
+
+/**
+ * When {pattern} does not match {actual} an error message is
+ * added to |v:errors|.  Also see |assert-return|.
+ * {pattern} is used as with |=~|: The matching is always done
+ * like 'magic' was set and 'cpoptions' is empty, no matter what
+ * the actual value of 'magic' or 'cpoptions' is.
+ * {actual} is used as a string, automatic conversion applies.
+ * Use "^" and "$" to match with the start and end of the text.
+ * Use both to match the whole text.
+ * When {msg} is omitted an error in the form
+ * "Pattern {pattern} does not match {actual}" is produced.
+ * Example:
+ * 	assert_match('^f.*o$', 'foobar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
+ * Can also be used as a |method|:
+ * 	getFile()->assert_match('foo.*')
+ */
+export function assert_match(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_match(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_match", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it
+ * produces a beep or visual bell.
+ * Also see |assert_beeps()|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_nobeep()
+ */
+export function assert_nobeep(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_nobeep(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_nobeep", ...args);
+}
+
+/**
+ * The opposite of `assert_equal()`: add an error message to
+ * |v:errors| when {expected} and {actual} are equal.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	mylist->assert_notequal([1, 2, 3])
+ */
+export function assert_notequal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_notequal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notequal", ...args);
+}
+
+/**
+ * The opposite of `assert_match()`: add an error message to
+ * |v:errors| when {pattern} matches {actual}.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	getFile()->assert_notmatch('bar.*')
+ */
+export function assert_notmatch(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_notmatch(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notmatch", ...args);
+}
+
+/**
+ * Report a test failure directly, using {msg}.
+ * Always returns one.
+ * Can also be used as a |method|:
+ * 	GetMessage()->assert_report()
+ */
+export function assert_report(denops: Denops, msg: unknown): Promise<unknown>;
+export function assert_report(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_report", ...args);
+}
+
+/**
+ *   VIM REFERENCE MANUAL	  by Bram Moolenaar
+ * 	test20.in		oldest, only for tiny and small builds
+ * 	test_something.vim	new style tests
+ * This is for testing: If the memory allocation with {id} is
+ * called, then decrement {countdown}, and when it reaches zero
+ * let memory allocation fail {repeat} times.  When {repeat} is
+ * smaller than one it fails one time.
+ * Can also be used as a |method|:
+ * 	GetAllocId()->test_alloc_fail()
+ * Set a flag to enable the effect of 'autochdir' before Vim
+ * startup has finished.
+ * Characters in {string} are queued for processing as if they
+ * were typed by the user. This uses a low level input buffer.
+ * This function works only when with |+unix| or GUI is running.
+ * Can also be used as a |method|:
+ * 	GetText()->test_feedinput()
+ * Like garbagecollect(), but executed right away.  This must
+ * only be called directly to avoid any structure to exist
+ * internally, and |v:testing| must have been set before calling
+ * any function.
+ * Set the flag to call the garbagecollector as if in the main
+ * loop.  Only to be used in tests.
+ * Get the value of an internal variable.  These values for
+ * {name} are supported:
+ * 	need_fileinfo
+ * Can also be used as a |method|:
+ * 	GetName()->test_getvalue()
+ * Drop one or more files in {list} in the window at {row}, {col}.
+ * This function only works when the GUI is running.
+ * The supported values for {mods} are:
+ * 	0x4	Shift
+ * 	0x8	Alt
+ * 	0x10	Ctrl
+ * The files are added to the argument list and the first file in
+ * {list} is edited in the window.  See |drag-n-drop| for more
+ * information.
+ * Inject a mouse button click event.  This function only works
+ * when the GUI is running.
+ * The supported values for {button} are:
+ * 	0	right mouse button
+ * 	1	middle mouse button
+ * 	2	left mouse button
+ * 	3	mouse button release
+ * 	4	scroll wheel down
+ * 	5	scroll wheel up
+ * 	6	scroll wheel left
+ * 	7	scroll wheel right
+ * {row} and {col} specify the location of the mouse click. The
+ * first row of the Vim window is 1 and the last row is 'lines'.
+ * The maximum value of {col} is 'columns'.
+ * To inject a multiclick event, set {multiclick} to 1.
+ * The supported values for {modifiers} are:
+ * 	4	shift is pressed
+ * 	8	alt is pressed
+ * 	16	ctrl is pressed
+ * After injecting the mouse event you probably should call
+ * |feedkeys()| to have them processed, e.g.:
+ * 	call feedkeys("y", 'Lx!')
+ * Ignore any error containing {expr}.  A normal message is given
+ * instead.
+ * This is only meant to be used in tests, where catching the
+ * error with try/catch cannot be used (because it skips over
+ * following code).
+ * {expr} is used literally, not as a pattern.
+ * When the {expr} is the string "RESET" then the list of ignored
+ * errors is made empty.
+ * Can also be used as a |method|:
+ * 	GetErrorText()->test_ignore_error()
+ * Return a |Blob| that is null. Only useful for testing.
+ * Return a |Channel| that is null. Only useful for testing.
+ * {only available when compiled with the +channel feature}
+ * Return a |Dict| that is null. Only useful for testing.
+ * Return a |Funcref| that is null. Only useful for testing.
+ * Return a |Job| that is null. Only useful for testing.
+ * {only available when compiled with the +job feature}
+ * Return a |List| that is null. Only useful for testing.
+ * Return a |Partial| that is null. Only useful for testing.
+ * Return a |String| that is null. Only useful for testing.
+ * Return a value with unknown type. Only useful for testing.
+ * Return a value with void type. Only useful for testing.
+ * Reset the flag that indicates option {name} was set.  Thus it
+ * looks like it still has the default value. Use like this:
+ * 	set ambiwidth=double
+ * 	call test_option_not_set('ambiwidth')
+ * Now the 'ambiwidth' option behaves like it was never changed,
+ * even though the value is "double".
+ * Only to be used for testing!
+ * Can also be used as a |method|:
+ * 	GetOptionName()->test_option_not_set()
+ * Overrides certain parts of Vim's internal processing to be able
+ * to run tests. Only to be used for testing Vim!
+ * The override is enabled when {val} is non-zero and removed
+ * when {val} is zero.
+ * Current supported values for name are:
+ * name	     effect when {val} is non-zero ~
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * char_avail   disable the char_avail() function
+ * starting     reset the "starting" variable, see below
+ * nfa_fail     makes the NFA regexp engine fail to force a
+ * 	     fallback to the old engine
+ * no_query_mouse  do not query the mouse position for "dec"
+ * 		terminals
+ * no_wait_return	set the "no_wait_return" flag.  Not restored
+ * 		with "ALL".
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
+ * term_props   reset all terminal properties when the version
+ * 	     string is detected
+ * uptime 	     overrules sysinfo.uptime
+ * ALL	     clear all overrides ({val} is not used)
+ * "starting" is to be used when a test should behave like
+ * startup was done.  Since the tests are run by sourcing a
+ * script the "starting" variable is non-zero. This is usually a
+ * good thing (tests run faster), but sometimes changes behavior
+ * in a way that the test doesn't work properly.
+ * When using:
+ * 	call test_override('starting', 1)
+ * The value of "starting" is saved.  It is restored by:
+ * 	call test_override('starting', 0)
+ * Can also be used as a |method|:
+ * 	GetOverrideVal()-> test_override('starting')
+ * Return the reference count of {expr}.  When {expr} is of a
+ * type that does not have a reference count, returns -1.  Only
+ * to be used for testing.
+ * Can also be used as a |method|:
+ * 	GetVarname()->test_refcount()
+ * Pretend using scrollbar {which} to move it to position
+ * {value}.  {which} can be:
+ * 	left	Left scrollbar of the current window
+ * 	right	Right scrollbar of the current window
+ * 	hor	Horizontal scrollbar
+ * For the vertical scrollbars {value} can be 1 to the
+ * line-count of the buffer.  For the horizontal scrollbar the
+ * {value} can be between 1 and the maximum line length, assuming
+ * 'wrap' is not set.
+ * When {dragging} is non-zero it's like dragging the scrollbar,
+ * otherwise it's like clicking in the scrollbar.
+ * Only works when the {which} scrollbar actually exists,
+ * obviously only when using the GUI.
+ * Can also be used as a |method|:
+ * 	GetValue()->test_scrollbar('right', 0)
+ * Set the mouse position to be used for the next mouse action.
+ * {row} and {col} are one based.
+ * For example:
+ * 	call test_setmouse(4, 20)
+ * 	call feedkeys("\<LeftMouse>", "xt")
+ * Set the time Vim uses internally.  Currently only used for
+ * timestamps in the history, as they are used in viminfo, and
+ * for undo.
+ * Using a value of 1 makes Vim not sleep after a warning or
+ * error message.
+ * {expr} must evaluate to a number.  When the value is zero the
+ * normal behavior is restored.
+ * Can also be used as a |method|:
+ * 	GetTime()->test_settime()
+ * When [seed] is given this sets the seed value used by
+ * `srand()`.  When omitted the test seed is removed.
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce a beep or visual bell.
+ * Also see |assert_fails()|, |assert_nobeep()| and
+ * |assert-return|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_beeps()
+ * When {expected} and {actual} are not equal an error message is
+ * added to |v:errors| and 1 is returned.  Otherwise zero is
+ * returned |assert-return|.
+ * There is no automatic conversion, the String "4" is different
+ * from the Number 4.  And the number 4 is different from the
+ * Float 4.0.  The value of 'ignorecase' is not used here, case
+ * always matters.
+ * When {msg} is omitted an error in the form "Expected
+ * {expected} but got {actual}" is produced.
+ * Example:
+ * 	assert_equal('foo', 'bar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Expected 'foo' but got 'bar' ~
+ * Can also be used as a |method|, the base is passed as the
+ * second argument:
+ * 	mylist->assert_equal([1, 2, 3])
+ * When the files {fname-one} and {fname-two} do not contain
+ * exactly the same text an error message is added to |v:errors|.
+ * Also see |assert-return|.
+ * When {fname-one} or {fname-two} does not exist the error will
+ * mention that.
+ * Mainly useful with |terminal-diff|.
+ * Can also be used as a |method|:
+ * 	GetLog()->assert_equalfile('expected.log')
+ * When v:exception does not contain the string {error} an error
+ * message is added to |v:errors|.  Also see |assert-return|.
+ * This can be used to assert that a command throws an exception.
+ * Using the error number, followed by a colon, avoids problems
+ * with translations:
+ * 	try
+ * 	  commandthatfails
+ * 	  call assert_false(1, 'command should have failed')
+ * 	catch
+ * 	  call assert_exception('E492:')
+ * 	endtry
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce an error or when {error} is not found in the
+ * error message.  Also see |assert-return|.
+ * When {error} is a string it must be found literally in the
+ * first reported error. Most often this will be the error code,
+ * including the colon, e.g. "E123:".
+ * 	assert_fails('bad cmd', 'E987:')
+ * When {error} is a |List| with one or two strings, these are
+ * used as patterns.  The first pattern is matched against the
+ * first reported error:
+ * 	assert_fails('cmd', ['E987:.*expected bool'])
+ * The second pattern, if present, is matched against the last
+ * reported error.
+ * If there is only one error then both patterns must match. This
+ * can be used to check that there is only one error.
+ * To only match the last error use an empty string for the first
+ * error:
+ * 	assert_fails('cmd', ['', 'E987:'])
+ * If {msg} is empty then it is not used.  Do this to get the
+ * default message when passing the {lnum} argument.
+ * When {lnum} is present and not negative, and the {error}
+ * argument is present and matches, then this is compared with
+ * the line number at which the error was reported. That can be
+ * the line number in a function or in a script.
+ * When {context} is present it is used as a pattern and matched
+ * against the context (script name or function name) where
+ * {lnum} is located in.
+ * Note that beeping is not considered an error, and some failing
+ * commands only beep.  Use |assert_beeps()| for those.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_fails('E99:')
+ * When {actual} is not false an error message is added to
+ * |v:errors|, like with |assert_equal()|.
+ * Also see |assert-return|.
+ * A value is false when it is zero. When {actual} is not a
+ * number the assert fails.
+ * When {msg} is omitted an error in the form
+ * "Expected False but got {actual}" is produced.
+ * Can also be used as a |method|:
+ * 	GetResult()->assert_false()
+ * This asserts number and |Float| values.  When {actual}  is lower
+ * than {lower} or higher than {upper} an error message is added
+ * to |v:errors|.  Also see |assert-return|.
+ * When {msg} is omitted an error in the form
+ * "Expected range {lower} - {upper}, but got {actual}" is
+ * produced.
+ * When {pattern} does not match {actual} an error message is
+ * added to |v:errors|.  Also see |assert-return|.
+ * {pattern} is used as with |=~|: The matching is always done
+ * like 'magic' was set and 'cpoptions' is empty, no matter what
+ * the actual value of 'magic' or 'cpoptions' is.
+ * {actual} is used as a string, automatic conversion applies.
+ * Use "^" and "$" to match with the start and end of the text.
+ * Use both to match the whole text.
+ * When {msg} is omitted an error in the form
+ * "Pattern {pattern} does not match {actual}" is produced.
+ * Example:
+ * 	assert_match('^f.*o$', 'foobar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
+ * Can also be used as a |method|:
+ * 	getFile()->assert_match('foo.*')
+ * Run {cmd} and add an error message to |v:errors| if it
+ * produces a beep or visual bell.
+ * Also see |assert_beeps()|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_nobeep()
+ * The opposite of `assert_equal()`: add an error message to
+ * |v:errors| when {expected} and {actual} are equal.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	mylist->assert_notequal([1, 2, 3])
+ * The opposite of `assert_match()`: add an error message to
+ * |v:errors| when {pattern} matches {actual}.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	getFile()->assert_notmatch('bar.*')
+ * Report a test failure directly, using {msg}.
+ * Always returns one.
+ * Can also be used as a |method|:
+ * 	GetMessage()->assert_report()
+ */
+export function assert_true(
+  denops: Denops,
+  id: unknown,
+  countdown: unknown,
+  repeat: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, string: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  list: unknown,
+  row: unknown,
+  col: unknown,
+  mods: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  button: unknown,
+  row: unknown,
+  col: unknown,
+  multiclick: unknown,
+  modifiers: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  name: unknown,
+  val: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  which: unknown,
+  value: unknown,
+  dragging: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, seed?: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  fname_one: unknown,
+  fname_two: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  error: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  cmd: unknown,
+  error?: unknown,
+  msg?: unknown,
+  lnum?: unknown,
+  context?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  lower: unknown,
+  upper: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, msg: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_true", ...args);
 }
