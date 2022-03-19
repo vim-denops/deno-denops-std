@@ -24,6 +24,7 @@ const vimHelps = await Promise.all([
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/textprop.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/terminal.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/channel.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/testing.txt`,
 ].map(downloadString));
 const vimDefs = vimHelps.map(parse).flat();
 const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);

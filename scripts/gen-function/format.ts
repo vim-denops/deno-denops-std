@@ -6,6 +6,8 @@ const translate: Record<string, string> = {
   "eval": "eval_",
   "function": "function_",
   "lnum-end": "lnum_end",
+  "fname-one": "fname_one",
+  "fname-two": "fname_two",
 };
 
 function formatDocs(docs: string): string[] {

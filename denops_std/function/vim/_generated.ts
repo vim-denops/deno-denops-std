@@ -2850,3 +2850,1140 @@ export function job_stop(
 export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("job_stop", ...args);
 }
+
+/**
+ * This is for testing: If the memory allocation with {id} is
+ * called, then decrement {countdown}, and when it reaches zero
+ * let memory allocation fail {repeat} times.  When {repeat} is
+ * smaller than one it fails one time.
+ * Can also be used as a |method|:
+ * 	GetAllocId()->test_alloc_fail()
+ */
+export function test_alloc_fail(
+  denops: Denops,
+  id: unknown,
+  countdown: unknown,
+  repeat: unknown,
+): Promise<unknown>;
+export function test_alloc_fail(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_alloc_fail", ...args);
+}
+
+/**
+ * Set a flag to enable the effect of 'autochdir' before Vim
+ * startup has finished.
+ */
+export function test_autochdir(denops: Denops): Promise<unknown>;
+export function test_autochdir(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_autochdir", ...args);
+}
+
+/**
+ * Characters in {string} are queued for processing as if they
+ * were typed by the user. This uses a low level input buffer.
+ * This function works only when with |+unix| or GUI is running.
+ * Can also be used as a |method|:
+ * 	GetText()->test_feedinput()
+ */
+export function test_feedinput(
+  denops: Denops,
+  string: unknown,
+): Promise<unknown>;
+export function test_feedinput(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_feedinput", ...args);
+}
+
+/**
+ * Like garbagecollect(), but executed right away.  This must
+ * only be called directly to avoid any structure to exist
+ * internally, and |v:testing| must have been set before calling
+ * any function.
+ */
+export function test_garbagecollect_now(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_now(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_garbagecollect_now", ...args);
+}
+
+/**
+ * Set the flag to call the garbagecollector as if in the main
+ * loop.  Only to be used in tests.
+ */
+export function test_garbagecollect_soon(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_soon(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_garbagecollect_soon", ...args);
+}
+
+/**
+ * Get the value of an internal variable.  These values for
+ * {name} are supported:
+ * 	need_fileinfo
+ * Can also be used as a |method|:
+ * 	GetName()->test_getvalue()
+ */
+export function test_getvalue(denops: Denops, name: unknown): Promise<unknown>;
+export function test_getvalue(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_getvalue", ...args);
+}
+
+/**
+ * Drop one or more files in {list} in the window at {row}, {col}.
+ * This function only works when the GUI is running.
+ * The supported values for {mods} are:
+ * 	0x4	Shift
+ * 	0x8	Alt
+ * 	0x10	Ctrl
+ * The files are added to the argument list and the first file in
+ * {list} is edited in the window.  See |drag-n-drop| for more
+ * information.
+ */
+export function test_gui_drop_files(
+  denops: Denops,
+  list: unknown,
+  row: unknown,
+  col: unknown,
+  mods: unknown,
+): Promise<unknown>;
+export function test_gui_drop_files(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_gui_drop_files", ...args);
+}
+
+/**
+ * Inject a mouse button click event.  This function only works
+ * when the GUI is running.
+ * The supported values for {button} are:
+ * 	0	right mouse button
+ * 	1	middle mouse button
+ * 	2	left mouse button
+ * 	3	mouse button release
+ * 	4	scroll wheel down
+ * 	5	scroll wheel up
+ * 	6	scroll wheel left
+ * 	7	scroll wheel right
+ * {row} and {col} specify the location of the mouse click. The
+ * first row of the Vim window is 1 and the last row is 'lines'.
+ * The maximum value of {col} is 'columns'.
+ * To inject a multiclick event, set {multiclick} to 1.
+ * The supported values for {modifiers} are:
+ * 	4	shift is pressed
+ * 	8	alt is pressed
+ * 	16	ctrl is pressed
+ * After injecting the mouse event you probably should call
+ * |feedkeys()| to have them processed, e.g.:
+ * 	call feedkeys("y", 'Lx!')
+ */
+export function test_gui_mouse_event(
+  denops: Denops,
+  button: unknown,
+  row: unknown,
+  col: unknown,
+  multiclick: unknown,
+  modifiers: unknown,
+): Promise<unknown>;
+export function test_gui_mouse_event(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_gui_mouse_event", ...args);
+}
+
+/**
+ * Ignore any error containing {expr}.  A normal message is given
+ * instead.
+ * This is only meant to be used in tests, where catching the
+ * error with try/catch cannot be used (because it skips over
+ * following code).
+ * {expr} is used literally, not as a pattern.
+ * When the {expr} is the string "RESET" then the list of ignored
+ * errors is made empty.
+ * Can also be used as a |method|:
+ * 	GetErrorText()->test_ignore_error()
+ */
+export function test_ignore_error(
+  denops: Denops,
+  expr: unknown,
+): Promise<unknown>;
+export function test_ignore_error(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_ignore_error", ...args);
+}
+
+/**
+ * Return a |Blob| that is null. Only useful for testing.
+ */
+export function test_null_blob(denops: Denops): Promise<unknown>;
+export function test_null_blob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_blob", ...args);
+}
+
+/**
+ * Return a |Channel| that is null. Only useful for testing.
+ * {only available when compiled with the +channel feature}
+ */
+export function test_null_channel(denops: Denops): Promise<unknown>;
+export function test_null_channel(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_channel", ...args);
+}
+
+/**
+ * Return a |Dict| that is null. Only useful for testing.
+ */
+export function test_null_dict(denops: Denops): Promise<unknown>;
+export function test_null_dict(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_dict", ...args);
+}
+
+/**
+ * Return a |Funcref| that is null. Only useful for testing.
+ */
+export function test_null_function(denops: Denops): Promise<unknown>;
+export function test_null_function(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_function", ...args);
+}
+
+/**
+ * Return a |Job| that is null. Only useful for testing.
+ * {only available when compiled with the +job feature}
+ */
+export function test_null_job(denops: Denops): Promise<unknown>;
+export function test_null_job(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_job", ...args);
+}
+
+/**
+ * Return a |List| that is null. Only useful for testing.
+ */
+export function test_null_list(denops: Denops): Promise<unknown>;
+export function test_null_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_list", ...args);
+}
+
+/**
+ * Return a |Partial| that is null. Only useful for testing.
+ */
+export function test_null_partial(denops: Denops): Promise<unknown>;
+export function test_null_partial(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_partial", ...args);
+}
+
+/**
+ * Return a |String| that is null. Only useful for testing.
+ */
+export function test_null_string(denops: Denops): Promise<unknown>;
+export function test_null_string(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_null_string", ...args);
+}
+
+/**
+ * Return a value with unknown type. Only useful for testing.
+ */
+export function test_unknown(denops: Denops): Promise<unknown>;
+export function test_unknown(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_unknown", ...args);
+}
+
+/**
+ * Return a value with void type. Only useful for testing.
+ */
+export function test_void(denops: Denops): Promise<unknown>;
+export function test_void(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_void", ...args);
+}
+
+/**
+ * Reset the flag that indicates option {name} was set.  Thus it
+ * looks like it still has the default value. Use like this:
+ * 	set ambiwidth=double
+ * 	call test_option_not_set('ambiwidth')
+ * Now the 'ambiwidth' option behaves like it was never changed,
+ * even though the value is "double".
+ * Only to be used for testing!
+ * Can also be used as a |method|:
+ * 	GetOptionName()->test_option_not_set()
+ */
+export function test_option_not_set(
+  denops: Denops,
+  name: unknown,
+): Promise<unknown>;
+export function test_option_not_set(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_option_not_set", ...args);
+}
+
+/**
+ * Overrides certain parts of Vim's internal processing to be able
+ * to run tests. Only to be used for testing Vim!
+ * The override is enabled when {val} is non-zero and removed
+ * when {val} is zero.
+ * Current supported values for name are:
+ * name	     effect when {val} is non-zero ~
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * char_avail   disable the char_avail() function
+ * starting     reset the "starting" variable, see below
+ * nfa_fail     makes the NFA regexp engine fail to force a
+ * 	     fallback to the old engine
+ * no_query_mouse  do not query the mouse position for "dec"
+ * 		terminals
+ * no_wait_return	set the "no_wait_return" flag.  Not restored
+ * 		with "ALL".
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
+ * term_props   reset all terminal properties when the version
+ * 	     string is detected
+ * uptime 	     overrules sysinfo.uptime
+ * ALL	     clear all overrides ({val} is not used)
+ * "starting" is to be used when a test should behave like
+ * startup was done.  Since the tests are run by sourcing a
+ * script the "starting" variable is non-zero. This is usually a
+ * good thing (tests run faster), but sometimes changes behavior
+ * in a way that the test doesn't work properly.
+ * When using:
+ * 	call test_override('starting', 1)
+ * The value of "starting" is saved.  It is restored by:
+ * 	call test_override('starting', 0)
+ * Can also be used as a |method|:
+ * 	GetOverrideVal()-> test_override('starting')
+ */
+export function test_override(
+  denops: Denops,
+  name: unknown,
+  val: unknown,
+): Promise<unknown>;
+export function test_override(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_override", ...args);
+}
+
+/**
+ * Return the reference count of {expr}.  When {expr} is of a
+ * type that does not have a reference count, returns -1.  Only
+ * to be used for testing.
+ * Can also be used as a |method|:
+ * 	GetVarname()->test_refcount()
+ */
+export function test_refcount(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_refcount(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_refcount", ...args);
+}
+
+/**
+ * Pretend using scrollbar {which} to move it to position
+ * {value}.  {which} can be:
+ * 	left	Left scrollbar of the current window
+ * 	right	Right scrollbar of the current window
+ * 	hor	Horizontal scrollbar
+ * For the vertical scrollbars {value} can be 1 to the
+ * line-count of the buffer.  For the horizontal scrollbar the
+ * {value} can be between 1 and the maximum line length, assuming
+ * 'wrap' is not set.
+ * When {dragging} is non-zero it's like dragging the scrollbar,
+ * otherwise it's like clicking in the scrollbar.
+ * Only works when the {which} scrollbar actually exists,
+ * obviously only when using the GUI.
+ * Can also be used as a |method|:
+ * 	GetValue()->test_scrollbar('right', 0)
+ */
+export function test_scrollbar(
+  denops: Denops,
+  which: unknown,
+  value: unknown,
+  dragging: unknown,
+): Promise<unknown>;
+export function test_scrollbar(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_scrollbar", ...args);
+}
+
+/**
+ * Set the mouse position to be used for the next mouse action.
+ * {row} and {col} are one based.
+ * For example:
+ * 	call test_setmouse(4, 20)
+ * 	call feedkeys("\<LeftMouse>", "xt")
+ */
+export function test_setmouse(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function test_setmouse(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_setmouse", ...args);
+}
+
+/**
+ * Set the time Vim uses internally.  Currently only used for
+ * timestamps in the history, as they are used in viminfo, and
+ * for undo.
+ * Using a value of 1 makes Vim not sleep after a warning or
+ * error message.
+ * {expr} must evaluate to a number.  When the value is zero the
+ * normal behavior is restored.
+ * Can also be used as a |method|:
+ * 	GetTime()->test_settime()
+ */
+export function test_settime(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_settime(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_settime", ...args);
+}
+
+/**
+ * When [seed] is given this sets the seed value used by
+ * `srand()`.  When omitted the test seed is removed.
+ */
+export function test_srand_seed(
+  denops: Denops,
+  seed?: unknown,
+): Promise<unknown>;
+export function test_srand_seed(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_srand_seed", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce a beep or visual bell.
+ * Also see |assert_fails()|, |assert_nobeep()| and
+ * |assert-return|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_beeps()
+ */
+export function assert_beeps(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_beeps(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_beeps", ...args);
+}
+
+/**
+ * When {expected} and {actual} are not equal an error message is
+ * added to |v:errors| and 1 is returned.  Otherwise zero is
+ * returned |assert-return|.
+ * There is no automatic conversion, the String "4" is different
+ * from the Number 4.  And the number 4 is different from the
+ * Float 4.0.  The value of 'ignorecase' is not used here, case
+ * always matters.
+ * When {msg} is omitted an error in the form "Expected
+ * {expected} but got {actual}" is produced.
+ * Example:
+ * 	assert_equal('foo', 'bar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Expected 'foo' but got 'bar' ~
+ * Can also be used as a |method|, the base is passed as the
+ * second argument:
+ * 	mylist->assert_equal([1, 2, 3])
+ */
+export function assert_equal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_equal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equal", ...args);
+}
+
+/**
+ * When the files {fname-one} and {fname-two} do not contain
+ * exactly the same text an error message is added to |v:errors|.
+ * Also see |assert-return|.
+ * When {fname-one} or {fname-two} does not exist the error will
+ * mention that.
+ * Mainly useful with |terminal-diff|.
+ * Can also be used as a |method|:
+ * 	GetLog()->assert_equalfile('expected.log')
+ */
+export function assert_equalfile(
+  denops: Denops,
+  fname_one: unknown,
+  fname_two: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_equalfile(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equalfile", ...args);
+}
+
+/**
+ * When v:exception does not contain the string {error} an error
+ * message is added to |v:errors|.  Also see |assert-return|.
+ * This can be used to assert that a command throws an exception.
+ * Using the error number, followed by a colon, avoids problems
+ * with translations:
+ * 	try
+ * 	  commandthatfails
+ * 	  call assert_false(1, 'command should have failed')
+ * 	catch
+ * 	  call assert_exception('E492:')
+ * 	endtry
+ */
+export function assert_exception(
+  denops: Denops,
+  error: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_exception(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_exception", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce an error or when {error} is not found in the
+ * error message.  Also see |assert-return|.
+ * When {error} is a string it must be found literally in the
+ * first reported error. Most often this will be the error code,
+ * including the colon, e.g. "E123:".
+ * 	assert_fails('bad cmd', 'E987:')
+ * When {error} is a |List| with one or two strings, these are
+ * used as patterns.  The first pattern is matched against the
+ * first reported error:
+ * 	assert_fails('cmd', ['E987:.*expected bool'])
+ * The second pattern, if present, is matched against the last
+ * reported error.
+ * If there is only one error then both patterns must match. This
+ * can be used to check that there is only one error.
+ * To only match the last error use an empty string for the first
+ * error:
+ * 	assert_fails('cmd', ['', 'E987:'])
+ * If {msg} is empty then it is not used.  Do this to get the
+ * default message when passing the {lnum} argument.
+ * When {lnum} is present and not negative, and the {error}
+ * argument is present and matches, then this is compared with
+ * the line number at which the error was reported. That can be
+ * the line number in a function or in a script.
+ * When {context} is present it is used as a pattern and matched
+ * against the context (script name or function name) where
+ * {lnum} is located in.
+ * Note that beeping is not considered an error, and some failing
+ * commands only beep.  Use |assert_beeps()| for those.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_fails('E99:')
+ */
+export function assert_fails(
+  denops: Denops,
+  cmd: unknown,
+  error?: unknown,
+  msg?: unknown,
+  lnum?: unknown,
+  context?: unknown,
+): Promise<unknown>;
+export function assert_fails(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_fails", ...args);
+}
+
+/**
+ * When {actual} is not false an error message is added to
+ * |v:errors|, like with |assert_equal()|.
+ * Also see |assert-return|.
+ * A value is false when it is zero. When {actual} is not a
+ * number the assert fails.
+ * When {msg} is omitted an error in the form
+ * "Expected False but got {actual}" is produced.
+ * Can also be used as a |method|:
+ * 	GetResult()->assert_false()
+ */
+export function assert_false(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_false(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_false", ...args);
+}
+
+/**
+ * This asserts number and |Float| values.  When {actual}  is lower
+ * than {lower} or higher than {upper} an error message is added
+ * to |v:errors|.  Also see |assert-return|.
+ * When {msg} is omitted an error in the form
+ * "Expected range {lower} - {upper}, but got {actual}" is
+ * produced.
+ */
+export function assert_inrange(
+  denops: Denops,
+  lower: unknown,
+  upper: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_inrange(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_inrange", ...args);
+}
+
+/**
+ * When {pattern} does not match {actual} an error message is
+ * added to |v:errors|.  Also see |assert-return|.
+ * {pattern} is used as with |=~|: The matching is always done
+ * like 'magic' was set and 'cpoptions' is empty, no matter what
+ * the actual value of 'magic' or 'cpoptions' is.
+ * {actual} is used as a string, automatic conversion applies.
+ * Use "^" and "$" to match with the start and end of the text.
+ * Use both to match the whole text.
+ * When {msg} is omitted an error in the form
+ * "Pattern {pattern} does not match {actual}" is produced.
+ * Example:
+ * 	assert_match('^f.*o$', 'foobar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
+ * Can also be used as a |method|:
+ * 	getFile()->assert_match('foo.*')
+ */
+export function assert_match(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_match(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_match", ...args);
+}
+
+/**
+ * Run {cmd} and add an error message to |v:errors| if it
+ * produces a beep or visual bell.
+ * Also see |assert_beeps()|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_nobeep()
+ */
+export function assert_nobeep(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_nobeep(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_nobeep", ...args);
+}
+
+/**
+ * The opposite of `assert_equal()`: add an error message to
+ * |v:errors| when {expected} and {actual} are equal.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	mylist->assert_notequal([1, 2, 3])
+ */
+export function assert_notequal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_notequal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notequal", ...args);
+}
+
+/**
+ * The opposite of `assert_match()`: add an error message to
+ * |v:errors| when {pattern} matches {actual}.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	getFile()->assert_notmatch('bar.*')
+ */
+export function assert_notmatch(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_notmatch(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notmatch", ...args);
+}
+
+/**
+ * Report a test failure directly, using {msg}.
+ * Always returns one.
+ * Can also be used as a |method|:
+ * 	GetMessage()->assert_report()
+ */
+export function assert_report(denops: Denops, msg: unknown): Promise<unknown>;
+export function assert_report(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_report", ...args);
+}
+
+/**
+ *   VIM REFERENCE MANUAL	  by Bram Moolenaar
+ * 	test20.in		oldest, only for tiny and small builds
+ * 	test_something.vim	new style tests
+ * This is for testing: If the memory allocation with {id} is
+ * called, then decrement {countdown}, and when it reaches zero
+ * let memory allocation fail {repeat} times.  When {repeat} is
+ * smaller than one it fails one time.
+ * Can also be used as a |method|:
+ * 	GetAllocId()->test_alloc_fail()
+ * Set a flag to enable the effect of 'autochdir' before Vim
+ * startup has finished.
+ * Characters in {string} are queued for processing as if they
+ * were typed by the user. This uses a low level input buffer.
+ * This function works only when with |+unix| or GUI is running.
+ * Can also be used as a |method|:
+ * 	GetText()->test_feedinput()
+ * Like garbagecollect(), but executed right away.  This must
+ * only be called directly to avoid any structure to exist
+ * internally, and |v:testing| must have been set before calling
+ * any function.
+ * Set the flag to call the garbagecollector as if in the main
+ * loop.  Only to be used in tests.
+ * Get the value of an internal variable.  These values for
+ * {name} are supported:
+ * 	need_fileinfo
+ * Can also be used as a |method|:
+ * 	GetName()->test_getvalue()
+ * Drop one or more files in {list} in the window at {row}, {col}.
+ * This function only works when the GUI is running.
+ * The supported values for {mods} are:
+ * 	0x4	Shift
+ * 	0x8	Alt
+ * 	0x10	Ctrl
+ * The files are added to the argument list and the first file in
+ * {list} is edited in the window.  See |drag-n-drop| for more
+ * information.
+ * Inject a mouse button click event.  This function only works
+ * when the GUI is running.
+ * The supported values for {button} are:
+ * 	0	right mouse button
+ * 	1	middle mouse button
+ * 	2	left mouse button
+ * 	3	mouse button release
+ * 	4	scroll wheel down
+ * 	5	scroll wheel up
+ * 	6	scroll wheel left
+ * 	7	scroll wheel right
+ * {row} and {col} specify the location of the mouse click. The
+ * first row of the Vim window is 1 and the last row is 'lines'.
+ * The maximum value of {col} is 'columns'.
+ * To inject a multiclick event, set {multiclick} to 1.
+ * The supported values for {modifiers} are:
+ * 	4	shift is pressed
+ * 	8	alt is pressed
+ * 	16	ctrl is pressed
+ * After injecting the mouse event you probably should call
+ * |feedkeys()| to have them processed, e.g.:
+ * 	call feedkeys("y", 'Lx!')
+ * Ignore any error containing {expr}.  A normal message is given
+ * instead.
+ * This is only meant to be used in tests, where catching the
+ * error with try/catch cannot be used (because it skips over
+ * following code).
+ * {expr} is used literally, not as a pattern.
+ * When the {expr} is the string "RESET" then the list of ignored
+ * errors is made empty.
+ * Can also be used as a |method|:
+ * 	GetErrorText()->test_ignore_error()
+ * Return a |Blob| that is null. Only useful for testing.
+ * Return a |Channel| that is null. Only useful for testing.
+ * {only available when compiled with the +channel feature}
+ * Return a |Dict| that is null. Only useful for testing.
+ * Return a |Funcref| that is null. Only useful for testing.
+ * Return a |Job| that is null. Only useful for testing.
+ * {only available when compiled with the +job feature}
+ * Return a |List| that is null. Only useful for testing.
+ * Return a |Partial| that is null. Only useful for testing.
+ * Return a |String| that is null. Only useful for testing.
+ * Return a value with unknown type. Only useful for testing.
+ * Return a value with void type. Only useful for testing.
+ * Reset the flag that indicates option {name} was set.  Thus it
+ * looks like it still has the default value. Use like this:
+ * 	set ambiwidth=double
+ * 	call test_option_not_set('ambiwidth')
+ * Now the 'ambiwidth' option behaves like it was never changed,
+ * even though the value is "double".
+ * Only to be used for testing!
+ * Can also be used as a |method|:
+ * 	GetOptionName()->test_option_not_set()
+ * Overrides certain parts of Vim's internal processing to be able
+ * to run tests. Only to be used for testing Vim!
+ * The override is enabled when {val} is non-zero and removed
+ * when {val} is zero.
+ * Current supported values for name are:
+ * name	     effect when {val} is non-zero ~
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * char_avail   disable the char_avail() function
+ * starting     reset the "starting" variable, see below
+ * nfa_fail     makes the NFA regexp engine fail to force a
+ * 	     fallback to the old engine
+ * no_query_mouse  do not query the mouse position for "dec"
+ * 		terminals
+ * no_wait_return	set the "no_wait_return" flag.  Not restored
+ * 		with "ALL".
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
+ * term_props   reset all terminal properties when the version
+ * 	     string is detected
+ * uptime 	     overrules sysinfo.uptime
+ * ALL	     clear all overrides ({val} is not used)
+ * "starting" is to be used when a test should behave like
+ * startup was done.  Since the tests are run by sourcing a
+ * script the "starting" variable is non-zero. This is usually a
+ * good thing (tests run faster), but sometimes changes behavior
+ * in a way that the test doesn't work properly.
+ * When using:
+ * 	call test_override('starting', 1)
+ * The value of "starting" is saved.  It is restored by:
+ * 	call test_override('starting', 0)
+ * Can also be used as a |method|:
+ * 	GetOverrideVal()-> test_override('starting')
+ * Return the reference count of {expr}.  When {expr} is of a
+ * type that does not have a reference count, returns -1.  Only
+ * to be used for testing.
+ * Can also be used as a |method|:
+ * 	GetVarname()->test_refcount()
+ * Pretend using scrollbar {which} to move it to position
+ * {value}.  {which} can be:
+ * 	left	Left scrollbar of the current window
+ * 	right	Right scrollbar of the current window
+ * 	hor	Horizontal scrollbar
+ * For the vertical scrollbars {value} can be 1 to the
+ * line-count of the buffer.  For the horizontal scrollbar the
+ * {value} can be between 1 and the maximum line length, assuming
+ * 'wrap' is not set.
+ * When {dragging} is non-zero it's like dragging the scrollbar,
+ * otherwise it's like clicking in the scrollbar.
+ * Only works when the {which} scrollbar actually exists,
+ * obviously only when using the GUI.
+ * Can also be used as a |method|:
+ * 	GetValue()->test_scrollbar('right', 0)
+ * Set the mouse position to be used for the next mouse action.
+ * {row} and {col} are one based.
+ * For example:
+ * 	call test_setmouse(4, 20)
+ * 	call feedkeys("\<LeftMouse>", "xt")
+ * Set the time Vim uses internally.  Currently only used for
+ * timestamps in the history, as they are used in viminfo, and
+ * for undo.
+ * Using a value of 1 makes Vim not sleep after a warning or
+ * error message.
+ * {expr} must evaluate to a number.  When the value is zero the
+ * normal behavior is restored.
+ * Can also be used as a |method|:
+ * 	GetTime()->test_settime()
+ * When [seed] is given this sets the seed value used by
+ * `srand()`.  When omitted the test seed is removed.
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce a beep or visual bell.
+ * Also see |assert_fails()|, |assert_nobeep()| and
+ * |assert-return|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_beeps()
+ * When {expected} and {actual} are not equal an error message is
+ * added to |v:errors| and 1 is returned.  Otherwise zero is
+ * returned |assert-return|.
+ * There is no automatic conversion, the String "4" is different
+ * from the Number 4.  And the number 4 is different from the
+ * Float 4.0.  The value of 'ignorecase' is not used here, case
+ * always matters.
+ * When {msg} is omitted an error in the form "Expected
+ * {expected} but got {actual}" is produced.
+ * Example:
+ * 	assert_equal('foo', 'bar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Expected 'foo' but got 'bar' ~
+ * Can also be used as a |method|, the base is passed as the
+ * second argument:
+ * 	mylist->assert_equal([1, 2, 3])
+ * When the files {fname-one} and {fname-two} do not contain
+ * exactly the same text an error message is added to |v:errors|.
+ * Also see |assert-return|.
+ * When {fname-one} or {fname-two} does not exist the error will
+ * mention that.
+ * Mainly useful with |terminal-diff|.
+ * Can also be used as a |method|:
+ * 	GetLog()->assert_equalfile('expected.log')
+ * When v:exception does not contain the string {error} an error
+ * message is added to |v:errors|.  Also see |assert-return|.
+ * This can be used to assert that a command throws an exception.
+ * Using the error number, followed by a colon, avoids problems
+ * with translations:
+ * 	try
+ * 	  commandthatfails
+ * 	  call assert_false(1, 'command should have failed')
+ * 	catch
+ * 	  call assert_exception('E492:')
+ * 	endtry
+ * Run {cmd} and add an error message to |v:errors| if it does
+ * NOT produce an error or when {error} is not found in the
+ * error message.  Also see |assert-return|.
+ * When {error} is a string it must be found literally in the
+ * first reported error. Most often this will be the error code,
+ * including the colon, e.g. "E123:".
+ * 	assert_fails('bad cmd', 'E987:')
+ * When {error} is a |List| with one or two strings, these are
+ * used as patterns.  The first pattern is matched against the
+ * first reported error:
+ * 	assert_fails('cmd', ['E987:.*expected bool'])
+ * The second pattern, if present, is matched against the last
+ * reported error.
+ * If there is only one error then both patterns must match. This
+ * can be used to check that there is only one error.
+ * To only match the last error use an empty string for the first
+ * error:
+ * 	assert_fails('cmd', ['', 'E987:'])
+ * If {msg} is empty then it is not used.  Do this to get the
+ * default message when passing the {lnum} argument.
+ * When {lnum} is present and not negative, and the {error}
+ * argument is present and matches, then this is compared with
+ * the line number at which the error was reported. That can be
+ * the line number in a function or in a script.
+ * When {context} is present it is used as a pattern and matched
+ * against the context (script name or function name) where
+ * {lnum} is located in.
+ * Note that beeping is not considered an error, and some failing
+ * commands only beep.  Use |assert_beeps()| for those.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_fails('E99:')
+ * When {actual} is not false an error message is added to
+ * |v:errors|, like with |assert_equal()|.
+ * Also see |assert-return|.
+ * A value is false when it is zero. When {actual} is not a
+ * number the assert fails.
+ * When {msg} is omitted an error in the form
+ * "Expected False but got {actual}" is produced.
+ * Can also be used as a |method|:
+ * 	GetResult()->assert_false()
+ * This asserts number and |Float| values.  When {actual}  is lower
+ * than {lower} or higher than {upper} an error message is added
+ * to |v:errors|.  Also see |assert-return|.
+ * When {msg} is omitted an error in the form
+ * "Expected range {lower} - {upper}, but got {actual}" is
+ * produced.
+ * When {pattern} does not match {actual} an error message is
+ * added to |v:errors|.  Also see |assert-return|.
+ * {pattern} is used as with |=~|: The matching is always done
+ * like 'magic' was set and 'cpoptions' is empty, no matter what
+ * the actual value of 'magic' or 'cpoptions' is.
+ * {actual} is used as a string, automatic conversion applies.
+ * Use "^" and "$" to match with the start and end of the text.
+ * Use both to match the whole text.
+ * When {msg} is omitted an error in the form
+ * "Pattern {pattern} does not match {actual}" is produced.
+ * Example:
+ * 	assert_match('^f.*o$', 'foobar')
+ * Will result in a string to be added to |v:errors|:
+ * 	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
+ * Can also be used as a |method|:
+ * 	getFile()->assert_match('foo.*')
+ * Run {cmd} and add an error message to |v:errors| if it
+ * produces a beep or visual bell.
+ * Also see |assert_beeps()|.
+ * Can also be used as a |method|:
+ * 	GetCmd()->assert_nobeep()
+ * The opposite of `assert_equal()`: add an error message to
+ * |v:errors| when {expected} and {actual} are equal.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	mylist->assert_notequal([1, 2, 3])
+ * The opposite of `assert_match()`: add an error message to
+ * |v:errors| when {pattern} matches {actual}.
+ * Also see |assert-return|.
+ * Can also be used as a |method|:
+ * 	getFile()->assert_notmatch('bar.*')
+ * Report a test failure directly, using {msg}.
+ * Always returns one.
+ * Can also be used as a |method|:
+ * 	GetMessage()->assert_report()
+ */
+export function assert_true(
+  denops: Denops,
+  id: unknown,
+  countdown: unknown,
+  repeat: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, string: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  list: unknown,
+  row: unknown,
+  col: unknown,
+  mods: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  button: unknown,
+  row: unknown,
+  col: unknown,
+  multiclick: unknown,
+  modifiers: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  name: unknown,
+  val: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  which: unknown,
+  value: unknown,
+  dragging: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, seed?: unknown): Promise<unknown>;
+export function assert_true(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  fname_one: unknown,
+  fname_two: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  error: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  cmd: unknown,
+  error?: unknown,
+  msg?: unknown,
+  lnum?: unknown,
+  context?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  lower: unknown,
+  upper: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<unknown>;
+export function assert_true(denops: Denops, msg: unknown): Promise<unknown>;
+export function assert_true(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_true", ...args);
+}
