@@ -22,6 +22,7 @@ const manualFnSet = new Set([
 const vimHelps = await Promise.all([
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/eval.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/textprop.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/terminal.txt`,
 ].map(downloadString));
 const vimDefs = vimHelps.map(parse).flat();
 const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);
