@@ -49,7 +49,7 @@ export async function input(
     });
     try {
       return await denops.call(
-        "DenopsStdHelperInput",
+        "DenopsStdHelperInputV1",
         options.prompt ?? "",
         options.text ?? "",
         { plugin: denops.name, id },
@@ -67,7 +67,7 @@ export async function input(
     }
   }
   return denops.call(
-    "DenopsStdHelperInput",
+    "DenopsStdHelperInputV1",
     options.prompt ?? "",
     options.text ?? "",
     completion,

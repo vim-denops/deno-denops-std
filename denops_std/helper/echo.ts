@@ -63,5 +63,5 @@ export async function friendlyCall(
 
 async function echoVim(denops: Denops, message: string): Promise<void> {
   await load(denops, new URL("./echo.vim", import.meta.url));
-  await denops.call("DenopsStdHelperEcho", message);
+  await denops.call("DenopsStdHelperEchoV1", message);
 }
