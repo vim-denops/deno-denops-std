@@ -54,15 +54,16 @@ for more details.
 
 ## Index
 
-| Name                       | Description                                                      |
-| -------------------------- | ---------------------------------------------------------------- |
-| [`anonymous`](./anonymous) | A module to provide anonymous function                           |
-| [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`         |
-| [`batch`](./batch)         | A module to provide wrapper functions of `denops.batch()`        |
-| [`buffer`](./buffer)       | A module to provide helper functions to manage buffers           |
-| [`bufname`](./bufname)     | A module to provide helper functions to manage Vim's buffer name |
-| [`function`](./function)   | A module to provide functions of Vim and Neovim native functions |
-| [`helper`](./helper)       | A module to provide helper functions                             |
-| [`mapping`](./mapping)     | A module to provide helper functions to manage mappings          |
-| [`option`](./option)       | A module to provide helper functions to manage options           |
-| [`variable`](./variable)   | A module to provide helper accessor functions to variables       |
+| Name                       | Description                                                            |
+| -------------------------- | ---------------------------------------------------------------------- |
+| [`anonymous`](./anonymous) | A module to provide anonymous function                                 |
+| [`argument`](./argument)   | A module to provide helper functions to manage Vim's command arguments |
+| [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`               |
+| [`batch`](./batch)         | A module to provide wrapper functions of `denops.batch()`              |
+| [`buffer`](./buffer)       | A module to provide helper functions to manage buffers                 |
+| [`bufname`](./bufname)     | A module to provide helper functions to manage Vim's buffer name       |
+| [`function`](./function)   | A module to provide functions of Vim and Neovim native functions       |
+| [`helper`](./helper)       | A module to provide helper functions                                   |
+| [`mapping`](./mapping)     | A module to provide helper functions to manage mappings                |
+| [`option`](./option)       | A module to provide helper functions to manage options                 |
+| [`variable`](./variable)   | A module to provide helper accessor functions to variables             |
