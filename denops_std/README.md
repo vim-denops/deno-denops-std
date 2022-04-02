@@ -12,10 +12,10 @@ for a plugin.
 By using this module, developers can write Vim/Neovim denops plugins like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
-import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
-import * as helper from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "./mod.ts";
+import * as fn from "./function/mod.ts";
+import * as vars from "./variable/mod.ts";
+import * as helper from "./helper/mod.ts";
 
 import { assertString } from "https://deno.land/x/unknownutil/mod.ts";
 

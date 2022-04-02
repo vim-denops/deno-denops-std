@@ -11,8 +11,8 @@
 Use `map()` to register a mapping like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello");
@@ -25,8 +25,8 @@ export async function main(denops: Denops): Promise<void> {
 Users can specify multiple `mode` value like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
@@ -40,8 +40,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `unmap()` to unregister a mapping like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello");
@@ -59,8 +59,8 @@ export async function main(denops: Denops): Promise<void> {
 Users can specify multiple `mode` value like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
@@ -78,8 +78,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `read()` to read a mapping like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await denops.cmd(`map <Plug>(test-denops-std) Hello`);
@@ -99,8 +99,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `list()` to list mappings like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as mapping from "https://deno.land/x/denops_std/mapping/mod.ts";
+import { Denops } from "../mod.ts";
+import * as mapping from "../mapping/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const result = await mapping.list(denops, "<Plug>");

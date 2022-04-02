@@ -14,10 +14,10 @@ in minimal supported Vim and Neovim versions.
 ## Example
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
-import * as vimFn from "https://deno.land/x/denops_std/function/vim/mod.ts";
-import * as nvimFn from "https://deno.land/x/denops_std/function/nvim/mod.ts";
+import { Denops } from "../mod.ts";
+import * as fn from "../function/mod.ts";
+import * as vimFn from "../function/vim/mod.ts";
+import * as nvimFn from "../function/nvim/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // fn holds functions exists in both Vim and Neovim

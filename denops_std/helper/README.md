@@ -13,8 +13,8 @@ won't show messages reported from channel commands. It's same for
 `denops.cmd('echo "Hello\nWorld!"')` in Neovim.
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { echo, echoerr } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { echo, echoerr } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await echo(denops, "Hello\nWorld!");
@@ -31,8 +31,8 @@ functions.
 Note that it prints a stack trace when denops is running in debug mode.
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { friendlyCall } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { friendlyCall } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
@@ -53,8 +53,8 @@ Use `input()` which is a wrapper function of `input()` in
 like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { input } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   console.log(
@@ -74,8 +74,8 @@ It accepts a TypeScript callback as a completion function addition to built-in
 completions and Vim script custom completion like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { input } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Built-in completions
@@ -117,8 +117,8 @@ If you'd like to guard input by `inputsave()` and `inputrestore()`, use
 `inputsave` option like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { input } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { input } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
@@ -142,8 +142,8 @@ function on that module instead.
 Use `execute()` to execute multi-lined Vim script like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { execute } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { execute } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await execute(
@@ -177,8 +177,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `load()` to load a local or remote Vim script like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { load } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { load } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Load '../../foo.vim' from this file
@@ -193,8 +193,8 @@ It does nothing if the `url` is already loaded unless `force` option is
 specified like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { load } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { load } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const url = new URL("../../foo.vim", import.meta.url);
@@ -213,8 +213,8 @@ export async function main(denops: Denops): Promise<void> {
 It returns `true` when the script is loaded. Otherwise, it returns `false` like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { load } from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "../mod.ts";
+import { load } from "../helper/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const url = new URL("../../foo.vim", import.meta.url);

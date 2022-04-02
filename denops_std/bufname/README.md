@@ -54,7 +54,7 @@ instance like:
 
 ```typescript
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { format } from "https://deno.land/x/denops_std/bufname/mod.ts";
+import { format } from "../bufname/mod.ts";
 
 assertEquals(
   format({
@@ -107,7 +107,7 @@ constructing a buffer name from a real path. For example
 ```typescript
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import * as path from "https://deno.land/std/path/mod.ts";
-import { format } from "https://deno.land/x/denops_std/bufname/mod.ts";
+import { format } from "../bufname/mod.ts";
 
 // NOTE:
 // Works only on Windows (Use path.win32.toFileUrl instead on other platforms)
@@ -126,7 +126,7 @@ Use `parse()` to parse Vim's buffer name and get a `Bufname` instance like
 
 ```typescript
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { parse } from "https://deno.land/x/denops_std/bufname/mod.ts";
+import { parse } from "../bufname/mod.ts";
 
 assertEquals(
   parse("denops:///Users/John Titor/test.git"),
@@ -181,7 +181,7 @@ was constructed from a real path. For example
 ```typescript
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import * as path from "https://deno.land/std/path/mod.ts";
-import { parse } from "https://deno.land/x/denops_std/bufname/mod.ts";
+import { parse } from "../bufname/mod.ts";
 
 const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
 assertEquals(bufname, {

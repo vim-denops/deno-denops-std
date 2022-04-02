@@ -11,8 +11,8 @@
 Use `globals` (or `g`) to access global variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { globals } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { globals } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set global variable
@@ -31,8 +31,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `buffers` (or `b`) to access buffer variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { buffers } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { buffers } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set buffer variable
@@ -51,8 +51,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `windows` (or `w`) to access window variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { windows } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { windows } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set window variable
@@ -71,8 +71,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `tabpages` (or `t`) to access tabpage variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { tabpages } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { tabpages } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set tabpage variable
@@ -91,8 +91,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `vim` (or `v`) to access Vim variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { vim } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { vim } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set vim variable
@@ -108,8 +108,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `environment` (or `e`) to access environment variables like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { environment } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { environment } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set environment variable
@@ -128,8 +128,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `register` (or `r`) to access register like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { register } from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { register } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set register
@@ -148,12 +148,8 @@ Use `options` (or `o`), `localOptions` (or `lo`), or `globalOptions` (or `go`)
 to access options like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import {
-  globalOptions,
-  localOptions,
-  options,
-} from "https://deno.land/x/denops_std/variable/mod.ts";
+import { Denops } from "../mod.ts";
+import { globalOptions, localOptions, options } from "../variable/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Set option
