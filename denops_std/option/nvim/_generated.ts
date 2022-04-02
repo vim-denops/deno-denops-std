@@ -1,5 +1,5 @@
 // NOTE: This file is generated. Do NOT modify it manually.
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**

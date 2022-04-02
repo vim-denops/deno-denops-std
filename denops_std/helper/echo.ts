@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
 import { batch } from "../batch/mod.ts";
 import { load } from "./load.ts";
 
