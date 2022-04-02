@@ -1,5 +1,5 @@
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.0/mod.ts";
 import type { Position, ScreenPos } from "./types.ts";
-import { Denops } from "../deps.ts";
 
 /**
  * The result is a Number, which is the byte index of the column

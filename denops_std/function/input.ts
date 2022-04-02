@@ -1,4 +1,4 @@
-import { Denops } from "../deps.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.0/mod.ts";
 import { BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
 
 /**

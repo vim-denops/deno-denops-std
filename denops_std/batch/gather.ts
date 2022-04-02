@@ -1,4 +1,9 @@
-import { Context, Denops, Dispatcher, Meta } from "../deps.ts";
+import type {
+  Context,
+  Denops,
+  Dispatcher,
+  Meta,
+} from "https://deno.land/x/denops_core@v3.0.0/mod.ts";
 
 class GatherHelper implements Denops {
   #denops: Denops;

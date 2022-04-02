@@ -1,5 +1,7 @@
 import { Definition, Variant } from "./types.ts";
 
+const denops = "https://deno.land/x/denops_core@v3.0.0/mod.ts";
+
 const translate: Record<string, string> = {
   "default": "defaultValue",
   "delete": "delete_",
@@ -49,12 +51,11 @@ function formatDefinition({ fn, docs, vars }: Definition): string[] {
   return lines;
 }
 
-export function format(definitions: Definition[], root: string): string[] {
-  const denops = `${root}/deps.ts`;
+export function format(definitions: Definition[]): string[] {
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
     "// deno-lint-ignore-file camelcase",
-    `import { Denops } from "${denops}";`,
+    `import type { Denops } from "${denops}";`,
     "",
     ...definitions.map(formatDefinition),
   ];

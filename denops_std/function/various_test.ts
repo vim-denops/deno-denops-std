@@ -1,6 +1,6 @@
-import { test } from "../deps_test.ts";
+import { assertEquals } from "https://deno.land/std@0.127.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.0/test/mod.ts";
 import * as various from "./various.ts";
-import { assertEquals } from "../deps_test.ts";
 
 test({
   mode: "all",

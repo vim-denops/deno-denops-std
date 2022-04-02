@@ -1,5 +1,7 @@
 import { Option } from "./types.ts";
 
+const denops = "https://deno.land/x/denops_core@v3.0.0/mod.ts";
+
 const translate: Record<string, string> = {
   "default": "defaultValue",
   "delete": "delete_",
@@ -94,11 +96,10 @@ function formatLocalOptionBody(name: string, type: string): string[] {
 }
 
 export function format(options: Option[], root: string): string[] {
-  const denops = `${root}/../deps.ts`;
   const variable = `${root}/../variable/mod.ts`;
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
-    `import { Denops } from "${denops}";`,
+    `import type { Denops } from "${denops}";`,
     `import { globalOptions, localOptions, options } from "${variable}";`,
     "",
     ...options.map(formatOption),

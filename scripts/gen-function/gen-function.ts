@@ -45,15 +45,12 @@ const nvimOnlyFnSet = difference(nvimFnSet, vimFnSet);
 
 const commonCode = format(
   vimDefs.filter((def) => commonFnSet.has(def.fn)),
-  "..",
 );
 const vimOnlyCode = format(
   vimDefs.filter((def) => vimOnlyFnSet.has(def.fn)),
-  "../..",
 );
 const nvimOnlyCode = format(
   nvimDefs.filter((def) => nvimOnlyFnSet.has(def.fn)),
-  "../..",
 );
 
 await Deno.writeTextFile(
