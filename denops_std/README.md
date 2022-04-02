@@ -59,6 +59,7 @@ for more details.
 | [`anonymous`](./anonymous) | A module to provide anonymous function                           |
 | [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`         |
 | [`batch`](./batch)         | A module to provide wrapper functions of `denops.batch()`        |
+| [`buffer`](./buffer)       | A module to provide helper functions to manage buffers           |
 | [`bufname`](./bufname)     | A module to provide helper functions to manage Vim's buffer name |
 | [`function`](./function)   | A module to provide functions of Vim and Neovim native functions |
 | [`helper`](./helper)       | A module to provide helper functions                             |
