@@ -12,8 +12,8 @@ Use `batch()` to call multiple denops functions sequentially without overhead
 like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { Denops } from "../mod.ts";
+import { batch } from "../batch/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await batch(denops, async (denops) => {
@@ -28,8 +28,8 @@ The function can be nested thus users can use functions which may internally use
 `batch()` like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { Denops } from "../mod.ts";
+import { batch } from "../batch/mod.ts";
 
 async function replace(denops: Denops, content: string): Promise<void> {
   await batch(denops, async (denops) => {
@@ -53,8 +53,8 @@ Note that `denops.call()`, `denops.batch()`, or `denops.eval()` always return
 falsy value in `batch()`, indicating that you **cannot** write code like below:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { Denops } from "../mod.ts";
+import { batch } from "../batch/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await batch(denops, async (denops) => {
@@ -72,9 +72,9 @@ the block. It works like a real `denops` instance, mean that you can write code
 like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { batch } from "https://deno.land/x/denops_std/batch/mod.ts";
-import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
+import { Denops } from "../mod.ts";
+import { batch } from "../batch/mod.ts";
+import * as anonymous from "../anonymous/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await batch(denops, async (denops) => {
@@ -100,8 +100,8 @@ Use `gather()` to call multiple denops functions sequentially without overhead
 and return values like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { gather } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { Denops } from "../mod.ts";
+import { gather } from "../batch/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const results = await gather(denops, async (denops) => {
@@ -119,8 +119,8 @@ Note that `denops.call()` or `denops.eval()` always return falsy value in
 `gather()`, indicating that you **cannot** write code like below:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import { gather } from "https://deno.land/x/denops_std/batch/mod.ts";
+import { Denops } from "../mod.ts";
+import { gather } from "../batch/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   const results = await gather(denops, async (denops) => {

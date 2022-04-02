@@ -1,5 +1,8 @@
-import { assertEquals, assertRejects } from "../deps_test.ts";
-import { test } from "../deps_test.ts";
+import {
+  assertEquals,
+  assertRejects,
+} from "https://deno.land/std@0.133.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
 import * as anonymous from "./mod.ts";
 
 test({

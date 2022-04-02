@@ -12,10 +12,10 @@ for a plugin.
 By using this module, developers can write Vim/Neovim denops plugins like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as fn from "https://deno.land/x/denops_std/function/mod.ts";
-import * as vars from "https://deno.land/x/denops_std/variable/mod.ts";
-import * as helper from "https://deno.land/x/denops_std/helper/mod.ts";
+import { Denops } from "./mod.ts";
+import * as fn from "./function/mod.ts";
+import * as vars from "./variable/mod.ts";
+import * as helper from "./helper/mod.ts";
 
 import { assertString } from "https://deno.land/x/unknownutil/mod.ts";
 
@@ -54,14 +54,16 @@ for more details.
 
 ## Index
 
-| Name                       | Description                                                      |
-| -------------------------- | ---------------------------------------------------------------- |
-| [`anonymous`](./anonymous) | A module to provide anonymous function                           |
-| [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`         |
-| [`batch`](./batch)         | A module to provide wrapper functions of `denops.batch()`        |
-| [`bufname`](./bufname)     | A module to provide helper functions to manage Vim's buffer name |
-| [`function`](./function)   | A module to provide functions of Vim and Neovim native functions |
-| [`helper`](./helper)       | A module to provide helper functions                             |
-| [`mapping`](./mapping)     | A module to provide helper functions to manage mappings          |
-| [`option`](./option)       | A module to provide helper functions to manage options           |
-| [`variable`](./variable)   | A module to provide helper accessor functions to variables       |
+| Name                       | Description                                                            |
+| -------------------------- | ---------------------------------------------------------------------- |
+| [`anonymous`](./anonymous) | A module to provide anonymous function                                 |
+| [`argument`](./argument)   | A module to provide helper functions to manage Vim's command arguments |
+| [`autocmd`](./autocmd)     | A module to provide helper functions to manage `autocmd`               |
+| [`batch`](./batch)         | A module to provide wrapper functions of `denops.batch()`              |
+| [`buffer`](./buffer)       | A module to provide helper functions to manage buffers                 |
+| [`bufname`](./bufname)     | A module to provide helper functions to manage Vim's buffer name       |
+| [`function`](./function)   | A module to provide functions of Vim and Neovim native functions       |
+| [`helper`](./helper)       | A module to provide helper functions                                   |
+| [`mapping`](./mapping)     | A module to provide helper functions to manage mappings                |
+| [`option`](./option)       | A module to provide helper functions to manage options                 |
+| [`variable`](./variable)   | A module to provide helper accessor functions to variables             |

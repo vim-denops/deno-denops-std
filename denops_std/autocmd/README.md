@@ -12,8 +12,8 @@ Use `group()` to create an autocmd group and define/remove autocmds in that
 group like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await autocmd.group(denops, "my-autocmd", (helper) => {
@@ -53,8 +53,8 @@ autocmd group and the number of RPC calls is minimized.
 Use `define()` to define new autocmd like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Define new autocmd for BufEnter
@@ -85,8 +85,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `remove()` to remove an autocmd like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Remove BufEnter autocmd
@@ -110,8 +110,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `list()` to list defined autocmd like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // List all autocmd
@@ -133,8 +133,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `emit()` to emit autocmd in a buffer like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Emit an autocmd in a current buffer
@@ -153,8 +153,8 @@ export async function main(denops: Denops): Promise<void> {
 Use `emitAll()` to emit autocmd in all buffers like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as autocmd from "https://deno.land/x/denops_std/autocmd/mod.ts";
+import { Denops } from "../mod.ts";
+import * as autocmd from "../autocmd/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Emit an autocmd in all buffers

@@ -1,6 +1,6 @@
-import { Denops } from "../deps.ts";
-import { gather } from "../batch/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
 import type { GatherHelper } from "../batch/mod.ts";
+import { gather } from "../batch/mod.ts";
 
 /**
  * @deprecated Use `gather()` function in `batch` module instead.

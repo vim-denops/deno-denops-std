@@ -14,10 +14,10 @@ minimal supported Vim and Neovim versions.
 ## Example
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as op from "https://deno.land/x/denops_std/option/mod.ts";
-import * as vimOp from "https://deno.land/x/denops_std/option/vim/mod.ts";
-import * as nvimOp from "https://deno.land/x/denops_std/option/nvim/mod.ts";
+import { Denops } from "../mod.ts";
+import * as op from "../option/mod.ts";
+import * as vimOp from "../option/vim/mod.ts";
+import * as nvimOp from "../option/nvim/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Get value of the option.

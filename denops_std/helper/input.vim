@@ -1,11 +1,11 @@
-if exists('g:denops_std_helper_input_loaded')
+if exists('g:loaded_denops_std_helper_input_v1')
   finish
 endif
-let g:denops_std_helper_input_loaded = 1
+let g:loaded_denops_std_helper_input_v1 = 1
 
 let s:escape_token = '###DenopsStdHelperInputCancelled###'
 
-function! DenopsStdHelperInput(prompt, text, completion, inputsave) abort
+function! DenopsStdHelperInputV1(prompt, text, completion, inputsave) abort
   if type(a:completion) is# v:t_dict
     let s:completion = copy(a:completion)
     let completion = printf('customlist,%s', s:completion_proxy_name)

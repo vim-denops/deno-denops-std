@@ -13,8 +13,8 @@ Use `add()` to add new anonymous functions and use return value as unique IDs to
 call added functions later like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
+import { Denops } from "../mod.ts";
+import * as anonymous from "./mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Add anonymous functions
@@ -46,8 +46,8 @@ export async function main(denops: Denops): Promise<void> {
 If you need one-time anonymous function, use `once()` instead like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
+import { Denops } from "../mod.ts";
+import * as anonymous from "../anonymous/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Add anonymous functions
@@ -76,8 +76,8 @@ export async function main(denops: Denops): Promise<void> {
 When you need to remove callback, use `remove()` like:
 
 ```typescript
-import { Denops } from "https://deno.land/x/denops_std/mod.ts";
-import * as anonymous from "https://deno.land/x/denops_std/anonymous/mod.ts";
+import { Denops } from "../mod.ts";
+import * as anonymous from "../anonymous/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   // Add anonymous functions

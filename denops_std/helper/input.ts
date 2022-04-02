@@ -1,4 +1,8 @@
-import { assertNumber, assertString, Denops } from "../deps.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
+import {
+  assertNumber,
+  assertString,
+} from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as anonymous from "../anonymous/mod.ts";
 import * as helper from "../helper/mod.ts";
@@ -45,7 +49,7 @@ export async function input(
     });
     try {
       return await denops.call(
-        "DenopsStdHelperInput",
+        "DenopsStdHelperInputV1",
         options.prompt ?? "",
         options.text ?? "",
         { plugin: denops.name, id },
@@ -63,7 +67,7 @@ export async function input(
     }
   }
   return denops.call(
-    "DenopsStdHelperInput",
+    "DenopsStdHelperInputV1",
     options.prompt ?? "",
     options.text ?? "",
     completion,

@@ -2,7 +2,7 @@ import {
   difference,
   intersection,
 } from "https://deno.land/x/set_operations@v1.0.3/mod.ts";
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
+import * as path from "https://deno.land/std@0.133.0/path/mod.ts";
 import * as commonManual from "../../denops_std/function/_manual.ts";
 import * as vimManual from "../../denops_std/function/vim/_manual.ts";
 import * as nvimManual from "../../denops_std/function/nvim/_manual.ts";
@@ -45,15 +45,12 @@ const nvimOnlyFnSet = difference(nvimFnSet, vimFnSet);
 
 const commonCode = format(
   vimDefs.filter((def) => commonFnSet.has(def.fn)),
-  "..",
 );
 const vimOnlyCode = format(
   vimDefs.filter((def) => vimOnlyFnSet.has(def.fn)),
-  "../..",
 );
 const nvimOnlyCode = format(
   nvimDefs.filter((def) => nvimOnlyFnSet.has(def.fn)),
-  "../..",
 );
 
 await Deno.writeTextFile(

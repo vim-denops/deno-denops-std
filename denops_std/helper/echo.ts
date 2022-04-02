@@ -1,4 +1,4 @@
-import { Denops } from "../deps.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
 import { batch } from "../batch/mod.ts";
 import { load } from "./load.ts";
 
@@ -63,5 +63,5 @@ export async function friendlyCall(
 
 async function echoVim(denops: Denops, message: string): Promise<void> {
   await load(denops, new URL("./echo.vim", import.meta.url));
-  await denops.call("DenopsStdHelperEcho", message);
+  await denops.call("DenopsStdHelperEchoV1", message);
 }
