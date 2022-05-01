@@ -98,10 +98,12 @@ export async function assign(
     findFileFormat(text, fileformats) ?? fileformat;
   const preprocessor = options.preprocessor ?? ((v: string[]) => v);
   const repl = preprocessor(splitText(text, ff));
-  await batch.batch(denops, async (denops) => {
-    await fn.setbufvar(denops, bufnr, "&fileformat", ff);
-    await fn.setbufvar(denops, bufnr, "&fileencoding", enc);
-    await replace(denops, bufnr, repl);
+  await modifiable(denops, bufnr, async () => {
+    await batch.batch(denops, async (denops) => {
+      await fn.setbufvar(denops, bufnr, "&fileformat", ff);
+      await fn.setbufvar(denops, bufnr, "&fileencoding", enc);
+      await replace(denops, bufnr, repl);
+    });
   });
 }
 
