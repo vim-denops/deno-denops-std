@@ -263,7 +263,7 @@ test({
         });
       },
       undefined,
-      "E227: mapping already exists",
+      "E227:",
     );
   },
   prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
