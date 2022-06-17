@@ -1,7 +1,7 @@
-import type { Denops } from "https://deno.land/x/denops_std@v3.2.0/mod.ts";
-import * as batch from "https://deno.land/x/denops_std@v3.2.0/batch/mod.ts";
-import * as vimFn from "https://deno.land/x/denops_std@v3.2.0/function/vim/mod.ts";
-import * as nvimFn from "https://deno.land/x/denops_std@v3.2.0/function/nvim/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
+import * as batch from "../batch/mod.ts";
+import * as vimFn from "../function/vim/mod.ts";
+import * as nvimFn from "../function/nvim/mod.ts";
 import * as itertools from "https://deno.land/x/itertools@v1.0.2/mod.ts";
 import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 
