@@ -4,8 +4,95 @@ import {
   assertString,
 } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import * as fn from "../function/mod.ts";
+import * as vars from "../variable/mod.ts";
 import * as anonymous from "../anonymous/mod.ts";
-import * as helper from "../helper/mod.ts";
+import { execute } from "./execute.ts";
+import { generateUniqueString } from "../util.ts";
+
+const suffix = generateUniqueString();
+
+async function ensurePrerequisites(denops: Denops): Promise<string> {
+  if (await vars.g.get(denops, `loaded_denops_std_helper_input_${suffix}`)) {
+    return suffix;
+  }
+  const script = `
+  let s:loaded_denops_std_helper_input_${suffix} = 1
+
+  let s:escape_token_${suffix} = '###DenopsStdHelperInputCancelled###'
+
+  function! DenopsStdHelperInput_${suffix}(prompt, text, completion, inputsave) abort
+    if type(a:completion) is# v:t_dict
+      let s:completion_${suffix} = copy(a:completion)
+      let completion = printf('customlist,%s', s:completion_proxy_name_${suffix})
+    else
+      let completion = a:completion
+    endif
+    if a:inputsave
+      call inputsave()
+    endif
+    try
+      return s:input_${suffix}(a:prompt, a:text, completion)
+    finally
+      if a:inputsave
+        call inputrestore()
+      endif
+    endtry
+  endfunction
+
+  function! s:completion_proxy_${suffix}(arglead, cmdline, cursorpos) abort
+    return denops#request(
+          \\ s:completion_${suffix}.plugin,
+          \\ s:completion_${suffix}.id,
+          \\ [a:arglead, a:cmdline, a:cursorpos],
+          \\)
+  endfunction
+
+  if has('nvim')
+    function! s:input_${suffix}(prompt, text, completion) abort
+      let options = {
+          \\ 'prompt': a:prompt,
+          \\ 'default': a:text,
+          \\ 'cancelreturn': s:escape_token_${suffix},
+          \\}
+      if a:completion isnot# v:null
+        let options['completion'] = a:completion
+      endif
+      let result = input(options)
+      if result ==# s:escape_token_${suffix}
+        return v:null
+      endif
+      return result
+    endfunction
+  else
+    function! s:input_${suffix}(prompt, text, completion) abort
+      let original = maparg('<Esc>', 'n')
+      execute printf('cnoremap <nowait><buffer> <Esc> <C-u>%s<CR>', s:escape_token_${suffix})
+      try
+        let result = a:completion is# v:null
+              \\ ? input(a:prompt, a:text)
+              \\ : input(a:prompt, a:text, a:completion)
+        redraw | echo ""
+        if result ==# s:escape_token_${suffix}
+          return v:null
+        endif
+        return result
+      catch /^Vim:Interrupt$/
+        return v:null
+      finally
+        if empty(original)
+          cunmap <buffer> <Esc>
+        else
+          execute printf('cmap <buffer> %s', original)
+        endif
+      endtry
+    endfunction
+  endif
+
+  let s:completion_proxy_name_${suffix} = get(funcref('s:completion_proxy_${suffix}'), 'name')
+  `;
+  await execute(denops, script);
+  return suffix;
+}
 
 export type CustomCompletion = (
   arglead: string,
@@ -38,7 +125,7 @@ export async function input(
   denops: Denops,
   options: InputOptions = {},
 ): Promise<string | null> {
-  await helper.load(denops, new URL("./input.vim", import.meta.url));
+  const suffix = await ensurePrerequisites(denops);
   const completion = options.completion ?? null;
   if (completion && typeof completion !== "string") {
     const [id] = anonymous.add(denops, async (arglead, cmdline, cursorpos) => {
@@ -49,7 +136,7 @@ export async function input(
     });
     try {
       return await denops.call(
-        "DenopsStdHelperInputV1",
+        `DenopsStdHelperInput_${suffix}`,
         options.prompt ?? "",
         options.text ?? "",
         { plugin: denops.name, id },
@@ -67,7 +154,7 @@ export async function input(
     }
   }
   return denops.call(
-    "DenopsStdHelperInputV1",
+    `DenopsStdHelperInput_${suffix}`,
     options.prompt ?? "",
     options.text ?? "",
     completion,
