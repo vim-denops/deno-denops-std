@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { register } from "./register.ts";
 
 test({
@@ -13,7 +13,6 @@ test({
       async () => {
         await register.get(denops, "aa");
       },
-      undefined,
       "must be a single character",
     );
   },
@@ -50,7 +49,6 @@ test({
       async () => {
         await register.set(denops, "aa", "world");
       },
-      undefined,
       "must be a single character",
     );
   },

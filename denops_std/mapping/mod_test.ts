@@ -1,9 +1,9 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { Mapping, Mode } from "./types.ts";
 import * as mapping from "./mod.ts";
 
@@ -262,7 +262,6 @@ test({
           unique: true,
         });
       },
-      undefined,
       "E227:",
     );
   },
@@ -284,7 +283,6 @@ for (const mode of modes) {
         async () => {
           await mapping.read(denops, "<Plug>(test-denops-std)", { mode });
         },
-        undefined,
         "No mapping found for",
       );
     },
@@ -307,7 +305,6 @@ test({
         async () => {
           await mapping.read(denops, "<Plug>(test-denops-std)", { mode });
         },
-        undefined,
         "No mapping found for",
       );
     }

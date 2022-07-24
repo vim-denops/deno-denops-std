@@ -1,4 +1,4 @@
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { echo } from "./echo.ts";
 
 test({

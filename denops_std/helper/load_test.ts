@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { load } from "./load.ts";
 
 const loadScriptUrlBase =
@@ -41,7 +41,6 @@ test({
           new URL("./load_test_not_exists.vim", import.meta.url),
         );
       },
-      undefined,
       `Failed to call 'call' with`,
     );
   },

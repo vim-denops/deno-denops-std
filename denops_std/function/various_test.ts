@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import * as various from "./various.ts";
 
 test({
