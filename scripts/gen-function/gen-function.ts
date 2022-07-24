@@ -2,7 +2,7 @@ import {
   difference,
   intersection,
 } from "https://deno.land/x/set_operations@v1.0.3/mod.ts";
-import * as path from "https://deno.land/std@0.133.0/path/mod.ts";
+import * as path from "https://deno.land/std@0.149.0/path/mod.ts";
 import * as commonManual from "../../denops_std/function/_manual.ts";
 import * as vimManual from "../../denops_std/function/vim/_manual.ts";
 import * as nvimManual from "../../denops_std/function/nvim/_manual.ts";

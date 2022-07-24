@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import * as path from "https://deno.land/std@0.133.0/path/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import * as path from "https://deno.land/std@0.149.0/path/mod.ts";
 import { format, parse } from "./bufname.ts";
 
 Deno.test("format throws exception when 'scheme' contains unusable characters", () => {
@@ -12,7 +12,6 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
         scheme: "denops0number",
         expr: "/absolute/path/to/worktree",
       }),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
@@ -21,7 +20,6 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
         scheme: "denops+plus",
         expr: "/absolute/path/to/worktree",
       }),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
@@ -30,7 +28,6 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
         scheme: "denops-minus",
         expr: "/absolute/path/to/worktree",
       }),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
@@ -39,7 +36,6 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
         scheme: "denops.dot",
         expr: "/absolute/path/to/worktree",
       }),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
@@ -48,7 +44,6 @@ Deno.test("format throws exception when 'scheme' contains unusable characters", 
         scheme: "denops_underscore",
         expr: "/absolute/path/to/worktree",
       }),
-    undefined,
     "contains unusable characters",
   );
 });
@@ -211,34 +206,28 @@ Deno.test("parse throws exception when 'expr' contains unusable characters", () 
     () => {
       parse(src);
     },
-    undefined,
     "contains unusable characters",
   );
 });
 Deno.test("parse throws exception when scheme part of 'expr' contains unusable characters", () => {
   assertThrows(
     () => parse("denops0number://absolute/path/to/worktree"),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
     () => parse("denops+plus://absolute/path/to/worktree"),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
     () => parse("denops+minus://absolute/path/to/worktree"),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
     () => parse("denops.dot://absolute/path/to/worktree"),
-    undefined,
     "contains unusable characters",
   );
   assertThrows(
     () => parse("denops_underscore://absolute/path/to/worktree"),
-    undefined,
     "contains unusable characters",
   );
 });

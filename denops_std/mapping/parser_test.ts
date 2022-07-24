@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
 import { Mapping } from "./types.ts";
 import { parse } from "./parser.ts";
 
@@ -86,7 +86,6 @@ Deno.test(`parse() throws an error for invalid record`, () => {
     () => {
       parse("This-is-invalid-record");
     },
-    undefined,
     "Failed to parse a mapping record",
   );
 });

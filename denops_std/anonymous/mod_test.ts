@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import * as anonymous from "./mod.ts";
 
 test({
@@ -43,21 +43,18 @@ test({
       async () => {
         await denops.dispatch(denops.name, ids[0]);
       },
-      undefined,
       `No method '${ids[0]}' exists`,
     );
     await assertRejects(
       async () => {
         await denops.dispatch(denops.name, ids[1]);
       },
-      undefined,
       `No method '${ids[1]}' exists`,
     );
     await assertRejects(
       async () => {
         await denops.dispatch(denops.name, ids[2]);
       },
-      undefined,
       `No method '${ids[2]}' exists`,
     );
   },
@@ -81,21 +78,18 @@ test({
       async () => {
         await denops.dispatch(denops.name, ids[0]);
       },
-      undefined,
       `No method '${ids[0]}' exists`,
     );
     await assertRejects(
       async () => {
         await denops.dispatch(denops.name, ids[1]);
       },
-      undefined,
       `No method '${ids[1]}' exists`,
     );
     await assertRejects(
       async () => {
         await denops.dispatch(denops.name, ids[2]);
       },
-      undefined,
       `No method '${ids[2]}' exists`,
     );
   },

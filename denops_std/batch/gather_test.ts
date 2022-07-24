@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { gather, GatherHelper } from "./gather.ts";
 
 test({
@@ -55,7 +55,6 @@ test({
           await denops.batch();
         });
       },
-      undefined,
       "method is not available",
     );
   },
@@ -78,21 +77,18 @@ test({
       async () => {
         await helper!.call("execute", "DenopsGatherTest");
       },
-      undefined,
       "not available outside",
     );
     await assertRejects(
       async () => {
         await helper.cmd("DenopsGatherTest");
       },
-      undefined,
       "not available outside",
     );
     await assertRejects(
       async () => {
         const _ = await helper.eval("v:version");
       },
-      undefined,
       "not available outside",
     );
   },

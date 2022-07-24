@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.133.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.0.1/test/mod.ts";
+} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.0.2/test/mod.ts";
 import { execute } from "./execute.ts";
 
 test({
@@ -48,7 +48,6 @@ test({
       `,
         );
       },
-      undefined,
       "This is expected error",
     );
     assertEquals(await denops.eval("g:denops_std_execute_test") as number, 2);

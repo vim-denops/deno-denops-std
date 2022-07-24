@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
 import * as vars from "../variable/mod.ts";
 import { execute } from "./execute.ts";
 import { batch } from "../batch/mod.ts";
