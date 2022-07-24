@@ -2,7 +2,8 @@ import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
-import * as helper from "../helper/mod.ts";
+import * as vars from "../variable/mod.ts";
+import { execute } from "../helper/mod.ts";
 import * as unknownutil from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import {
   assertFileFormat,
@@ -12,6 +13,81 @@ import {
   splitText,
 } from "./fileformat.ts";
 import { tryDecode } from "./fileencoding.ts";
+import { generateUniqueString } from "../util.ts";
+
+const suffix = generateUniqueString();
+
+async function ensurePrerequisites(denops: Denops): Promise<string> {
+  if (await vars.g.get(denops, `loaded_denops_std_buffer_${suffix}`)) {
+    return suffix;
+  }
+  const script = `
+  let g:loaded_denops_std_buffer_${suffix} = 1
+
+  function! DenopsStdBufferReload_${suffix}(bufnr) abort
+    if bufnr('%') is# a:bufnr
+      edit
+      return
+    endif
+    let winid_saved = win_getid()
+    let winid = bufwinid(a:bufnr)
+    if winid is# -1
+      augroup denops_std_buffer_reload_${suffix}
+        execute printf('autocmd! * <buffer=%d>', a:bufnr)
+        execute printf('autocmd BufEnter <buffer=%d> ++nested ++once edit', a:bufnr)
+      augroup END
+      return
+    endif
+    keepjumps keepalt call win_gotoid(winid)
+    try
+      edit
+    finally
+      keepjumps keepalt call win_gotoid(winid_saved)
+    endtry
+  endfunction
+
+  function! DenopsStdBufferReplace_${suffix}(bufnr, repl, fileformat, fileencoding) abort
+    let modified = getbufvar(a:bufnr, '&modified')
+    let modifiable = getbufvar(a:bufnr, '&modifiable')
+    let foldmethod = getbufvar(a:bufnr, '&foldmethod')
+    call setbufvar(a:bufnr, '&modifiable', 1)
+    call setbufvar(a:bufnr, '&foldmethod', 'manual')
+    if a:fileformat isnot# v:null
+      call setbufvar(a:bufnr, '&fileformat', a:fileformat)
+    endif
+    if a:fileencoding isnot# v:null
+      call setbufvar(a:bufnr, '&fileencoding', a:fileencoding)
+    endif
+    call setbufline(a:bufnr, 1, a:repl)
+    call deletebufline(a:bufnr, len(a:repl) + 1, '$')
+    call setbufvar(a:bufnr, '&modified', modified)
+    call setbufvar(a:bufnr, '&modifiable', modifiable)
+    call setbufvar(a:bufnr, '&foldmethod', foldmethod)
+  endfunction
+
+  function! DenopsStdBufferConcreteRestore_${suffix}() abort
+    if !exists('b:denops_std_buffer_concrete_cache_${suffix}')
+      return
+    endif
+    call DenopsStdBufferReplace_${suffix}(
+          \\ bufnr('%'),
+          \\ b:denops_std_buffer_concrete_cache_${suffix}.content,
+          \\ v:null,
+          \\ v:null,
+          \\)
+    let &filetype = b:denops_std_buffer_concrete_cache_${suffix}.filetype
+  endfunction
+
+  function! DenopsStdBufferConcreteStore_${suffix}() abort
+    let b:denops_std_buffer_concrete_cache_${suffix} = {
+          \\ 'filetype': &filetype,
+          \\ 'content': getline(1, '$'),
+          \\}
+  endfunction
+  `;
+  await execute(denops, script);
+  return suffix;
+}
 
 export type OpenOptions = {
   mods?: string;
@@ -35,14 +111,17 @@ export async function open(
  * Edit a buffer
  */
 export async function reload(denops: Denops, bufnr: number): Promise<void> {
-  await helper.load(denops, new URL("./buffer.vim", import.meta.url));
+  const suffix = await ensurePrerequisites(denops);
   await denops.cmd(
-    "call timer_start(0, { -> DenopsStdBufferV1Reload(bufnr) })",
-    {
-      bufnr,
-    },
+    `call timer_start(0, { -> DenopsStdBufferReload_${suffix}(bufnr) })`,
+    { bufnr },
   );
 }
+
+export type ReplaceOptions = {
+  fileformat?: string;
+  fileencoding?: string;
+};
 
 /**
  * Replace the buffer content
@@ -51,9 +130,16 @@ export async function replace(
   denops: Denops,
   bufnr: number,
   repl: string[],
+  options: ReplaceOptions = {},
 ): Promise<void> {
-  await helper.load(denops, new URL("./buffer.vim", import.meta.url));
-  await denops.call("DenopsStdBufferV1Replace", bufnr, repl);
+  const suffix = await ensurePrerequisites(denops);
+  await denops.call(
+    `DenopsStdBufferReplace_${suffix}`,
+    bufnr,
+    repl,
+    options.fileformat ?? null,
+    options.fileencoding ?? null,
+  );
 }
 
 export type AssignOptions = {
@@ -98,12 +184,9 @@ export async function assign(
     findFileFormat(text, fileformats) ?? fileformat;
   const preprocessor = options.preprocessor ?? ((v: string[]) => v);
   const repl = preprocessor(splitText(text, ff));
-  await modifiable(denops, bufnr, async () => {
-    await batch.batch(denops, async (denops) => {
-      await fn.setbufvar(denops, bufnr, "&fileformat", ff);
-      await fn.setbufvar(denops, bufnr, "&fileencoding", enc);
-      await replace(denops, bufnr, repl);
-    });
+  await replace(denops, bufnr, repl, {
+    fileformat: ff,
+    fileencoding: enc,
   });
 }
 
@@ -119,30 +202,30 @@ export async function concrete(
   denops: Denops,
   bufnr: number,
 ): Promise<void> {
-  await helper.load(denops, new URL("./buffer.vim", import.meta.url));
+  const suffix = await ensurePrerequisites(denops);
   await batch.batch(denops, async (denops) => {
     await autocmd.group(
       denops,
-      "denops_std_buffer_v1_concrete",
+      `denops_std_buffer_concrete_${suffix}`,
       (helper) => {
         const pat = `<buffer=${bufnr}>`;
         helper.remove("*", pat);
         helper.define(
           "BufWriteCmd",
           pat,
-          "call DenopsStdBufferV1ConcreteStore()",
+          `call DenopsStdBufferConcreteStore_${suffix}()`,
         );
         helper.define(
           "BufReadCmd",
           pat,
-          "call DenopsStdBufferV1ConcreteRestore()",
+          `call DenopsStdBufferConcreteRestore_${suffix}()`,
           {
             nested: true,
           },
         );
       },
     );
-    await denops.call("DenopsStdBufferV1ConcreteStore");
+    await denops.call(`DenopsStdBufferConcreteStore_${suffix}`);
   });
 }
 

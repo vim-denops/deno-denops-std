@@ -1,6 +1,29 @@
 import type { Denops } from "https://deno.land/x/denops_core@v3.0.1/mod.ts";
+import * as vars from "../variable/mod.ts";
+import { execute } from "./execute.ts";
 import { batch } from "../batch/mod.ts";
-import { load } from "./load.ts";
+import { generateUniqueString } from "../util.ts";
+
+const suffix = generateUniqueString();
+
+async function ensurePrerequisites(denops: Denops): Promise<string> {
+  if (await vars.g.get(denops, `loaded_denops_std_helper_echo_${suffix}`)) {
+    return suffix;
+  }
+  const script = `
+  let g:loaded_denops_std_helper_echo_${suffix} = 1
+
+  function! DenopsStdHelperEcho_${suffix}(message) abort
+    call timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
+  endfunction
+
+  function! s:DenopsStdHelperEchoInternal_${suffix}(message) abort
+    redraw | echo a:message
+  endfunction
+  `;
+  await execute(denops, script);
+  return suffix;
+}
 
 /**
  * Echo message as like `echo` on Vim script.
@@ -62,6 +85,6 @@ export async function friendlyCall(
 }
 
 async function echoVim(denops: Denops, message: string): Promise<void> {
-  await load(denops, new URL("./echo.vim", import.meta.url));
-  await denops.call("DenopsStdHelperEchoV1", message);
+  const suffix = await ensurePrerequisites(denops);
+  await denops.call(`DenopsStdHelperEcho_${suffix}`, message);
 }
