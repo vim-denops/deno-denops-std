@@ -3,7 +3,7 @@ import type {
   Denops,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
+} from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
 
 class GatherHelper implements Denops {
   #denops: Denops;
@@ -30,6 +30,10 @@ class GatherHelper implements Denops {
 
   get meta(): Meta {
     return this.#denops.meta;
+  }
+
+  get context(): Record<string | number | symbol, unknown> {
+    return this.#denops.context;
   }
 
   get dispatcher(): Dispatcher {

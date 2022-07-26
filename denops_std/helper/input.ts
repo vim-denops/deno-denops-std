@@ -1,20 +1,21 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
 import {
   assertNumber,
   assertString,
 } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import * as fn from "../function/mod.ts";
-import * as vars from "../variable/mod.ts";
 import * as anonymous from "../anonymous/mod.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
+const cacheKey = Symbol("denops_std/helper/input");
 const suffix = generateUniqueString();
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (await vars.g.get(denops, `loaded_denops_std_helper_input_${suffix}`)) {
+  if (cacheKey in denops.context) {
     return suffix;
   }
+  denops.context[cacheKey] = true;
   const script = `
   let s:loaded_denops_std_helper_input_${suffix} = 1
 
