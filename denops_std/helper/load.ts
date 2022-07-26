@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
 import * as fs from "https://deno.land/std@0.149.0/fs/mod.ts";
 import * as hash from "https://deno.land/std@0.149.0/hash/mod.ts";
 import * as path from "https://deno.land/std@0.149.0/path/mod.ts";

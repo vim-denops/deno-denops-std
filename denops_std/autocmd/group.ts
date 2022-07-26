@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
 import { execute } from "../helper/execute.ts";
 import { AutocmdEvent } from "./types.ts";
 import {
