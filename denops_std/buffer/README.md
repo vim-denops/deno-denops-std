@@ -29,23 +29,33 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
-Use `split`, `vsplit`, `tabedit`, `pedit`, or whatever before if you'd like to
-open a buffer with non current window like:
+Use `split`, `vsplit`, `tabedit`, `pedit`, or whatever in `opener` attribute of
+the option like:
 
 ```typescript
 import { Denops } from "../mod.ts";
-import { batch } from "../batch/mod.ts";
 import { open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
-  await batch(denops, async (denops) => {
-    await denops.cmd("split");
-    await open(denops, "README.md");
-  });
+  await open(denops, "README.md", { opener: "split" });
 }
 ```
 
-See [`batch`](../batch/README.md) documentation for `batch()` part.
+Use a result value if you need window id, buffer number, window number, or
+tabpage number like:
+
+```typescript
+import { Denops } from "../mod.ts";
+import { open } from "../buffer/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  const info = await open(denops, "README.md");
+  console.log("winid:", info.winid);
+  console.log("bufnr:", info.bufnr);
+  console.log("winnr:", info.winnr);
+  console.log("tabpagenr:", info.tabpagenr);
+}
+```
 
 ### reload
 
