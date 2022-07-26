@@ -23,6 +23,15 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   }
   denops.context[cacheKey] = true;
   const script = `
+  function! DenopsStdBufferOpen_${suffix}(mods, opener, cmdarg, bufname) abort
+    execute printf('%s %s %s \`=a:bufname\`', a:mods, a:opener, a:cmdarg)
+    return {
+          \\ 'winid': win_getid(),
+          \\ 'bufnr': bufnr(),
+          \\ 'winnr': winnr(),
+          \\ 'tabpagenr': tabpagenr(),
+          \\}
+  endfunction
   function! DenopsStdBufferReload_${suffix}(bufnr) abort
     if bufnr('%') is# a:bufnr
       edit
@@ -91,6 +100,14 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
 export type OpenOptions = {
   mods?: string;
   cmdarg?: string;
+  opener?: string;
+};
+
+export type OpenResult = {
+  winid: number;
+  bufnr: number;
+  winnr: number;
+  tabpagenr: number;
 };
 
 /**
@@ -100,10 +117,18 @@ export async function open(
   denops: Denops,
   bufname: string,
   options: OpenOptions = {},
-): Promise<void> {
+): Promise<OpenResult> {
+  const suffix = await ensurePrerequisites(denops);
   const mods = options.mods ?? "";
   const cmdarg = options.cmdarg ?? "";
-  await denops.cmd(`${mods} edit ${cmdarg} \`=bufname\``, { bufname });
+  const opener = options.opener ?? "edit";
+  return await denops.call(
+    `DenopsStdBufferOpen_${suffix}`,
+    mods,
+    opener,
+    cmdarg,
+    bufname,
+  ) as OpenResult;
 }
 
 /**

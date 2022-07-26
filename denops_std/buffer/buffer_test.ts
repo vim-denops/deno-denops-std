@@ -15,18 +15,26 @@ test({
   mode: "all",
   name: "open opens a new buffer",
   fn: async (denops) => {
-    await open(denops, "Hello world");
+    const info = await open(denops, "Hello world");
     const bufname = await fn.bufname(denops);
     assertEquals("Hello world", bufname);
+    assertEquals(await fn.win_getid(denops), info.winid);
+    assertEquals(await fn.bufnr(denops), info.bufnr);
+    assertEquals(await fn.winnr(denops), info.winnr);
+    assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
   },
 });
 test({
   mode: "all",
   name: "open opens a new buffer (remote buffer name)",
   fn: async (denops) => {
-    await open(denops, "gin://this-is-valid-remote-buffer-name");
+    const info = await open(denops, "gin://this-is-valid-remote-buffer-name");
     const bufname = await fn.bufname(denops);
     assertEquals("gin://this-is-valid-remote-buffer-name", bufname);
+    assertEquals(await fn.win_getid(denops), info.winid);
+    assertEquals(await fn.bufnr(denops), info.bufnr);
+    assertEquals(await fn.winnr(denops), info.winnr);
+    assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
   },
 });
 test({
@@ -34,9 +42,13 @@ test({
   name: "open opens a new buffer (symobls with percent-encoding)",
   fn: async (denops) => {
     const symbols = " !%22#$%&'()%2a+,-./:;%3c=%3e%3f@[\\]^`{%7c}~";
-    await open(denops, `test://${symbols}`);
+    const info = await open(denops, `test://${symbols}`);
     const bufname = await fn.bufname(denops);
     assertEquals(`test://${symbols}`, bufname);
+    assertEquals(await fn.win_getid(denops), info.winid);
+    assertEquals(await fn.bufnr(denops), info.bufnr);
+    assertEquals(await fn.winnr(denops), info.winnr);
+    assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
   },
 });
 
