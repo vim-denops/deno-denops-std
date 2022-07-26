@@ -2,7 +2,6 @@ import type { Denops } from "https://deno.land/x/denops_core@v3.0.2/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
-import * as vars from "../variable/mod.ts";
 import { execute } from "../helper/mod.ts";
 import * as unknownutil from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import {
@@ -15,15 +14,15 @@ import {
 import { tryDecode } from "./fileencoding.ts";
 import { generateUniqueString } from "../util.ts";
 
+const cacheKey = Symbol("denops_std/buffer/buffer.ts");
 const suffix = generateUniqueString();
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (await vars.g.get(denops, `loaded_denops_std_buffer_${suffix}`)) {
+  if (cacheKey in denops.context) {
     return suffix;
   }
+  denops.context[cacheKey] = true;
   const script = `
-  let g:loaded_denops_std_buffer_${suffix} = 1
-
   function! DenopsStdBufferReload_${suffix}(bufnr) abort
     if bufnr('%') is# a:bufnr
       edit
