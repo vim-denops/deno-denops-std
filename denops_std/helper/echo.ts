@@ -36,14 +36,19 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  *
  * Note that it does nothing and return immediately when denops is
  * running as 'test' mode to avoid unwilling test failures.
+ *
+ * WARNING:
+ * In order to make the behavior of Vim and Neovim consistent, `timer_start()`
+ * is used internally not only in Vim but also in Neovim. Note that this
+ * means that it is not possible to control messages by prepending `silent`
+ * to them. Developers must control the display of messages by not calling this
+ * function.
  */
 export function echo(denops: Denops, message: string): Promise<void> {
   if (denops.meta.mode === "test") {
     return Promise.resolve();
-  } else if (denops.meta.host === "vim") {
-    return echoVim(denops, message);
   } else {
-    return denops.cmd("redraw | echo message", { message });
+    return echoVim(denops, message);
   }
 }
 

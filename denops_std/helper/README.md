@@ -22,6 +22,13 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+##### Warning
+
+In order to make the behavior of Vim and Neovim consistent, `timer_start()` is
+used internally not only in Vim but also in Neovim. Note that this means that it
+is not possible to control messages by prepending `silent` to them. Developers
+must control the display of messages by not calling this function.
+
 ### friendlyCall
 
 Use `friendlyCall()` to call given function and print a friendly error message
