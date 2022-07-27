@@ -13,9 +13,11 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   denops.context[cacheKey] = true;
   const script = `
   let g:loaded_denops_std_helper_echo_${suffix} = 1
+  let s:denops_std_helper_echo_timer = 0
 
   function! DenopsStdHelperEcho_${suffix}(message) abort
-    call timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
+    call timer_stop(s:denops_std_helper_echo_timer)
+    let s:denops_std_helper_echo_timer = timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
   endfunction
 
   function! s:DenopsStdHelperEchoInternal_${suffix}(message) abort
