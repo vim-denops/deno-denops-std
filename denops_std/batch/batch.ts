@@ -86,11 +86,11 @@ class BatchHelper implements Denops {
  */
 export async function batch(
   denops: Denops,
-  main: (helper: BatchHelper) => Promise<void>,
+  executor: (helper: BatchHelper) => Promise<void>,
 ): Promise<void> {
   const helper = new BatchHelper(denops);
   try {
-    await main(helper);
+    await executor(helper);
   } finally {
     BatchHelper.close(helper);
   }

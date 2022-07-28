@@ -256,10 +256,10 @@ export async function concrete(
 /**
  * Ensure the executor is executed under the specified buffer
  */
-export async function ensure<T = void>(
+export async function ensure<T>(
   denops: Denops,
   bufnr: number,
-  executor: () => Promise<T>,
+  executor: () => T,
 ): Promise<T> {
   const [bufnrCur, winidCur, winidNext] = await batch.gather(
     denops,
@@ -295,10 +295,10 @@ export async function ensure<T = void>(
 /**
  * Ensure the executor is executed under a modifiable buffer
  */
-export async function modifiable<T = void>(
+export async function modifiable<T>(
   denops: Denops,
   bufnr: number,
-  executor: () => Promise<T>,
+  executor: () => T,
 ): Promise<T> {
   const [modified, modifiable, foldmethod] = await batch.gather(
     denops,
