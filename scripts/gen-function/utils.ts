@@ -1,4 +1,4 @@
-import * as io from "https://deno.land/std@0.149.0/io/mod.ts";
+import * as io from "https://deno.land/std@0.150.0/io/mod.ts";
 
 export async function downloadString(url: string): Promise<string> {
   const textDecoder = new TextDecoder();
