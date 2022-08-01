@@ -4,6 +4,7 @@ import { batch } from "../batch/mod.ts";
 import { generateUniqueString } from "../util.ts";
 
 const cacheKey = Symbol("denops_std/helper/echo");
+const cacheKeySilent = Symbol("denops_std/helper/echo/silent");
 const suffix = generateUniqueString();
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
@@ -13,9 +14,11 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   denops.context[cacheKey] = true;
   const script = `
   let g:loaded_denops_std_helper_echo_${suffix} = 1
+  let s:denops_std_helper_echo_timer = 0
 
   function! DenopsStdHelperEcho_${suffix}(message) abort
-    call timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
+    call timer_stop(s:denops_std_helper_echo_timer)
+    let s:denops_std_helper_echo_timer = timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
   endfunction
 
   function! s:DenopsStdHelperEchoInternal_${suffix}(message) abort
@@ -24,6 +27,39 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   `;
   await execute(denops, script);
   return suffix;
+}
+
+export type Silent = "" | "silent" | "silent!";
+
+/**
+ * Get global silent status
+ */
+export function getSilent(denops: Denops): Silent {
+  return (denops.context[cacheKeySilent] ?? "") as Silent;
+}
+
+/**
+ * Set global silent status
+ */
+export function setSilent(denops: Denops, silent: Silent): void {
+  denops.context[cacheKeySilent] = silent;
+}
+
+/**
+ * Ensure global silent status during given function
+ */
+export async function ensureSilent<T>(
+  denops: Denops,
+  silent: Silent,
+  executor: () => T,
+): Promise<T> {
+  const saved = denops.context[cacheKeySilent];
+  denops.context[cacheKeySilent] = silent;
+  try {
+    return await executor();
+  } finally {
+    denops.context[cacheKeySilent] = saved;
+  }
 }
 
 /**
@@ -36,29 +72,68 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  *
  * Note that it does nothing and return immediately when denops is
  * running as 'test' mode to avoid unwilling test failures.
+ *
+ * WARNING:
+ * In order to make the behavior of Vim and Neovim consistent,
+ * `timer_start()` is used internally not only in Vim but also in
+ * Neovim. Note that this means that you cannot control the message
+ * by prepending `silent` when calling it from the Vim script.
+ * If you want to control the message, use the `setSilent` function
+ * to change the silent state to `'silent'` or `'silent!'` in
+ * advance, or use the `ensureSilent` function to fix the silent state
+ * to `'silent'` or `'silent!'` during execution of any function.
  */
-export function echo(denops: Denops, message: string): Promise<void> {
+export function echo(
+  denops: Denops,
+  message: string,
+): Promise<void> {
+  const silent = getSilent(denops);
+  switch (silent) {
+    case "silent":
+    case "silent!":
+      return Promise.resolve();
+  }
   if (denops.meta.mode === "test") {
     return Promise.resolve();
-  } else if (denops.meta.host === "vim") {
-    return echoVim(denops, message);
   } else {
-    return denops.cmd("redraw | echo message", { message });
+    return echoInternal(denops, message);
   }
 }
 
 /**
  * Echo message as an error message.
  *
- * Note that this function just use ErrorMsg highlight and is not equivalent
- * to `echoerr` command in Vim/Neovim.
+ * Note that this function just use ErrorMsg highlight and is not
+ * equivalent to `echoerr` command in Vim/Neovim.
+ *
+ * WARNING:
+ * In order to make the behavior of Vim and Neovim consistent,
+ * `timer_start()` is used internally not only in Vim but also in
+ * Neovim. Note that this means that you cannot control the message
+ * by prepending `silent` when calling it from the Vim script.
+ * If you want to control the message, use the `setSilent` function
+ * to change the silent state to `'silent!'` in advance, or use the
+ * `ensureSilent` function to fix the silent state to `'silent!'`
+ * during execution of any function.
  */
-export async function echoerr(denops: Denops, message: string): Promise<void> {
-  await batch(denops, async (denops) => {
-    await denops.cmd("echohl ErrorMsg");
-    await echo(denops, message);
-    await denops.cmd("echohl None");
-  });
+export async function echoerr(
+  denops: Denops,
+  message: string,
+): Promise<void> {
+  const silent = getSilent(denops);
+  switch (silent) {
+    case "silent!":
+      return Promise.resolve();
+  }
+  if (denops.meta.mode === "test") {
+    return Promise.resolve();
+  } else {
+    await batch(denops, async (denops) => {
+      await denops.cmd("echohl ErrorMsg");
+      await echoInternal(denops, message);
+      await denops.cmd("echohl None");
+    });
+  }
 }
 
 /**
@@ -85,7 +160,7 @@ export async function friendlyCall(
   }
 }
 
-async function echoVim(denops: Denops, message: string): Promise<void> {
+async function echoInternal(denops: Denops, message: string): Promise<void> {
   const suffix = await ensurePrerequisites(denops);
   await denops.call(`DenopsStdHelperEcho_${suffix}`, message);
 }

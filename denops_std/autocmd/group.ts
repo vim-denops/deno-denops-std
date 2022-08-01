@@ -14,11 +14,11 @@ export type GroupRemoveOptions = Omit<RemoveOptions, "group">;
 export async function group(
   denops: Denops,
   name: string,
-  main: (helper: GroupHelper) => void,
+  executor: (helper: GroupHelper) => void,
 ): Promise<void> {
   const commands: string[] = [];
   const helper = new GroupHelper(commands);
-  main(helper);
+  executor(helper);
   await execute(denops, [
     `aug ${name}`,
     ...commands,

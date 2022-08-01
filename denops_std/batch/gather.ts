@@ -88,11 +88,11 @@ class GatherHelper implements Denops {
  */
 export async function gather(
   denops: Denops,
-  main: (helper: GatherHelper) => Promise<void>,
+  executor: (helper: GatherHelper) => Promise<void>,
 ): Promise<unknown[]> {
   const helper = new GatherHelper(denops);
   try {
-    await main(helper);
+    await executor(helper);
   } finally {
     GatherHelper.close(helper);
   }

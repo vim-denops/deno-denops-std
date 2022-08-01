@@ -22,6 +22,75 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+##### Warning
+
+In order to make the behavior of Vim and Neovim consistent, `timer_start()` is
+used internally not only in Vim but also in Neovim. Note that this means that
+you cannot control the message by prepending `silent` when calling it from the
+Vim script. If you want to control the message, use the `setSilent` function to
+change the silent state to `'silent'` or `'silent!'` in advance, or use the
+`ensureSilent` function to fix the silent state to `'silent'` or `'silent!'`
+during execution of any function.
+
+### setSilent / getSilent
+
+By setting the silent state with `setSilent`, you can control `silent` and
+`silent!` messages as follows.
+
+```typescript
+import { Denops } from "../mod.ts";
+import { echo, echoerr, getSilent, setSilent } from "../helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
+  setSilent(denops, "silent!");
+  await echo(denops, "Hello\nWorld!");
+  await echoerr(denops, "This is error message");
+
+  // Because silent is "silent", `echo` doesn't show messages.
+  setSilent(denops, "silent");
+  await echo(denops, "Hello\nWorld!");
+  await echoerr(denops, "This is error message");
+
+  // Because silent is "", both show messages.
+  setSilent(denops, "");
+  await echo(denops, "Hello\nWorld!");
+  await echoerr(denops, "This is error message");
+}
+```
+
+Use the `getSilent()` function to get the current silent state.
+
+### ensureSilent
+
+To control `silent` and `silent!` messages while executing a particular
+function, use `ensureSilent` as follows
+
+```typescript
+import { Denops } from "../mod.ts";
+import { echo, echoerr, ensureSilent } from "../helper/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
+  await ensureSilent(denops, "silent!", async () => {
+    await echo(denops, "Hello\nWorld!");
+    await echoerr(denops, "This is error message");
+  });
+
+  // Because silent is "silent", `echo` doesn't show messages.
+  await ensureSilent(denops, "silent", async () => {
+    await echo(denops, "Hello\nWorld!");
+    await echoerr(denops, "This is error message");
+  });
+
+  // Because silent is "", both shows messages.
+  await ensureSilent(denops, "", async () => {
+    await echo(denops, "Hello\nWorld!");
+    await echoerr(denops, "This is error message");
+  });
+}
+```
+
 ### friendlyCall
 
 Use `friendlyCall()` to call given function and print a friendly error message
