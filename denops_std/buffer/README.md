@@ -78,6 +78,48 @@ export async function main(denops: Denops): Promise<void> {
 It may temporary change a current buffer or a current window to properly reload
 the content of the `bufnr` buffer.
 
+### decode
+
+Use `decode()` to decode raw binary content for string array for the `bufnr`
+buffer like:
+
+```typescript
+import { Denops } from "../mod.ts";
+import * as fn from "../function/mod.ts";
+import { decode, open, replace } from "../buffer/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await open(denops, "README.md");
+  const bufnr = await fn.bufnr(denops) as number;
+  const data = await Deno.readFile("README.md");
+  const { content } = await decode(denops, bufnr, data);
+  await replace(denops, bufnr, content);
+}
+```
+
+It follows Vim's rule to find a corresponding `fileformat` and `fileencoding` to
+decode the `data` if the one is not given by `options`.
+
+### append
+
+Use `append()` to append the content of the `bufnr` buffer like:
+
+```typescript
+import { Denops } from "../mod.ts";
+import * as fn from "../function/mod.ts";
+import { append, open } from "../buffer/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await open(denops, "README.md");
+  const bufnr = await fn.bufnr(denops) as number;
+  // Append the content under the cursor position of the `bufnr` buffer
+  await append(denops, bufnr, ["Hello", "World"]);
+}
+```
+
+It temporary change `modified`, `modifiable`, and `foldmethod` options to append
+the content of the `buffer` buffer without unmodifiable error or so on.
+
 ### replace
 
 Use `replace()` to replace the content of the `bufnr` buffer like:
@@ -99,6 +141,8 @@ It temporary change `modified`, `modifiable`, and `foldmethod` options to
 replace the content of the `buffer` buffer without unmodifiable error or so on.
 
 ### assign
+
+**DEPRECATED: Use `decode()` and `replace()` individually**
 
 Use `assign()` to assign raw binary content into the `bufnr` buffer like:
 

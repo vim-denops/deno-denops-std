@@ -3,8 +3,10 @@ import { test } from "../test/mod.ts";
 import { default as Encoding } from "https://cdn.skypack.dev/encoding-japanese@2.0.0/";
 import * as fn from "../function/mod.ts";
 import {
+  append,
   assign,
   concrete,
+  decode,
   ensure,
   modifiable,
   open,
@@ -49,6 +51,212 @@ test({
     assertEquals(await fn.bufnr(denops), info.bufnr);
     assertEquals(await fn.winnr(denops), info.winnr);
     assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+  },
+});
+
+test({
+  mode: "all",
+  name: "decode decodes data for a buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    const encoder = new TextEncoder();
+    let result = await decode(
+      denops,
+      bufnr,
+      encoder.encode(
+        "こんにちわ\n世界\n",
+      ),
+    );
+    assertEquals([
+      "こんにちわ",
+      "世界",
+    ], result.content);
+
+    result = await decode(
+      denops,
+      bufnr,
+      encoder.encode(
+        "今すぐダウンロー\nド",
+      ),
+    );
+    assertEquals([
+      "今すぐダウンロー",
+      "ド",
+    ], result.content);
+  },
+});
+test({
+  mode: "all",
+  name: "decode decodes content for a buffer with specified fileencoding",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    const encode = (text: string, encoding: string): Uint8Array => {
+      return new Uint8Array(
+        Encoding.convert(Encoding.stringToCode(text), encoding, "UNICODE"),
+      );
+    };
+    let result = await decode(
+      denops,
+      bufnr,
+      encode("こんにちわ\n世界\n", "sjis"),
+      {
+        fileencoding: "sjis",
+      },
+    );
+    assertEquals("sjis", result.fileencoding);
+    assertEquals([
+      "こんにちわ",
+      "世界",
+    ], result.content);
+
+    result = await decode(
+      denops,
+      bufnr,
+      encode("今すぐダウンロー\nド", "euc-jp"),
+      {
+        fileencoding: "euc-jp",
+      },
+    );
+    assertEquals("euc-jp", result.fileencoding);
+    assertEquals([
+      "今すぐダウンロー",
+      "ド",
+    ], result.content);
+  },
+});
+test({
+  mode: "all",
+  name: "assign assings content to a buffer with specified fileformat",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    const encoder = new TextEncoder();
+    let result = await decode(
+      denops,
+      bufnr,
+      encoder.encode(
+        "こんにちわ\r\n世界\r\n",
+      ),
+      {
+        fileformat: "dos",
+      },
+    );
+    assertEquals("dos", result.fileformat);
+    assertEquals([
+      "こんにちわ",
+      "世界",
+    ], result.content);
+
+    result = await decode(
+      denops,
+      bufnr,
+      encoder.encode(
+        "今すぐダウンロー\r\nド",
+      ),
+    );
+    assertEquals("dos", result.fileformat);
+    assertEquals([
+      "今すぐダウンロー",
+      "ド",
+    ], result.content);
+  },
+});
+
+test({
+  mode: "all",
+  name: "append appends content of a buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await append(denops, bufnr, [
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ]);
+    assertEquals([
+      "",
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+
+    await append(denops, bufnr, [
+      "Joking",
+    ]);
+    assertEquals([
+      "",
+      "Joking",
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+
+    await append(denops, bufnr, [
+      "Foo",
+    ], {
+      lnum: 3,
+    });
+    assertEquals([
+      "",
+      "Joking",
+      "Hello",
+      "Foo",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+  },
+});
+test({
+  mode: "all",
+  name: "append appends content of an 'unmodifiable' buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await fn.setbufvar(denops, bufnr, "&modifiable", 0);
+    await append(denops, bufnr, [
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ]);
+    assertEquals([
+      "",
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+    assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+
+    await append(denops, bufnr, [
+      "Joking",
+    ]);
+    assertEquals([
+      "",
+      "Joking",
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+    assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+
+    await append(denops, bufnr, [
+      "Foo",
+    ], {
+      lnum: 3,
+    });
+    assertEquals([
+      "",
+      "Joking",
+      "Hello",
+      "Foo",
+      "Darkness",
+      "My",
+      "Old friend",
+    ], await fn.getline(denops, 1, "$"));
+    assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
   },
 });
 
