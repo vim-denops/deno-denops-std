@@ -97,19 +97,6 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   return suffix;
 }
 
-export type OpenOptions = {
-  mods?: string;
-  cmdarg?: string;
-  opener?: string;
-};
-
-export type OpenResult = {
-  winid: number;
-  bufnr: number;
-  winnr: number;
-  tabpagenr: number;
-};
-
 /**
  * Open a buffer
  */
@@ -131,6 +118,19 @@ export async function open(
   ) as OpenResult;
 }
 
+export type OpenOptions = {
+  mods?: string;
+  cmdarg?: string;
+  opener?: string;
+};
+
+export type OpenResult = {
+  winid: number;
+  bufnr: number;
+  winnr: number;
+  tabpagenr: number;
+};
+
 /**
  * Edit a buffer
  */
@@ -141,11 +141,6 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
     { bufnr },
   );
 }
-
-export type ReplaceOptions = {
-  fileformat?: string;
-  fileencoding?: string;
-};
 
 /**
  * Replace the buffer content
@@ -166,10 +161,9 @@ export async function replace(
   );
 }
 
-export type AssignOptions = {
+export type ReplaceOptions = {
   fileformat?: string;
   fileencoding?: string;
-  preprocessor?: (repl: string[]) => string[];
 };
 
 /**
@@ -213,6 +207,12 @@ export async function assign(
     fileencoding: enc,
   });
 }
+
+export type AssignOptions = {
+  fileformat?: string;
+  fileencoding?: string;
+  preprocessor?: (repl: string[]) => string[];
+};
 
 /**
  * Concrete the buffer.
