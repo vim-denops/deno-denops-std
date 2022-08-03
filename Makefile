@@ -20,7 +20,7 @@ type-check: FORCE	## Type check
 	@deno test --unstable --no-run ${TARGETS}
 
 test: FORCE	## Test
-	@deno test --unstable -A --no-check --jobs
+	@deno test --unstable -A --no-check --jobs ${ARGS}
 
 gen: FORCE	## Generate codes
 	@deno run --unstable -A ./scripts/gen-function/gen-function.ts
