@@ -6,6 +6,7 @@ import { execute } from "../helper/mod.ts";
 import * as unknownutil from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 import {
   assertFileFormat,
+  FileFormat,
   findFileFormat,
   isFileFormat,
   maybeFileFormat,
@@ -54,6 +55,18 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
     endtry
   endfunction
 
+  function! DenopsStdBufferAppend_${suffix}(bufnr, lnum, repl) abort
+    let modified = getbufvar(a:bufnr, '&modified')
+    let modifiable = getbufvar(a:bufnr, '&modifiable')
+    let foldmethod = getbufvar(a:bufnr, '&foldmethod')
+    call setbufvar(a:bufnr, '&modifiable', 1)
+    call setbufvar(a:bufnr, '&foldmethod', 'manual')
+    call appendbufline(a:bufnr, a:lnum, a:repl)
+    call setbufvar(a:bufnr, '&modified', modified)
+    call setbufvar(a:bufnr, '&modifiable', modifiable)
+    call setbufvar(a:bufnr, '&foldmethod', foldmethod)
+  endfunction
+
   function! DenopsStdBufferReplace_${suffix}(bufnr, repl, fileformat, fileencoding) abort
     let modified = getbufvar(a:bufnr, '&modified')
     let modifiable = getbufvar(a:bufnr, '&modifiable')
@@ -97,19 +110,6 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   return suffix;
 }
 
-export type OpenOptions = {
-  mods?: string;
-  cmdarg?: string;
-  opener?: string;
-};
-
-export type OpenResult = {
-  winid: number;
-  bufnr: number;
-  winnr: number;
-  tabpagenr: number;
-};
-
 /**
  * Open a buffer
  */
@@ -131,6 +131,19 @@ export async function open(
   ) as OpenResult;
 }
 
+export type OpenOptions = {
+  mods?: string;
+  cmdarg?: string;
+  opener?: string;
+};
+
+export type OpenResult = {
+  winid: number;
+  bufnr: number;
+  winnr: number;
+  tabpagenr: number;
+};
+
 /**
  * Edit a buffer
  */
@@ -142,9 +155,80 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
   );
 }
 
-export type ReplaceOptions = {
+/**
+ * Decode content for the buffer with given format and encoding.
+ */
+export async function decode(
+  denops: Denops,
+  bufnr: number,
+  data: Uint8Array,
+  options: DecodeOptions = {},
+): Promise<DecodeResult> {
+  const [fileformat, fileformatsStr, fileencodingsStr] = await batch.gather(
+    denops,
+    async (denops) => {
+      await fn.getbufvar(denops, bufnr, "&fileformat");
+      await fn.getbufvar(denops, bufnr, "&fileformats");
+      await fn.getbufvar(denops, bufnr, "&fileencodings");
+    },
+  );
+  assertFileFormat(fileformat);
+  unknownutil.assertString(fileformatsStr);
+  unknownutil.assertString(fileencodingsStr);
+  const fileformats = fileformatsStr.split(",");
+  const fileencodings = fileencodingsStr.split(",");
+  unknownutil.assertArray(fileformats, isFileFormat);
+  unknownutil.assertArray(fileencodings, unknownutil.isString);
+  let enc: string;
+  let text: string;
+  if (options.fileencoding) {
+    enc = options.fileencoding;
+    text = (new TextDecoder(enc)).decode(data);
+  } else {
+    [enc, text] = tryDecode(data, fileencodings);
+  }
+  const ff = maybeFileFormat(options.fileformat) ??
+    findFileFormat(text, fileformats) ?? fileformat;
+  return {
+    content: splitText(text, ff),
+    fileformat: ff,
+    fileencoding: enc,
+  };
+}
+
+export type DecodeOptions = {
   fileformat?: string;
   fileencoding?: string;
+};
+
+export type DecodeResult = {
+  content: string[];
+  fileformat: FileFormat;
+  fileencoding: string;
+};
+
+/**
+ * Append content under the current cursor position or given lnum of the buffer
+ */
+export async function append(
+  denops: Denops,
+  bufnr: number,
+  repl: string[],
+  options: AppendOptions = {},
+): Promise<void> {
+  const suffix = await ensurePrerequisites(denops);
+  const lnum = options.lnum ??
+    await ensure(denops, bufnr, () => fn.line(denops, "."));
+  await denops.call(
+    `DenopsStdBufferAppend_${suffix}`,
+    bufnr,
+    lnum,
+    repl,
+  );
+}
+
+export type AppendOptions = {
+  lnum?: number;
 };
 
 /**
@@ -166,53 +250,39 @@ export async function replace(
   );
 }
 
-export type AssignOptions = {
+export type ReplaceOptions = {
   fileformat?: string;
   fileencoding?: string;
-  preprocessor?: (repl: string[]) => string[];
 };
 
 /**
  * Assign content to the buffer with given format and encoding.
+ *
+ * @deprecated Use `decode()` and `replace()` individually instead.
  */
 export async function assign(
   denops: Denops,
   bufnr: number,
-  content: Uint8Array,
+  data: Uint8Array,
   options: AssignOptions = {},
 ): Promise<void> {
-  const [fileformat, fileformatsStr, fileencodingsStr] = await batch.gather(
+  const { content, fileformat, fileencoding } = await decode(
     denops,
-    async (denops) => {
-      await fn.getbufvar(denops, bufnr, "&fileformat");
-      await fn.getbufvar(denops, bufnr, "&fileformats");
-      await fn.getbufvar(denops, bufnr, "&fileencodings");
-    },
+    bufnr,
+    data,
+    options,
   );
-  assertFileFormat(fileformat);
-  unknownutil.assertString(fileformatsStr);
-  unknownutil.assertString(fileencodingsStr);
-  const fileformats = fileformatsStr.split(",");
-  const fileencodings = fileencodingsStr.split(",");
-  unknownutil.assertArray(fileformats, isFileFormat);
-  unknownutil.assertArray(fileencodings, unknownutil.isString);
-  let enc: string;
-  let text: string;
-  if (options.fileencoding) {
-    enc = options.fileencoding;
-    text = (new TextDecoder(enc)).decode(content);
-  } else {
-    [enc, text] = tryDecode(content, fileencodings);
-  }
-  const ff = maybeFileFormat(options.fileformat) ??
-    findFileFormat(text, fileformats) ?? fileformat;
   const preprocessor = options.preprocessor ?? ((v: string[]) => v);
-  const repl = preprocessor(splitText(text, ff));
+  const repl = preprocessor(content);
   await replace(denops, bufnr, repl, {
-    fileformat: ff,
-    fileencoding: enc,
+    fileformat,
+    fileencoding,
   });
 }
+
+export type AssignOptions = DecodeOptions & {
+  preprocessor?: (repl: string[]) => string[];
+};
 
 /**
  * Concrete the buffer.
