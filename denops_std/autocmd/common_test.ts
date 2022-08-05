@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.150.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
 import { test } from "https://deno.land/x/denops_core@v3.1.0/test/mod.ts";
 import { globals } from "../variable/mod.ts";
 import { define, emit, emitAll, list, remove } from "./common.ts";
