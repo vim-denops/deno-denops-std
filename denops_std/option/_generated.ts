@@ -822,7 +822,12 @@ export const breakindent = {
  * 		    continuation (positive).
  * 	sbr	    Display the 'showbreak' value before applying the
  * 		    additional indent.
- * The default value for min is 20 and shift is 0.
+ * 	list:{n}    Adds an additional indent for lines that match a
+ * 		    numbered or bulleted list (using the
+ * 		    'formatlistpat' setting).
+ * 	list:-1	    Uses the length of a match with 'formatlistpat'
+ * 		    for indentation.
+ * The default value for min is 20, shift and list is 0.
  */
 export const breakindentopt = {
   async get(denops: Denops): Promise<string> {
@@ -1994,6 +1999,39 @@ export const cursorline = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "cursorline");
+  },
+};
+
+/**
+ * 		{not available when compiled without the |+syntax|
+ * 		feature}
+ * Comma separated list of settings for how 'cursorline' is displayed.
+ * Valid values:
+ * "line"		Highlight the text line of the cursor with
+ * 		CursorLine |hl-CursorLine|.
+ * "screenline"	Highlight only the screen line of the cursor with
+ * 		CursorLine |hl-CursorLine|.
+ * "number"	Highlight the line number of the cursor with
+ * 		CursorLineNr |hl-CursorLineNr|.
+ */
+export const cursorlineopt = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "cursorlineopt") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "cursorlineopt", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "cursorlineopt");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "cursorlineopt") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "cursorlineopt", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "cursorlineopt");
   },
 };
 
@@ -8327,6 +8365,8 @@ export const spellfile = {
  * If the name "cjk" is included East Asian characters are excluded from
  * spell checking.  This is useful when editing text that also has Asian
  * words.
+ * Note that the "medical" dictionary does not exist, it is just an
+ * example of a longer name.
  * As a special case the name of a .spl file can be given as-is.  The
  * first "_xx" in the name is removed and used as the region name
  * (_xx is an underscore, two letters and followed by a non-letter).
@@ -9738,6 +9778,10 @@ export const viewoptions = {
  *     insert	Allow virtual editing in Insert mode.
  *     all		Allow virtual editing in all modes.
  *     onemore	Allow the cursor to move just past the end of the line
+ *     none	When used as the local value, do not allow virtual
+ * 		editing even when the global value is set.  When used
+ * 		as the global value, "none" is the same as "".
+ *     NONE	Alternative spelling of "none".
  */
 export const virtualedit = {
   async get(denops: Denops): Promise<string> {
@@ -9757,6 +9801,15 @@ export const virtualedit = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "virtualedit");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "virtualedit") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "virtualedit", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "virtualedit");
   },
 };
 

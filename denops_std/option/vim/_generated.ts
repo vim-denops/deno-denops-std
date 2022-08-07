@@ -308,39 +308,6 @@ export const cscopeverbose = {
 };
 
 /**
- * 		{not available when compiled without the |+syntax|
- * 		feature}
- * Comma separated list of settings for how 'cursorline' is displayed.
- * Valid values:
- * "line"		Highlight the text line of the cursor with
- * 		CursorLine |hl-CursorLine|.
- * "screenline"	Highlight only the screen line of the cursor with
- * 		CursorLine |hl-CursorLine|.
- * "number"	Highlight the line number of the cursor with
- * 		CursorLineNr |hl-CursorLineNr|.
- */
-export const cursorlineopt = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cursorlineopt") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "cursorlineopt", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cursorlineopt");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cursorlineopt") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "cursorlineopt", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "cursorlineopt");
-  },
-};
-
-/**
  * Makes the 'g' and 'c' flags of the ":substitute" command to be
  * toggled each time the flag is given.  See |complex-change|.  See
  * also 'gdefault' option.

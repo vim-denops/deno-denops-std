@@ -10,8 +10,8 @@ import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { downloadString } from "./utils.ts";
 
-const VIM_VERSION = "8.2.3081";
-const NVIM_VERSION = "0.5.0";
+const VIM_VERSION = "8.2.3452";
+const NVIM_VERSION = "0.6.0";
 
 const manualOptionSet = new Set([
   ...Object.keys(commonManual),
@@ -19,19 +19,27 @@ const manualOptionSet = new Set([
   ...Object.keys(nvimManual),
 ]);
 
-const vimHelp = await downloadString(
+const vimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/options.txt`,
-);
-const vimDefs = parse(vimHelp);
+];
+for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
+  console.log(`Download from ${vimHelpDownloadUrl}`);
+}
+const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
+const vimDefs = vimHelps.map(parse).flat();
 const vimOptionSet = difference(
   new Set(vimDefs.map((def) => def.name)),
   manualOptionSet,
 );
 
-const nvimHelp = await downloadString(
+const nvimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/options.txt`,
-);
-const nvimDefs = parse(nvimHelp);
+];
+for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
+  console.log(`Download from ${nvimHelpDownloadUrl}`);
+}
+const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
+const nvimDefs = nvimHelps.map(parse).flat();
 const nvimOptionSet = difference(
   new Set(nvimDefs.map((def) => def.name)),
   manualOptionSet,

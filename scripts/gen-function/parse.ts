@@ -25,7 +25,7 @@ export function parse(content: string): Definition[] {
     const e = content.lastIndexOf("\n", me);
     const block = content
       .substring(s, e)
-      .replaceAll(/\*.+?\*/g, "") // Remove tags
+      .replaceAll(/\*\S+?\*/g, "") // Remove tags
       .replaceAll(/\s+\n/g, "\n") // Remove trailing '\s'
       .trim();
     definitions.push(parseBlock(fn, block));
