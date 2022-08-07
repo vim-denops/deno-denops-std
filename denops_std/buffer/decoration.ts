@@ -39,7 +39,7 @@ async function vimDecorate(
   bufnr: number,
   decorations: Decoration[],
 ): Promise<void> {
-  const toPropType = (n: string) => `gin:decoration:decorate:${n}`;
+  const toPropType = (n: string) => `denops_std:buffer:decoration:decorate:${n}`;
   try {
     for (const chunk of itertools.chunked(decorations, 1000)) {
       await batch.batch(denops, async (denops) => {
@@ -64,7 +64,7 @@ async function nvimDecorate(
 ): Promise<void> {
   const ns = await nvimFn.nvim_create_namespace(
     denops,
-    "gin:decoration:decorate",
+    "denops_std:buffer:decoration:decorate",
   );
   for (const chunk of itertools.chunked(decorations, 1000)) {
     await batch.batch(denops, async (denops) => {
