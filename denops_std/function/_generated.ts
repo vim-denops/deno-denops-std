@@ -87,6 +87,7 @@ export function and(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * the current buffer.
  * Any type of item is accepted and converted to a String.
  * {lnum} can be zero to insert a line before the first one.
+ * {lnum} is used like with |getline()|.
  * Returns 1 for failure ({lnum} out of range or out of memory),
  * 0 for success.  Example:
  * 	:let failed = append(line('$'), "# THE END")
@@ -105,15 +106,15 @@ export function append(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Like |append()| but append the text in buffer {expr}.
+ * Like |append()| but append the text in buffer {buf}.
  * This function works only for loaded buffers. First call
  * |bufload()| if needed.
- * For the use of {expr}, see |bufname()|.
+ * For the use of {buf}, see |bufname()|.
  * {lnum} is used like with |append()|.  Note that using |line()|
  * would use the current buffer, not the one appending to.
  * Use "$" to append at the end of the buffer.
  * On success 0 is returned, on failure 1 is returned.
- * If {expr} is not a valid buffer or {lnum} is not valid, an
+ * If {buf} is not a valid buffer or {lnum} is not valid, an
  * error message is given. Example:
  * 	:let failed = appendbufline(13, 0, "# THE START")
  * Can also be used as a |method| after a List, the base is
@@ -122,7 +123,7 @@ export function append(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function appendbufline(
   denops: Denops,
-  expr: unknown,
+  buf: unknown,
   lnum: unknown,
   text: unknown,
 ): Promise<unknown>;
@@ -250,7 +251,7 @@ export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	:echo atan2(1, -1)
  * 	2.356194
  * Can also be used as a |method|:
- * 	Compute()->atan(1)
+ * 	Compute()->atan2(1)
  * {only available when compiled with the |+float| feature}
  */
 export function atan2(
@@ -309,7 +310,7 @@ export function browsedir(
 }
 
 /**
- * Return byte index of the {nr}'th character in the string
+ * Return byte index of the {nr}'th character in the String
  * {expr}.  Use zero for the first character, it then returns
  * zero.
  * If there are no multibyte characters the returned value is
@@ -422,7 +423,8 @@ export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Return number value of the first char in {expr}.  Examples:
+ * Return number value of the first char in {string}.
+ * Examples:
  * 	char2nr(" ")		returns 32
  * 	char2nr("ABC")		returns 65
  * When {utf8} is omitted or zero, the current 'encoding' is used.
@@ -441,7 +443,7 @@ export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function char2nr(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   utf8?: unknown,
 ): Promise<unknown>;
 export function char2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -453,10 +455,10 @@ export function char2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The index of the first character is zero.
  * If there are no multibyte characters the returned value is
  * equal to {idx}.
- * When {countcc} is omitted or zero, then composing characters
- * are not counted separately, their byte length is added to the
- * preceding base character.
- * When {countcc} is set to 1, then composing characters are
+ * When {countcc} is omitted or |FALSE|, then composing characters
+ * are not counted separately, their byte length is
+ * added to the preceding base character.
+ * When {countcc} is |TRUE|, then composing characters are
  * counted as separate characters.
  * Returns -1 if the arguments are invalid or if {idx} is greater
  * than the index of the last byte in {string}.  An error is
@@ -480,6 +482,34 @@ export function charidx(
 ): Promise<unknown>;
 export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("charidx", ...args);
+}
+
+/**
+ * Change the current working directory to {dir}.  The scope of
+ * the directory change depends on the directory of the current
+ * window:
+ * 	- If the current window has a window-local directory
+ * 	  (|:lcd|), then changes the window local directory.
+ * 	- Otherwise, if the current tabpage has a local
+ * 	  directory (|:tcd|) then changes the tabpage local
+ * 	  directory.
+ * 	- Otherwise, changes the global directory.
+ * {dir} must be a String.
+ * If successful, returns the previous working directory.  Pass
+ * this to another chdir() to restore the directory.
+ * On failure, returns an empty string.
+ * Example:
+ * 	let save_dir = chdir(newdir)
+ * 	if save_dir != ""
+ * 	   " ... do some work
+ * 	   call chdir(save_dir)
+ * 	endif
+ * Can also be used as a |method|:
+ * 	GetDir()->chdir()
+ */
+export function chdir(denops: Denops, dir: unknown): Promise<unknown>;
+export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("chdir", ...args);
 }
 
 /**
@@ -526,6 +556,7 @@ export function clearmatches(
  * match.
  * {matches} must be a |List|.  Each |List| item is one match.
  * See |complete-items| for the kind of items that are possible.
+ * "longest" in 'completeopt' is ignored.
  * Note that the after calling this function you need to avoid
  * inserting anything that would cause completion to stop.
  * The match can be selected with CTRL-N and CTRL-P as usual with
@@ -603,7 +634,9 @@ export function complete_check(
  * 		See |complete-items|.
  *    selected	Selected item index.  First index is zero.
  * 		Index is -1 if no item is selected (showing
- * 		typed text only)
+ * 		typed text only, or the last completion after
+ * 		no item is selected when using the <Up> or
+ * 		<Down> keys)
  *    inserted	Inserted string. [NOT IMPLEMENT YET]
  * mode values are:
  *    ""		     Not in completion mode
@@ -670,11 +703,12 @@ export function complete_info(
  * that is made if the user hits <CR>.  Use 1 to make the first
  * choice the default one.  Use 0 to not set a default.  If
  * {default} is omitted, 1 is used.
- * The optional {type} argument gives the type of dialog.  This
- * is only used for the icon of the GTK, Mac, Motif and Win32
- * GUI.  It can be one of these values: "Error", "Question",
- * "Info", "Warning" or "Generic".  Only the first character is
- * relevant.  When {type} is omitted, "Generic" is used.
+ * The optional {type} String argument gives the type of dialog.
+ * This is only used for the icon of the GTK, Mac, Motif and
+ * Win32 GUI.  It can be one of these values: "Error",
+ * "Question", "Info", "Warning" or "Generic".  Only the first
+ * character is relevant.  When {type} is omitted, "Generic" is
+ * used.
  * If the user aborts the dialog by pressing <Esc>, CTRL-C,
  * or another valid interrupt key, confirm() returns 0.
  * An example:
@@ -904,21 +938,21 @@ export function delete_(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Delete lines {first} to {last} (inclusive) from buffer {expr}.
+ * Delete lines {first} to {last} (inclusive) from buffer {buf}.
  * If {last} is omitted then delete line {first} only.
  * On success 0 is returned, on failure 1 is returned.
  * This function works only for loaded buffers. First call
  * |bufload()| if needed.
- * For the use of {expr}, see |bufname()| above.
+ * For the use of {buf}, see |bufname()| above.
  * {first} and {last} are used like with |getline()|. Note that
  * when using |line()| this refers to the current buffer. Use "$"
- * to refer to the last line in buffer {expr}.
+ * to refer to the last line in buffer {buf}.
  * Can also be used as a |method|:
  * 	GetBuffer()->deletebufline(1)
  */
 export function deletebufline(
   denops: Denops,
-  expr: unknown,
+  buf: unknown,
   first: unknown,
   last?: unknown,
 ): Promise<unknown>;
@@ -1158,19 +1192,19 @@ export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Expand wildcards and the following special keywords in {expr}.
- * 'wildignorecase' applies.
+ * Expand wildcards and the following special keywords in
+ * {string}.  'wildignorecase' applies.
  * If {list} is given and it is |TRUE|, a List will be returned.
  * Otherwise the result is a String and when there are several
  * matches, they are separated by <NL> characters.  [Note: in
  * version 5.0 a space was used, which caused problems when a
  * file name contains a space]
  * If the expansion fails, the result is an empty string.  A name
- * for a non-existing file is not included, unless {expr} does
+ * for a non-existing file is not included, unless {string} does
  * not start with '%', '#' or '<', see below.
- * When {expr} starts with '%', '#' or '<', the expansion is done
- * like for the |cmdline-special| variables with their associated
- * modifiers.  Here is a short overview:
+ * When {string} starts with '%', '#' or '<', the expansion is
+ * done like for the |cmdline-special| variables with their
+ * associated modifiers.  Here is a short overview:
  * 	%		current file name
  * 	#		alternate file name
  * 	#n		alternate file name n
@@ -1216,7 +1250,7 @@ export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * is not defined, an empty string is used.  Using "%:p" in a
  * buffer with no name, results in the current directory, with a
  * '/' added.
- * When {expr} does not start with '%', '#' or '<', it is
+ * When {string} does not start with '%', '#' or '<', it is
  * expanded like a file name is expanded on the command line.
  * 'suffixes' and 'wildignore' are used, unless the optional
  * {nosuf} argument is given and it is |TRUE|.
@@ -1239,7 +1273,7 @@ export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function expand(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   nosuf?: unknown,
   list?: unknown,
 ): Promise<unknown>;
@@ -1248,16 +1282,17 @@ export function expand(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Expand special items in {expr} like what is done for an Ex
- * command such as `:edit`.  This expands special keywords, like
- * with |expand()|, and environment variables, anywhere in
- * {expr}.  "~user" and "~/path" are only expanded at the start.
+ * Expand special items in String {string} like what is done for
+ * an Ex command such as `:edit`.  This expands special keywords,
+ * like with |expand()|, and environment variables, anywhere in
+ * {string}.  "~user" and "~/path" are only expanded at the
+ * start.
  * Returns the expanded string.  Example:
  * 	:echo expandcmd('make %<.o')
  * Can also be used as a |method|:
  * 	GetCommand()->expandcmd()
  */
-export function expandcmd(denops: Denops, expr: unknown): Promise<unknown>;
+export function expandcmd(denops: Denops, string: unknown): Promise<unknown>;
 export function expandcmd(
   denops: Denops,
   ...args: unknown[]
@@ -1407,14 +1442,16 @@ export function filewritable(
 }
 
 /**
- * {expr1} must be a |List| or a |Dictionary|.
+ * {expr1} must be a |List|, |Blob| or |Dictionary|.
  * For each item in {expr1} evaluate {expr2} and when the result
- * is zero remove the item from the |List| or |Dictionary|.
+ * is zero remove the item from the |List| or |Dictionary|. For a
+ * |Blob| each byte is removed.
  * {expr2} must be a |string| or |Funcref|.
  * If {expr2} is a |string|, inside {expr2} |v:val| has the value
  * of the current item.  For a |Dictionary| |v:key| has the key
  * of the current item and for a |List| |v:key| has the index of
- * the current item.
+ * the current item.  For a |Blob| |v:key| has the index of the
+ * current byte.
  * Examples:
  * 	call filter(mylist, 'v:val !~ "OLD"')
  * Removes the items where "OLD" appears.
@@ -1441,11 +1478,11 @@ export function filewritable(
  * The operation is done in-place.  If you want a |List| or
  * |Dictionary| to remain unmodified make a copy first:
  * 	:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
- * Returns {expr1}, the |List| or |Dictionary| that was filtered.
- * When an error is encountered while evaluating {expr2} no
- * further items in {expr1} are processed.  When {expr2} is a
- * Funcref errors inside a function are ignored, unless it was
- * defined with the "abort" flag.
+ * Returns {expr1}, the |List| , |Blob| or |Dictionary| that was
+ * filtered.  When an error is encountered while evaluating
+ * {expr2} no further items in {expr1} are processed.  When
+ * {expr2} is a Funcref errors inside a function are ignored,
+ * unless it was defined with the "abort" flag.
  * Can also be used as a |method|:
  * 	mylist->filter(expr2)
  */
@@ -1469,7 +1506,7 @@ export function filter(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If the optional {count} is given, find {count}'s occurrence of
  * {name} in {path} instead of the first one.
  * When {count} is negative return all the matches in a |List|.
- * This is quite similar to the ex-command |:find|.
+ * This is quite similar to the ex-command `:find`.
  * {only available when compiled with the |+file_in_path|
  * feature}
  * Can also be used as a |method|:
@@ -1931,8 +1968,8 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	buflisted	include only listed buffers.
  * 	bufloaded	include only loaded buffers.
  * 	bufmodified	include only modified buffers.
- * Otherwise, {expr} specifies a particular buffer to return
- * information for.  For the use of {expr}, see |bufname()|
+ * Otherwise, {buf} specifies a particular buffer to return
+ * information for.  For the use of {buf}, see |bufname()|
  * above.  If the buffer is found the returned List has one item.
  * Otherwise the result is an empty list.
  * Each returned List item is a dictionary with the following
@@ -1984,7 +2021,7 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetBufnr()->getbufinfo()
  */
-export function getbufinfo(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getbufinfo(denops: Denops, buf?: unknown): Promise<unknown>;
 export function getbufinfo(denops: Denops, dict?: unknown): Promise<unknown>;
 export function getbufinfo(
   denops: Denops,
@@ -1995,8 +2032,9 @@ export function getbufinfo(
 
 /**
  * The result is the value of option or local buffer variable
- * {varname} in buffer {expr}.  Note that the name without "b:"
+ * {varname} in buffer {buf}.  Note that the name without "b:"
  * must be used.
+ * The {varname} argument is a string.
  * When {varname} is empty returns a |Dictionary| with all the
  * buffer-local variables.
  * When {varname} is equal to "&" returns a |Dictionary| with all
@@ -2006,7 +2044,7 @@ export function getbufinfo(
  * This also works for a global or buffer-local option, but it
  * doesn't work for a global variable, window-local variable or
  * window-local option.
- * For the use of {expr}, see |bufname()| above.
+ * For the use of {buf}, see |bufname()| above.
  * When the buffer or variable doesn't exist {def} or an empty
  * string is returned, there is no error message.
  * Examples:
@@ -2017,7 +2055,7 @@ export function getbufinfo(
  */
 export function getbufvar(
   denops: Denops,
-  expr: unknown,
+  buf: unknown,
   varname: unknown,
   def?: unknown,
 ): Promise<unknown>;
@@ -2029,8 +2067,8 @@ export function getbufvar(
 }
 
 /**
- * Returns the |changelist| for the buffer {expr}. For the use
- * of {expr}, see |bufname()| above. If buffer {expr} doesn't
+ * Returns the |changelist| for the buffer {buf}. For the use
+ * of {buf}, see |bufname()| above. If buffer {buf} doesn't
  * exist, an empty list is returned.
  * The returned list contains two entries: a list with the change
  * locations and the current position in the list.  Each
@@ -2039,13 +2077,13 @@ export function getbufvar(
  * 	col		column number
  * 	coladd		column offset for 'virtualedit'
  * 	lnum		line number
- * If buffer {expr} is the current buffer, then the current
+ * If buffer {buf} is the current buffer, then the current
  * position refers to the position in the list. For other
  * buffers, it is set to the length of the list.
  * Can also be used as a |method|:
  * 	GetBufnr()->getchangelist()
  */
-export function getchangelist(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getchangelist(denops: Denops, buf?: unknown): Promise<unknown>;
 export function getchangelist(
   denops: Denops,
   ...args: unknown[]
@@ -2180,6 +2218,26 @@ export function getcharsearch(
 }
 
 /**
+ * Get a single character from the user or input stream as a
+ * string.
+ * If [expr] is omitted, wait until a character is available.
+ * If [expr] is 0 or false, only get a character when one is
+ * 	available.  Return an empty string otherwise.
+ * If [expr] is 1 or true, only check if a character is
+ * 	available, it is not consumed.  Return an empty string
+ * 	if no character is available.
+ * Otherwise this works like |getchar()|, except that a number
+ * result is converted to a string.
+ */
+export function getcharstr(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getcharstr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcharstr", ...args);
+}
+
+/**
  * Return the current command-line.  Only works when the command
  * line is being edited, thus requires use of |c_CTRL-\_e| or
  * |c_CTRL-R_=|.
@@ -2249,9 +2307,9 @@ export function getcmdwintype(
 }
 
 /**
- * Return a list of command-line completion matches. {type}
- * specifies what for.  The following completion types are
- * supported:
+ * Return a list of command-line completion matches. The String
+ * {type} argument specifies what for.  The following completion
+ * types are supported:
  * arglist		file names in argument list
  * augroup		autocmd groups
  * buffer		buffer names
@@ -2358,7 +2416,9 @@ export function getcwd(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Return the value of environment variable {name}.
+ * Return the value of environment variable {name}.  The {name}
+ * argument is a string, without a leading '$'.  Example:
+ * 	myHome = getenv('HOME')
  * When the variable does not exist |v:null| is returned.  That
  * is different from a variable set to an empty string, although
  * some systems interpret the empty value as the variable being
@@ -2375,8 +2435,8 @@ export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Without an argument returns the name of the normal font being
  * used.  Like what is used for the Normal highlight group
  * |hl-Normal|.
- * With an argument a check is done whether {name} is a valid
- * font name.  If not then an empty string is returned.
+ * With an argument a check is done whether String {name} is a
+ * valid font name.  If not then an empty string is returned.
  * Otherwise the actual font name is returned, or {name} if the
  * GUI does not support obtaining the real name.
  * Only works when the GUI is running, thus not in your vimrc or
@@ -2542,10 +2602,10 @@ export function getloclist(
 }
 
 /**
- * Without the {expr} argument returns a |List| with information
+ * Without the {buf} argument returns a |List| with information
  * about all the global marks. |mark|
- * If the optional {expr} argument is specified, returns the
- * local marks defined in buffer {expr}.  For the use of {expr},
+ * If the optional {buf} argument is specified, returns the
+ * local marks defined in buffer {buf}.  For the use of {buf},
  * see |bufname()|.
  * Each item in the returned List is a |Dict| with the following:
  *     mark   name of the mark prefixed by "'"
@@ -2558,7 +2618,7 @@ export function getloclist(
  * Can also be used as a |method|:
  * 	GetBufnr()->getmarklist()
  */
-export function getmarklist(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getmarklist(denops: Denops, buf?: unknown): Promise<unknown>;
 export function getmarklist(
   denops: Denops,
   ...args: unknown[]
@@ -2596,6 +2656,37 @@ export function getmatches(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getmatches", ...args);
+}
+
+/**
+ * Returns a |Dictionary| with the last known position of the
+ * mouse.  This can be used in a mapping for a mouse click or in
+ * a filter of a popup window.  The items are:
+ * 	screenrow	screen row
+ * 	screencol	screen column
+ * 	winid		Window ID of the click
+ * 	winrow		row inside "winid"
+ * 	wincol		column inside "winid"
+ * 	line		text line inside "winid"
+ * 	column		text column inside "winid"
+ * All numbers are 1-based.
+ * If not over a window, e.g. when in the command line, then only
+ * "screenrow" and "screencol" are valid, the others are zero.
+ * When on the status line below a window or the vertical
+ * separator right of a window, the "line" and "column" values
+ * are zero.
+ * When the position is after the text then "column" is the
+ * length of the text in bytes plus one.
+ * If the mouse is over a popup window then that window is used.
+ * When using |getchar()| the Vim variables |v:mouse_lnum|,
+ * |v:mouse_col| and |v:mouse_winid| also provide these values.
+ */
+export function getmousepos(denops: Denops): Promise<unknown>;
+export function getmousepos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getmousepos", ...args);
 }
 
 /**
@@ -2716,6 +2807,7 @@ export function getqflist(
  * {regname}.  Example:
  * 	:let cliptext = getreg('*')
  * When {regname} was not set the result is an empty string.
+ * The {regname} argument is a string.
  * getreg('=') returns the last evaluated value of the expression
  * register.  (For use in maps.)
  * getreg('=', 1) returns the expression itself, so that it can
@@ -2743,6 +2835,40 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Returns detailed information about register {regname} as a
+ * Dictionary with the following entries:
+ * 	regcontents	List of lines contained in register
+ * 			{regname}, like
+ * 			|getreg|({regname}, 1, 1).
+ * 	regtype		the type of register {regname}, as in
+ * 			|getregtype()|.
+ * 	isunnamed	Boolean flag, v:true if this register
+ * 			is currently pointed to by the unnamed
+ * 			register.
+ * 	points_to	for the unnamed register, gives the
+ * 			single letter name of the register
+ * 			currently pointed to (see |quotequote|).
+ * 			For example, after deleting a line
+ * 			with `dd`, this field will be "1",
+ * 			which is the register that got the
+ * 			deleted text.
+ * The {regname} argument is a string.  If {regname} is invalid
+ * or not set, an empty Dictionary will be returned.
+ * If {regname} is not specified, |v:register| is used.
+ * The returned Dictionary can be passed to |setreg()|.
+ * In |Vim9-script| {regname} must be one character.
+ * Can also be used as a |method|:
+ * 	GetRegname()->getreginfo()
+ */
+export function getreginfo(denops: Denops, regname?: unknown): Promise<unknown>;
+export function getreginfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getreginfo", ...args);
+}
+
+/**
  * The result is a String, which is type of register {regname}.
  * The value will be one of:
  *     "v"			for |characterwise| text
@@ -2750,7 +2876,8 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     "<CTRL-V>{width}"	for |blockwise-visual| text
  *     ""			for an empty or unknown register
  * <CTRL-V> is one character with value 0x16.
- * If {regname} is not specified, |v:register| is used.
+ * The {regname} argument is a string.  If {regname} is not
+ * specified, |v:register| is used.
  * In |Vim9-script| {regname} must be one character.
  * Can also be used as a |method|:
  * 	GetRegname()->getregtype()
@@ -2789,8 +2916,8 @@ export function gettabinfo(
  * Get the value of a tab-local variable {varname} in tab page
  * {tabnr}. |t:var|
  * Tabs are numbered starting with one.
- * When {varname} is empty a dictionary with all tab-local
- * variables is returned.
+ * The {varname} argument is a string.  When {varname} is empty a
+ * dictionary with all tab-local variables is returned.
  * Note that the name without "t:" must be used.
  * When the tab or variable doesn't exist {def} or an empty
  * string is returned, there is no error message.
@@ -2813,8 +2940,8 @@ export function gettabvar(
 /**
  * Get the value of window-local variable {varname} in window
  * {winnr} in tab page {tabnr}.
- * When {varname} is empty a dictionary with all window-local
- * variables is returned.
+ * The {varname} argument is a string.  When {varname} is empty a
+ * dictionary with all window-local variables is returned.
  * When {varname} is equal to "&" get the values of all
  * window-local options in a |Dictionary|.
  * Otherwise, when {varname} starts with "&" get the value of a
@@ -3056,14 +3183,14 @@ export function glob(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	if filename =~ glob2regpat('Make*.mak')
  * This is equivalent to:
  * 	if filename =~ '^Make.*\.mak$'
- * When {expr} is an empty string the result is "^$", match an
+ * When {string} is an empty string the result is "^$", match an
  * empty string.
  * Note that the result depends on the system.  On MS-Windows
  * a backslash usually means a path separator.
  * Can also be used as a |method|:
  * 	GetExpr()->glob2regpat()
  */
-export function glob2regpat(denops: Denops, expr: unknown): Promise<unknown>;
+export function glob2regpat(denops: Denops, string: unknown): Promise<unknown>;
 export function glob2regpat(
   denops: Denops,
   ...args: unknown[]
@@ -3072,8 +3199,8 @@ export function glob2regpat(
 }
 
 /**
- * Perform glob() for {expr} on all directories in {path} and
- * concatenate the results.  Example:
+ * Perform glob() for String {expr} on all directories in {path}
+ * and concatenate the results.  Example:
  * 	:echo globpath(&rtp, "syntax/c.vim")
  * {path} is a comma-separated list of directory names.  Each
  * directory name is prepended to {expr} and expanded like with
@@ -3118,7 +3245,8 @@ export function globpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is a Number, which is TRUE if |Dictionary| {dict}
- * has an entry with key {key}.  FALSE otherwise.
+ * has an entry with key {key}.  FALSE otherwise. The {key}
+ * argument is a string.
  * Can also be used as a |method|:
  * 	mydict->has_key(key)
  */
@@ -3182,6 +3310,7 @@ export function haslocaldir(
  * that contains {what} in somewhere in the rhs (what it is
  * mapped to) and this mapping exists in one of the modes
  * indicated by {mode}.
+ * The arguments {what} and {mode} are strings.
  * When {abbr} is there and it is |TRUE| use abbreviations
  * instead of mappings.  Don't forget to specify Insert and/or
  * Command-line mode.
@@ -3368,7 +3497,7 @@ export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is a String, which is the text {expr} converted
+ * The result is a String, which is the text {string} converted
  * from encoding {from} to encoding {to}.
  * When the conversion completely fails an empty string is
  * returned.  When some characters could not be converted they
@@ -3390,7 +3519,7 @@ export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function iconv(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   from: unknown,
   to: unknown,
 ): Promise<unknown>;
@@ -3540,8 +3669,9 @@ export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * The result is a Number, which is |TRUE| when {expr} is the
  * name of a locked variable.
- * {expr} must be the name of a variable, |List| item or
- * |Dictionary| entry, not the variable itself!  Example:
+ * The string argument {expr} must be the name of a variable,
+ * |List| item or |Dictionary| entry, not the variable itself!
+ * Example:
  * 	:let alist = [0, ['a', 'b'], 2, 3]
  * 	:lockvar 1 alist
  * 	:echo islocked('alist')		" 1
@@ -3895,7 +4025,8 @@ export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If {expr2} is a |string|, inside {expr2} |v:val| has the value
  * of the current item.  For a |Dictionary| |v:key| has the key
  * of the current item and for a |List| |v:key| has the index of
- * the current item.
+ * the current item.  For a |Blob| |v:key| has the index of the
+ * current byte.
  * Example:
  * 	:call map(mylist, '"> " . v:val . " <"')
  * This puts "> " before and " <" after each item in "mylist".
@@ -4586,6 +4717,7 @@ export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	if getline(nextnonblank(1)) =~ "Java"
  * When {lnum} is invalid or there is no non-blank line at or
  * below it, zero is returned.
+ * {lnum} is used like with |getline()|.
  * See also |prevnonblank()|.
  * Can also be used as a |method|:
  * 	GetLnum()->nextnonblank()
@@ -4645,7 +4777,7 @@ export function or(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Shorten directory names in the path {expr} and return the
+ * Shorten directory names in the path {path} and return the
  * result.  The tail, the file name, is kept as-is.  The other
  * components in the path are reduced to {len} letters in length.
  * If {len} is omitted or smaller than 1 then 1 is used (single
@@ -4660,7 +4792,7 @@ export function or(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function pathshorten(
   denops: Denops,
-  expr: unknown,
+  path: unknown,
   len?: unknown,
 ): Promise<unknown>;
 export function pathshorten(
@@ -4679,6 +4811,8 @@ export function pathshorten(
  * Example:
  * 	:echo perleval('[1 .. 4]')
  * 	[1, 2, 3, 4]
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetExpr()->perleval()
  * {only available when compiled with the |+perl| feature}
@@ -4713,6 +4847,7 @@ export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	let ind = indent(prevnonblank(v:lnum - 1))
  * When {lnum} is invalid or there is no non-blank line at or
  * above it, zero is returned.
+ * {lnum} is used like with |getline()|.
  * Also see |nextnonblank()|.
  * Can also be used as a |method|:
  * 	GetLnum()->prevnonblank()
@@ -4902,6 +5037,7 @@ export function printf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * string is returned.
  * Can also be used as a |method|:
  * 	GetBuffer()->prompt_getprompt()
+ * {only available when compiled with the |+channel| feature}
  */
 export function prompt_getprompt(
   denops: Denops,
@@ -4943,6 +5079,7 @@ export function prompt_getprompt(
  *    endfunc
  * Can also be used as a |method|:
  * 	GetBuffer()->prompt_setcallback(callback)
+ * {only available when compiled with the |+channel| feature}
  */
 export function prompt_setcallback(
   denops: Denops,
@@ -4965,6 +5102,7 @@ export function prompt_setcallback(
  * as in any buffer.
  * Can also be used as a |method|:
  * 	GetBuffer()->prompt_setinterrupt(callback)
+ * {only available when compiled with the |+channel| feature}
  */
 export function prompt_setinterrupt(
   denops: Denops,
@@ -4986,6 +5124,7 @@ export function prompt_setinterrupt(
  * 	call prompt_setprompt(bufnr(), 'command: ')
  * Can also be used as a |method|:
  * 	GetBuffer()->prompt_setprompt('command: ')
+ * {only available when compiled with the |+channel| feature}
  */
 export function prompt_setprompt(
   denops: Denops,
@@ -5043,6 +5182,8 @@ export function pumvisible(
  * Lists are represented as Vim |List| type.
  * Dictionaries are represented as Vim |Dictionary| type with
  * keys converted to strings.
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetExpr()->py3eval()
  * {only available when compiled with the |+python3| feature}
@@ -5060,6 +5201,8 @@ export function py3eval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Lists are represented as Vim |List| type.
  * Dictionaries are represented as Vim |Dictionary| type,
  * non-string keys result in error.
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetExpr()->pyeval()
  * {only available when compiled with the |+python| feature}
@@ -5256,7 +5399,8 @@ export function reg_recording(
  * With two arguments it returns the time passed between {start}
  * and {end}.
  * The {start} and {end} arguments must be values returned by
- * reltime().
+ * reltime().  If there is an error zero is returned in legacy
+ * script, in Vim9 script an error is given.
  * Can also be used as a |method|:
  * 	GetStart()->reltime()
  * {only available when compiled with the |+reltime| feature}
@@ -5278,6 +5422,8 @@ export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	let seconds = reltimefloat(reltime(start))
  * See the note of reltimestr() about overhead.
  * Also see |profiling|.
+ * If there is an error 0.0 is returned in legacy script, in Vim9
+ * script an error is given.
  * Can also be used as a |method|:
  * 	reltime(start)->reltimefloat()
  * {only available when compiled with the |+reltime| feature}
@@ -5303,6 +5449,8 @@ export function reltimefloat(
  * can use split() to remove it.
  * 	echo split(reltimestr(reltime(start)))[0]
  * Also see |profiling|.
+ * If there is an error an empty string is returned in legacy
+ * script, in Vim9 script an error is given.
  * Can also be used as a |method|:
  * 	reltime(start)->reltimestr()
  * {only available when compiled with the |+reltime| feature}
@@ -5357,6 +5505,7 @@ export function remote_expr(
 
 /**
  * Move the Vim server with the name {server} to the foreground.
+ * The {server} argument is a string.
  * This works like:
  * 	remote_expr({server}, "foreground()")
  * Except that on Win32 systems the client does the work, to work
@@ -5618,6 +5767,8 @@ export function round(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Hashes are represented as Vim |Dictionary| type.
  * Other objects are represented as strings resulted from their
  * "Object#to_s" method.
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetRubyExpr()->rubyeval()
  * {only available when compiled with the |+ruby| feature}
@@ -5671,6 +5822,27 @@ export function screenchar(
 }
 
 /**
+ * The result is a |List| of Numbers.  The first number is the same
+ * as what |screenchar()| returns.  Further numbers are
+ * composing characters on top of the base character.
+ * This is mainly to be used for testing.
+ * Returns an empty List when row or col is out of range.
+ * Can also be used as a |method|:
+ * 	GetRow()->screenchars(col)
+ */
+export function screenchars(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function screenchars(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("screenchars", ...args);
+}
+
+/**
  * The result is a Number, which is the current screen column of
  * the cursor. The leftmost column has number 1.
  * This function is mainly used for testing.
@@ -5704,6 +5876,28 @@ export function screenrow(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("screenrow", ...args);
+}
+
+/**
+ * The result is a String that contains the base character and
+ * any composing characters at position [row, col] on the screen.
+ * This is like |screenchars()| but returning a String with the
+ * characters.
+ * This is mainly to be used for testing.
+ * Returns an empty String when row or col is out of range.
+ * Can also be used as a |method|:
+ * 	GetRow()->screenstring(col)
+ */
+export function screenstring(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<unknown>;
+export function screenstring(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("screenstring", ...args);
 }
 
 /**
@@ -6149,12 +6343,13 @@ export function serverlist(
 }
 
 /**
- * Set option or local variable {varname} in buffer {expr} to
+ * Set option or local variable {varname} in buffer {buf} to
  * {val}.
  * This also works for a global or local window option, but it
  * doesn't work for a global or local window variable.
  * For a local window option the global value is unchanged.
- * For the use of {expr}, see |bufname()| above.
+ * For the use of {buf}, see |bufname()| above.
+ * The {varname} argument is a string.
  * Note that the variable name without "b:" must be used.
  * Examples:
  * 	:call setbufvar(1, "&mod", 1)
@@ -6166,7 +6361,7 @@ export function serverlist(
  */
 export function setbufvar(
   denops: Denops,
-  expr: unknown,
+  buf: unknown,
   varname: unknown,
   val: unknown,
 ): Promise<unknown>;
@@ -6231,7 +6426,8 @@ export function setcmdpos(
 }
 
 /**
- * Set environment variable {name} to {val}.
+ * Set environment variable {name} to {val}.  Example:
+ * 	call setenv('HOME', '/home/myhome')
  * When {val} is |v:null| the environment variable is deleted.
  * See also |expr-env|.
  * Can also be used as a |method|, the base is passed as the
@@ -6440,7 +6636,8 @@ export function setqflist(
 /**
  * Set the register {regname} to {value}.
  * If {regname} is "" or "@", the unnamed register '"' is used.
- * In |Vim9-script| {regname} must be one character.
+ * The {regname} argument is a string.  In |Vim9-script|
+ * {regname} must be one character.
  * {value} may be any value returned by |getreg()| or
  * |getreginfo()|, including a |List| or |Dict|.
  * If {options} contains "a" or {regname} is upper case,
@@ -6499,6 +6696,7 @@ export function setreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Set tab-local variable {varname} to {val} in tab page {tabnr}.
  * |t:var|
+ * The {varname} argument is a string.
  * Note that autocommands are blocked, side effects may not be
  * triggered, e.g. when setting 'filetype'.
  * Note that the variable name without "t:" must be used.
@@ -6656,6 +6854,9 @@ export function sha256(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * With a |non-zero-arg| {special} the <NL> character is also
  * escaped.  When 'shell' containing "csh" in the tail it's
  * escaped a second time.
+ * The "\" character will be escaped when 'shell' contains "fish"
+ * in the tail. That is because for fish "\" is used as an escape
+ * character inside single quotes.
  * Example of use with a |:!| command:
  *     :exe '!dir ' . shellescape(expand('<cfile>'), 1)
  * This results in a directory listing for the file under the
@@ -6809,12 +7010,14 @@ export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	func MyCompare(i1, i2)
  * 	   return a:i1 == a:i2 ? 0 : a:i1 > a:i2 ? 1 : -1
  * 	endfunc
- * 	let sortedlist = sort(mylist, "MyCompare")
+ * 	eval mylist->sort("MyCompare")
  * A shorter compare version for this specific simple case, which
  * ignores overflow:
  * 	func MyCompare(i1, i2)
  * 	   return a:i1 - a:i2
  * 	endfunc
+ * For a simple expression you can use a lambda:
+ * 	eval mylist->sort({i1, i2 -> i1 - i2})
  */
 export function sort(
   denops: Denops,
@@ -6911,7 +7114,7 @@ export function spellsuggest(
 }
 
 /**
- * Make a |List| out of {expr}.  When {pattern} is omitted or
+ * Make a |List| out of {string}.  When {pattern} is omitted or
  * empty each white-separated sequence of characters becomes an
  * item.
  * Otherwise the string is split where {pattern} matches,
@@ -6937,7 +7140,7 @@ export function spellsuggest(
  */
 export function split(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   pattern?: unknown,
   keepempty?: unknown,
 ): Promise<unknown>;
@@ -6966,12 +7169,15 @@ export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Convert String {expr} to a Float.  This mostly works the same
- * as when using a floating point number in an expression, see
- * |floating-point-format|.  But it's a bit more permissive.
+ * Convert String {string} to a Float.  This mostly works the
+ * same as when using a floating point number in an expression,
+ * see |floating-point-format|.  But it's a bit more permissive.
  * E.g., "1e40" is accepted, while in an expression you need to
  * write "1.0e40".  The hexadecimal form "0x123" is also
  * accepted, but not others, like binary or octal.
+ * When {quoted} is present and non-zero then embedded single
+ * quotes before the dot are ignored, thus "1'000.0" is a
+ * thousand.
  * Text after the number is silently ignored.
  * The decimal point is always '.', no matter what the locale is
  * set to.  A comma ends the number: "12,345.67" is converted to
@@ -6982,7 +7188,11 @@ export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 	let f = text->substitute(',', '', 'g')->str2float()
  * {only available when compiled with the |+float| feature}
  */
-export function str2float(denops: Denops, expr: unknown): Promise<unknown>;
+export function str2float(
+  denops: Denops,
+  string: unknown,
+  quoted?: unknown,
+): Promise<unknown>;
 export function str2float(
   denops: Denops,
   ...args: unknown[]
@@ -6992,7 +7202,7 @@ export function str2float(
 
 /**
  * Return a list containing the number values which represent
- * each character in String {expr}.  Examples:
+ * each character in String {string}.  Examples:
  * 	str2list(" ")		returns [32]
  * 	str2list("ABC")		returns [65, 66, 67]
  * |list2str()| does the opposite.
@@ -7006,7 +7216,7 @@ export function str2float(
  */
 export function str2list(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   utf8?: unknown,
 ): Promise<unknown>;
 export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7014,7 +7224,7 @@ export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Convert string {expr} to a number.
+ * Convert string {string} to a number.
  * {base} is the conversion base, it can be 2, 8, 10 or 16.
  * When {quoted} is present and non-zero then embedded single
  * quotes are ignored, thus "1'000'000" is a million.
@@ -7032,7 +7242,7 @@ export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function str2nr(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   base?: unknown,
   quoted?: unknown,
 ): Promise<unknown>;
@@ -7071,7 +7281,7 @@ export function strcharpart(
 
 /**
  * The result is a Number, which is the number of characters
- * in String {expr}.
+ * in String {string}.
  * When {skipcc} is omitted or zero, composing characters are
  * counted separately.
  * When {skipcc} set to 1, Composing characters are ignored.
@@ -7097,7 +7307,7 @@ export function strcharpart(
  */
 export function strchars(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   skipcc?: unknown,
 ): Promise<unknown>;
 export function strchars(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7106,14 +7316,14 @@ export function strchars(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is a Number, which is the number of display cells
- * String {expr} occupies on the screen when it starts at {col}
+ * String {string} occupies on the screen when it starts at {col}
  * (first column is zero).  When {col} is omitted zero is used.
  * Otherwise it is the screen column where to start.  This
  * matters for Tab characters.
  * The option settings of the current window are used.  This
  * matters for anything that's displayed differently, such as
  * 'tabstop' and 'display'.
- * When {expr} contains characters with East Asian Width Class
+ * When {string} contains characters with East Asian Width Class
  * Ambiguous, this function's return value depends on 'ambiwidth'.
  * Also see |strlen()|, |strwidth()| and |strchars()|.
  * Can also be used as a |method|:
@@ -7121,7 +7331,7 @@ export function strchars(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function strdisplaywidth(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   col?: unknown,
 ): Promise<unknown>;
 export function strdisplaywidth(
@@ -7259,7 +7469,7 @@ export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is a Number, which is the length of the String
- * {expr} in bytes.
+ * {string} in bytes.
  * If the argument is a Number it is first converted to a String.
  * For other types an error is given.
  * If you want to count the number of multibyte characters use
@@ -7268,7 +7478,7 @@ export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetString()->strlen()
  */
-export function strlen(denops: Denops, expr: unknown): Promise<unknown>;
+export function strlen(denops: Denops, string: unknown): Promise<unknown>;
 export function strlen(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strlen", ...args);
 }
@@ -7380,7 +7590,7 @@ export function strrchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is a String, which is {expr} with all unprintable
+ * The result is a String, which is {string} with all unprintable
  * characters translated into printable characters |'isprint'|.
  * Like they are shown in a window.  Example:
  * 	echo strtrans(@a)
@@ -7389,22 +7599,22 @@ export function strrchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a |method|:
  * 	GetString()->strtrans()
  */
-export function strtrans(denops: Denops, expr: unknown): Promise<unknown>;
+export function strtrans(denops: Denops, string: unknown): Promise<unknown>;
 export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strtrans", ...args);
 }
 
 /**
  * The result is a Number, which is the number of display cells
- * String {expr} occupies.  A Tab character is counted as one
+ * String {string} occupies.  A Tab character is counted as one
  * cell, alternatively use |strdisplaywidth()|.
- * When {expr} contains characters with East Asian Width Class
+ * When {string} contains characters with East Asian Width Class
  * Ambiguous, this function's return value depends on 'ambiwidth'.
  * Also see |strlen()|, |strdisplaywidth()| and |strchars()|.
  * Can also be used as a |method|:
  * 	GetString()->strwidth()
  */
-export function strwidth(denops: Denops, expr: unknown): Promise<unknown>;
+export function strwidth(denops: Denops, string: unknown): Promise<unknown>;
 export function strwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strwidth", ...args);
 }
@@ -7444,9 +7654,9 @@ export function submatch(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is a String, which is a copy of {expr}, in which
+ * The result is a String, which is a copy of {string}, in which
  * the first match of {pat} is replaced with {sub}.
- * When {flags} is "g", all matches of {pat} in {expr} are
+ * When {flags} is "g", all matches of {pat} in {string} are
  * replaced.  Otherwise {flags} should be "".
  * This works like the ":substitute" command (without any flags).
  * But the matching with {pat} is always done like the 'magic'
@@ -7459,7 +7669,7 @@ export function submatch(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Note that some codes in {sub} have a special meaning
  * |sub-replace-special|.  For example, to replace something with
  * "\n" (two characters), use "\\\\n" or '\\n'.
- * When {pat} does not match in {expr}, {expr} is returned
+ * When {pat} does not match in {string}, {string} is returned
  * unmodified.
  * Example:
  *    :let &path = substitute(&path, ",\\=[^,]*$", "", "")
@@ -7482,7 +7692,7 @@ export function submatch(denops: Denops, ...args: unknown[]): Promise<unknown> {
  */
 export function substitute(
   denops: Denops,
-  expr: unknown,
+  string: unknown,
   pat: unknown,
   sub: unknown,
   flags: unknown,
@@ -7522,14 +7732,14 @@ export function swapinfo(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is the swap file path of the buffer {expr}.
- * For the use of {expr}, see |bufname()| above.
- * If buffer {expr} is the current buffer, the result is equal to
+ * For the use of {buf}, see |bufname()| above.
+ * If buffer {buf} is the current buffer, the result is equal to
  * |:swapname| (unless there is no swap file).
- * If buffer {expr} has no swap file, returns an empty string.
+ * If buffer {buf} has no swap file, returns an empty string.
  * Can also be used as a |method|:
  * 	GetBufname()->swapname()
  */
-export function swapname(denops: Denops, expr: unknown): Promise<unknown>;
+export function swapname(denops: Denops, buf: unknown): Promise<unknown>;
 export function swapname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("swapname", ...args);
 }
@@ -7543,7 +7753,7 @@ export function swapname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * line.  'synmaxcol' applies, in a longer line zero is returned.
  * Note that when the position is after the last character,
  * that's where the cursor can be in Insert mode, synID() returns
- * zero.
+ * zero.  {lnum} is used like with |getline()|.
  * When {trans} is |TRUE|, transparent items are reduced to the
  * item that they reveal.  This is useful when wanting to know
  * the effective color.  When {trans} is |FALSE|, the transparent
@@ -7635,7 +7845,7 @@ export function synIDtrans(
  * The result is a |List| with currently three items:
  * 1. The first item in the list is 0 if the character at the
  *    position {lnum} and {col} is not part of a concealable
- *    region, 1 if it is.
+ *    region, 1 if it is.  {lnum} is used like with |getline()|.
  * 2. The second item in the list is a string. If the first item
  *    is 1, the second item contains the text which will be
  *    displayed in place of the concealed text, depending on the
@@ -7670,8 +7880,9 @@ export function synconcealed(
 
 /**
  * Return a |List|, which is the stack of syntax items at the
- * position {lnum} and {col} in the current window.  Each item in
- * the List is an ID like what |synID()| returns.
+ * position {lnum} and {col} in the current window.  {lnum} is
+ * used like with |getline()|.  Each item in the List is an ID
+ * like what |synID()| returns.
  * The first item in the List is the outer region, following are
  * items contained in that one.  The last one is what |synID()|
  * returns, unless not the whole item is highlighted or it is a
@@ -8438,10 +8649,12 @@ export function win_getid(
  * Return the type of the window:
  * 	"autocmd"	autocommand window. Temporary window
  * 			used to execute autocommands.
- * 	"popup"		popup window |popup|
- * 	"preview"	preview window |preview-window|
  * 	"command"	command-line window |cmdwin|
  * 	(empty)		normal window
+ * 	"loclist"	|location-list-window|
+ * 	"popup"		popup window |popup|
+ * 	"preview"	preview window |preview-window|
+ * 	"quickfix"	|quickfix-window|
  * 	"unknown"	window {nr} not found
  * When {nr} is omitted return the type of the current window.
  * When {nr} is given return the type of this window by number or
@@ -8508,7 +8721,7 @@ export function win_id2win(
  * [1, 1], unless there is a tabline, then it is [2, 1].
  * {nr} can be the window number or the |window-ID|.  Use zero
  * for the current window.
- * Return [0, 0] if the window cannot be found in the current
+ * Returns [0, 0] if the window cannot be found in the current
  * tabpage.
  * Can also be used as a |method|:
  * 	GetWinid()->win_screenpos()

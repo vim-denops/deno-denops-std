@@ -309,6 +309,40 @@ export const termpastefilter = {
 };
 
 /**
+ * This option specifies a function to be used for thesaurus completion
+ * with CTRL-X CTRL-T. |i_CTRL-X_CTRL-T| See |compl-thesaurusfunc|.
+ */
+export const thesaurusfunc = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "thesaurusfunc") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "thesaurusfunc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "thesaurusfunc");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "thesaurusfunc") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "thesaurusfunc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "thesaurusfunc");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "thesaurusfunc") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "thesaurusfunc", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "thesaurusfunc");
+  },
+};
+
+/**
  * Enables pseudo-transparency for a floating window. Valid values are in
  * the range of 0 for fully opaque window (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.

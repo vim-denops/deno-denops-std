@@ -40,8 +40,8 @@ export function chanclose(
  * it writes to Nvim's stdout.  Returns the number of bytes
  * written if the write succeeded, 0 otherwise.
  * See |channel-bytes| for more information.
- * {data} may be a string, string convertible, or a list.  If
- * {data} is a list, the items will be joined by newlines; any
+ * {data} may be a string, string convertible, |Blob|, or a list.
+ * If {data} is a list, the items will be joined by newlines; any
  * newlines in an item will be sent as NUL. To send a final
  * newline, include a final empty string. Example:
  * 	:call chansend(id, ["abc", "123\n456", ""])
@@ -177,16 +177,16 @@ export function dictwatcherdel(
 
 /**
  * Returns a |String| which is a unique identifier of the
- * container type (|List|, |Dict| and |Partial|). It is
+ * container type (|List|, |Dict|, |Blob| and |Partial|). It is
  * guaranteed that for the mentioned types `id(v1) ==# id(v2)`
  * returns true iff `type(v1) == type(v2) && v1 is v2`.
- * Note that |v:_null_string|, |v:_null_list|, and |v:_null_dict|
- * have the same `id()` with different types because they are
- * internally represented as a NULL pointers.  `id()` returns a
- * hexadecimal representanion of the pointers to the containers
- * (i.e. like `0x994a40`), same as `printf("%p", {expr})`,
- * but it is advised against counting on the exact format of
- * return value.
+ * Note that |v:_null_string|, |v:_null_list|, |v:_null_dict| and
+ * |v:_null_blob| have the same `id()` with different types
+ * because they are internally represented as NULL pointers.
+ * `id()` returns a hexadecimal representanion of the pointers to
+ * the containers (i.e. like `0x994a40`), same as `printf("%p",
+ * {expr})`, but it is advised against counting on the exact
+ * format of the return value.
  * It is not guaranteed that `id(no_longer_existing_container)`
  * will not be equal to some other `id()`: new containers may
  * reuse identifiers of the garbage-collected ones.
@@ -279,6 +279,9 @@ export function jobresize(
  * 	      before invoking `on_stderr`. |channel-buffered|
  *   stdout_buffered: (boolean) Collect data until EOF (stream
  * 	      closed) before invoking `on_stdout`. |channel-buffered|
+ *   stdin:      (string) Either "pipe" (default) to connect the
+ * 	      job's stdin to a channel or "null" to disconnect
+ * 	      stdin.
  *   width:      (number) Width of the `pty` terminal.
  * {opts} is passed as |self| dictionary to the callback; the
  * caller may set other keys to pass application-specific data.
@@ -314,8 +317,8 @@ export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Waits for jobs and their |on_exit| handlers to complete.
  * {jobs} is a List of |job-id|s to wait for.
- * {timeout} is the maximum waiting time in milliseconds, -1
- * means forever.
+ * {timeout} is the maximum waiting time in milliseconds. If
+ * omitted or -1, wait forever.
  * Timeout of 0 can be used to check the status of a job:
  * 	let running = jobwait([{job-id}], 0)[0] == -1
  * During jobwait() callbacks for jobs not in the {jobs} list may
@@ -380,27 +383,34 @@ export function jobwait(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function menu_get(
   denops: Denops,
   path: unknown,
-  modes: unknown,
+  modes?: unknown,
 ): Promise<unknown>;
 export function menu_get(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("menu_get", ...args);
 }
 
 /**
- * Convert a list of VimL objects to msgpack. Returned value is
- * |readfile()|-style list. Example:
+ * Convert a list of VimL objects to msgpack. Returned value is a
+ * |readfile()|-style list. When {type} contains "B", a |Blob| is
+ * returned instead. Example:
  * 	call writefile(msgpackdump([{}]), 'fname.mpack', 'b')
- * This will write the single 0x80 byte to `fname.mpack` file
+ * or, using a |Blob|:
+ * 	call writefile(msgpackdump([{}], 'B'), 'fname.mpack')
+ * This will write the single 0x80 byte to a `fname.mpack` file
  * (dictionary with zero items is represented by 0x80 byte in
  * messagepack).
  * Limitations:
  * 1. |Funcref|s cannot be dumped.
  * 2. Containers that reference themselves cannot be dumped.
  * 3. Dictionary keys are always dumped as STR strings.
- * 4. Other strings are always dumped as BIN strings.
+ * 4. Other strings and |Blob|s are always dumped as BIN strings.
  * 5. Points 3. and 4. do not apply to |msgpack-special-dict|s.
  */
-export function msgpackdump(denops: Denops, list: unknown): Promise<unknown>;
+export function msgpackdump(
+  denops: Denops,
+  list: unknown,
+  type?: unknown,
+): Promise<unknown>;
 export function msgpackdump(
   denops: Denops,
   ...args: unknown[]
@@ -409,7 +419,8 @@ export function msgpackdump(
 }
 
 /**
- * Convert a |readfile()|-style list to a list of VimL objects.
+ * Convert a |readfile()|-style list or a |Blob| to a list of
+ * VimL objects.
  * Example:
  * 	let fname = expand('~/.config/nvim/shada/main.shada')
  * 	let mpack = readfile(fname, 'b')
@@ -418,7 +429,7 @@ export function msgpackdump(
  * `shada_objects` list.
  * Limitations:
  * 1. Mapping ordering is not preserved unless messagepack
- *    mapping is dumped using generic  mapping
+ *    mapping is dumped using generic mapping
  *    (|msgpack-special-map|).
  * 2. Since the parser aims to preserve all data untouched
  *    (except for 1.) some strings are parsed to
@@ -459,9 +470,9 @@ export function msgpackdump(
  * 	zero byte or if string is a mapping key and mapping is
  * 	being represented as special dictionary for other
  * 	reasons.
- * binary	|readfile()|-style list of strings. This value will
- * 	appear in |msgpackparse()| output if binary string
- * 	contains zero byte.
+ * binary	|String|, or |Blob| if binary string contains zero
+ * 	byte. This value cannot appear in |msgpackparse()|
+ * 	output since blobs were introduced.
  * array	|List|. This value cannot appear in |msgpackparse()|
  * 	output.
  * map	|List| of |List|s with two items (key and value) each.
@@ -476,7 +487,7 @@ export function msgpackdump(
  * 	representing extension type. Second is
  * 	|readfile()|-style list of strings.
  */
-export function msgpackparse(denops: Denops, list: unknown): Promise<unknown>;
+export function msgpackparse(denops: Denops, data: unknown): Promise<unknown>;
 export function msgpackparse(
   denops: Denops,
   ...args: unknown[]
@@ -594,7 +605,7 @@ export function serverstop(
  * Use |chansend()| to send data over a bytes socket, and
  * |rpcrequest()| and |rpcnotify()| to communicate with a RPC
  * socket.
- * {opts} is a dictionary with these keys:
+ * {opts} is an optional dictionary with these keys:
  *   |on_data| : callback invoked when data was read from socket
  *   data_buffered : read socket data in |channel-buffered| mode.
  *   rpc     : If set, |msgpack-rpc| will be used to communicate
@@ -607,7 +618,7 @@ export function sockconnect(
   denops: Denops,
   mode: unknown,
   address: unknown,
-  opts: unknown,
+  opts?: unknown,
 ): Promise<unknown>;
 export function sockconnect(
   denops: Denops,
@@ -730,6 +741,30 @@ export function nvim__get_lib_dir(
 }
 
 /**
+ * Find files in runtime directories
+ * Attributes: ~
+ *     {fast}
+ * Parameters: ~
+ *     {pat}      pattern of files to search for
+ *     {all}      whether to return all matches or only the first
+ *     {options}  is_lua: only search lua subdirs
+ * Return: ~
+ *     list of absolute paths to the found files
+ */
+export function nvim__get_runtime(
+  denops: Denops,
+  pat: unknown,
+  all: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim__get_runtime(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim__get_runtime", ...args);
+}
+
+/**
  * Returns object given as argument.
  * This API function is used for testing. One should not rely on
  * its presence in plugins.
@@ -811,6 +846,17 @@ export function nvim__inspect_cell(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim__inspect_cell", ...args);
+}
+
+/**
+ * TODO: Documentation
+ */
+export function nvim__runtime_inspect(denops: Denops): Promise<unknown>;
+export function nvim__runtime_inspect(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim__runtime_inspect", ...args);
 }
 
 /**
@@ -900,53 +946,6 @@ export function nvim_call_atomic(
 }
 
 /**
- * Calls a VimL |Dictionary-function| with the given arguments.
- * On execution error: fails with VimL error, does not update
- * v:errmsg.
- * Parameters: ~
- *     {dict}  Dictionary, or String evaluating to a VimL |self|
- *             dict
- *     {fn}    Name of the function defined on the VimL dict
- *     {args}  Function arguments packed in an Array
- * Return: ~
- *     Result of the function call
- */
-export function nvim_call_dict_function(
-  denops: Denops,
-  dict: unknown,
-  fn: unknown,
-  args: unknown,
-): Promise<unknown>;
-export function nvim_call_dict_function(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_call_dict_function", ...args);
-}
-
-/**
- * Calls a VimL function with the given arguments.
- * On execution error: fails with VimL error, does not update
- * v:errmsg.
- * Parameters: ~
- *     {fn}    Function to call
- *     {args}  Function arguments packed in an Array
- * Return: ~
- *     Result of the function call
- */
-export function nvim_call_function(
-  denops: Denops,
-  fn: unknown,
-  args: unknown,
-): Promise<unknown>;
-export function nvim_call_function(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_call_function", ...args);
-}
-
-/**
  * Send data to channel `id` . For a job, it writes it to the
  * stdin of the process. For the stdio channel |channel-stdio|,
  * it writes to Nvim's stdout. For an internal terminal instance
@@ -973,26 +972,6 @@ export function nvim_chan_send(
 }
 
 /**
- * Executes an ex-command.
- * On execution error: fails with VimL error, does not update
- * v:errmsg.
- * Parameters: ~
- *     {command}  Ex-command string
- * See also: ~
- *     |nvim_exec()|
- */
-export function nvim_command(
-  denops: Denops,
-  command: unknown,
-): Promise<unknown>;
-export function nvim_command(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_command", ...args);
-}
-
-/**
  * Creates a new, empty, unnamed buffer.
  * Parameters: ~
  *     {listed}   Sets 'buflisted'
@@ -1014,30 +993,6 @@ export function nvim_create_buf(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_create_buf", ...args);
-}
-
-/**
- * Creates a new namespace, or gets an existing one.
- * Namespaces are used for buffer highlights and virtual text,
- * see |nvim_buf_add_highlight()| and
- * |nvim_buf_set_virtual_text()|.
- * Namespaces can be named or anonymous. If `name` matches an
- * existing namespace, the associated id is returned. If `name`
- * is an empty string a new, anonymous namespace is created.
- * Parameters: ~
- *     {name}  Namespace name or empty string
- * Return: ~
- *     Namespace id
- */
-export function nvim_create_namespace(
-  denops: Denops,
-  name: unknown,
-): Promise<unknown>;
-export function nvim_create_namespace(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_create_namespace", ...args);
 }
 
 /**
@@ -1069,6 +1024,27 @@ export function nvim_del_keymap(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_del_keymap", ...args);
+}
+
+/**
+ * Deletes a uppercase/file named mark. See |mark-motions|.
+ * Note:
+ *     fails with error if a lowercase or buffer local named mark
+ *     is used.
+ * Parameters: ~
+ *     {name}  Mark name
+ * Return: ~
+ *     true if the mark was deleted, else false.
+ * See also: ~
+ *     |nvim_buf_del_mark()|
+ *     |nvim_get_mark()|
+ */
+export function nvim_del_mark(denops: Denops, name: unknown): Promise<unknown>;
+export function nvim_del_mark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_del_mark", ...args);
 }
 
 /**
@@ -1142,51 +1118,45 @@ export function nvim_err_writeln(
 }
 
 /**
- * Evaluates a VimL |expression|. Dictionaries and Lists are
- * recursively expanded.
- * On execution error: fails with VimL error, does not update
- * v:errmsg.
+ * Evaluates statusline string.
+ * Attributes: ~
+ *     {fast}
  * Parameters: ~
- *     {expr}  VimL expression string
+ *     {str}   Statusline string (see 'statusline').
+ *     {opts}  Optional parameters.
+ *             • winid: (number) |window-ID| of the window to use
+ *               as context for statusline.
+ *             • maxwidth: (number) Maximum width of statusline.
+ *             • fillchar: (string) Character to fill blank
+ *               spaces in the statusline (see 'fillchars').
+ *             • highlights: (boolean) Return highlight
+ *               information.
+ *             • use_tabline: (boolean) Evaluate tabline instead
+ *               of statusline. When |TRUE|, {winid} is ignored.
  * Return: ~
- *     Evaluation result or expanded object
+ *     Dictionary containing statusline information, with these
+ *     keys:
+ *     • str: (string) Characters that will be displayed on the
+ *       statusline.
+ *     • width: (number) Display width of the statusline.
+ *     • highlights: Array containing highlight information of
+ *       the statusline. Only included when the "highlights" key
+ *       in {opts} is |TRUE|. Each element of the array is a
+ *       |Dictionary| with these keys:
+ *       • start: (number) Byte index (0-based) of first
+ *         character that uses the highlight.
+ *       • group: (string) Name of highlight group.
  */
-export function nvim_eval(denops: Denops, expr: unknown): Promise<unknown>;
-export function nvim_eval(
+export function nvim_eval_statusline(
   denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_eval", ...args);
-}
-
-/**
- * Executes Vimscript (multiline block of Ex-commands), like
- * anonymous |:source|.
- * Unlike |nvim_command()| this function supports heredocs,
- * script-scope (s:), etc.
- * On execution error: fails with VimL error, does not update
- * v:errmsg.
- * Parameters: ~
- *     {src}     Vimscript code
- *     {output}  Capture and return all (non-error, non-shell
- *               |:!|) output
- * Return: ~
- *     Output (non-error, non-shell |:!|) if `output` is true,
- *     else empty string.
- * See also: ~
- *     |execute()|
- *     |nvim_command()|
- */
-export function nvim_exec(
-  denops: Denops,
-  src: unknown,
-  output: unknown,
+  str: unknown,
+  opts: unknown,
 ): Promise<unknown>;
-export function nvim_exec(
+export function nvim_eval_statusline(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("nvim_exec", ...args);
+  return denops.call("nvim_eval_statusline", ...args);
 }
 
 /**
@@ -1217,10 +1187,9 @@ export function nvim_exec_lua(
  * by `mode` flags. This is a blocking call, unlike
  * |nvim_input()|.
  * On execution error: does not fail, but updates v:errmsg.
- * If you need to input sequences like <C-o> use
- * |nvim_replace_termcodes| to replace the termcodes and then
- * pass the resulting string to nvim_feedkeys. You'll also want
- * to enable escape_csi.
+ * To input sequences like <C-o> use |nvim_replace_termcodes()|
+ * (typically with escape_csi=true) to replace |keycodes|, then
+ * pass the result to nvim_feedkeys().
  * Example:
  *     :let key = nvim_replace_termcodes("<C-o>", v:true, v:false, v:true)
  *     :call nvim_feedkeys(key, 'n', v:true)
@@ -1278,29 +1247,30 @@ export function nvim_get_api_info(
 }
 
 /**
- * Get information about a channel.
+ * Gets information about a channel.
  * Return: ~
  *     Dictionary describing a channel, with these keys:
- *     • "stream" the stream underlying the channel
+ *     • "id" Channel id.
+ *     • "argv" (optional) Job arguments list.
+ *     • "stream" Stream underlying the channel.
  *       • "stdio" stdin and stdout of this Nvim instance
  *       • "stderr" stderr of this Nvim instance
  *       • "socket" TCP/IP socket or named pipe
- *       • "job" job with communication over its stdio
- *     • "mode" how data received on the channel is interpreted
- *       • "bytes" send and receive raw bytes
- *       • "terminal" a |terminal| instance interprets ASCII
- *         sequences
- *       • "rpc" |RPC| communication on the channel is active
- *     • "pty" Name of pseudoterminal, if one is used (optional).
- *       On a POSIX system, this will be a device path like
- *       /dev/pts/1. Even if the name is unknown, the key will
- *       still be present to indicate a pty is used. This is
- *       currently the case when using winpty on windows.
- *     • "buffer" buffer with connected |terminal| instance
- *       (optional)
- *     • "client" information about the client on the other end
- *       of the RPC channel, if it has added it using
- *       |nvim_set_client_info()|. (optional)
+ *       • "job" Job with communication over its stdio.
+ *     • "mode" How data received on the channel is interpreted.
+ *       • "bytes" Send and receive raw bytes.
+ *       • "terminal" |terminal| instance interprets ASCII
+ *         sequences.
+ *       • "rpc" |RPC| communication on the channel is active.
+ *     • "pty" (optional) Name of pseudoterminal. On a POSIX
+ *       system this is a device path like "/dev/pts/1". If the
+ *       name is unknown, the key will still be present if a pty
+ *       is used (e.g. for winpty on Windows).
+ *     • "buffer" (optional) Buffer with connected |terminal|
+ *       instance.
+ *     • "client" (optional) Info about the peer (client on the
+ *       other end of the RPC channel), if provided by it via
+ *       |nvim_set_client_info()|.
  */
 export function nvim_get_chan_info(
   denops: Denops,
@@ -1524,6 +1494,35 @@ export function nvim_get_keymap(
 }
 
 /**
+ * Return a tuple (row, col, buffer, buffername) representing the
+ * position of the uppercase/file named mark. See |mark-motions|.
+ * Marks are (1,0)-indexed. |api-indexing|
+ * Note:
+ *     fails with error if a lowercase or buffer local named mark
+ *     is used.
+ * Parameters: ~
+ *     {name}  Mark name
+ *     {opts}  Optional parameters. Reserved for future use.
+ * Return: ~
+ *     4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if
+ *     the mark is not set.
+ * See also: ~
+ *     |nvim_buf_set_mark()|
+ *     |nvim_del_mark()|
+ */
+export function nvim_get_mark(
+  denops: Denops,
+  name: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_get_mark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_get_mark", ...args);
+}
+
+/**
  * Gets the current mode. |mode()| "blocking" is true if Nvim is
  * waiting for input.
  * Return: ~
@@ -1537,19 +1536,6 @@ export function nvim_get_mode(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_get_mode", ...args);
-}
-
-/**
- * Gets existing, non-anonymous namespaces.
- * Return: ~
- *     dict that maps from names to namespace ids.
- */
-export function nvim_get_namespaces(denops: Denops): Promise<unknown>;
-export function nvim_get_namespaces(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_get_namespaces", ...args);
 }
 
 /**
@@ -1638,9 +1624,6 @@ export function nvim_get_proc_children(
  * search pattern for subdirectories regardless of platform.
  * It is not an error to not find any files. An empty array is
  * returned then.
- * To find a directory, `name` must end with a forward slash,
- * like "rplugin/python/". Without the slash it would instead
- * look for an ordinary file called "rplugin/python".
  * Attributes: ~
  *     {fast}
  * Parameters: ~
@@ -1729,7 +1712,7 @@ export function nvim_input(
  *     intermediate mouse positions will be ignored. It should be
  *     used to implement real-time mouse input in a GUI. The
  *     deprecated pseudokey form ("<LeftMouse><col,row>") of
- *     |nvim_input()| has the same limitiation.
+ *     |nvim_input()| has the same limitation.
  * Attributes: ~
  *     {fast}
  * Parameters: ~
@@ -1872,7 +1855,7 @@ export function nvim_load_context(
 /**
  * Notify the user with a message
  * Relays the call to vim.notify . By default forwards your
- * message in the echo area but can be overriden to trigger
+ * message in the echo area but can be overridden to trigger
  * desktop notifications.
  * Parameters: ~
  *     {msg}        Message to display to the user
@@ -1897,18 +1880,26 @@ export function nvim_notify(
  * By default (and currently the only option) the terminal will
  * not be connected to an external process. Instead, input send
  * on the channel will be echoed directly by the terminal. This
- * is useful to disply ANSI terminal sequences returned as part
+ * is useful to display ANSI terminal sequences returned as part
  * of a rpc message, or similar.
  * Note: to directly initiate the terminal using the right size,
  * display the buffer in a configured window before calling this.
  * For instance, for a floating display, first create an empty
  * buffer using |nvim_create_buf()|, then display it using
  * |nvim_open_win()|, and then call this function. Then
- * |nvim_chan_send()| cal be called immediately to process
+ * |nvim_chan_send()| can be called immediately to process
  * sequences in a virtual terminal having the intended size.
  * Parameters: ~
  *     {buffer}  the buffer to use (expected to be empty)
- *     {opts}    Optional parameters. Reserved for future use.
+ *     {opts}    Optional parameters.
+ *               • on_input: lua callback for input sent, i e
+ *                 keypresses in terminal mode. Note: keypresses
+ *                 are sent raw as they would be to the pty
+ *                 master end. For instance, a carriage return is
+ *                 sent as a "\r", not as a "\n". |textlock|
+ *                 applies. It is possible to call
+ *                 |nvim_chan_send| directly in the callback
+ *                 however. ["input", term, bufnr, data]
  * Return: ~
  *     Channel id, or 0 on error
  */
@@ -1925,152 +1916,6 @@ export function nvim_open_term(
 }
 
 /**
- * Open a new window.
- * Currently this is used to open floating and external windows.
- * Floats are windows that are drawn above the split layout, at
- * some anchor position in some other window. Floats can be drawn
- * internally or by external GUI with the |ui-multigrid|
- * extension. External windows are only supported with multigrid
- * GUIs, and are displayed as separate top-level windows.
- * For a general overview of floats, see |api-floatwin|.
- * Exactly one of `external` and `relative` must be specified.
- * The `width` and `height` of the new window must be specified.
- * With relative=editor (row=0,col=0) refers to the top-left
- * corner of the screen-grid and (row=Lines-1,col=Columns-1)
- * refers to the bottom-right corner. Fractional values are
- * allowed, but the builtin implementation (used by non-multigrid
- * UIs) will always round down to nearest integer.
- * Out-of-bounds values, and configurations that make the float
- * not fit inside the main editor, are allowed. The builtin
- * implementation truncates values so floats are fully within the
- * main screen grid. External GUIs could let floats hover outside
- * of the main window like a tooltip, but this should not be used
- * to specify arbitrary WM screen positions.
- * Example (Lua): window-relative float
- *     vim.api.nvim_open_win(0, false,
- *       {relative='win', row=3, col=3, width=12, height=3})
- * Example (Lua): buffer-relative float (travels as buffer is
- * scrolled)
- *     vim.api.nvim_open_win(0, false,
- *       {relative='win', width=12, height=3, bufpos={100,10}})
- * Attributes: ~
- *     not allowed when |textlock| is active
- * Parameters: ~
- *     {buffer}  Buffer to display, or 0 for current buffer
- *     {enter}   Enter the window (make it the current window)
- *     {config}  Map defining the window configuration. Keys:
- *               • `relative`: Sets the window layout to "floating", placed
- *                 at (row,col) coordinates relative to:
- *                 • "editor" The global editor grid
- *                 • "win" Window given by the `win` field, or
- *                   current window.
- *                 • "cursor" Cursor position in current window.
- *               • `win` : |window-ID| for relative="win".
- *               • `anchor`: Decides which corner of the float to place
- *                 at (row,col):
- *                 • "NW" northwest (default)
- *                 • "NE" northeast
- *                 • "SW" southwest
- *                 • "SE" southeast
- *               • `width` : Window width (in character cells).
- *                 Minimum of 1.
- *               • `height` : Window height (in character cells).
- *                 Minimum of 1.
- *               • `bufpos` : Places float relative to buffer
- *                 text (only when relative="win"). Takes a tuple
- *                 of zero-indexed [line, column]. `row` and
- *                 `col` if given are applied relative to this
- *                 position, else they default to `row=1` and
- *                 `col=0` (thus like a tooltip near the buffer
- *                 text).
- *               • `row` : Row position in units of "screen cell
- *                 height", may be fractional.
- *               • `col` : Column position in units of "screen
- *                 cell width", may be fractional.
- *               • `focusable` : Enable focus by user actions
- *                 (wincmds, mouse events). Defaults to true.
- *                 Non-focusable windows can be entered by
- *                 |nvim_set_current_win()|.
- *               • `external` : GUI should display the window as
- *                 an external top-level window. Currently
- *                 accepts no other positioning configuration
- *                 together with this.
- *               • `zindex`: Stacking order. floats with higher`zindex`go on top on floats with lower indices. Must
- *                 be larger than zero. The following screen
- *                 elements have hard-coded z-indices:
- *                 • 100: insert completion popupmenu
- *                 • 200: message scrollback
- *                 • 250: cmdline completion popupmenu (when
- *                   wildoptions+=pum) The default value for
- *                   floats are 50. In general, values below 100
- *                   are recommended, unless there is a good
- *                   reason to overshadow builtin elements.
- *               • `style`: Configure the appearance of the window.
- *                 Currently only takes one non-empty value:
- *                 • "minimal" Nvim will display the window with
- *                   many UI options disabled. This is useful
- *                   when displaying a temporary float where the
- *                   text should not be edited. Disables
- *                   'number', 'relativenumber', 'cursorline',
- *                   'cursorcolumn', 'foldcolumn', 'spell' and
- *                   'list' options. 'signcolumn' is changed to
- *                   `auto` and 'colorcolumn' is cleared. The
- *                   end-of-buffer region is hidden by setting
- *                   `eob` flag of 'fillchars' to a space char,
- *                   and clearing the |EndOfBuffer| region in
- *                   'winhighlight'.
- *               • `border`: Style of (optional) window border. This can
- *                 either be a string or an array. The string
- *                 values are
- *                 • "none": No border (default).
- *                 • "single": A single line box.
- *                 • "double": A double line box.
- *                 • "rounded": Like "single", but with rounded
- *                   corners ("╭" etc.).
- *                 • "solid": Adds padding by a single whitespace
- *                   cell.
- *                 • "shadow": A drop shadow effect by blending
- *                   with the background.
- *                 • If it is an array, it should have a length
- *                   of eight or any divisor of eight. The array
- *                   will specifify the eight chars building up
- *                   the border in a clockwise fashion starting
- *                   with the top-left corner. As an example, the
- *                   double box style could be specified as [
- *                   "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ]. If
- *                   the number of chars are less than eight,
- *                   they will be repeated. Thus an ASCII border
- *                   could be specified as [ "/", "-", "\\", "|"
- *                   ], or all chars the same as [ "x" ]. An
- *                   empty string can be used to turn off a
- *                   specific border, for instance, [ "", "", "",
- *                   ">", "", "", "", "<" ] will only make
- *                   vertical borders but not horizontal ones. By
- *                   default, `FloatBorder` highlight is used,
- *                   which links to `VertSplit` when not defined.
- *                   It could also be specified by character: [
- *                   {"+", "MyCorner"}, {"x", "MyBorder"} ].
- *               • `noautocmd` : If true then no buffer-related
- *                 autocommand events such as |BufEnter|,
- *                 |BufLeave| or |BufWinEnter| may fire from
- *                 calling this function.
- * Return: ~
- *     Window handle, or 0 on error
- */
-export function nvim_open_win(
-  denops: Denops,
-  buffer: unknown,
-  enter: unknown,
-  config: unknown,
-): Promise<unknown>;
-export function nvim_open_win(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_open_win", ...args);
-}
-
-/**
  * Writes a message to the Vim output buffer. Does not append
  * "\n", the message is buffered (won't display) until a linefeed
  * is written.
@@ -2083,109 +1928,6 @@ export function nvim_out_write(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_out_write", ...args);
-}
-
-/**
- * Parse a VimL expression.
- * Attributes: ~
- *     {fast}
- * Parameters: ~
- *     {expr}       Expression to parse. Always treated as a
- *                  single line.
- *     {flags}      Flags:
- *                  • "m" if multiple expressions in a row are
- *                    allowed (only the first one will be
- *                    parsed),
- *                  • "E" if EOC tokens are not allowed
- *                    (determines whether they will stop parsing
- *                    process or be recognized as an
- *                    operator/space, though also yielding an
- *                    error).
- *                  • "l" when needing to start parsing with
- *                    lvalues for ":let" or ":for". Common flag
- *                    sets:
- *                  • "m" to parse like for ":echo".
- *                  • "E" to parse like for "<C-r>=".
- *                  • empty string for ":call".
- *                  • "lm" to parse for ":let".
- *     {highlight}  If true, return value will also include
- *                  "highlight" key containing array of 4-tuples
- *                  (arrays) (Integer, Integer, Integer, String),
- *                  where first three numbers define the
- *                  highlighted region and represent line,
- *                  starting column and ending column (latter
- *                  exclusive: one should highlight region
- *                  [start_col, end_col)).
- * Return: ~
- *     • AST: top-level dictionary with these keys:
- *       • "error": Dictionary with error, present only if parser
- *         saw some error. Contains the following keys:
- *         • "message": String, error message in printf format,
- *           translated. Must contain exactly one "%.*s".
- *         • "arg": String, error message argument.
- *       • "len": Amount of bytes successfully parsed. With flags
- *         equal to "" that should be equal to the length of expr
- *         string. (“Sucessfully parsed” here means “participated
- *         in AST creation”, not “till the first error”.)
- *       • "ast": AST, either nil or a dictionary with these
- *         keys:
- *         • "type": node type, one of the value names from
- *           ExprASTNodeType stringified without "kExprNode"
- *           prefix.
- *         • "start": a pair [line, column] describing where node
- *           is "started" where "line" is always 0 (will not be 0
- *           if you will be using nvim_parse_viml() on e.g.
- *           ":let", but that is not present yet). Both elements
- *           are Integers.
- *         • "len": “length” of the node. This and "start" are
- *           there for debugging purposes primary (debugging
- *           parser and providing debug information).
- *         • "children": a list of nodes described in top/"ast".
- *           There always is zero, one or two children, key will
- *           not be present if node has no children. Maximum
- *           number of children may be found in node_maxchildren
- *           array.
- *     • Local values (present only for certain nodes):
- *       • "scope": a single Integer, specifies scope for
- *         "Option" and "PlainIdentifier" nodes. For "Option" it
- *         is one of ExprOptScope values, for "PlainIdentifier"
- *         it is one of ExprVarScope values.
- *       • "ident": identifier (without scope, if any), present
- *         for "Option", "PlainIdentifier", "PlainKey" and
- *         "Environment" nodes.
- *       • "name": Integer, register name (one character) or -1.
- *         Only present for "Register" nodes.
- *       • "cmp_type": String, comparison type, one of the value
- *         names from ExprComparisonType, stringified without
- *         "kExprCmp" prefix. Only present for "Comparison"
- *         nodes.
- *       • "ccs_strategy": String, case comparison strategy, one
- *         of the value names from ExprCaseCompareStrategy,
- *         stringified without "kCCStrategy" prefix. Only present
- *         for "Comparison" nodes.
- *       • "augmentation": String, augmentation type for
- *         "Assignment" nodes. Is either an empty string, "Add",
- *         "Subtract" or "Concat" for "=", "+=", "-=" or ".="
- *         respectively.
- *       • "invert": Boolean, true if result of comparison needs
- *         to be inverted. Only present for "Comparison" nodes.
- *       • "ivalue": Integer, integer value for "Integer" nodes.
- *       • "fvalue": Float, floating-point value for "Float"
- *         nodes.
- *       • "svalue": String, value for "SingleQuotedString" and
- *         "DoubleQuotedString" nodes.
- */
-export function nvim_parse_expression(
-  denops: Denops,
-  expr: unknown,
-  flags: unknown,
-  highlight: unknown,
-): Promise<unknown>;
-export function nvim_parse_expression(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_parse_expression", ...args);
 }
 
 /**
@@ -2477,66 +2219,13 @@ export function nvim_set_current_win(
 }
 
 /**
- * Set or change decoration provider for a namespace
- * This is a very general purpose interface for having lua
- * callbacks being triggered during the redraw code.
- * The expected usage is to set extmarks for the currently
- * redrawn buffer. |nvim_buf_set_extmark| can be called to add
- * marks on a per-window or per-lines basis. Use the `ephemeral`
- * key to only use the mark for the current screen redraw (the
- * callback will be called again for the next redraw ).
- * Note: this function should not be called often. Rather, the
- * callbacks themselves can be used to throttle unneeded
- * callbacks. the `on_start` callback can return `false` to
- * disable the provider until the next redraw. Similarily, return
- * `false` in `on_win` will skip the `on_lines` calls for that
- * window (but any extmarks set in `on_win` will still be used).
- * A plugin managing multiple sources of decoration should
- * ideally only set one provider, and merge the sources
- * internally. You can use multiple `ns_id` for the extmarks
- * set/modified inside the callback anyway.
- * Note: doing anything other than setting extmarks is considered
- * experimental. Doing things like changing options are not
- * expliticly forbidden, but is likely to have unexpected
- * consequences (such as 100% CPU consumption). doing
- * `vim.rpcnotify` should be OK, but `vim.rpcrequest` is quite
- * dubious for the moment.
- * Parameters: ~
- *     {ns_id}  Namespace id from |nvim_create_namespace()|
- *     {opts}   Callbacks invoked during redraw:
- *              • on_start: called first on each screen redraw
- *                ["start", tick]
- *              • on_buf: called for each buffer being redrawn
- *                (before window callbacks) ["buf", bufnr, tick]
- *              • on_win: called when starting to redraw a
- *                specific window. ["win", winid, bufnr, topline,
- *                botline_guess]
- *              • on_line: called for each buffer line being
- *                redrawn. (The interation with fold lines is
- *                subject to change) ["win", winid, bufnr, row]
- *              • on_end: called at the end of a redraw cycle
- *                ["end", tick]
- */
-export function nvim_set_decoration_provider(
-  denops: Denops,
-  ns_id: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_set_decoration_provider(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_set_decoration_provider", ...args);
-}
-
-/**
  * Set a highlight group.
  * TODO: ns_id = 0, should modify :highlight namespace TODO val
  * should take update vs reset flag
  * Parameters: ~
  *     {ns_id}  number of namespace for this highlight
  *     {name}   highlight group name, like ErrorMsg
- *     {val}    highlight definiton map, like
+ *     {val}    highlight definition map, like
  *              |nvim_get_hl_by_name|. in addition the following
  *              keys are also recognized: `default` : don't
  *              override existing definition, like `hi default`
@@ -2698,6 +2387,225 @@ export function nvim_unsubscribe(
 }
 
 /**
+ * Calls a VimL |Dictionary-function| with the given arguments.
+ * On execution error: fails with VimL error, does not update
+ * v:errmsg.
+ * Parameters: ~
+ *     {dict}  Dictionary, or String evaluating to a VimL |self|
+ *             dict
+ *     {fn}    Name of the function defined on the VimL dict
+ *     {args}  Function arguments packed in an Array
+ * Return: ~
+ *     Result of the function call
+ */
+export function nvim_call_dict_function(
+  denops: Denops,
+  dict: unknown,
+  fn: unknown,
+  args: unknown,
+): Promise<unknown>;
+export function nvim_call_dict_function(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_call_dict_function", ...args);
+}
+
+/**
+ * Calls a VimL function with the given arguments.
+ * On execution error: fails with VimL error, does not update
+ * v:errmsg.
+ * Parameters: ~
+ *     {fn}    Function to call
+ *     {args}  Function arguments packed in an Array
+ * Return: ~
+ *     Result of the function call
+ */
+export function nvim_call_function(
+  denops: Denops,
+  fn: unknown,
+  args: unknown,
+): Promise<unknown>;
+export function nvim_call_function(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_call_function", ...args);
+}
+
+/**
+ * Executes an ex-command.
+ * On execution error: fails with VimL error, does not update
+ * v:errmsg.
+ * Parameters: ~
+ *     {command}  Ex-command string
+ * See also: ~
+ *     |nvim_exec()|
+ */
+export function nvim_command(
+  denops: Denops,
+  command: unknown,
+): Promise<unknown>;
+export function nvim_command(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_command", ...args);
+}
+
+/**
+ * Evaluates a VimL |expression|. Dictionaries and Lists are
+ * recursively expanded.
+ * On execution error: fails with VimL error, does not update
+ * v:errmsg.
+ * Parameters: ~
+ *     {expr}  VimL expression string
+ * Return: ~
+ *     Evaluation result or expanded object
+ */
+export function nvim_eval(denops: Denops, expr: unknown): Promise<unknown>;
+export function nvim_eval(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_eval", ...args);
+}
+
+/**
+ * Executes Vimscript (multiline block of Ex-commands), like
+ * anonymous |:source|.
+ * Unlike |nvim_command()| this function supports heredocs,
+ * script-scope (s:), etc.
+ * On execution error: fails with VimL error, does not update
+ * v:errmsg.
+ * Parameters: ~
+ *     {src}     Vimscript code
+ *     {output}  Capture and return all (non-error, non-shell
+ *               |:!|) output
+ * Return: ~
+ *     Output (non-error, non-shell |:!|) if `output` is true,
+ *     else empty string.
+ * See also: ~
+ *     |execute()|
+ *     |nvim_command()|
+ */
+export function nvim_exec(
+  denops: Denops,
+  src: unknown,
+  output: unknown,
+): Promise<unknown>;
+export function nvim_exec(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_exec", ...args);
+}
+
+/**
+ * Parse a VimL expression.
+ * Attributes: ~
+ *     {fast}
+ * Parameters: ~
+ *     {expr}       Expression to parse. Always treated as a
+ *                  single line.
+ *     {flags}      Flags:
+ *                  • "m" if multiple expressions in a row are
+ *                    allowed (only the first one will be
+ *                    parsed),
+ *                  • "E" if EOC tokens are not allowed
+ *                    (determines whether they will stop parsing
+ *                    process or be recognized as an
+ *                    operator/space, though also yielding an
+ *                    error).
+ *                  • "l" when needing to start parsing with
+ *                    lvalues for ":let" or ":for". Common flag
+ *                    sets:
+ *                  • "m" to parse like for ":echo".
+ *                  • "E" to parse like for "<C-r>=".
+ *                  • empty string for ":call".
+ *                  • "lm" to parse for ":let".
+ *     {highlight}  If true, return value will also include
+ *                  "highlight" key containing array of 4-tuples
+ *                  (arrays) (Integer, Integer, Integer, String),
+ *                  where first three numbers define the
+ *                  highlighted region and represent line,
+ *                  starting column and ending column (latter
+ *                  exclusive: one should highlight region
+ *                  [start_col, end_col)).
+ * Return: ~
+ *     • AST: top-level dictionary with these keys:
+ *       • "error": Dictionary with error, present only if parser
+ *         saw some error. Contains the following keys:
+ *         • "message": String, error message in printf format,
+ *           translated. Must contain exactly one "%.*s".
+ *         • "arg": String, error message argument.
+ *       • "len": Amount of bytes successfully parsed. With flags
+ *         equal to "" that should be equal to the length of expr
+ *         string. (“Successfully parsed” here means
+ *         “participated in AST creation”, not “till the first
+ *         error”.)
+ *       • "ast": AST, either nil or a dictionary with these
+ *         keys:
+ *         • "type": node type, one of the value names from
+ *           ExprASTNodeType stringified without "kExprNode"
+ *           prefix.
+ *         • "start": a pair [line, column] describing where node
+ *           is "started" where "line" is always 0 (will not be 0
+ *           if you will be using nvim_parse_viml() on e.g.
+ *           ":let", but that is not present yet). Both elements
+ *           are Integers.
+ *         • "len": “length” of the node. This and "start" are
+ *           there for debugging purposes primary (debugging
+ *           parser and providing debug information).
+ *         • "children": a list of nodes described in top/"ast".
+ *           There always is zero, one or two children, key will
+ *           not be present if node has no children. Maximum
+ *           number of children may be found in node_maxchildren
+ *           array.
+ *     • Local values (present only for certain nodes):
+ *       • "scope": a single Integer, specifies scope for
+ *         "Option" and "PlainIdentifier" nodes. For "Option" it
+ *         is one of ExprOptScope values, for "PlainIdentifier"
+ *         it is one of ExprVarScope values.
+ *       • "ident": identifier (without scope, if any), present
+ *         for "Option", "PlainIdentifier", "PlainKey" and
+ *         "Environment" nodes.
+ *       • "name": Integer, register name (one character) or -1.
+ *         Only present for "Register" nodes.
+ *       • "cmp_type": String, comparison type, one of the value
+ *         names from ExprComparisonType, stringified without
+ *         "kExprCmp" prefix. Only present for "Comparison"
+ *         nodes.
+ *       • "ccs_strategy": String, case comparison strategy, one
+ *         of the value names from ExprCaseCompareStrategy,
+ *         stringified without "kCCStrategy" prefix. Only present
+ *         for "Comparison" nodes.
+ *       • "augmentation": String, augmentation type for
+ *         "Assignment" nodes. Is either an empty string, "Add",
+ *         "Subtract" or "Concat" for "=", "+=", "-=" or ".="
+ *         respectively.
+ *       • "invert": Boolean, true if result of comparison needs
+ *         to be inverted. Only present for "Comparison" nodes.
+ *       • "ivalue": Integer, integer value for "Integer" nodes.
+ *       • "fvalue": Float, floating-point value for "Float"
+ *         nodes.
+ *       • "svalue": String, value for "SingleQuotedString" and
+ *         "DoubleQuotedString" nodes.
+ */
+export function nvim_parse_expression(
+  denops: Denops,
+  expr: unknown,
+  flags: unknown,
+  highlight: unknown,
+): Promise<unknown>;
+export function nvim_parse_expression(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_parse_expression", ...args);
+}
+
+/**
  * TODO: Documentation
  */
 export function nvim__buf_redraw_range(
@@ -2728,57 +2636,6 @@ export function nvim__buf_stats(
 }
 
 /**
- * Adds a highlight to buffer.
- * Useful for plugins that dynamically generate highlights to a
- * buffer (like a semantic highlighter or linter). The function
- * adds a single highlight to a buffer. Unlike |matchaddpos()|
- * highlights follow changes to line numbering (as lines are
- * inserted/removed above the highlighted line), like signs and
- * marks do.
- * Namespaces are used for batch deletion/updating of a set of
- * highlights. To create a namespace, use
- * |nvim_create_namespace()| which returns a namespace id. Pass
- * it in to this function as `ns_id` to add highlights to the
- * namespace. All highlights in the same namespace can then be
- * cleared with single call to |nvim_buf_clear_namespace()|. If
- * the highlight never will be deleted by an API call, pass
- * `ns_id = -1` .
- * As a shorthand, `ns_id = 0` can be used to create a new
- * namespace for the highlight, the allocated id is then
- * returned. If `hl_group` is the empty string no highlight is
- * added, but a new `ns_id` is still returned. This is supported
- * for backwards compatibility, new code should use
- * |nvim_create_namespace()| to create a new empty namespace.
- * Parameters: ~
- *     {buffer}     Buffer handle, or 0 for current buffer
- *     {ns_id}      namespace to use or -1 for ungrouped
- *                  highlight
- *     {hl_group}   Name of the highlight group to use
- *     {line}       Line to highlight (zero-indexed)
- *     {col_start}  Start of (byte-indexed) column range to
- *                  highlight
- *     {col_end}    End of (byte-indexed) column range to
- *                  highlight, or -1 to highlight to end of line
- * Return: ~
- *     The ns_id that was used
- */
-export function nvim_buf_add_highlight(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  hl_group: unknown,
-  line: unknown,
-  col_start: unknown,
-  col_end: unknown,
-): Promise<unknown>;
-export function nvim_buf_add_highlight(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_add_highlight", ...args);
-}
-
-/**
  * Activates buffer-update events on a channel, or as Lua
  * callbacks.
  * Example (Lua): capture buffer updates in a global `events` variable (use "print(vim.inspect(events))" to see its
@@ -2796,7 +2653,7 @@ export function nvim_buf_add_highlight(
  *                    callbacks.
  *     {opts}         Optional parameters.
  *                    • on_lines: Lua callback invoked on change.
- *                      Return`true`to detach. Args:
+ *                      Return `true` to detach. Args:
  *                      • the string "lines"
  *                      • buffer handle
  *                      • b:changedtick
@@ -2811,7 +2668,7 @@ export function nvim_buf_add_highlight(
  *                    • on_bytes: lua callback invoked on change.
  *                      This callback receives more granular
  *                      information about the change compared to
- *                      on_lines. Return`true`to detach. Args:
+ *                      on_lines. Return `true` to detach. Args:
  *                      • the string "bytes"
  *                      • buffer handle
  *                      • b:changedtick
@@ -2873,7 +2730,7 @@ export function nvim_buf_attach(
  * switched If a window inside the current tabpage (including a
  * float) already shows the buffer One of these windows will be
  * set as current window temporarily. Otherwise a temporary
- * scratch window (calleed the "autocmd window" for historical
+ * scratch window (called the "autocmd window" for historical
  * reasons) will be used.
  * This is useful e.g. to call vimL functions that only work with
  * the current buffer/window currently, like |termopen()|.
@@ -2898,55 +2755,6 @@ export function nvim_buf_call(
 }
 
 /**
- * Clears namespaced objects (highlights, extmarks, virtual text)
- * from a region.
- * Lines are 0-indexed. |api-indexing| To clear the namespace in
- * the entire buffer, specify line_start=0 and line_end=-1.
- * Parameters: ~
- *     {buffer}      Buffer handle, or 0 for current buffer
- *     {ns_id}       Namespace to clear, or -1 to clear all
- *                   namespaces.
- *     {line_start}  Start of range of lines to clear
- *     {line_end}    End of range of lines to clear (exclusive)
- *                   or -1 to clear to end of buffer.
- */
-export function nvim_buf_clear_namespace(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  line_start: unknown,
-  line_end: unknown,
-): Promise<unknown>;
-export function nvim_buf_clear_namespace(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_clear_namespace", ...args);
-}
-
-/**
- * Removes an extmark.
- * Parameters: ~
- *     {buffer}  Buffer handle, or 0 for current buffer
- *     {ns_id}   Namespace id from |nvim_create_namespace()|
- *     {id}      Extmark id
- * Return: ~
- *     true if the extmark was found, else false
- */
-export function nvim_buf_del_extmark(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  id: unknown,
-): Promise<unknown>;
-export function nvim_buf_del_extmark(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_del_extmark", ...args);
-}
-
-/**
  * Unmaps a buffer-local |mapping| for the given mode.
  * Parameters: ~
  *     {buffer}  Buffer handle, or 0 for current buffer
@@ -2964,6 +2772,32 @@ export function nvim_buf_del_keymap(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_buf_del_keymap", ...args);
+}
+
+/**
+ * Deletes a named mark in the buffer. See |mark-motions|.
+ * Note:
+ *     only deletes marks set in the buffer, if the mark is not
+ *     set in the buffer it will return false.
+ * Parameters: ~
+ *     {buffer}  Buffer to set the mark on
+ *     {name}    Mark name
+ * Return: ~
+ *     true if the mark was deleted, else false.
+ * See also: ~
+ *     |nvim_buf_set_mark()|
+ *     |nvim_del_mark()|
+ */
+export function nvim_buf_del_mark(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
+): Promise<unknown>;
+export function nvim_buf_del_mark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_del_mark", ...args);
 }
 
 /**
@@ -3069,86 +2903,6 @@ export function nvim_buf_get_commands(
 }
 
 /**
- * Returns position for a given extmark id
- * Parameters: ~
- *     {buffer}  Buffer handle, or 0 for current buffer
- *     {ns_id}   Namespace id from |nvim_create_namespace()|
- *     {id}      Extmark id
- *     {opts}    Optional parameters. Keys:
- *               • details: Whether to include the details dict
- * Return: ~
- *     (row, col) tuple or empty list () if extmark id was absent
- */
-export function nvim_buf_get_extmark_by_id(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  id: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_buf_get_extmark_by_id(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_get_extmark_by_id", ...args);
-}
-
-/**
- *             Gets extmarks in "traversal order" from a |charwise| region
- *             defined by buffer positions (inclusive, 0-indexed
- *             |api-indexing|).
- *             Region can be given as (row,col) tuples, or valid extmark ids
- *             (whose positions define the bounds). 0 and -1 are understood
- *             as (0,0) and (-1,-1) respectively, thus the following are
- *             equivalent:
- * nvim_buf_get_extmarks(0, my_ns, 0, -1, {})
- * nvim_buf_get_extmarks(0, my_ns, [0,0], [-1,-1], {})
- *             If `end` is less than `start` , traversal works backwards.
- *             (Useful with `limit` , to get the first marks prior to a given
- *             position.)
- *             Example:
- * local a   = vim.api
- * local pos = a.nvim_win_get_cursor(0)
- * local ns  = a.nvim_create_namespace('my-plugin')
- * -- Create new extmark at line 1, column 1.
- * local m1  = a.nvim_buf_set_extmark(0, ns, 0, 0, 0, {})
- * -- Create new extmark at line 3, column 1.
- * local m2  = a.nvim_buf_set_extmark(0, ns, 0, 2, 0, {})
- * -- Get extmarks only from line 3.
- * local ms  = a.nvim_buf_get_extmarks(0, ns, {2,0}, {2,0}, {})
- * -- Get all marks in this buffer + namespace.
- * local all = a.nvim_buf_get_extmarks(0, ns, 0, -1, {})
- * print(vim.inspect(ms))
- *             Parameters: ~
- *                 {buffer}  Buffer handle, or 0 for current buffer
- *                 {ns_id}   Namespace id from |nvim_create_namespace()|
- *                 {start}   Start of range, given as (row, col) or valid
- *                           extmark id (whose position defines the bound)
- *                 {end}     End of range, given as (row, col) or valid
- *                           extmark id (whose position defines the bound)
- *                 {opts}    Optional parameters. Keys:
- *                           • limit: Maximum number of marks to return
- *                           • details Whether to include the details dict
- *             Return: ~
- *                 List of [extmark_id, row, col] tuples in "traversal
- *                 order".
- */
-export function nvim_buf_get_extmarks(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  start: unknown,
-  end: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_buf_get_extmarks(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_get_extmarks", ...args);
-}
-
-/**
  * Gets a list of buffer-local |mapping| definitions.
  * Parameters: ~
  *     {mode}    Mode short-name ("n", "i", "v", ...)
@@ -3200,14 +2954,18 @@ export function nvim_buf_get_lines(
 }
 
 /**
- * Return a tuple (row,col) representing the position of the
- * named mark.
+ * Returns a tuple (row,col) representing the position of the
+ * named mark. See |mark-motions|.
  * Marks are (1,0)-indexed. |api-indexing|
  * Parameters: ~
  *     {buffer}  Buffer handle, or 0 for current buffer
  *     {name}    Mark name
  * Return: ~
- *     (row, col) tuple
+ *     (row, col) tuple, (0, 0) if the mark is not set, or is an
+ *     uppercase/file mark set in another buffer.
+ * See also: ~
+ *     |nvim_buf_set_mark()|
+ *     |nvim_buf_del_mark()|
  */
 export function nvim_buf_get_mark(
   denops: Denops,
@@ -3365,93 +3123,6 @@ export function nvim_buf_line_count(
 }
 
 /**
- * Creates or updates an extmark.
- * To create a new extmark, pass id=0. The extmark id will be
- * returned. To move an existing mark, pass its id.
- * It is also allowed to create a new mark by passing in a
- * previously unused id, but the caller must then keep track of
- * existing and unused ids itself. (Useful over RPC, to avoid
- * waiting for the return value.)
- * Using the optional arguments, it is possible to use this to
- * highlight a range of text, and also to associate virtual text
- * to the mark.
- * Parameters: ~
- *     {buffer}  Buffer handle, or 0 for current buffer
- *     {ns_id}   Namespace id from |nvim_create_namespace()|
- *     {line}    Line where to place the mark, 0-based
- *     {col}     Column where to place the mark, 0-based
- *     {opts}    Optional parameters.
- *               • id : id of the extmark to edit.
- *               • end_line : ending line of the mark, 0-based
- *                 inclusive.
- *               • end_col : ending col of the mark, 0-based
- *                 exclusive.
- *               • hl_group : name of the highlight group used to
- *                 highlight this mark.
- *               • virt_text : virtual text to link to this mark.
- *               • virt_text_pos : positioning of virtual text.
- *                 Possible values:
- *                 • "eol": right after eol character (default)
- *                 • "overlay": display over the specified
- *                   column, without shifting the underlying
- *                   text.
- *                 • "right_align": display right aligned in the
- *                   window.
- *               • virt_text_win_col : position the virtual text
- *                 at a fixed window column (starting from the
- *                 first text column)
- *               • virt_text_hide : hide the virtual text when
- *                 the background text is selected or hidden due
- *                 to horizontal scroll 'nowrap'
- *               • hl_mode : control how highlights are combined
- *                 with the highlights of the text. Currently
- *                 only affects virt_text highlights, but might
- *                 affect`hl_group`in later versions.
- *                 • "replace": only show the virt_text color.
- *                   This is the default
- *                 • "combine": combine with background text
- *                   color
- *                 • "blend": blend with background text color.
- *               • hl_eol : when true, for a multiline highlight
- *                 covering the EOL of a line, continue the
- *                 highlight for the rest of the screen line
- *                 (just like for diff and cursorline highlight).
- *               • ephemeral : for use with
- *                 |nvim_set_decoration_provider| callbacks. The
- *                 mark will only be used for the current redraw
- *                 cycle, and not be permantently stored in the
- *                 buffer.
- *               • right_gravity : boolean that indicates the
- *                 direction the extmark will be shifted in when
- *                 new text is inserted (true for right, false
- *                 for left). defaults to true.
- *               • end_right_gravity : boolean that indicates the
- *                 direction the extmark end position (if it
- *                 exists) will be shifted in when new text is
- *                 inserted (true for right, false for left).
- *                 Defaults to false.
- *               • priority: a priority value for the highlight
- *                 group. For example treesitter highlighting
- *                 uses a value of 100.
- * Return: ~
- *     Id of the created/updated extmark
- */
-export function nvim_buf_set_extmark(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  line: unknown,
-  col: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_buf_set_extmark(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_set_extmark", ...args);
-}
-
-/**
  * Sets a buffer-local |mapping| for the given mode.
  * Parameters: ~
  *     {buffer}  Buffer handle, or 0 for current buffer
@@ -3510,6 +3181,39 @@ export function nvim_buf_set_lines(
 }
 
 /**
+ * Sets a named mark in the given buffer, all marks are allowed
+ * file/uppercase, visual, last change, etc. See |mark-motions|.
+ * Marks are (1,0)-indexed. |api-indexing|
+ * Note:
+ *     Passing 0 as line deletes the mark
+ * Parameters: ~
+ *     {buffer}  Buffer to set the mark on
+ *     {name}    Mark name
+ *     {line}    Line number
+ *     {col}     Column/row number
+ *     {opts}    Optional parameters. Reserved for future use.
+ * Return: ~
+ *     true if the mark was set, else false.
+ * See also: ~
+ *     |nvim_buf_del_mark()|
+ *     |nvim_buf_get_mark()|
+ */
+export function nvim_buf_set_mark(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
+  line: unknown,
+  col: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_buf_set_mark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_set_mark", ...args);
+}
+
+/**
  * Sets the full file name for a buffer
  * Parameters: ~
  *     {buffer}  Buffer handle, or 0 for current buffer
@@ -3562,7 +3266,7 @@ export function nvim_buf_set_option(
  * Parameters: ~
  *     {buffer}        Buffer handle, or 0 for current buffer
  *     {start_row}     First line index
- *     {start_column}  Last column
+ *     {start_column}  First column
  *     {end_row}       Last line index
  *     {end_column}    Last column
  *     {replacement}   Array of lines to use as replacement
@@ -3604,50 +3308,390 @@ export function nvim_buf_set_var(
 }
 
 /**
- * Set the virtual text (annotation) for a buffer line.
- * By default (and currently the only option) the text will be
- * placed after the buffer text. Virtual text will never cause
- * reflow, rather virtual text will be truncated at the end of
- * the screen line. The virtual text will begin one cell
- * (|lcs-eol| or space) after the ordinary text.
- * Namespaces are used to support batch deletion/updating of
- * virtual text. To create a namespace, use
- * |nvim_create_namespace()|. Virtual text is cleared using
- * |nvim_buf_clear_namespace()|. The same `ns_id` can be used for
- * both virtual text and highlights added by
- * |nvim_buf_add_highlight()|, both can then be cleared with a
- * single call to |nvim_buf_clear_namespace()|. If the virtual
- * text never will be cleared by an API call, pass `ns_id = -1` .
+ * Adds a highlight to buffer.
+ * Useful for plugins that dynamically generate highlights to a
+ * buffer (like a semantic highlighter or linter). The function
+ * adds a single highlight to a buffer. Unlike |matchaddpos()|
+ * highlights follow changes to line numbering (as lines are
+ * inserted/removed above the highlighted line), like signs and
+ * marks do.
+ * Namespaces are used for batch deletion/updating of a set of
+ * highlights. To create a namespace, use
+ * |nvim_create_namespace()| which returns a namespace id. Pass
+ * it in to this function as `ns_id` to add highlights to the
+ * namespace. All highlights in the same namespace can then be
+ * cleared with single call to |nvim_buf_clear_namespace()|. If
+ * the highlight never will be deleted by an API call, pass
+ * `ns_id = -1` .
  * As a shorthand, `ns_id = 0` can be used to create a new
- * namespace for the virtual text, the allocated id is then
- * returned.
+ * namespace for the highlight, the allocated id is then
+ * returned. If `hl_group` is the empty string no highlight is
+ * added, but a new `ns_id` is still returned. This is supported
+ * for backwards compatibility, new code should use
+ * |nvim_create_namespace()| to create a new empty namespace.
  * Parameters: ~
- *     {buffer}  Buffer handle, or 0 for current buffer
- *     {ns_id}   Namespace to use or 0 to create a namespace, or
- *               -1 for a ungrouped annotation
- *     {line}    Line to annotate with virtual text
- *               (zero-indexed)
- *     {chunks}  A list of [text, hl_group] arrays, each
- *               representing a text chunk with specified
- *               highlight. `hl_group` element can be omitted for
- *               no highlight.
- *     {opts}    Optional parameters. Currently not used.
+ *     {buffer}     Buffer handle, or 0 for current buffer
+ *     {ns_id}      namespace to use or -1 for ungrouped
+ *                  highlight
+ *     {hl_group}   Name of the highlight group to use
+ *     {line}       Line to highlight (zero-indexed)
+ *     {col_start}  Start of (byte-indexed) column range to
+ *                  highlight
+ *     {col_end}    End of (byte-indexed) column range to
+ *                  highlight, or -1 to highlight to end of line
  * Return: ~
  *     The ns_id that was used
  */
-export function nvim_buf_set_virtual_text(
+export function nvim_buf_add_highlight(
   denops: Denops,
   buffer: unknown,
-  src_id: unknown,
+  ns_id: unknown,
+  hl_group: unknown,
   line: unknown,
-  chunks: unknown,
-  opts: unknown,
+  col_start: unknown,
+  col_end: unknown,
 ): Promise<unknown>;
-export function nvim_buf_set_virtual_text(
+export function nvim_buf_add_highlight(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("nvim_buf_set_virtual_text", ...args);
+  return denops.call("nvim_buf_add_highlight", ...args);
+}
+
+/**
+ * Clears namespaced objects (highlights, extmarks, virtual text)
+ * from a region.
+ * Lines are 0-indexed. |api-indexing| To clear the namespace in
+ * the entire buffer, specify line_start=0 and line_end=-1.
+ * Parameters: ~
+ *     {buffer}      Buffer handle, or 0 for current buffer
+ *     {ns_id}       Namespace to clear, or -1 to clear all
+ *                   namespaces.
+ *     {line_start}  Start of range of lines to clear
+ *     {line_end}    End of range of lines to clear (exclusive)
+ *                   or -1 to clear to end of buffer.
+ */
+export function nvim_buf_clear_namespace(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  line_start: unknown,
+  line_end: unknown,
+): Promise<unknown>;
+export function nvim_buf_clear_namespace(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_clear_namespace", ...args);
+}
+
+/**
+ * Removes an extmark.
+ * Parameters: ~
+ *     {buffer}  Buffer handle, or 0 for current buffer
+ *     {ns_id}   Namespace id from |nvim_create_namespace()|
+ *     {id}      Extmark id
+ * Return: ~
+ *     true if the extmark was found, else false
+ */
+export function nvim_buf_del_extmark(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  id: unknown,
+): Promise<unknown>;
+export function nvim_buf_del_extmark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_del_extmark", ...args);
+}
+
+/**
+ * Gets the position (0-indexed) of an extmark.
+ * Parameters: ~
+ *     {buffer}  Buffer handle, or 0 for current buffer
+ *     {ns_id}   Namespace id from |nvim_create_namespace()|
+ *     {id}      Extmark id
+ *     {opts}    Optional parameters. Keys:
+ *               • details: Whether to include the details dict
+ * Return: ~
+ *     0-indexed (row, col) tuple or empty list () if extmark id
+ *     was absent
+ */
+export function nvim_buf_get_extmark_by_id(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  id: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_buf_get_extmark_by_id(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_get_extmark_by_id", ...args);
+}
+
+/**
+ *             Gets extmarks in "traversal order" from a |charwise| region
+ *             defined by buffer positions (inclusive, 0-indexed
+ *             |api-indexing|).
+ *             Region can be given as (row,col) tuples, or valid extmark ids
+ *             (whose positions define the bounds). 0 and -1 are understood
+ *             as (0,0) and (-1,-1) respectively, thus the following are
+ *             equivalent:
+ * nvim_buf_get_extmarks(0, my_ns, 0, -1, {})
+ * nvim_buf_get_extmarks(0, my_ns, [0,0], [-1,-1], {})
+ *             If `end` is less than `start` , traversal works backwards.
+ *             (Useful with `limit` , to get the first marks prior to a given
+ *             position.)
+ *             Example:
+ * local a   = vim.api
+ * local pos = a.nvim_win_get_cursor(0)
+ * local ns  = a.nvim_create_namespace('my-plugin')
+ * -- Create new extmark at line 1, column 1.
+ * local m1  = a.nvim_buf_set_extmark(0, ns, 0, 0, 0, {})
+ * -- Create new extmark at line 3, column 1.
+ * local m2  = a.nvim_buf_set_extmark(0, ns, 0, 2, 0, {})
+ * -- Get extmarks only from line 3.
+ * local ms  = a.nvim_buf_get_extmarks(0, ns, {2,0}, {2,0}, {})
+ * -- Get all marks in this buffer + namespace.
+ * local all = a.nvim_buf_get_extmarks(0, ns, 0, -1, {})
+ * print(vim.inspect(ms))
+ *             Parameters: ~
+ *                 {buffer}  Buffer handle, or 0 for current buffer
+ *                 {ns_id}   Namespace id from |nvim_create_namespace()|
+ *                 {start}   Start of range: a 0-indexed (row, col) or valid
+ *                           extmark id (whose position defines the bound).
+ *                           |api-indexing|
+ *                 {end}     End of range (inclusive): a 0-indexed (row, col)
+ *                           or valid extmark id (whose position defines the
+ *                           bound). |api-indexing|
+ *                 {opts}    Optional parameters. Keys:
+ *                           • limit: Maximum number of marks to return
+ *                           • details Whether to include the details dict
+ *             Return: ~
+ *                 List of [extmark_id, row, col] tuples in "traversal
+ *                 order".
+ */
+export function nvim_buf_get_extmarks(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  start: unknown,
+  end: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_buf_get_extmarks(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_get_extmarks", ...args);
+}
+
+/**
+ * Creates or updates an extmark.
+ * To create a new extmark, pass id=0. The extmark id will be
+ * returned. To move an existing mark, pass its id.
+ * It is also allowed to create a new mark by passing in a
+ * previously unused id, but the caller must then keep track of
+ * existing and unused ids itself. (Useful over RPC, to avoid
+ * waiting for the return value.)
+ * Using the optional arguments, it is possible to use this to
+ * highlight a range of text, and also to associate virtual text
+ * to the mark.
+ * Parameters: ~
+ *     {buffer}  Buffer handle, or 0 for current buffer
+ *     {ns_id}   Namespace id from |nvim_create_namespace()|
+ *     {line}    Line where to place the mark, 0-based.
+ *               |api-indexing|
+ *     {col}     Column where to place the mark, 0-based.
+ *               |api-indexing|
+ *     {opts}    Optional parameters.
+ *               • id : id of the extmark to edit.
+ *               • end_line : ending line of the mark, 0-based
+ *                 inclusive.
+ *               • end_col : ending col of the mark, 0-based
+ *                 exclusive.
+ *               • hl_group : name of the highlight group used to
+ *                 highlight this mark.
+ *               • hl_eol : when true, for a multiline highlight
+ *                 covering the EOL of a line, continue the
+ *                 highlight for the rest of the screen line
+ *                 (just like for diff and cursorline highlight).
+ *               • virt_text : virtual text to link to this mark.
+ *                 A list of [text, highlight] tuples, each
+ *                 representing a text chunk with specified
+ *                 highlight. `highlight` element can either be a
+ *                 a single highlight group, or an array of
+ *                 multiple highlight groups that will be stacked
+ *                 (highest priority last). A highlight group can
+ *                 be supplied either as a string or as an
+ *                 integer, the latter which can be obtained
+ *                 using |nvim_get_hl_id_by_name|.
+ *               • virt_text_pos : position of virtual text.
+ *                 Possible values:
+ *                 • "eol": right after eol character (default)
+ *                 • "overlay": display over the specified
+ *                   column, without shifting the underlying
+ *                   text.
+ *                 • "right_align": display right aligned in the
+ *                   window.
+ *               • virt_text_win_col : position the virtual text
+ *                 at a fixed window column (starting from the
+ *                 first text column)
+ *               • virt_text_hide : hide the virtual text when
+ *                 the background text is selected or hidden due
+ *                 to horizontal scroll 'nowrap'
+ *               • hl_mode : control how highlights are combined
+ *                 with the highlights of the text. Currently
+ *                 only affects virt_text highlights, but might
+ *                 affect `hl_group` in later versions.
+ *                 • "replace": only show the virt_text color.
+ *                   This is the default
+ *                 • "combine": combine with background text
+ *                   color
+ *                 • "blend": blend with background text color.
+ *               • virt_lines : virtual lines to add next to this
+ *                 mark This should be an array over lines, where
+ *                 each line in turn is an array over [text,
+ *                 highlight] tuples. In general, buffer and
+ *                 window options do not affect the display of
+ *                 the text. In particular 'wrap' and 'linebreak'
+ *                 options do not take effect, so the number of
+ *                 extra screen lines will always match the size
+ *                 of the array. However the 'tabstop' buffer
+ *                 option is still used for hard tabs. By default
+ *                 lines are placed below the buffer line
+ *                 containing the mark.
+ *               • virt_lines_above: place virtual lines above
+ *                 instead.
+ *               • virt_lines_leftcol: Place extmarks in the
+ *                 leftmost column of the window, bypassing sign
+ *                 and number columns.
+ *               • ephemeral : for use with
+ *                 |nvim_set_decoration_provider| callbacks. The
+ *                 mark will only be used for the current redraw
+ *                 cycle, and not be permantently stored in the
+ *                 buffer.
+ *               • right_gravity : boolean that indicates the
+ *                 direction the extmark will be shifted in when
+ *                 new text is inserted (true for right, false
+ *                 for left). defaults to true.
+ *               • end_right_gravity : boolean that indicates the
+ *                 direction the extmark end position (if it
+ *                 exists) will be shifted in when new text is
+ *                 inserted (true for right, false for left).
+ *                 Defaults to false.
+ *               • priority: a priority value for the highlight
+ *                 group. For example treesitter highlighting
+ *                 uses a value of 100.
+ * Return: ~
+ *     Id of the created/updated extmark
+ */
+export function nvim_buf_set_extmark(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  line: unknown,
+  col: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_buf_set_extmark(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_buf_set_extmark", ...args);
+}
+
+/**
+ * Creates a new  or gets an existing one.
+ * Namespaces are used for buffer highlights and virtual text,
+ * see |nvim_buf_add_highlight()| and |nvim_buf_set_extmark()|.
+ * Namespaces can be named or anonymous. If `name` matches an
+ * existing namespace, the associated id is returned. If `name`
+ * is an empty string a new, anonymous namespace is created.
+ * Parameters: ~
+ *     {name}  Namespace name or empty string
+ * Return: ~
+ *     Namespace id
+ */
+export function nvim_create_namespace(
+  denops: Denops,
+  name: unknown,
+): Promise<unknown>;
+export function nvim_create_namespace(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_create_namespace", ...args);
+}
+
+/**
+ * Gets existing, non-anonymous namespaces.
+ * Return: ~
+ *     dict that maps from names to namespace ids.
+ */
+export function nvim_get_namespaces(denops: Denops): Promise<unknown>;
+export function nvim_get_namespaces(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_get_namespaces", ...args);
+}
+
+/**
+ * Set or change decoration provider for a namespace
+ * This is a very general purpose interface for having lua
+ * callbacks being triggered during the redraw code.
+ * The expected usage is to set extmarks for the currently
+ * redrawn buffer. |nvim_buf_set_extmark| can be called to add
+ * marks on a per-window or per-lines basis. Use the `ephemeral`
+ * key to only use the mark for the current screen redraw (the
+ * callback will be called again for the next redraw ).
+ * Note: this function should not be called often. Rather, the
+ * callbacks themselves can be used to throttle unneeded
+ * callbacks. the `on_start` callback can return `false` to
+ * disable the provider until the next redraw. Similarly, return
+ * `false` in `on_win` will skip the `on_lines` calls for that
+ * window (but any extmarks set in `on_win` will still be used).
+ * A plugin managing multiple sources of decoration should
+ * ideally only set one provider, and merge the sources
+ * internally. You can use multiple `ns_id` for the extmarks
+ * set/modified inside the callback anyway.
+ * Note: doing anything other than setting extmarks is considered
+ * experimental. Doing things like changing options are not
+ * expliticly forbidden, but is likely to have unexpected
+ * consequences (such as 100% CPU consumption). doing
+ * `vim.rpcnotify` should be OK, but `vim.rpcrequest` is quite
+ * dubious for the moment.
+ * Parameters: ~
+ *     {ns_id}  Namespace id from |nvim_create_namespace()|
+ *     {opts}   Callbacks invoked during redraw:
+ *              • on_start: called first on each screen redraw
+ *                ["start", tick]
+ *              • on_buf: called for each buffer being redrawn
+ *                (before window callbacks) ["buf", bufnr, tick]
+ *              • on_win: called when starting to redraw a
+ *                specific window. ["win", winid, bufnr, topline,
+ *                botline_guess]
+ *              • on_line: called for each buffer line being
+ *                redrawn. (The interaction with fold lines is
+ *                subject to change) ["win", winid, bufnr, row]
+ *              • on_end: called at the end of a redraw cycle
+ *                ["end", tick]
+ */
+export function nvim_set_decoration_provider(
+  denops: Denops,
+  ns_id: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_set_decoration_provider(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_set_decoration_provider", ...args);
 }
 
 /**
@@ -3732,27 +3776,6 @@ export function nvim_win_get_buf(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_win_get_buf", ...args);
-}
-
-/**
- * Gets window configuration.
- * The returned value may be given to |nvim_open_win()|.
- * `relative` is empty for normal windows.
- * Parameters: ~
- *     {window}  Window handle, or 0 for current window
- * Return: ~
- *     Map defining the window configuration, see
- *     |nvim_open_win()|
- */
-export function nvim_win_get_config(
-  denops: Denops,
-  window: unknown,
-): Promise<unknown>;
-export function nvim_win_get_config(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_win_get_config", ...args);
 }
 
 /**
@@ -3967,32 +3990,6 @@ export function nvim_win_set_buf(
 }
 
 /**
- * Configures window layout. Currently only for floating and
- * external windows (including changing a split window to those
- * layouts).
- * When reconfiguring a floating window, absent option keys will
- * not be changed. `row` / `col` and `relative` must be
- * reconfigured together.
- * Parameters: ~
- *     {window}  Window handle, or 0 for current window
- *     {config}  Map defining the window configuration, see
- *               |nvim_open_win()|
- * See also: ~
- *     |nvim_open_win()|
- */
-export function nvim_win_set_config(
-  denops: Denops,
-  window: unknown,
-  config: unknown,
-): Promise<unknown>;
-export function nvim_win_set_config(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_win_set_config", ...args);
-}
-
-/**
  * Sets the (1,0)-indexed cursor position in the window.
  * |api-indexing|
  * Parameters: ~
@@ -4088,6 +4085,202 @@ export function nvim_win_set_width(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_win_set_width", ...args);
+}
+
+/**
+ * Open a new window.
+ * Currently this is used to open floating and external windows.
+ * Floats are windows that are drawn above the split layout, at
+ * some anchor position in some other window. Floats can be drawn
+ * internally or by external GUI with the |ui-multigrid|
+ * extension. External windows are only supported with multigrid
+ * GUIs, and are displayed as separate top-level windows.
+ * For a general overview of floats, see |api-floatwin|.
+ * Exactly one of `external` and `relative` must be specified.
+ * The `width` and `height` of the new window must be specified.
+ * With relative=editor (row=0,col=0) refers to the top-left
+ * corner of the screen-grid and (row=Lines-1,col=Columns-1)
+ * refers to the bottom-right corner. Fractional values are
+ * allowed, but the builtin implementation (used by non-multigrid
+ * UIs) will always round down to nearest integer.
+ * Out-of-bounds values, and configurations that make the float
+ * not fit inside the main editor, are allowed. The builtin
+ * implementation truncates values so floats are fully within the
+ * main screen grid. External GUIs could let floats hover outside
+ * of the main window like a tooltip, but this should not be used
+ * to specify arbitrary WM screen positions.
+ * Example (Lua): window-relative float
+ *     vim.api.nvim_open_win(0, false,
+ *       {relative='win', row=3, col=3, width=12, height=3})
+ * Example (Lua): buffer-relative float (travels as buffer is
+ * scrolled)
+ *     vim.api.nvim_open_win(0, false,
+ *       {relative='win', width=12, height=3, bufpos={100,10}})
+ * Attributes: ~
+ *     not allowed when |textlock| is active
+ * Parameters: ~
+ *     {buffer}  Buffer to display, or 0 for current buffer
+ *     {enter}   Enter the window (make it the current window)
+ *     {config}  Map defining the window configuration. Keys:
+ *               • relative: Sets the window layout to
+ *                 "floating", placed at (row,col) coordinates
+ *                 relative to:
+ *                 • "editor" The global editor grid
+ *                 • "win" Window given by the `win` field, or
+ *                   current window.
+ *                 • "cursor" Cursor position in current window.
+ *               • win: |window-ID| for relative="win".
+ *               • anchor: Decides which corner of the float to
+ *                 place at (row,col):
+ *                 • "NW" northwest (default)
+ *                 • "NE" northeast
+ *                 • "SW" southwest
+ *                 • "SE" southeast
+ *               • width: Window width (in character cells).
+ *                 Minimum of 1.
+ *               • height: Window height (in character cells).
+ *                 Minimum of 1.
+ *               • bufpos: Places float relative to buffer text
+ *                 (only when relative="win"). Takes a tuple of
+ *                 zero-indexed [line, column]. `row` and `col` if given are applied relative to this
+ *                 position, else they default to:
+ *                 • `row=1` and `col=0` if `anchor` is "NW" or
+ *                   "NE"
+ *                 • `row=0` and `col=0` if `anchor` is "SW" or
+ *                   "SE" (thus like a tooltip near the buffer
+ *                   text).
+ *               • row: Row position in units of "screen cell
+ *                 height", may be fractional.
+ *               • col: Column position in units of "screen cell
+ *                 width", may be fractional.
+ *               • focusable: Enable focus by user actions
+ *                 (wincmds, mouse events). Defaults to true.
+ *                 Non-focusable windows can be entered by
+ *                 |nvim_set_current_win()|.
+ *               • external: GUI should display the window as an
+ *                 external top-level window. Currently accepts
+ *                 no other positioning configuration together
+ *                 with this.
+ *               • zindex: Stacking order. floats with higher `zindex` go on top on floats with lower indices. Must
+ *                 be larger than zero. The following screen
+ *                 elements have hard-coded z-indices:
+ *                 • 100: insert completion popupmenu
+ *                 • 200: message scrollback
+ *                 • 250: cmdline completion popupmenu (when
+ *                   wildoptions+=pum) The default value for
+ *                   floats are 50. In general, values below 100
+ *                   are recommended, unless there is a good
+ *                   reason to overshadow builtin elements.
+ *               • style: Configure the appearance of the window.
+ *                 Currently only takes one non-empty value:
+ *                 • "minimal" Nvim will display the window with
+ *                   many UI options disabled. This is useful
+ *                   when displaying a temporary float where the
+ *                   text should not be edited. Disables
+ *                   'number', 'relativenumber', 'cursorline',
+ *                   'cursorcolumn', 'foldcolumn', 'spell' and
+ *                   'list' options. 'signcolumn' is changed to
+ *                   `auto` and 'colorcolumn' is cleared. The
+ *                   end-of-buffer region is hidden by setting
+ *                   `eob` flag of 'fillchars' to a space char,
+ *                   and clearing the |EndOfBuffer| region in
+ *                   'winhighlight'.
+ *               • border: Style of (optional) window border.
+ *                 This can either be a string or an array. The
+ *                 string values are
+ *                 • "none": No border (default).
+ *                 • "single": A single line box.
+ *                 • "double": A double line box.
+ *                 • "rounded": Like "single", but with rounded
+ *                   corners ("╭" etc.).
+ *                 • "solid": Adds padding by a single whitespace
+ *                   cell.
+ *                 • "shadow": A drop shadow effect by blending
+ *                   with the background.
+ *                 • If it is an array, it should have a length
+ *                   of eight or any divisor of eight. The array
+ *                   will specifify the eight chars building up
+ *                   the border in a clockwise fashion starting
+ *                   with the top-left corner. As an example, the
+ *                   double box style could be specified as [
+ *                   "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ]. If
+ *                   the number of chars are less than eight,
+ *                   they will be repeated. Thus an ASCII border
+ *                   could be specified as [ "/", "-", "\\", "|"
+ *                   ], or all chars the same as [ "x" ]. An
+ *                   empty string can be used to turn off a
+ *                   specific border, for instance, [ "", "", "",
+ *                   ">", "", "", "", "<" ] will only make
+ *                   vertical borders but not horizontal ones. By
+ *                   default, `FloatBorder` highlight is used,
+ *                   which links to `VertSplit` when not defined.
+ *                   It could also be specified by character: [
+ *                   {"+", "MyCorner"}, {"x", "MyBorder"} ].
+ *               • noautocmd: If true then no buffer-related
+ *                 autocommand events such as |BufEnter|,
+ *                 |BufLeave| or |BufWinEnter| may fire from
+ *                 calling this function.
+ * Return: ~
+ *     Window handle, or 0 on error
+ */
+export function nvim_open_win(
+  denops: Denops,
+  buffer: unknown,
+  enter: unknown,
+  config: unknown,
+): Promise<unknown>;
+export function nvim_open_win(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_open_win", ...args);
+}
+
+/**
+ * Gets window configuration.
+ * The returned value may be given to |nvim_open_win()|.
+ * `relative` is empty for normal windows.
+ * Parameters: ~
+ *     {window}  Window handle, or 0 for current window
+ * Return: ~
+ *     Map defining the window configuration, see
+ *     |nvim_open_win()|
+ */
+export function nvim_win_get_config(
+  denops: Denops,
+  window: unknown,
+): Promise<unknown>;
+export function nvim_win_get_config(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_win_get_config", ...args);
+}
+
+/**
+ * Configures window layout. Currently only for floating and
+ * external windows (including changing a split window to those
+ * layouts).
+ * When reconfiguring a floating window, absent option keys will
+ * not be changed. `row` / `col` and `relative` must be
+ * reconfigured together.
+ * Parameters: ~
+ *     {window}  Window handle, or 0 for current window
+ *     {config}  Map defining the window configuration, see
+ *               |nvim_open_win()|
+ * See also: ~
+ *     |nvim_open_win()|
+ */
+export function nvim_win_set_config(
+  denops: Denops,
+  window: unknown,
+  config: unknown,
+): Promise<unknown>;
+export function nvim_win_set_config(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("nvim_win_set_config", ...args);
 }
 
 /**
@@ -4389,9 +4582,15 @@ export function nvim_ui_try_resize(
  *  Buffer	enum value kObjectTypeBuffer		|bufnr()|
  *  Window	enum value kObjectTypeWindow		|window-ID|
  *  Tabpage	enum value kObjectTypeTabpage		internal handle
+ *    |nvim_get_mark()|
  *    |nvim_buf_get_mark()|
+ *    |nvim_buf_set_mark()|
  *    |nvim_win_get_cursor()|
  *    |nvim_win_set_cursor()|
+ *    |nvim_buf_del_extmark()|
+ *    |nvim_buf_get_extmark_by_id()|
+ *    |nvim_buf_get_extmarks()|
+ *    |nvim_buf_set_extmark()|
  * (version.api_prerelease && fn.since == version.api_level)
  *                        describing the return value and parameters.
  *  - Container types may be decorated with type/size constraints, e.g.
@@ -4490,14 +4689,46 @@ export function nvim_ui_try_resize(
  *    let win = nvim_open_win(buf, 0, opts)
  *    " optional: change highlight, otherwise Pmenu is used
  *    call nvim_win_set_option(win, 'winhl', 'Normal:MyHighlight')
+ *     f o o b a r      line contents
+ *     0 1 2 3 4 5      character positions (0-based)
+ *    0 1 2 3 4 5 6     extmark positions (0-based)
+ *     f o o|b a r      line (| = cursor)
+ *          3           extmark
+ *     f o o z|b a r    line (| = cursor)
+ *            4         extmark (after typing "z")
+ *     f o o z b a r|   line (| = cursor)
+ *                  7   extmark
+ *     f o o z b a r    first line
+ *                      extmarks (none present)
+ *     |                second line (| = cursor)
+ *     0                extmark (after typing <CR>)
+ *      01 2345678
+ *    0 ex|ample..
+ *        ^ extmark position
  *    let g:mark_ns = nvim_create_namespace('myplugin')
- *    let g:mark_id = nvim_buf_set_extmark(0, g:mark_ns, 0, 0, 2, {})
- *    echo nvim_buf_get_extmark_by_id(0, g:mark_ns, g:mark_id)
+ *    let g:mark_id = nvim_buf_set_extmark(0, g:mark_ns, 0, 2, {})
+ *    echo nvim_buf_get_extmark_by_id(0, g:mark_ns, g:mark_id, {})
  *    => [0, 2]
  *    echo nvim_buf_get_extmarks(0, g:mark_ns, 0, -1, {})
  *    => [[1, 0, 2]]
+ *      0 12345678
+ *    0 e|ample..
+ *       ^ extmark position
+ *    echo nvim_buf_get_extmark_by_id(0, g:mark_ns, g:mark_id, {})
+ *    => [0, 1]
+ *    Note: Extmark "gravity" decides how it will shift after a text edit.
+ *          See |nvim_buf_set_extmark()|
  *                TODO: Documentation
  *                TODO: Documentation
+ *                Find files in runtime directories
+ *                Attributes: ~
+ *                    {fast}
+ *                Parameters: ~
+ *                    {pat}      pattern of files to search for
+ *                    {all}      whether to return all matches or only the first
+ *                    {options}  is_lua: only search lua subdirs
+ *                Return: ~
+ *                    list of absolute paths to the found files
  *                Returns object given as argument.
  *                This API function is used for testing. One should not rely on
  *                its presence in plugins.
@@ -4526,6 +4757,7 @@ export function nvim_ui_try_resize(
  *                    {flt}  Value to return.
  *                Return: ~
  *                    its argument.
+ *                TODO: Documentation
  *                TODO: Documentation
  *                TODO: Documentation
  *                Attributes: ~
@@ -4564,24 +4796,6 @@ export function nvim_ui_try_resize(
  *                    error, the error type and the error message. If an error
  *                    occurred, the values from all preceding calls will still
  *                    be returned.
- *                Calls a VimL |Dictionary-function| with the given arguments.
- *                On execution error: fails with VimL error, does not update
- *                v:errmsg.
- *                Parameters: ~
- *                    {dict}  Dictionary, or String evaluating to a VimL |self|
- *                            dict
- *                    {fn}    Name of the function defined on the VimL dict
- *                    {args}  Function arguments packed in an Array
- *                Return: ~
- *                    Result of the function call
- *                Calls a VimL function with the given arguments.
- *                On execution error: fails with VimL error, does not update
- *                v:errmsg.
- *                Parameters: ~
- *                    {fn}    Function to call
- *                    {args}  Function arguments packed in an Array
- *                Return: ~
- *                    Result of the function call
  *                Send data to channel `id` . For a job, it writes it to the
  *                stdin of the process. For the stdio channel |channel-stdio|,
  *                it writes to Nvim's stdout. For an internal terminal instance
@@ -4594,13 +4808,6 @@ export function nvim_ui_try_resize(
  *                Parameters: ~
  *                    {chan}  id of the channel
  *                    {data}  data to write. 8-bit clean: can contain NUL bytes.
- *                Executes an ex-command.
- *                On execution error: fails with VimL error, does not update
- *                v:errmsg.
- *                Parameters: ~
- *                    {command}  Ex-command string
- *                See also: ~
- *                    |nvim_exec()|
  *                Creates a new, empty, unnamed buffer.
  *                Parameters: ~
  *                    {listed}   Sets 'buflisted'
@@ -4611,17 +4818,6 @@ export function nvim_ui_try_resize(
  *                    Buffer handle, or 0 on error
  *                See also: ~
  *                    buf_open_scratch
- *                Creates a new namespace, or gets an existing one.
- *                Namespaces are used for buffer highlights and virtual text,
- *                see |nvim_buf_add_highlight()| and
- *                |nvim_buf_set_virtual_text()|.
- *                Namespaces can be named or anonymous. If `name` matches an
- *                existing namespace, the associated id is returned. If `name`
- *                is an empty string a new, anonymous namespace is created.
- *                Parameters: ~
- *                    {name}  Namespace name or empty string
- *                Return: ~
- *                    Namespace id
  *                Deletes the current line.
  *                Attributes: ~
  *                    not allowed when |textlock| is active
@@ -4629,6 +4825,17 @@ export function nvim_ui_try_resize(
  *                To unmap a buffer-local mapping, use |nvim_buf_del_keymap()|.
  *                See also: ~
  *                    |nvim_set_keymap()|
+ *                Deletes a uppercase/file named mark. See |mark-motions|.
+ *                Note:
+ *                    fails with error if a lowercase or buffer local named mark
+ *                    is used.
+ *                Parameters: ~
+ *                    {name}  Mark name
+ *                Return: ~
+ *                    true if the mark was deleted, else false.
+ *                See also: ~
+ *                    |nvim_buf_del_mark()|
+ *                    |nvim_get_mark()|
  *                Removes a global (g:) variable.
  *                Parameters: ~
  *                    {name}  Variable name
@@ -4651,30 +4858,34 @@ export function nvim_ui_try_resize(
  *                    {str}  Message
  *                See also: ~
  *                    nvim_err_write()
- *                Evaluates a VimL |expression|. Dictionaries and Lists are
- *                recursively expanded.
- *                On execution error: fails with VimL error, does not update
- *                v:errmsg.
+ *                Evaluates statusline string.
+ *                Attributes: ~
+ *                    {fast}
  *                Parameters: ~
- *                    {expr}  VimL expression string
+ *                    {str}   Statusline string (see 'statusline').
+ *                    {opts}  Optional parameters.
+ *                            • winid: (number) |window-ID| of the window to use
+ *                              as context for statusline.
+ *                            • maxwidth: (number) Maximum width of statusline.
+ *                            • fillchar: (string) Character to fill blank
+ *                              spaces in the statusline (see 'fillchars').
+ *                            • highlights: (boolean) Return highlight
+ *                              information.
+ *                            • use_tabline: (boolean) Evaluate tabline instead
+ *                              of statusline. When |TRUE|, {winid} is ignored.
  *                Return: ~
- *                    Evaluation result or expanded object
- *                Executes Vimscript (multiline block of Ex-commands), like
- *                anonymous |:source|.
- *                Unlike |nvim_command()| this function supports heredocs,
- *                script-scope (s:), etc.
- *                On execution error: fails with VimL error, does not update
- *                v:errmsg.
- *                Parameters: ~
- *                    {src}     Vimscript code
- *                    {output}  Capture and return all (non-error, non-shell
- *                              |:!|) output
- *                Return: ~
- *                    Output (non-error, non-shell |:!|) if `output` is true,
- *                    else empty string.
- *                See also: ~
- *                    |execute()|
- *                    |nvim_command()|
+ *                    Dictionary containing statusline information, with these
+ *                    keys:
+ *                    • str: (string) Characters that will be displayed on the
+ *                      statusline.
+ *                    • width: (number) Display width of the statusline.
+ *                    • highlights: Array containing highlight information of
+ *                      the statusline. Only included when the "highlights" key
+ *                      in {opts} is |TRUE|. Each element of the array is a
+ *                      |Dictionary| with these keys:
+ *                      • start: (number) Byte index (0-based) of first
+ *                        character that uses the highlight.
+ *                      • group: (string) Name of highlight group.
  *                Execute Lua code. Parameters (if any) are available as `...`
  *                inside the chunk. The chunk can return a value.
  *                Only statements are executed. To evaluate an expression,
@@ -4688,10 +4899,9 @@ export function nvim_ui_try_resize(
  *                by `mode` flags. This is a blocking call, unlike
  *                |nvim_input()|.
  *                On execution error: does not fail, but updates v:errmsg.
- *                If you need to input sequences like <C-o> use
- *                |nvim_replace_termcodes| to replace the termcodes and then
- *                pass the resulting string to nvim_feedkeys. You'll also want
- *                to enable escape_csi.
+ *                To input sequences like <C-o> use |nvim_replace_termcodes()|
+ *                (typically with escape_csi=true) to replace |keycodes|, then
+ *                pass the result to nvim_feedkeys().
  *                Example:
  *                    :let key = nvim_replace_termcodes("<C-o>", v:true, v:false, v:true)
  *                    :call nvim_feedkeys(key, 'n', v:true)
@@ -4714,29 +4924,30 @@ export function nvim_ui_try_resize(
  *                    2-tuple [{channel-id}, {api-metadata}]
  *                Attributes: ~
  *                    {fast}
- *                Get information about a channel.
+ *                Gets information about a channel.
  *                Return: ~
  *                    Dictionary describing a channel, with these keys:
- *                    • "stream" the stream underlying the channel
+ *                    • "id" Channel id.
+ *                    • "argv" (optional) Job arguments list.
+ *                    • "stream" Stream underlying the channel.
  *                      • "stdio" stdin and stdout of this Nvim instance
  *                      • "stderr" stderr of this Nvim instance
  *                      • "socket" TCP/IP socket or named pipe
- *                      • "job" job with communication over its stdio
- *                    • "mode" how data received on the channel is interpreted
- *                      • "bytes" send and receive raw bytes
- *                      • "terminal" a |terminal| instance interprets ASCII
- *                        sequences
- *                      • "rpc" |RPC| communication on the channel is active
- *                    • "pty" Name of pseudoterminal, if one is used (optional).
- *                      On a POSIX system, this will be a device path like
- *                      /dev/pts/1. Even if the name is unknown, the key will
- *                      still be present to indicate a pty is used. This is
- *                      currently the case when using winpty on windows.
- *                    • "buffer" buffer with connected |terminal| instance
- *                      (optional)
- *                    • "client" information about the client on the other end
- *                      of the RPC channel, if it has added it using
- *                      |nvim_set_client_info()|. (optional)
+ *                      • "job" Job with communication over its stdio.
+ *                    • "mode" How data received on the channel is interpreted.
+ *                      • "bytes" Send and receive raw bytes.
+ *                      • "terminal" |terminal| instance interprets ASCII
+ *                        sequences.
+ *                      • "rpc" |RPC| communication on the channel is active.
+ *                    • "pty" (optional) Name of pseudoterminal. On a POSIX
+ *                      system this is a device path like "/dev/pts/1". If the
+ *                      name is unknown, the key will still be present if a pty
+ *                      is used (e.g. for winpty on Windows).
+ *                    • "buffer" (optional) Buffer with connected |terminal|
+ *                      instance.
+ *                    • "client" (optional) Info about the peer (client on the
+ *                      other end of the RPC channel), if provided by it via
+ *                      |nvim_set_client_info()|.
  *                Returns the 24-bit RGB value of a |nvim_get_color_map()| color
  *                name or "#rrggbb" hexadecimal string.
  *                Example:
@@ -4804,15 +5015,27 @@ export function nvim_ui_try_resize(
  *                Return: ~
  *                    Array of maparg()-like dictionaries describing mappings.
  *                    The "buffer" key is always zero.
+ *                Return a tuple (row, col, buffer, buffername) representing the
+ *                position of the uppercase/file named mark. See |mark-motions|.
+ *                Marks are (1,0)-indexed. |api-indexing|
+ *                Note:
+ *                    fails with error if a lowercase or buffer local named mark
+ *                    is used.
+ *                Parameters: ~
+ *                    {name}  Mark name
+ *                    {opts}  Optional parameters. Reserved for future use.
+ *                Return: ~
+ *                    4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if
+ *                    the mark is not set.
+ *                See also: ~
+ *                    |nvim_buf_set_mark()|
+ *                    |nvim_del_mark()|
  *                Gets the current mode. |mode()| "blocking" is true if Nvim is
  *                waiting for input.
  *                Return: ~
  *                    Dictionary { "mode": String, "blocking": Boolean }
  *                Attributes: ~
  *                    {fast}
- *                Gets existing, non-anonymous namespaces.
- *                Return: ~
- *                    dict that maps from names to namespace ids.
  *                Gets an option value string.
  *                Parameters: ~
  *                    {name}  Option name
@@ -4849,9 +5072,6 @@ export function nvim_ui_try_resize(
  *                search pattern for subdirectories regardless of platform.
  *                It is not an error to not find any files. An empty array is
  *                returned then.
- *                To find a directory, `name` must end with a forward slash,
- *                like "rplugin/python/". Without the slash it would instead
- *                look for an ordinary file called "rplugin/python".
  *                Attributes: ~
  *                    {fast}
  *                Parameters: ~
@@ -4896,7 +5116,7 @@ export function nvim_ui_try_resize(
  *                    intermediate mouse positions will be ignored. It should be
  *                    used to implement real-time mouse input in a GUI. The
  *                    deprecated pseudokey form ("<LeftMouse><col,row>") of
- *                    |nvim_input()| has the same limitiation.
+ *                    |nvim_input()| has the same limitation.
  *                Attributes: ~
  *                    {fast}
  *                Parameters: ~
@@ -4948,7 +5168,7 @@ export function nvim_ui_try_resize(
  *                    {dict}  |Context| map.
  *                Notify the user with a message
  *                Relays the call to vim.notify . By default forwards your
- *                message in the echo area but can be overriden to trigger
+ *                message in the echo area but can be overridden to trigger
  *                desktop notifications.
  *                Parameters: ~
  *                    {msg}        Message to display to the user
@@ -4958,244 +5178,33 @@ export function nvim_ui_try_resize(
  *                By default (and currently the only option) the terminal will
  *                not be connected to an external process. Instead, input send
  *                on the channel will be echoed directly by the terminal. This
- *                is useful to disply ANSI terminal sequences returned as part
+ *                is useful to display ANSI terminal sequences returned as part
  *                of a rpc message, or similar.
  *                Note: to directly initiate the terminal using the right size,
  *                display the buffer in a configured window before calling this.
  *                For instance, for a floating display, first create an empty
  *                buffer using |nvim_create_buf()|, then display it using
  *                |nvim_open_win()|, and then call this function. Then
- *                |nvim_chan_send()| cal be called immediately to process
+ *                |nvim_chan_send()| can be called immediately to process
  *                sequences in a virtual terminal having the intended size.
  *                Parameters: ~
  *                    {buffer}  the buffer to use (expected to be empty)
- *                    {opts}    Optional parameters. Reserved for future use.
+ *                    {opts}    Optional parameters.
+ *                              • on_input: lua callback for input sent, i e
+ *                                keypresses in terminal mode. Note: keypresses
+ *                                are sent raw as they would be to the pty
+ *                                master end. For instance, a carriage return is
+ *                                sent as a "\r", not as a "\n". |textlock|
+ *                                applies. It is possible to call
+ *                                |nvim_chan_send| directly in the callback
+ *                                however. ["input", term, bufnr, data]
  *                Return: ~
  *                    Channel id, or 0 on error
- *                Open a new window.
- *                Currently this is used to open floating and external windows.
- *                Floats are windows that are drawn above the split layout, at
- *                some anchor position in some other window. Floats can be drawn
- *                internally or by external GUI with the |ui-multigrid|
- *                extension. External windows are only supported with multigrid
- *                GUIs, and are displayed as separate top-level windows.
- *                For a general overview of floats, see |api-floatwin|.
- *                Exactly one of `external` and `relative` must be specified.
- *                The `width` and `height` of the new window must be specified.
- *                With relative=editor (row=0,col=0) refers to the top-left
- *                corner of the screen-grid and (row=Lines-1,col=Columns-1)
- *                refers to the bottom-right corner. Fractional values are
- *                allowed, but the builtin implementation (used by non-multigrid
- *                UIs) will always round down to nearest integer.
- *                Out-of-bounds values, and configurations that make the float
- *                not fit inside the main editor, are allowed. The builtin
- *                implementation truncates values so floats are fully within the
- *                main screen grid. External GUIs could let floats hover outside
- *                of the main window like a tooltip, but this should not be used
- *                to specify arbitrary WM screen positions.
- *                Example (Lua): window-relative float
- *                    vim.api.nvim_open_win(0, false,
- *                      {relative='win', row=3, col=3, width=12, height=3})
- *                Example (Lua): buffer-relative float (travels as buffer is
- *                scrolled)
- *                    vim.api.nvim_open_win(0, false,
- *                      {relative='win', width=12, height=3, bufpos={100,10}})
- *                Attributes: ~
- *                    not allowed when |textlock| is active
- *                Parameters: ~
- *                    {buffer}  Buffer to display, or 0 for current buffer
- *                    {enter}   Enter the window (make it the current window)
- *                    {config}  Map defining the window configuration. Keys:
- *                              • `relative`: Sets the window layout to "floating", placed
- *                                at (row,col) coordinates relative to:
- *                                • "editor" The global editor grid
- *                                • "win" Window given by the `win` field, or
- *                                  current window.
- *                                • "cursor" Cursor position in current window.
- *                              • `win` : |window-ID| for relative="win".
- *                              • `anchor`: Decides which corner of the float to place
- *                                at (row,col):
- *                                • "NW" northwest (default)
- *                                • "NE" northeast
- *                                • "SW" southwest
- *                                • "SE" southeast
- *                              • `width` : Window width (in character cells).
- *                                Minimum of 1.
- *                              • `height` : Window height (in character cells).
- *                                Minimum of 1.
- *                              • `bufpos` : Places float relative to buffer
- *                                text (only when relative="win"). Takes a tuple
- *                                of zero-indexed [line, column]. `row` and
- *                                `col` if given are applied relative to this
- *                                position, else they default to `row=1` and
- *                                `col=0` (thus like a tooltip near the buffer
- *                                text).
- *                              • `row` : Row position in units of "screen cell
- *                                height", may be fractional.
- *                              • `col` : Column position in units of "screen
- *                                cell width", may be fractional.
- *                              • `focusable` : Enable focus by user actions
- *                                (wincmds, mouse events). Defaults to true.
- *                                Non-focusable windows can be entered by
- *                                |nvim_set_current_win()|.
- *                              • `external` : GUI should display the window as
- *                                an external top-level window. Currently
- *                                accepts no other positioning configuration
- *                                together with this.
- *                              • `zindex`: Stacking order. floats with higher`zindex`go on top on floats with lower indices. Must
- *                                be larger than zero. The following screen
- *                                elements have hard-coded z-indices:
- *                                • 100: insert completion popupmenu
- *                                • 200: message scrollback
- *                                • 250: cmdline completion popupmenu (when
- *                                  wildoptions+=pum) The default value for
- *                                  floats are 50. In general, values below 100
- *                                  are recommended, unless there is a good
- *                                  reason to overshadow builtin elements.
- *                              • `style`: Configure the appearance of the window.
- *                                Currently only takes one non-empty value:
- *                                • "minimal" Nvim will display the window with
- *                                  many UI options disabled. This is useful
- *                                  when displaying a temporary float where the
- *                                  text should not be edited. Disables
- *                                  'number', 'relativenumber', 'cursorline',
- *                                  'cursorcolumn', 'foldcolumn', 'spell' and
- *                                  'list' options. 'signcolumn' is changed to
- *                                  `auto` and 'colorcolumn' is cleared. The
- *                                  end-of-buffer region is hidden by setting
- *                                  `eob` flag of 'fillchars' to a space char,
- *                                  and clearing the |EndOfBuffer| region in
- *                                  'winhighlight'.
- *                              • `border`: Style of (optional) window border. This can
- *                                either be a string or an array. The string
- *                                values are
- *                                • "none": No border (default).
- *                                • "single": A single line box.
- *                                • "double": A double line box.
- *                                • "rounded": Like "single", but with rounded
- *                                  corners ("╭" etc.).
- *                                • "solid": Adds padding by a single whitespace
- *                                  cell.
- *                                • "shadow": A drop shadow effect by blending
- *                                  with the background.
- *                                • If it is an array, it should have a length
- *                                  of eight or any divisor of eight. The array
- *                                  will specifify the eight chars building up
- *                                  the border in a clockwise fashion starting
- *                                  with the top-left corner. As an example, the
- *                                  double box style could be specified as [
- *                                  "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ]. If
- *                                  the number of chars are less than eight,
- *                                  they will be repeated. Thus an ASCII border
- *                                  could be specified as [ "/", "-", "\\", "|"
- *                                  ], or all chars the same as [ "x" ]. An
- *                                  empty string can be used to turn off a
- *                                  specific border, for instance, [ "", "", "",
- *                                  ">", "", "", "", "<" ] will only make
- *                                  vertical borders but not horizontal ones. By
- *                                  default, `FloatBorder` highlight is used,
- *                                  which links to `VertSplit` when not defined.
- *                                  It could also be specified by character: [
- *                                  {"+", "MyCorner"}, {"x", "MyBorder"} ].
- *                              • `noautocmd` : If true then no buffer-related
- *                                autocommand events such as |BufEnter|,
- *                                |BufLeave| or |BufWinEnter| may fire from
- *                                calling this function.
- *                Return: ~
- *                    Window handle, or 0 on error
  *                Writes a message to the Vim output buffer. Does not append
  *                "\n", the message is buffered (won't display) until a linefeed
  *                is written.
  *                Parameters: ~
  *                    {str}  Message
- *                Parse a VimL expression.
- *                Attributes: ~
- *                    {fast}
- *                Parameters: ~
- *                    {expr}       Expression to parse. Always treated as a
- *                                 single line.
- *                    {flags}      Flags:
- *                                 • "m" if multiple expressions in a row are
- *                                   allowed (only the first one will be
- *                                   parsed),
- *                                 • "E" if EOC tokens are not allowed
- *                                   (determines whether they will stop parsing
- *                                   process or be recognized as an
- *                                   operator/space, though also yielding an
- *                                   error).
- *                                 • "l" when needing to start parsing with
- *                                   lvalues for ":let" or ":for". Common flag
- *                                   sets:
- *                                 • "m" to parse like for ":echo".
- *                                 • "E" to parse like for "<C-r>=".
- *                                 • empty string for ":call".
- *                                 • "lm" to parse for ":let".
- *                    {highlight}  If true, return value will also include
- *                                 "highlight" key containing array of 4-tuples
- *                                 (arrays) (Integer, Integer, Integer, String),
- *                                 where first three numbers define the
- *                                 highlighted region and represent line,
- *                                 starting column and ending column (latter
- *                                 exclusive: one should highlight region
- *                                 [start_col, end_col)).
- *                Return: ~
- *                    • AST: top-level dictionary with these keys:
- *                      • "error": Dictionary with error, present only if parser
- *                        saw some error. Contains the following keys:
- *                        • "message": String, error message in printf format,
- *                          translated. Must contain exactly one "%.*s".
- *                        • "arg": String, error message argument.
- *                      • "len": Amount of bytes successfully parsed. With flags
- *                        equal to "" that should be equal to the length of expr
- *                        string. (“Sucessfully parsed” here means “participated
- *                        in AST creation”, not “till the first error”.)
- *                      • "ast": AST, either nil or a dictionary with these
- *                        keys:
- *                        • "type": node type, one of the value names from
- *                          ExprASTNodeType stringified without "kExprNode"
- *                          prefix.
- *                        • "start": a pair [line, column] describing where node
- *                          is "started" where "line" is always 0 (will not be 0
- *                          if you will be using nvim_parse_viml() on e.g.
- *                          ":let", but that is not present yet). Both elements
- *                          are Integers.
- *                        • "len": “length” of the node. This and "start" are
- *                          there for debugging purposes primary (debugging
- *                          parser and providing debug information).
- *                        • "children": a list of nodes described in top/"ast".
- *                          There always is zero, one or two children, key will
- *                          not be present if node has no children. Maximum
- *                          number of children may be found in node_maxchildren
- *                          array.
- *                    • Local values (present only for certain nodes):
- *                      • "scope": a single Integer, specifies scope for
- *                        "Option" and "PlainIdentifier" nodes. For "Option" it
- *                        is one of ExprOptScope values, for "PlainIdentifier"
- *                        it is one of ExprVarScope values.
- *                      • "ident": identifier (without scope, if any), present
- *                        for "Option", "PlainIdentifier", "PlainKey" and
- *                        "Environment" nodes.
- *                      • "name": Integer, register name (one character) or -1.
- *                        Only present for "Register" nodes.
- *                      • "cmp_type": String, comparison type, one of the value
- *                        names from ExprComparisonType, stringified without
- *                        "kExprCmp" prefix. Only present for "Comparison"
- *                        nodes.
- *                      • "ccs_strategy": String, case comparison strategy, one
- *                        of the value names from ExprCaseCompareStrategy,
- *                        stringified without "kCCStrategy" prefix. Only present
- *                        for "Comparison" nodes.
- *                      • "augmentation": String, augmentation type for
- *                        "Assignment" nodes. Is either an empty string, "Add",
- *                        "Subtract" or "Concat" for "=", "+=", "-=" or ".="
- *                        respectively.
- *                      • "invert": Boolean, true if result of comparison needs
- *                        to be inverted. Only present for "Comparison" nodes.
- *                      • "ivalue": Integer, integer value for "Integer" nodes.
- *                      • "fvalue": Float, floating-point value for "Float"
- *                        nodes.
- *                      • "svalue": String, value for "SingleQuotedString" and
- *                        "DoubleQuotedString" nodes.
  *                Pastes at cursor, in any mode.
  *                Invokes the `vim.paste` handler, which handles each mode
  *                appropriately. Sets redo/undo. Faster than |nvim_input()|.
@@ -5342,52 +5351,13 @@ export function nvim_ui_try_resize(
  *                    not allowed when |textlock| is active
  *                Parameters: ~
  *                    {window}  Window handle
- *                Set or change decoration provider for a namespace
- *                This is a very general purpose interface for having lua
- *                callbacks being triggered during the redraw code.
- *                The expected usage is to set extmarks for the currently
- *                redrawn buffer. |nvim_buf_set_extmark| can be called to add
- *                marks on a per-window or per-lines basis. Use the `ephemeral`
- *                key to only use the mark for the current screen redraw (the
- *                callback will be called again for the next redraw ).
- *                Note: this function should not be called often. Rather, the
- *                callbacks themselves can be used to throttle unneeded
- *                callbacks. the `on_start` callback can return `false` to
- *                disable the provider until the next redraw. Similarily, return
- *                `false` in `on_win` will skip the `on_lines` calls for that
- *                window (but any extmarks set in `on_win` will still be used).
- *                A plugin managing multiple sources of decoration should
- *                ideally only set one provider, and merge the sources
- *                internally. You can use multiple `ns_id` for the extmarks
- *                set/modified inside the callback anyway.
- *                Note: doing anything other than setting extmarks is considered
- *                experimental. Doing things like changing options are not
- *                expliticly forbidden, but is likely to have unexpected
- *                consequences (such as 100% CPU consumption). doing
- *                `vim.rpcnotify` should be OK, but `vim.rpcrequest` is quite
- *                dubious for the moment.
- *                Parameters: ~
- *                    {ns_id}  Namespace id from |nvim_create_namespace()|
- *                    {opts}   Callbacks invoked during redraw:
- *                             • on_start: called first on each screen redraw
- *                               ["start", tick]
- *                             • on_buf: called for each buffer being redrawn
- *                               (before window callbacks) ["buf", bufnr, tick]
- *                             • on_win: called when starting to redraw a
- *                               specific window. ["win", winid, bufnr, topline,
- *                               botline_guess]
- *                             • on_line: called for each buffer line being
- *                               redrawn. (The interation with fold lines is
- *                               subject to change) ["win", winid, bufnr, row]
- *                             • on_end: called at the end of a redraw cycle
- *                               ["end", tick]
  *                Set a highlight group.
  *                TODO: ns_id = 0, should modify :highlight namespace TODO val
  *                should take update vs reset flag
  *                Parameters: ~
  *                    {ns_id}  number of namespace for this highlight
  *                    {name}   highlight group name, like ErrorMsg
- *                    {val}    highlight definiton map, like
+ *                    {val}    highlight definition map, like
  *                             |nvim_get_hl_by_name|. in addition the following
  *                             keys are also recognized: `default` : don't
  *                             override existing definition, like `hi default`
@@ -5440,42 +5410,146 @@ export function nvim_ui_try_resize(
  *                Unsubscribes to event broadcasts.
  *                Parameters: ~
  *                    {event}  Event type string
- *                TODO: Documentation
- *                TODO: Documentation
- *                       {col_end})
- *                Adds a highlight to buffer.
- *                Useful for plugins that dynamically generate highlights to a
- *                buffer (like a semantic highlighter or linter). The function
- *                adds a single highlight to a buffer. Unlike |matchaddpos()|
- *                highlights follow changes to line numbering (as lines are
- *                inserted/removed above the highlighted line), like signs and
- *                marks do.
- *                Namespaces are used for batch deletion/updating of a set of
- *                highlights. To create a namespace, use
- *                |nvim_create_namespace()| which returns a namespace id. Pass
- *                it in to this function as `ns_id` to add highlights to the
- *                namespace. All highlights in the same namespace can then be
- *                cleared with single call to |nvim_buf_clear_namespace()|. If
- *                the highlight never will be deleted by an API call, pass
- *                `ns_id = -1` .
- *                As a shorthand, `ns_id = 0` can be used to create a new
- *                namespace for the highlight, the allocated id is then
- *                returned. If `hl_group` is the empty string no highlight is
- *                added, but a new `ns_id` is still returned. This is supported
- *                for backwards compatibility, new code should use
- *                |nvim_create_namespace()| to create a new empty namespace.
+ *                Calls a VimL |Dictionary-function| with the given arguments.
+ *                On execution error: fails with VimL error, does not update
+ *                v:errmsg.
  *                Parameters: ~
- *                    {buffer}     Buffer handle, or 0 for current buffer
- *                    {ns_id}      namespace to use or -1 for ungrouped
- *                                 highlight
- *                    {hl_group}   Name of the highlight group to use
- *                    {line}       Line to highlight (zero-indexed)
- *                    {col_start}  Start of (byte-indexed) column range to
- *                                 highlight
- *                    {col_end}    End of (byte-indexed) column range to
- *                                 highlight, or -1 to highlight to end of line
+ *                    {dict}  Dictionary, or String evaluating to a VimL |self|
+ *                            dict
+ *                    {fn}    Name of the function defined on the VimL dict
+ *                    {args}  Function arguments packed in an Array
  *                Return: ~
- *                    The ns_id that was used
+ *                    Result of the function call
+ *                Calls a VimL function with the given arguments.
+ *                On execution error: fails with VimL error, does not update
+ *                v:errmsg.
+ *                Parameters: ~
+ *                    {fn}    Function to call
+ *                    {args}  Function arguments packed in an Array
+ *                Return: ~
+ *                    Result of the function call
+ *                Executes an ex-command.
+ *                On execution error: fails with VimL error, does not update
+ *                v:errmsg.
+ *                Parameters: ~
+ *                    {command}  Ex-command string
+ *                See also: ~
+ *                    |nvim_exec()|
+ *                Evaluates a VimL |expression|. Dictionaries and Lists are
+ *                recursively expanded.
+ *                On execution error: fails with VimL error, does not update
+ *                v:errmsg.
+ *                Parameters: ~
+ *                    {expr}  VimL expression string
+ *                Return: ~
+ *                    Evaluation result or expanded object
+ *                Executes Vimscript (multiline block of Ex-commands), like
+ *                anonymous |:source|.
+ *                Unlike |nvim_command()| this function supports heredocs,
+ *                script-scope (s:), etc.
+ *                On execution error: fails with VimL error, does not update
+ *                v:errmsg.
+ *                Parameters: ~
+ *                    {src}     Vimscript code
+ *                    {output}  Capture and return all (non-error, non-shell
+ *                              |:!|) output
+ *                Return: ~
+ *                    Output (non-error, non-shell |:!|) if `output` is true,
+ *                    else empty string.
+ *                See also: ~
+ *                    |execute()|
+ *                    |nvim_command()|
+ *                Parse a VimL expression.
+ *                Attributes: ~
+ *                    {fast}
+ *                Parameters: ~
+ *                    {expr}       Expression to parse. Always treated as a
+ *                                 single line.
+ *                    {flags}      Flags:
+ *                                 • "m" if multiple expressions in a row are
+ *                                   allowed (only the first one will be
+ *                                   parsed),
+ *                                 • "E" if EOC tokens are not allowed
+ *                                   (determines whether they will stop parsing
+ *                                   process or be recognized as an
+ *                                   operator/space, though also yielding an
+ *                                   error).
+ *                                 • "l" when needing to start parsing with
+ *                                   lvalues for ":let" or ":for". Common flag
+ *                                   sets:
+ *                                 • "m" to parse like for ":echo".
+ *                                 • "E" to parse like for "<C-r>=".
+ *                                 • empty string for ":call".
+ *                                 • "lm" to parse for ":let".
+ *                    {highlight}  If true, return value will also include
+ *                                 "highlight" key containing array of 4-tuples
+ *                                 (arrays) (Integer, Integer, Integer, String),
+ *                                 where first three numbers define the
+ *                                 highlighted region and represent line,
+ *                                 starting column and ending column (latter
+ *                                 exclusive: one should highlight region
+ *                                 [start_col, end_col)).
+ *                Return: ~
+ *                    • AST: top-level dictionary with these keys:
+ *                      • "error": Dictionary with error, present only if parser
+ *                        saw some error. Contains the following keys:
+ *                        • "message": String, error message in printf format,
+ *                          translated. Must contain exactly one "%.*s".
+ *                        • "arg": String, error message argument.
+ *                      • "len": Amount of bytes successfully parsed. With flags
+ *                        equal to "" that should be equal to the length of expr
+ *                        string. (“Successfully parsed” here means
+ *                        “participated in AST creation”, not “till the first
+ *                        error”.)
+ *                      • "ast": AST, either nil or a dictionary with these
+ *                        keys:
+ *                        • "type": node type, one of the value names from
+ *                          ExprASTNodeType stringified without "kExprNode"
+ *                          prefix.
+ *                        • "start": a pair [line, column] describing where node
+ *                          is "started" where "line" is always 0 (will not be 0
+ *                          if you will be using nvim_parse_viml() on e.g.
+ *                          ":let", but that is not present yet). Both elements
+ *                          are Integers.
+ *                        • "len": “length” of the node. This and "start" are
+ *                          there for debugging purposes primary (debugging
+ *                          parser and providing debug information).
+ *                        • "children": a list of nodes described in top/"ast".
+ *                          There always is zero, one or two children, key will
+ *                          not be present if node has no children. Maximum
+ *                          number of children may be found in node_maxchildren
+ *                          array.
+ *                    • Local values (present only for certain nodes):
+ *                      • "scope": a single Integer, specifies scope for
+ *                        "Option" and "PlainIdentifier" nodes. For "Option" it
+ *                        is one of ExprOptScope values, for "PlainIdentifier"
+ *                        it is one of ExprVarScope values.
+ *                      • "ident": identifier (without scope, if any), present
+ *                        for "Option", "PlainIdentifier", "PlainKey" and
+ *                        "Environment" nodes.
+ *                      • "name": Integer, register name (one character) or -1.
+ *                        Only present for "Register" nodes.
+ *                      • "cmp_type": String, comparison type, one of the value
+ *                        names from ExprComparisonType, stringified without
+ *                        "kExprCmp" prefix. Only present for "Comparison"
+ *                        nodes.
+ *                      • "ccs_strategy": String, case comparison strategy, one
+ *                        of the value names from ExprCaseCompareStrategy,
+ *                        stringified without "kCCStrategy" prefix. Only present
+ *                        for "Comparison" nodes.
+ *                      • "augmentation": String, augmentation type for
+ *                        "Assignment" nodes. Is either an empty string, "Add",
+ *                        "Subtract" or "Concat" for "=", "+=", "-=" or ".="
+ *                        respectively.
+ *                      • "invert": Boolean, true if result of comparison needs
+ *                        to be inverted. Only present for "Comparison" nodes.
+ *                      • "ivalue": Integer, integer value for "Integer" nodes.
+ *                      • "fvalue": Float, floating-point value for "Float"
+ *                        nodes.
+ *                      • "svalue": String, value for "SingleQuotedString" and
+ *                        "DoubleQuotedString" nodes.
+ *                TODO: Documentation
+ *                TODO: Documentation
  *                Activates buffer-update events on a channel, or as Lua
  *                callbacks.
  *                Example (Lua): capture buffer updates in a global `events` variable (use "print(vim.inspect(events))" to see its
@@ -5493,7 +5567,7 @@ export function nvim_ui_try_resize(
  *                                   callbacks.
  *                    {opts}         Optional parameters.
  *                                   • on_lines: Lua callback invoked on change.
- *                                     Return`true`to detach. Args:
+ *                                     Return `true` to detach. Args:
  *                                     • the string "lines"
  *                                     • buffer handle
  *                                     • b:changedtick
@@ -5508,7 +5582,7 @@ export function nvim_ui_try_resize(
  *                                   • on_bytes: lua callback invoked on change.
  *                                     This callback receives more granular
  *                                     information about the change compared to
- *                                     on_lines. Return`true`to detach. Args:
+ *                                     on_lines. Return `true` to detach. Args:
  *                                     • the string "bytes"
  *                                     • buffer handle
  *                                     • b:changedtick
@@ -5555,7 +5629,7 @@ export function nvim_ui_try_resize(
  *                switched If a window inside the current tabpage (including a
  *                float) already shows the buffer One of these windows will be
  *                set as current window temporarily. Otherwise a temporary
- *                scratch window (calleed the "autocmd window" for historical
+ *                scratch window (called the "autocmd window" for historical
  *                reasons) will be used.
  *                This is useful e.g. to call vimL functions that only work with
  *                the current buffer/window currently, like |termopen()|.
@@ -5566,29 +5640,23 @@ export function nvim_ui_try_resize(
  *                Return: ~
  *                    Return value of function. NB: will deepcopy lua values
  *                    currently, use upvalues to send lua references in and out.
- *                Clears namespaced objects (highlights, extmarks, virtual text)
- *                from a region.
- *                Lines are 0-indexed. |api-indexing| To clear the namespace in
- *                the entire buffer, specify line_start=0 and line_end=-1.
- *                Parameters: ~
- *                    {buffer}      Buffer handle, or 0 for current buffer
- *                    {ns_id}       Namespace to clear, or -1 to clear all
- *                                  namespaces.
- *                    {line_start}  Start of range of lines to clear
- *                    {line_end}    End of range of lines to clear (exclusive)
- *                                  or -1 to clear to end of buffer.
- *                Removes an extmark.
- *                Parameters: ~
- *                    {buffer}  Buffer handle, or 0 for current buffer
- *                    {ns_id}   Namespace id from |nvim_create_namespace()|
- *                    {id}      Extmark id
- *                Return: ~
- *                    true if the extmark was found, else false
  *                Unmaps a buffer-local |mapping| for the given mode.
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
  *                See also: ~
  *                    |nvim_del_keymap()|
+ *                Deletes a named mark in the buffer. See |mark-motions|.
+ *                Note:
+ *                    only deletes marks set in the buffer, if the mark is not
+ *                    set in the buffer it will return false.
+ *                Parameters: ~
+ *                    {buffer}  Buffer to set the mark on
+ *                    {name}    Mark name
+ *                Return: ~
+ *                    true if the mark was deleted, else false.
+ *                See also: ~
+ *                    |nvim_buf_set_mark()|
+ *                    |nvim_del_mark()|
  *                Removes a buffer-scoped (b:) variable
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
@@ -5623,53 +5691,6 @@ export function nvim_ui_try_resize(
  *                    {opts}    Optional parameters. Currently not used.
  *                Return: ~
  *                    Map of maps describing commands.
- *                Returns position for a given extmark id
- *                Parameters: ~
- *                    {buffer}  Buffer handle, or 0 for current buffer
- *                    {ns_id}   Namespace id from |nvim_create_namespace()|
- *                    {id}      Extmark id
- *                    {opts}    Optional parameters. Keys:
- *                              • details: Whether to include the details dict
- *                Return: ~
- *                    (row, col) tuple or empty list () if extmark id was absent
- *                Gets extmarks in "traversal order" from a |charwise| region
- *                defined by buffer positions (inclusive, 0-indexed
- *                |api-indexing|).
- *                Region can be given as (row,col) tuples, or valid extmark ids
- *                (whose positions define the bounds). 0 and -1 are understood
- *                as (0,0) and (-1,-1) respectively, thus the following are
- *                equivalent:
- *    nvim_buf_get_extmarks(0, my_ns, 0, -1, {})
- *    nvim_buf_get_extmarks(0, my_ns, [0,0], [-1,-1], {})
- *                If `end` is less than `start` , traversal works backwards.
- *                (Useful with `limit` , to get the first marks prior to a given
- *                position.)
- *                Example:
- *    local a   = vim.api
- *    local pos = a.nvim_win_get_cursor(0)
- *    local ns  = a.nvim_create_namespace('my-plugin')
- *    -- Create new extmark at line 1, column 1.
- *    local m1  = a.nvim_buf_set_extmark(0, ns, 0, 0, 0, {})
- *    -- Create new extmark at line 3, column 1.
- *    local m2  = a.nvim_buf_set_extmark(0, ns, 0, 2, 0, {})
- *    -- Get extmarks only from line 3.
- *    local ms  = a.nvim_buf_get_extmarks(0, ns, {2,0}, {2,0}, {})
- *    -- Get all marks in this buffer + namespace.
- *    local all = a.nvim_buf_get_extmarks(0, ns, 0, -1, {})
- *    print(vim.inspect(ms))
- *                Parameters: ~
- *                    {buffer}  Buffer handle, or 0 for current buffer
- *                    {ns_id}   Namespace id from |nvim_create_namespace()|
- *                    {start}   Start of range, given as (row, col) or valid
- *                              extmark id (whose position defines the bound)
- *                    {end}     End of range, given as (row, col) or valid
- *                              extmark id (whose position defines the bound)
- *                    {opts}    Optional parameters. Keys:
- *                              • limit: Maximum number of marks to return
- *                              • details Whether to include the details dict
- *                Return: ~
- *                    List of [extmark_id, row, col] tuples in "traversal
- *                    order".
  *                Gets a list of buffer-local |mapping| definitions.
  *                Parameters: ~
  *                    {mode}    Mode short-name ("n", "i", "v", ...)
@@ -5691,14 +5712,18 @@ export function nvim_ui_try_resize(
  *                                       error.
  *                Return: ~
  *                    Array of lines, or empty array for unloaded buffer.
- *                Return a tuple (row,col) representing the position of the
- *                named mark.
+ *                Returns a tuple (row,col) representing the position of the
+ *                named mark. See |mark-motions|.
  *                Marks are (1,0)-indexed. |api-indexing|
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
  *                    {name}    Mark name
  *                Return: ~
- *                    (row, col) tuple
+ *                    (row, col) tuple, (0, 0) if the mark is not set, or is an
+ *                    uppercase/file mark set in another buffer.
+ *                See also: ~
+ *                    |nvim_buf_set_mark()|
+ *                    |nvim_buf_del_mark()|
  *                Gets the full file name for the buffer
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
@@ -5748,76 +5773,6 @@ export function nvim_ui_try_resize(
  *                    {buffer}  Buffer handle, or 0 for current buffer
  *                Return: ~
  *                    Line count, or 0 for unloaded buffer. |api-buffer|
- *                Creates or updates an extmark.
- *                To create a new extmark, pass id=0. The extmark id will be
- *                returned. To move an existing mark, pass its id.
- *                It is also allowed to create a new mark by passing in a
- *                previously unused id, but the caller must then keep track of
- *                existing and unused ids itself. (Useful over RPC, to avoid
- *                waiting for the return value.)
- *                Using the optional arguments, it is possible to use this to
- *                highlight a range of text, and also to associate virtual text
- *                to the mark.
- *                Parameters: ~
- *                    {buffer}  Buffer handle, or 0 for current buffer
- *                    {ns_id}   Namespace id from |nvim_create_namespace()|
- *                    {line}    Line where to place the mark, 0-based
- *                    {col}     Column where to place the mark, 0-based
- *                    {opts}    Optional parameters.
- *                              • id : id of the extmark to edit.
- *                              • end_line : ending line of the mark, 0-based
- *                                inclusive.
- *                              • end_col : ending col of the mark, 0-based
- *                                exclusive.
- *                              • hl_group : name of the highlight group used to
- *                                highlight this mark.
- *                              • virt_text : virtual text to link to this mark.
- *                              • virt_text_pos : positioning of virtual text.
- *                                Possible values:
- *                                • "eol": right after eol character (default)
- *                                • "overlay": display over the specified
- *                                  column, without shifting the underlying
- *                                  text.
- *                                • "right_align": display right aligned in the
- *                                  window.
- *                              • virt_text_win_col : position the virtual text
- *                                at a fixed window column (starting from the
- *                                first text column)
- *                              • virt_text_hide : hide the virtual text when
- *                                the background text is selected or hidden due
- *                                to horizontal scroll 'nowrap'
- *                              • hl_mode : control how highlights are combined
- *                                with the highlights of the text. Currently
- *                                only affects virt_text highlights, but might
- *                                affect`hl_group`in later versions.
- *                                • "replace": only show the virt_text color.
- *                                  This is the default
- *                                • "combine": combine with background text
- *                                  color
- *                                • "blend": blend with background text color.
- *                              • hl_eol : when true, for a multiline highlight
- *                                covering the EOL of a line, continue the
- *                                highlight for the rest of the screen line
- *                                (just like for diff and cursorline highlight).
- *                              • ephemeral : for use with
- *                                |nvim_set_decoration_provider| callbacks. The
- *                                mark will only be used for the current redraw
- *                                cycle, and not be permantently stored in the
- *                                buffer.
- *                              • right_gravity : boolean that indicates the
- *                                direction the extmark will be shifted in when
- *                                new text is inserted (true for right, false
- *                                for left). defaults to true.
- *                              • end_right_gravity : boolean that indicates the
- *                                direction the extmark end position (if it
- *                                exists) will be shifted in when new text is
- *                                inserted (true for right, false for left).
- *                                Defaults to false.
- *                              • priority: a priority value for the highlight
- *                                group. For example treesitter highlighting
- *                                uses a value of 100.
- *                Return: ~
- *                    Id of the created/updated extmark
  *                Sets a buffer-local |mapping| for the given mode.
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
@@ -5842,6 +5797,22 @@ export function nvim_ui_try_resize(
  *                    {strict_indexing}  Whether out-of-bounds should be an
  *                                       error.
  *                    {replacement}      Array of lines to use as replacement
+ *                Sets a named mark in the given buffer, all marks are allowed
+ *                file/uppercase, visual, last change, etc. See |mark-motions|.
+ *                Marks are (1,0)-indexed. |api-indexing|
+ *                Note:
+ *                    Passing 0 as line deletes the mark
+ *                Parameters: ~
+ *                    {buffer}  Buffer to set the mark on
+ *                    {name}    Mark name
+ *                    {line}    Line number
+ *                    {col}     Column/row number
+ *                    {opts}    Optional parameters. Reserved for future use.
+ *                Return: ~
+ *                    true if the mark was set, else false.
+ *                See also: ~
+ *                    |nvim_buf_del_mark()|
+ *                    |nvim_buf_get_mark()|
  *                Sets the full file name for a buffer
  *                Parameters: ~
  *                    {buffer}  Buffer handle, or 0 for current buffer
@@ -5866,7 +5837,7 @@ export function nvim_ui_try_resize(
  *                Parameters: ~
  *                    {buffer}        Buffer handle, or 0 for current buffer
  *                    {start_row}     First line index
- *                    {start_column}  Last column
+ *                    {start_column}  First column
  *                    {end_row}       Last line index
  *                    {end_column}    Last column
  *                    {replacement}   Array of lines to use as replacement
@@ -5875,36 +5846,258 @@ export function nvim_ui_try_resize(
  *                    {buffer}  Buffer handle, or 0 for current buffer
  *                    {name}    Variable name
  *                    {value}   Variable value
- *                Set the virtual text (annotation) for a buffer line.
- *                By default (and currently the only option) the text will be
- *                placed after the buffer text. Virtual text will never cause
- *                reflow, rather virtual text will be truncated at the end of
- *                the screen line. The virtual text will begin one cell
- *                (|lcs-eol| or space) after the ordinary text.
- *                Namespaces are used to support batch deletion/updating of
- *                virtual text. To create a namespace, use
- *                |nvim_create_namespace()|. Virtual text is cleared using
- *                |nvim_buf_clear_namespace()|. The same `ns_id` can be used for
- *                both virtual text and highlights added by
- *                |nvim_buf_add_highlight()|, both can then be cleared with a
- *                single call to |nvim_buf_clear_namespace()|. If the virtual
- *                text never will be cleared by an API call, pass `ns_id = -1` .
+ *                       {col_end})
+ *                Adds a highlight to buffer.
+ *                Useful for plugins that dynamically generate highlights to a
+ *                buffer (like a semantic highlighter or linter). The function
+ *                adds a single highlight to a buffer. Unlike |matchaddpos()|
+ *                highlights follow changes to line numbering (as lines are
+ *                inserted/removed above the highlighted line), like signs and
+ *                marks do.
+ *                Namespaces are used for batch deletion/updating of a set of
+ *                highlights. To create a namespace, use
+ *                |nvim_create_namespace()| which returns a namespace id. Pass
+ *                it in to this function as `ns_id` to add highlights to the
+ *                namespace. All highlights in the same namespace can then be
+ *                cleared with single call to |nvim_buf_clear_namespace()|. If
+ *                the highlight never will be deleted by an API call, pass
+ *                `ns_id = -1` .
  *                As a shorthand, `ns_id = 0` can be used to create a new
- *                namespace for the virtual text, the allocated id is then
- *                returned.
+ *                namespace for the highlight, the allocated id is then
+ *                returned. If `hl_group` is the empty string no highlight is
+ *                added, but a new `ns_id` is still returned. This is supported
+ *                for backwards compatibility, new code should use
+ *                |nvim_create_namespace()| to create a new empty namespace.
  *                Parameters: ~
- *                    {buffer}  Buffer handle, or 0 for current buffer
- *                    {ns_id}   Namespace to use or 0 to create a namespace, or
- *                              -1 for a ungrouped annotation
- *                    {line}    Line to annotate with virtual text
- *                              (zero-indexed)
- *                    {chunks}  A list of [text, hl_group] arrays, each
- *                              representing a text chunk with specified
- *                              highlight. `hl_group` element can be omitted for
- *                              no highlight.
- *                    {opts}    Optional parameters. Currently not used.
+ *                    {buffer}     Buffer handle, or 0 for current buffer
+ *                    {ns_id}      namespace to use or -1 for ungrouped
+ *                                 highlight
+ *                    {hl_group}   Name of the highlight group to use
+ *                    {line}       Line to highlight (zero-indexed)
+ *                    {col_start}  Start of (byte-indexed) column range to
+ *                                 highlight
+ *                    {col_end}    End of (byte-indexed) column range to
+ *                                 highlight, or -1 to highlight to end of line
  *                Return: ~
  *                    The ns_id that was used
+ *                Clears namespaced objects (highlights, extmarks, virtual text)
+ *                from a region.
+ *                Lines are 0-indexed. |api-indexing| To clear the namespace in
+ *                the entire buffer, specify line_start=0 and line_end=-1.
+ *                Parameters: ~
+ *                    {buffer}      Buffer handle, or 0 for current buffer
+ *                    {ns_id}       Namespace to clear, or -1 to clear all
+ *                                  namespaces.
+ *                    {line_start}  Start of range of lines to clear
+ *                    {line_end}    End of range of lines to clear (exclusive)
+ *                                  or -1 to clear to end of buffer.
+ *                Removes an extmark.
+ *                Parameters: ~
+ *                    {buffer}  Buffer handle, or 0 for current buffer
+ *                    {ns_id}   Namespace id from |nvim_create_namespace()|
+ *                    {id}      Extmark id
+ *                Return: ~
+ *                    true if the extmark was found, else false
+ *                Gets the position (0-indexed) of an extmark.
+ *                Parameters: ~
+ *                    {buffer}  Buffer handle, or 0 for current buffer
+ *                    {ns_id}   Namespace id from |nvim_create_namespace()|
+ *                    {id}      Extmark id
+ *                    {opts}    Optional parameters. Keys:
+ *                              • details: Whether to include the details dict
+ *                Return: ~
+ *                    0-indexed (row, col) tuple or empty list () if extmark id
+ *                    was absent
+ *                Gets extmarks in "traversal order" from a |charwise| region
+ *                defined by buffer positions (inclusive, 0-indexed
+ *                |api-indexing|).
+ *                Region can be given as (row,col) tuples, or valid extmark ids
+ *                (whose positions define the bounds). 0 and -1 are understood
+ *                as (0,0) and (-1,-1) respectively, thus the following are
+ *                equivalent:
+ *    nvim_buf_get_extmarks(0, my_ns, 0, -1, {})
+ *    nvim_buf_get_extmarks(0, my_ns, [0,0], [-1,-1], {})
+ *                If `end` is less than `start` , traversal works backwards.
+ *                (Useful with `limit` , to get the first marks prior to a given
+ *                position.)
+ *                Example:
+ *    local a   = vim.api
+ *    local pos = a.nvim_win_get_cursor(0)
+ *    local ns  = a.nvim_create_namespace('my-plugin')
+ *    -- Create new extmark at line 1, column 1.
+ *    local m1  = a.nvim_buf_set_extmark(0, ns, 0, 0, 0, {})
+ *    -- Create new extmark at line 3, column 1.
+ *    local m2  = a.nvim_buf_set_extmark(0, ns, 0, 2, 0, {})
+ *    -- Get extmarks only from line 3.
+ *    local ms  = a.nvim_buf_get_extmarks(0, ns, {2,0}, {2,0}, {})
+ *    -- Get all marks in this buffer + namespace.
+ *    local all = a.nvim_buf_get_extmarks(0, ns, 0, -1, {})
+ *    print(vim.inspect(ms))
+ *                Parameters: ~
+ *                    {buffer}  Buffer handle, or 0 for current buffer
+ *                    {ns_id}   Namespace id from |nvim_create_namespace()|
+ *                    {start}   Start of range: a 0-indexed (row, col) or valid
+ *                              extmark id (whose position defines the bound).
+ *                              |api-indexing|
+ *                    {end}     End of range (inclusive): a 0-indexed (row, col)
+ *                              or valid extmark id (whose position defines the
+ *                              bound). |api-indexing|
+ *                    {opts}    Optional parameters. Keys:
+ *                              • limit: Maximum number of marks to return
+ *                              • details Whether to include the details dict
+ *                Return: ~
+ *                    List of [extmark_id, row, col] tuples in "traversal
+ *                    order".
+ *                Creates or updates an extmark.
+ *                To create a new extmark, pass id=0. The extmark id will be
+ *                returned. To move an existing mark, pass its id.
+ *                It is also allowed to create a new mark by passing in a
+ *                previously unused id, but the caller must then keep track of
+ *                existing and unused ids itself. (Useful over RPC, to avoid
+ *                waiting for the return value.)
+ *                Using the optional arguments, it is possible to use this to
+ *                highlight a range of text, and also to associate virtual text
+ *                to the mark.
+ *                Parameters: ~
+ *                    {buffer}  Buffer handle, or 0 for current buffer
+ *                    {ns_id}   Namespace id from |nvim_create_namespace()|
+ *                    {line}    Line where to place the mark, 0-based.
+ *                              |api-indexing|
+ *                    {col}     Column where to place the mark, 0-based.
+ *                              |api-indexing|
+ *                    {opts}    Optional parameters.
+ *                              • id : id of the extmark to edit.
+ *                              • end_line : ending line of the mark, 0-based
+ *                                inclusive.
+ *                              • end_col : ending col of the mark, 0-based
+ *                                exclusive.
+ *                              • hl_group : name of the highlight group used to
+ *                                highlight this mark.
+ *                              • hl_eol : when true, for a multiline highlight
+ *                                covering the EOL of a line, continue the
+ *                                highlight for the rest of the screen line
+ *                                (just like for diff and cursorline highlight).
+ *                              • virt_text : virtual text to link to this mark.
+ *                                A list of [text, highlight] tuples, each
+ *                                representing a text chunk with specified
+ *                                highlight. `highlight` element can either be a
+ *                                a single highlight group, or an array of
+ *                                multiple highlight groups that will be stacked
+ *                                (highest priority last). A highlight group can
+ *                                be supplied either as a string or as an
+ *                                integer, the latter which can be obtained
+ *                                using |nvim_get_hl_id_by_name|.
+ *                              • virt_text_pos : position of virtual text.
+ *                                Possible values:
+ *                                • "eol": right after eol character (default)
+ *                                • "overlay": display over the specified
+ *                                  column, without shifting the underlying
+ *                                  text.
+ *                                • "right_align": display right aligned in the
+ *                                  window.
+ *                              • virt_text_win_col : position the virtual text
+ *                                at a fixed window column (starting from the
+ *                                first text column)
+ *                              • virt_text_hide : hide the virtual text when
+ *                                the background text is selected or hidden due
+ *                                to horizontal scroll 'nowrap'
+ *                              • hl_mode : control how highlights are combined
+ *                                with the highlights of the text. Currently
+ *                                only affects virt_text highlights, but might
+ *                                affect `hl_group` in later versions.
+ *                                • "replace": only show the virt_text color.
+ *                                  This is the default
+ *                                • "combine": combine with background text
+ *                                  color
+ *                                • "blend": blend with background text color.
+ *                              • virt_lines : virtual lines to add next to this
+ *                                mark This should be an array over lines, where
+ *                                each line in turn is an array over [text,
+ *                                highlight] tuples. In general, buffer and
+ *                                window options do not affect the display of
+ *                                the text. In particular 'wrap' and 'linebreak'
+ *                                options do not take effect, so the number of
+ *                                extra screen lines will always match the size
+ *                                of the array. However the 'tabstop' buffer
+ *                                option is still used for hard tabs. By default
+ *                                lines are placed below the buffer line
+ *                                containing the mark.
+ *                              • virt_lines_above: place virtual lines above
+ *                                instead.
+ *                              • virt_lines_leftcol: Place extmarks in the
+ *                                leftmost column of the window, bypassing sign
+ *                                and number columns.
+ *                              • ephemeral : for use with
+ *                                |nvim_set_decoration_provider| callbacks. The
+ *                                mark will only be used for the current redraw
+ *                                cycle, and not be permantently stored in the
+ *                                buffer.
+ *                              • right_gravity : boolean that indicates the
+ *                                direction the extmark will be shifted in when
+ *                                new text is inserted (true for right, false
+ *                                for left). defaults to true.
+ *                              • end_right_gravity : boolean that indicates the
+ *                                direction the extmark end position (if it
+ *                                exists) will be shifted in when new text is
+ *                                inserted (true for right, false for left).
+ *                                Defaults to false.
+ *                              • priority: a priority value for the highlight
+ *                                group. For example treesitter highlighting
+ *                                uses a value of 100.
+ *                Return: ~
+ *                    Id of the created/updated extmark
+ *                Creates a new  or gets an existing one.
+ *                Namespaces are used for buffer highlights and virtual text,
+ *                see |nvim_buf_add_highlight()| and |nvim_buf_set_extmark()|.
+ *                Namespaces can be named or anonymous. If `name` matches an
+ *                existing namespace, the associated id is returned. If `name`
+ *                is an empty string a new, anonymous namespace is created.
+ *                Parameters: ~
+ *                    {name}  Namespace name or empty string
+ *                Return: ~
+ *                    Namespace id
+ *                Gets existing, non-anonymous namespaces.
+ *                Return: ~
+ *                    dict that maps from names to namespace ids.
+ *                Set or change decoration provider for a namespace
+ *                This is a very general purpose interface for having lua
+ *                callbacks being triggered during the redraw code.
+ *                The expected usage is to set extmarks for the currently
+ *                redrawn buffer. |nvim_buf_set_extmark| can be called to add
+ *                marks on a per-window or per-lines basis. Use the `ephemeral`
+ *                key to only use the mark for the current screen redraw (the
+ *                callback will be called again for the next redraw ).
+ *                Note: this function should not be called often. Rather, the
+ *                callbacks themselves can be used to throttle unneeded
+ *                callbacks. the `on_start` callback can return `false` to
+ *                disable the provider until the next redraw. Similarly, return
+ *                `false` in `on_win` will skip the `on_lines` calls for that
+ *                window (but any extmarks set in `on_win` will still be used).
+ *                A plugin managing multiple sources of decoration should
+ *                ideally only set one provider, and merge the sources
+ *                internally. You can use multiple `ns_id` for the extmarks
+ *                set/modified inside the callback anyway.
+ *                Note: doing anything other than setting extmarks is considered
+ *                experimental. Doing things like changing options are not
+ *                expliticly forbidden, but is likely to have unexpected
+ *                consequences (such as 100% CPU consumption). doing
+ *                `vim.rpcnotify` should be OK, but `vim.rpcrequest` is quite
+ *                dubious for the moment.
+ *                Parameters: ~
+ *                    {ns_id}  Namespace id from |nvim_create_namespace()|
+ *                    {opts}   Callbacks invoked during redraw:
+ *                             • on_start: called first on each screen redraw
+ *                               ["start", tick]
+ *                             • on_buf: called for each buffer being redrawn
+ *                               (before window callbacks) ["buf", bufnr, tick]
+ *                             • on_win: called when starting to redraw a
+ *                               specific window. ["win", winid, bufnr, topline,
+ *                               botline_guess]
+ *                             • on_line: called for each buffer line being
+ *                               redrawn. (The interaction with fold lines is
+ *                               subject to change) ["win", winid, bufnr, row]
+ *                             • on_end: called at the end of a redraw cycle
+ *                               ["end", tick]
  *                Calls a function with window as temporary current window.
  *                Parameters: ~
  *                    {window}  Window handle, or 0 for current window
@@ -5934,14 +6127,6 @@ export function nvim_ui_try_resize(
  *                    {window}  Window handle, or 0 for current window
  *                Return: ~
  *                    Buffer handle
- *                Gets window configuration.
- *                The returned value may be given to |nvim_open_win()|.
- *                `relative` is empty for normal windows.
- *                Parameters: ~
- *                    {window}  Window handle, or 0 for current window
- *                Return: ~
- *                    Map defining the window configuration, see
- *                    |nvim_open_win()|
  *                Gets the (1,0)-indexed cursor position in the window.
  *                |api-indexing|
  *                Parameters: ~
@@ -6007,18 +6192,6 @@ export function nvim_ui_try_resize(
  *                Parameters: ~
  *                    {window}  Window handle, or 0 for current window
  *                    {buffer}  Buffer handle
- *                Configures window layout. Currently only for floating and
- *                external windows (including changing a split window to those
- *                layouts).
- *                When reconfiguring a floating window, absent option keys will
- *                not be changed. `row` / `col` and `relative` must be
- *                reconfigured together.
- *                Parameters: ~
- *                    {window}  Window handle, or 0 for current window
- *                    {config}  Map defining the window configuration, see
- *                              |nvim_open_win()|
- *                See also: ~
- *                    |nvim_open_win()|
  *                Sets the (1,0)-indexed cursor position in the window.
  *                |api-indexing|
  *                Parameters: ~
@@ -6045,6 +6218,160 @@ export function nvim_ui_try_resize(
  *                Parameters: ~
  *                    {window}  Window handle, or 0 for current window
  *                    {width}   Width as a count of columns
+ *                Open a new window.
+ *                Currently this is used to open floating and external windows.
+ *                Floats are windows that are drawn above the split layout, at
+ *                some anchor position in some other window. Floats can be drawn
+ *                internally or by external GUI with the |ui-multigrid|
+ *                extension. External windows are only supported with multigrid
+ *                GUIs, and are displayed as separate top-level windows.
+ *                For a general overview of floats, see |api-floatwin|.
+ *                Exactly one of `external` and `relative` must be specified.
+ *                The `width` and `height` of the new window must be specified.
+ *                With relative=editor (row=0,col=0) refers to the top-left
+ *                corner of the screen-grid and (row=Lines-1,col=Columns-1)
+ *                refers to the bottom-right corner. Fractional values are
+ *                allowed, but the builtin implementation (used by non-multigrid
+ *                UIs) will always round down to nearest integer.
+ *                Out-of-bounds values, and configurations that make the float
+ *                not fit inside the main editor, are allowed. The builtin
+ *                implementation truncates values so floats are fully within the
+ *                main screen grid. External GUIs could let floats hover outside
+ *                of the main window like a tooltip, but this should not be used
+ *                to specify arbitrary WM screen positions.
+ *                Example (Lua): window-relative float
+ *                    vim.api.nvim_open_win(0, false,
+ *                      {relative='win', row=3, col=3, width=12, height=3})
+ *                Example (Lua): buffer-relative float (travels as buffer is
+ *                scrolled)
+ *                    vim.api.nvim_open_win(0, false,
+ *                      {relative='win', width=12, height=3, bufpos={100,10}})
+ *                Attributes: ~
+ *                    not allowed when |textlock| is active
+ *                Parameters: ~
+ *                    {buffer}  Buffer to display, or 0 for current buffer
+ *                    {enter}   Enter the window (make it the current window)
+ *                    {config}  Map defining the window configuration. Keys:
+ *                              • relative: Sets the window layout to
+ *                                "floating", placed at (row,col) coordinates
+ *                                relative to:
+ *                                • "editor" The global editor grid
+ *                                • "win" Window given by the `win` field, or
+ *                                  current window.
+ *                                • "cursor" Cursor position in current window.
+ *                              • win: |window-ID| for relative="win".
+ *                              • anchor: Decides which corner of the float to
+ *                                place at (row,col):
+ *                                • "NW" northwest (default)
+ *                                • "NE" northeast
+ *                                • "SW" southwest
+ *                                • "SE" southeast
+ *                              • width: Window width (in character cells).
+ *                                Minimum of 1.
+ *                              • height: Window height (in character cells).
+ *                                Minimum of 1.
+ *                              • bufpos: Places float relative to buffer text
+ *                                (only when relative="win"). Takes a tuple of
+ *                                zero-indexed [line, column]. `row` and `col` if given are applied relative to this
+ *                                position, else they default to:
+ *                                • `row=1` and `col=0` if `anchor` is "NW" or
+ *                                  "NE"
+ *                                • `row=0` and `col=0` if `anchor` is "SW" or
+ *                                  "SE" (thus like a tooltip near the buffer
+ *                                  text).
+ *                              • row: Row position in units of "screen cell
+ *                                height", may be fractional.
+ *                              • col: Column position in units of "screen cell
+ *                                width", may be fractional.
+ *                              • focusable: Enable focus by user actions
+ *                                (wincmds, mouse events). Defaults to true.
+ *                                Non-focusable windows can be entered by
+ *                                |nvim_set_current_win()|.
+ *                              • external: GUI should display the window as an
+ *                                external top-level window. Currently accepts
+ *                                no other positioning configuration together
+ *                                with this.
+ *                              • zindex: Stacking order. floats with higher `zindex` go on top on floats with lower indices. Must
+ *                                be larger than zero. The following screen
+ *                                elements have hard-coded z-indices:
+ *                                • 100: insert completion popupmenu
+ *                                • 200: message scrollback
+ *                                • 250: cmdline completion popupmenu (when
+ *                                  wildoptions+=pum) The default value for
+ *                                  floats are 50. In general, values below 100
+ *                                  are recommended, unless there is a good
+ *                                  reason to overshadow builtin elements.
+ *                              • style: Configure the appearance of the window.
+ *                                Currently only takes one non-empty value:
+ *                                • "minimal" Nvim will display the window with
+ *                                  many UI options disabled. This is useful
+ *                                  when displaying a temporary float where the
+ *                                  text should not be edited. Disables
+ *                                  'number', 'relativenumber', 'cursorline',
+ *                                  'cursorcolumn', 'foldcolumn', 'spell' and
+ *                                  'list' options. 'signcolumn' is changed to
+ *                                  `auto` and 'colorcolumn' is cleared. The
+ *                                  end-of-buffer region is hidden by setting
+ *                                  `eob` flag of 'fillchars' to a space char,
+ *                                  and clearing the |EndOfBuffer| region in
+ *                                  'winhighlight'.
+ *                              • border: Style of (optional) window border.
+ *                                This can either be a string or an array. The
+ *                                string values are
+ *                                • "none": No border (default).
+ *                                • "single": A single line box.
+ *                                • "double": A double line box.
+ *                                • "rounded": Like "single", but with rounded
+ *                                  corners ("╭" etc.).
+ *                                • "solid": Adds padding by a single whitespace
+ *                                  cell.
+ *                                • "shadow": A drop shadow effect by blending
+ *                                  with the background.
+ *                                • If it is an array, it should have a length
+ *                                  of eight or any divisor of eight. The array
+ *                                  will specifify the eight chars building up
+ *                                  the border in a clockwise fashion starting
+ *                                  with the top-left corner. As an example, the
+ *                                  double box style could be specified as [
+ *                                  "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ]. If
+ *                                  the number of chars are less than eight,
+ *                                  they will be repeated. Thus an ASCII border
+ *                                  could be specified as [ "/", "-", "\\", "|"
+ *                                  ], or all chars the same as [ "x" ]. An
+ *                                  empty string can be used to turn off a
+ *                                  specific border, for instance, [ "", "", "",
+ *                                  ">", "", "", "", "<" ] will only make
+ *                                  vertical borders but not horizontal ones. By
+ *                                  default, `FloatBorder` highlight is used,
+ *                                  which links to `VertSplit` when not defined.
+ *                                  It could also be specified by character: [
+ *                                  {"+", "MyCorner"}, {"x", "MyBorder"} ].
+ *                              • noautocmd: If true then no buffer-related
+ *                                autocommand events such as |BufEnter|,
+ *                                |BufLeave| or |BufWinEnter| may fire from
+ *                                calling this function.
+ *                Return: ~
+ *                    Window handle, or 0 on error
+ *                Gets window configuration.
+ *                The returned value may be given to |nvim_open_win()|.
+ *                `relative` is empty for normal windows.
+ *                Parameters: ~
+ *                    {window}  Window handle, or 0 for current window
+ *                Return: ~
+ *                    Map defining the window configuration, see
+ *                    |nvim_open_win()|
+ *                Configures window layout. Currently only for floating and
+ *                external windows (including changing a split window to those
+ *                layouts).
+ *                When reconfiguring a floating window, absent option keys will
+ *                not be changed. `row` / `col` and `relative` must be
+ *                reconfigured together.
+ *                Parameters: ~
+ *                    {window}  Window handle, or 0 for current window
+ *                    {config}  Map defining the window configuration, see
+ *                              |nvim_open_win()|
+ *                See also: ~
+ *                    |nvim_open_win()|
  *                Removes a tab-scoped (t:) variable
  *                Parameters: ~
  *                    {tabpage}  Tabpage handle, or 0 for current tabpage
@@ -6122,6 +6449,12 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
+  pat: unknown,
+  all: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
   obj: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
@@ -6156,23 +6489,8 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
-  dict: unknown,
-  fn: unknown,
-  args: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  fn: unknown,
-  args: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
   chan: unknown,
   data: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  command: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6181,12 +6499,12 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
-  name: unknown,
+  mode: unknown,
+  lhs: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
-  mode: unknown,
-  lhs: unknown,
+  name: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6208,12 +6526,8 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
-  expr: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  src: unknown,
-  output: unknown,
+  str: unknown,
+  opts: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6259,6 +6573,11 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   mode: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  name: unknown,
+  opts: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6319,19 +6638,7 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
-  buffer: unknown,
-  enter: unknown,
-  config: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
   str: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  expr: unknown,
-  flags: unknown,
-  highlight: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6391,11 +6698,6 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   ns_id: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  ns_id: unknown,
   name: unknown,
   val: unknown,
 ): Promise<unknown>;
@@ -6435,6 +6737,36 @@ export function nvim_ui_try_resize_grid(
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
+  dict: unknown,
+  fn: unknown,
+  args: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  fn: unknown,
+  args: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  command: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  expr: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  src: unknown,
+  output: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  expr: unknown,
+  flags: unknown,
+  highlight: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
   buffer: unknown,
   first: unknown,
   last: unknown,
@@ -6457,21 +6789,13 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   buffer: unknown,
-  ns_id: unknown,
-  line_start: unknown,
-  line_end: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  id: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
   mode: unknown,
   lhs: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,
@@ -6494,21 +6818,6 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   buffer: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  id: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  start: unknown,
-  end: unknown,
   opts: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
@@ -6562,14 +6871,6 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   buffer: unknown,
-  ns_id: unknown,
-  line: unknown,
-  col: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
   mode: unknown,
   lhs: unknown,
   rhs: unknown,
@@ -6587,25 +6888,70 @@ export function nvim_ui_try_resize_grid(
   denops: Denops,
   buffer: unknown,
   name: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  name: unknown,
-  value: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  name: unknown,
-  value: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  buffer: unknown,
-  src_id: unknown,
   line: unknown,
-  chunks: unknown,
+  col: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
+  value: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  name: unknown,
+  value: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  line_start: unknown,
+  line_end: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  id: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  id: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  start: unknown,
+  end: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  ns_id: unknown,
+  line: unknown,
+  col: unknown,
+  opts: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  name: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  ns_id: unknown,
   opts: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
@@ -6642,10 +6988,6 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   window: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  window: unknown,
   name: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
@@ -6681,11 +7023,6 @@ export function nvim_ui_try_resize_grid(
 export function nvim_ui_try_resize_grid(
   denops: Denops,
   window: unknown,
-  config: unknown,
-): Promise<unknown>;
-export function nvim_ui_try_resize_grid(
-  denops: Denops,
-  window: unknown,
   pos: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
@@ -6709,6 +7046,21 @@ export function nvim_ui_try_resize_grid(
   denops: Denops,
   window: unknown,
   width: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  buffer: unknown,
+  enter: unknown,
+  config: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  window: unknown,
+): Promise<unknown>;
+export function nvim_ui_try_resize_grid(
+  denops: Denops,
+  window: unknown,
+  config: unknown,
 ): Promise<unknown>;
 export function nvim_ui_try_resize_grid(
   denops: Denops,

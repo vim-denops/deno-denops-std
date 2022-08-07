@@ -50,9 +50,9 @@ export function balloon_show(
 }
 
 /**
- * Split {msg} into lines to be displayed in a balloon.  The
- * splits are made for the current window size and optimize to
- * show debugger output.
+ * Split String {msg} into lines to be displayed in a balloon.
+ * The splits are made for the current window size and optimize
+ * to show debugger output.
  * Returns a |List| with the split lines.
  * Can also be used as a |method|:
  * 	GetText()->balloon_split()->balloon_show()
@@ -65,6 +65,24 @@ export function balloon_split(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("balloon_split", ...args);
+}
+
+/**
+ * Return a List containing the number value of each byte in Blob
+ * {blob}.  Examples:
+ * 	blob2list(0z0102.0304)	returns [1, 2, 3, 4]
+ * 	blob2list(0z)		returns []
+ * Returns an empty List on error.  |list2blob()| does the
+ * opposite.
+ * Can also be used as a |method|:
+ * 	GetBlob()->blob2list()
+ */
+export function blob2list(denops: Denops, blob: unknown): Promise<unknown>;
+export function blob2list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("blob2list", ...args);
 }
 
 /** */
@@ -141,45 +159,160 @@ export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Change the current working directory to {dir}.  The scope of
- * the directory change depends on the directory of the current
- * window:
- * 	- If the current window has a window-local directory
- * 	  (|:lcd|), then changes the window local directory.
- * 	- Otherwise, if the current tabpage has a local
- * 	  directory (|:tcd|) then changes the tabpage local
- * 	  directory.
- * 	- Otherwise, changes the global directory.
- * {dir} must be a String.
- * If successful, returns the previous working directory.  Pass
- * this to another chdir() to restore the directory.
- * On failure, returns an empty string.
- * Example:
- * 	let save_dir = chdir(newdir)
- * 	if save_dir != ""
- * 	   " ... do some work
- * 	   call chdir(save_dir)
- * 	endif
+ * Return the digraph of {chars}.  This should be a string with
+ * exactly two characters.  If {chars} are not just two
+ * characters, or the digraph of {chars} does not exist, an error
+ * is given and an empty string is returned.
+ * The character will be converted from Unicode to 'encoding'
+ * when needed.  This does require the conversion to be
+ * available, it might fail.
+ * Also see |digraph_getlist()|.
+ * Examples:
+ * " Get a built-in digraph
+ * :echo digraph_get('00')		" Returns '∞'
+ * " Get a user-defined digraph
+ * :call digraph_set('aa', 'あ')
+ * :echo digraph_get('aa')		" Returns 'あ'
  * Can also be used as a |method|:
- * 	GetDir()->chdir()
+ * 	GetChars()->digraph_get()
+ * This function works only when compiled with the |+digraphs|
+ * feature.  If this feature is disabled, this function will
+ * display an error message.
  */
-export function chdir(denops: Denops, dir: unknown): Promise<unknown>;
-export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("chdir", ...args);
+export function digraph_get(denops: Denops, chars: unknown): Promise<unknown>;
+export function digraph_get(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("digraph_get", ...args);
 }
 
 /**
- * Output {expr} as-is, including unprintable characters.  This
- * can be used to output a terminal code. For example, to disable
- * modifyOtherKeys:
+ * Return a list of digraphs.  If the {listall} argument is given
+ * and it is TRUE, return all digraphs, including the default
+ * digraphs.  Otherwise, return only user-defined digraphs.
+ * The characters will be converted from Unicode to 'encoding'
+ * when needed.  This does require the conservation to be
+ * available, it might fail.
+ * Also see |digraph_get()|.
+ * Examples:
+ * " Get user-defined digraphs
+ * :echo digraph_getlist()
+ * " Get all the digraphs, including default digraphs
+ * :echo digraph_getlist(1)
+ * Can also be used as a |method|:
+ * 	GetNumber()->digraph_getlist()
+ * This function works only when compiled with the |+digraphs|
+ * feature.  If this feature is disabled, this function will
+ * display an error message.
+ */
+export function digraph_getlist(
+  denops: Denops,
+  listall?: unknown,
+): Promise<unknown>;
+export function digraph_getlist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("digraph_getlist", ...args);
+}
+
+/**
+ * Add digraph {chars} to the list.  {chars} must be a string
+ * with two characters.  {digraph} is a string with one utf-8
+ * encoded character. Be careful, composing characters are NOT
+ * ignored.  This function is similar to |:digraphs| command, but
+ * useful to add digraphs start with a white space.
+ * The function result is v:true if |digraph| is registered.  If
+ * this fails an error message is given and v:false is returned.
+ * If you want to define multiple digraphs at once, you can use
+ * |digraph_setlist()|.
+ * Example:
+ * 	call digraph_set('  ', 'あ')
+ * Can be used as a |method|:
+ * 	GetString()->digraph_set('あ')
+ * This function works only when compiled with the |+digraphs|
+ * feature.  If this feature is disabled, this function will
+ * display an error message.
+ */
+export function digraph_set(
+  denops: Denops,
+  chars: unknown,
+  digraph: unknown,
+): Promise<unknown>;
+export function digraph_set(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("digraph_set", ...args);
+}
+
+/**
+ * Similar to |digraph_set()| but this function can add multiple
+ * digraphs at once.  {digraphlist} is a list composed of lists,
+ * where each list contains two strings with {chars} and
+ * {digraph} as in |digraph_set()|.
+ * Example:
+ *     call digraph_setlist([['aa', 'あ'], ['ii', 'い']])
+ * It is similar to the following:
+ *     for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
+ * 	  call digraph_set(chars, digraph)
+ *     endfor
+ * Except that the function returns after the first error,
+ * following digraphs will not be added.
+ * Can be used as a |method|:
+ *     GetList()->digraph_setlist()
+ * This function works only when compiled with the |+digraphs|
+ * feature.  If this feature is disabled, this function will
+ * display an error message.
+ */
+export function digraph_setlist(
+  denops: Denops,
+  digraphlist: unknown,
+): Promise<unknown>;
+export function digraph_setlist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("digraph_setlist", ...args);
+}
+
+/**
+ * Output {string} as-is, including unprintable characters.
+ * This can be used to output a terminal code. For example, to
+ * disable modifyOtherKeys:
  * 	call echoraw(&t_TE)
  * and to enable it again:
  * 	call echoraw(&t_TI)
  * Use with care, you can mess up the terminal this way.
  */
-export function echoraw(denops: Denops, expr: unknown): Promise<unknown>;
+export function echoraw(denops: Denops, string: unknown): Promise<unknown>;
 export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("echoraw", ...args);
+}
+
+/**
+ * Like `exists()` but evaluated at compile time.  This is useful
+ * to skip a block where a function is used that would otherwise
+ * give an error:
+ * 	if exists_compiled('*ThatFunction')
+ * 	   ThatFunction('works')
+ * 	endif
+ * If `exists()` were used then a compilation error would be
+ * given if ThatFunction() is not defined.
+ * {expr} must be a literal string.
+ * Can only be used in a |:def| function.
+ * This does not work to check for arguments or local variables.
+ */
+export function exists_compiled(
+  denops: Denops,
+  expr: unknown,
+): Promise<unknown>;
+export function exists_compiled(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("exists_compiled", ...args);
 }
 
 /**
@@ -230,10 +363,10 @@ export function flattennew(
 /**
  * Get the full command name from a short abbreviated command
  * name; see |20.2| for details on command abbreviations.
- * {name} may start with a `:` and can include a [range], these
- * are skipped and not returned.
+ * The string argument {name} may start with a `:` and can
+ * include a [range], these are skipped and not returned.
  * Returns an empty string if a command doesn't exist or if it's
- * ambiguous (for user-defined functions).
+ * ambiguous (for user-defined commands).
  * For example `fullcommand('s')`, `fullcommand('sub')`,
  * `fullcommand(':%substitute')` all return "substitute".
  * Can also be used as a |method|:
@@ -248,9 +381,9 @@ export function fullcommand(
 }
 
 /**
- * Get the position for {expr}. Same as |getpos()| but the column
- * number in the returned List is a character index instead of
- * a byte index.
+ * Get the position for String {expr}. Same as |getpos()| but the
+ * column number in the returned List is a character index
+ * instead of a byte index.
  * If |getpos()| returns a very large column number, such as
  * 2147483647, then getcharpos() will return the character index
  * of the last character.
@@ -267,26 +400,6 @@ export function getcharpos(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getcharpos", ...args);
-}
-
-/**
- * Get a single character from the user or input stream as a
- * string.
- * If [expr] is omitted, wait until a character is available.
- * If [expr] is 0 or false, only get a character when one is
- * 	available.  Return an empty string otherwise.
- * If [expr] is 1 or true, only check if a character is
- * 	available, it is not consumed.  Return an empty string
- * 	if no character is available.
- * Otherwise this works like |getchar()|, except that a number
- * result is converted to a string.
- */
-export function getcharstr(denops: Denops, expr?: unknown): Promise<unknown>;
-export function getcharstr(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getcharstr", ...args);
 }
 
 /**
@@ -324,72 +437,7 @@ export function getimstatus(
 }
 
 /**
- * Returns a |Dictionary| with the last known position of the
- * mouse.  This can be used in a mapping for a mouse click or in
- * a filter of a popup window.  The items are:
- * 	screenrow	screen row
- * 	screencol	screen column
- * 	winid		Window ID of the click
- * 	winrow		row inside "winid"
- * 	wincol		column inside "winid"
- * 	line		text line inside "winid"
- * 	column		text column inside "winid"
- * All numbers are 1-based.
- * If not over a window, e.g. when in the command line, then only
- * "screenrow" and "screencol" are valid, the others are zero.
- * When on the status line below a window or the vertical
- * separator right of a window, the "line" and "column" values
- * are zero.
- * When the position is after the text then "column" is the
- * length of the text in bytes.
- * If the mouse is over a popup window then that window is used.
- * When using |getchar()| the Vim variables |v:mouse_lnum|,
- * |v:mouse_col| and |v:mouse_winid| also provide these values.
- */
-export function getmousepos(denops: Denops): Promise<unknown>;
-export function getmousepos(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getmousepos", ...args);
-}
-
-/**
- * Returns detailed information about register {regname} as a
- * Dictionary with the following entries:
- * 	regcontents	List of lines contained in register
- * 			{regname}, like
- * 			|getreg|({regname}, 1, 1).
- * 	regtype		the type of register {regname}, as in
- * 			|getregtype()|.
- * 	isunnamed	Boolean flag, v:true if this register
- * 			is currently pointed to by the unnamed
- * 			register.
- * 	points_to	for the unnamed register, gives the
- * 			single letter name of the register
- * 			currently pointed to (see |quotequote|).
- * 			For example, after deleting a line
- * 			with `dd`, this field will be "1",
- * 			which is the register that got the
- * 			deleted text.
- * If {regname} is invalid or not set, an empty Dictionary
- * will be returned.
- * If {regname} is not specified, |v:register| is used.
- * The returned Dictionary can be passed to |setreg()|.
- * In |Vim9-script| {regname} must be one character.
- * Can also be used as a |method|:
- * 	GetRegname()->getreginfo()
- */
-export function getreginfo(denops: Denops, regname?: unknown): Promise<unknown>;
-export function getreginfo(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getreginfo", ...args);
-}
-
-/**
- * Translate {text} if possible.
+ * Translate String {text} if possible.
  * This is mainly for use in the distributed Vim scripts.  When
  * generating message translations the {text} is extracted by
  * xgettext, the translator can add the translated message in the
@@ -497,6 +545,25 @@ export function js_encode(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("js_encode", ...args);
+}
+
+/**
+ * Return a Blob concatenating all the number values in {list}.
+ * Examples:
+ * 	list2blob([1, 2, 3, 4])	returns 0z01020304
+ * 	list2blob([])		returns 0z
+ * Returns an empty Blob on error.  If one of the numbers is
+ * negative or more than 255 error  is given.
+ * |blob2list()| does the opposite.
+ * Can also be used as a |method|:
+ * 	GetList()->list2blob()
+ */
+export function list2blob(denops: Denops, list: unknown): Promise<unknown>;
+export function list2blob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("list2blob", ...args);
 }
 
 /**
@@ -620,6 +687,8 @@ export function listener_remove(
  * as-is.
  * Other objects are returned as zero without any errors.
  * See |lua-luaeval| for more details.
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetExpr()->luaeval()
  * {only available when compiled with the |+lua| feature}
@@ -848,6 +917,8 @@ export function menu_info(
  *     :mz (define h (make-hash)) (hash-set! h "list" l)
  *     :echo mzeval("l")
  *     :echo mzeval("h")
+ * Note that in a `:def` function local variables are not visible
+ * to {expr}.
  * Can also be used as a |method|:
  * 	GetExpr()->mzeval()
  * {only available when compiled with the |+mzscheme| feature}
@@ -978,49 +1049,6 @@ export function reduce(
 ): Promise<unknown>;
 export function reduce(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("reduce", ...args);
-}
-
-/**
- * The result is a |List| of Numbers.  The first number is the same
- * as what |screenchar()| returns.  Further numbers are
- * composing characters on top of the base character.
- * This is mainly to be used for testing.
- * Returns an empty List when row or col is out of range.
- * Can also be used as a |method|:
- * 	GetRow()->screenchars(col)
- */
-export function screenchars(
-  denops: Denops,
-  row: unknown,
-  col: unknown,
-): Promise<unknown>;
-export function screenchars(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("screenchars", ...args);
-}
-
-/**
- * The result is a String that contains the base character and
- * any composing characters at position [row, col] on the screen.
- * This is like |screenchars()| but returning a String with the
- * characters.
- * This is mainly to be used for testing.
- * Returns an empty String when row or col is out of range.
- * Can also be used as a |method|:
- * 	GetRow()->screenstring(col)
- */
-export function screenstring(
-  denops: Denops,
-  row: unknown,
-  col: unknown,
-): Promise<unknown>;
-export function screenstring(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("screenstring", ...args);
 }
 
 /**
@@ -1272,14 +1300,14 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is a Number, which is the number of characters
- * in String {expr}.  Composing characters are ignored.
+ * in String {string}.  Composing characters are ignored.
  * |strchars()| can count the number of characters, counting
  * composing characters separately.
  * Also see |strlen()|, |strdisplaywidth()| and |strwidth()|.
  * Can also be used as a |method|:
  * 	GetText()->strcharlen()
  */
-export function strcharlen(denops: Denops, expr: unknown): Promise<unknown>;
+export function strcharlen(denops: Denops, string: unknown): Promise<unknown>;
 export function strcharlen(
   denops: Denops,
   ...args: unknown[]
@@ -1382,6 +1410,45 @@ export function prop_add(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Similar to prop_add(), but attaches a text property at
+ * multiple positions in a buffer.
+ * {props} is a dictionary with these fields:
+ *    bufnr	buffer to add the property to; when omitted
+ * 		the current buffer is used
+ *    id		user defined ID for the property; must be a
+ * 		number; when omitted zero is used
+ *    type		name of the text property type
+ * All fields except "type" are optional.
+ * The second argument is a List of Lists where each list
+ * specifies the starting and ending position of the text.  The
+ * first two items {lnum} and {col} specify the starting position
+ * of the text where the property will be attached and the last
+ * two items {end-lnum} and {end-col} specify the position just
+ * after the text.
+ * Example:
+ * 	call prop_add_list(#{type: 'MyProp', id: 2},
+ * 			\ [[1, 4, 1, 7],
+ * 			\  [1, 15, 1, 20],
+ * 			\  [2, 30, 3, 30]]
+ * Can also be used as a |method|:
+ * 	GetProp()->prop_add_list([[1, 1, 1, 2], [1, 4, 1, 8]])
+ */
+export function prop_add_list(
+  denops: Denops,
+  props: unknown,
+  lnum: unknown,
+  col: unknown,
+  end_lnum: unknown,
+  end_col: unknown,
+): Promise<unknown>;
+export function prop_add_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_add_list", ...args);
+}
+
+/**
  * Remove all text properties from line {lnum}.
  * When {lnum-end} is given, remove all text properties from line
  * {lnum} to {lnum-end} (inclusive).
@@ -1450,6 +1517,8 @@ export function prop_find(
  *    id		property ID
  *    type		name of the property type, omitted if
  * 		the type was deleted
+ *    type_bufnr	buffer number for which this type was defined;
+ * 		0 if the type is global
  *    start	when TRUE property starts in this line
  *    end		when TRUE property ends in this line
  * When "start" is zero the property started in a previous line,
@@ -2024,28 +2093,6 @@ export function term_sendkeys(
 }
 
 /**
- * Set the function name prefix to be used for the |terminal-api|
- * function in terminal {buf}.  For example:
- *     :call term_setapi(buf, "Myapi_")
- *     :call term_setapi(buf, "")
- * The default is "Tapi_".  When {expr} is an empty string then
- * no |terminal-api| function can be used for {buf}.
- * When used as a method the base is used for {buf}:
- * 	GetBufnr()->term_setapi({expr})
- */
-export function term_setapi(
-  denops: Denops,
-  buf: unknown,
-  expr: unknown,
-): Promise<unknown>;
-export function term_setapi(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setapi", ...args);
-}
-
-/**
  * Set the ANSI color palette used by terminal {buf}.
  * {colors} must be a List of 16 valid color names or hexadecimal
  * color codes, like those accepted by |highlight-guifg|.
@@ -2086,6 +2133,28 @@ export function term_setansicolors(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("term_setansicolors", ...args);
+}
+
+/**
+ * Set the function name prefix to be used for the |terminal-api|
+ * function in terminal {buf}.  For example:
+ *     :call term_setapi(buf, "Myapi_")
+ *     :call term_setapi(buf, "")
+ * The default is "Tapi_".  When {expr} is an empty string then
+ * no |terminal-api| function can be used for {buf}.
+ * When used as a method the base is used for {buf}:
+ * 	GetBufnr()->term_setapi({expr})
+ */
+export function term_setapi(
+  denops: Denops,
+  buf: unknown,
+  expr: unknown,
+): Promise<unknown>;
+export function term_setapi(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setapi", ...args);
 }
 
 /**
@@ -2362,7 +2431,7 @@ export function ch_evalraw(
 }
 
 /**
- * Get the buffer number that {handle} is using for {what}.
+ * Get the buffer number that {handle} is using for String {what}.
  * {handle} can be a Channel or a Job that has a Channel.
  * {what} can be "err" for stderr, "out" for stdout or empty for
  * socket output.
@@ -2432,8 +2501,8 @@ export function ch_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Write {msg} in the channel log file, if it was opened with
- * |ch_logfile()|.
+ * Write String {msg} in the channel log file, if it was opened
+ * with |ch_logfile()|.
  * When {handle} is passed the channel number is used for the
  * message.
  * {handle} can be a Channel or a Job that has a Channel.  The
@@ -2483,7 +2552,7 @@ export function ch_logfile(
 /**
  * Open a channel to {address}.  See |channel|.
  * Returns a Channel.  Use |ch_status()| to check for failure.
- * {address} has the form "hostname:port", e.g.,
+ * {address} is a String and has the form "hostname:port", e.g.,
  * "localhost:8765".
  * When using an IPv6 address, enclose it within square brackets.
  * E.g., "[2001:db8::1]:8765".
@@ -2660,7 +2729,7 @@ export function ch_status(
 /**
  * Get the channel handle that {job} is using.
  * To check if the job has no channel:
- * 	if string(job_getchannel()) == 'channel fail'
+ * 	if string(job_getchannel(job)) == 'channel fail'
  * Can also be used as a |method|:
  * 	GetJob()->job_getchannel()
  */
@@ -2945,7 +3014,8 @@ export function test_getvalue(
 
 /**
  * Drop one or more files in {list} in the window at {row}, {col}.
- * This function only works when the GUI is running.
+ * This function only works when the GUI is running and the
+ * |drag-n-drop| feature is present.
  * The supported values for {mods} are:
  * 	0x4	Shift
  * 	0x8	Alt
@@ -3121,28 +3191,6 @@ export function test_null_string(
 }
 
 /**
- * Return a value with unknown type. Only useful for testing.
- */
-export function test_unknown(denops: Denops): Promise<unknown>;
-export function test_unknown(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("test_unknown", ...args);
-}
-
-/**
- * Return a value with void type. Only useful for testing.
- */
-export function test_void(denops: Denops): Promise<unknown>;
-export function test_void(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("test_void", ...args);
-}
-
-/**
  * Reset the flag that indicates option {name} was set.  Thus it
  * looks like it still has the default value. Use like this:
  * 	set ambiwidth=double
@@ -3307,6 +3355,28 @@ export function test_srand_seed(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("test_srand_seed", ...args);
+}
+
+/**
+ * Return a value with unknown type. Only useful for testing.
+ */
+export function test_unknown(denops: Denops): Promise<unknown>;
+export function test_unknown(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_unknown", ...args);
+}
+
+/**
+ * Return a value with void type. Only useful for testing.
+ */
+export function test_void(denops: Denops): Promise<unknown>;
+export function test_void(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_void", ...args);
 }
 
 /**
@@ -3584,7 +3654,7 @@ export function assert_notmatch(
 }
 
 /**
- * Report a test failure directly, using {msg}.
+ * Report a test failure directly, using String {msg}.
  * Always returns one.
  * Can also be used as a |method|:
  * 	GetMessage()->assert_report()
@@ -3626,7 +3696,8 @@ export function assert_report(
  * Can also be used as a |method|:
  * 	GetName()->test_getvalue()
  * Drop one or more files in {list} in the window at {row}, {col}.
- * This function only works when the GUI is running.
+ * This function only works when the GUI is running and the
+ * |drag-n-drop| feature is present.
  * The supported values for {mods} are:
  * 	0x4	Shift
  * 	0x8	Alt
@@ -3676,8 +3747,6 @@ export function assert_report(
  * Return a |List| that is null. Only useful for testing.
  * Return a |Partial| that is null. Only useful for testing.
  * Return a |String| that is null. Only useful for testing.
- * Return a value with unknown type. Only useful for testing.
- * Return a value with void type. Only useful for testing.
  * Reset the flag that indicates option {name} was set.  Thus it
  * looks like it still has the default value. Use like this:
  * 	set ambiwidth=double
@@ -3756,6 +3825,8 @@ export function assert_report(
  * 	GetTime()->test_settime()
  * When [seed] is given this sets the seed value used by
  * `srand()`.  When omitted the test seed is removed.
+ * Return a value with unknown type. Only useful for testing.
+ * Return a value with void type. Only useful for testing.
  * Run {cmd} and add an error message to |v:errors| if it does
  * NOT produce a beep or visual bell.
  * Also see |assert_fails()|, |assert_nobeep()| and
@@ -3874,7 +3945,7 @@ export function assert_report(
  * Also see |assert-return|.
  * Can also be used as a |method|:
  * 	getFile()->assert_notmatch('bar.*')
- * Report a test failure directly, using {msg}.
+ * Report a test failure directly, using String {msg}.
  * Always returns one.
  * Can also be used as a |method|:
  * 	GetMessage()->assert_report()
