@@ -5,6 +5,8 @@ import * as nvimFn from "../function/nvim/mod.ts";
 import * as itertools from "https://deno.land/x/itertools@v1.0.2/mod.ts";
 import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 
+const cacheKey = Symbol("denops_std/buffer/decoration/vimDecorate/rs");
+
 export type Decoration = {
   // Line number
   line: number;
@@ -34,26 +36,42 @@ export function decorate(
   }
 }
 
+function uniq<T>(array: T[]): T[] {
+  return [...new Set(array)];
+}
+
 async function vimDecorate(
   denops: Denops,
   bufnr: number,
   decorations: Decoration[],
 ): Promise<void> {
-  const toPropType = (n: string) => `denops_std:buffer:decoration:decorate:${n}`;
-  try {
-    for (const chunk of itertools.chunked(decorations, 1000)) {
-      await batch.batch(denops, async (denops) => {
-        for (const deco of chunk) {
-          await vimFn.prop_add(denops, deco.line, deco.column, {
-            bufnr,
-            length: deco.length,
-            type: toPropType(deco.highlight),
-          });
-        }
+  const toPropType = (n: string) => `denps_std:buffer:decoration:decorate:${n}`;
+  const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
+  denops.context[cacheKey] = rs;
+  const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
+    !rs.has(v)
+  );
+  await batch.batch(denops, async (denops) => {
+    for (const highlight of hs) {
+      const propType = toPropType(highlight);
+      await vimFn.prop_type_add(denops, propType, {
+        highlight,
+        combine: false,
       });
+      rs.add(highlight);
     }
-  } catch {
-    // Fail silently
+  });
+  for (const chunk of itertools.chunked(decorations, 1000)) {
+    await batch.batch(denops, async (denops) => {
+      for (const deco of chunk) {
+        const propType = toPropType(deco.highlight);
+        await vimFn.prop_add(denops, deco.line, deco.column, {
+          bufnr,
+          length: deco.length,
+          type: propType,
+        });
+      }
+    });
   }
 }
 
