@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.150.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
 import { decode, encode } from "./utils.ts";
 
 Deno.test("encode does nothing on alphabet characters", () => {
