@@ -3,13 +3,17 @@ import { Definition, Variant } from "./types.ts";
 const denops = "https://deno.land/x/denops_core@v3.1.0/mod.ts";
 
 const translate: Record<string, string> = {
+  "*config": "config",
+  "*opts": "opts",
   "default": "defaultValue",
   "delete": "delete_",
+  "end-col": "end_col",
+  "end-lnum": "end_lnum",
   "eval": "eval_",
-  "function": "function_",
-  "lnum-end": "lnum_end",
   "fname-one": "fname_one",
   "fname-two": "fname_two",
+  "function": "function_",
+  "lnum-end": "lnum_end",
 };
 
 function formatDocs(docs: string): string[] {
