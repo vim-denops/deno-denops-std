@@ -13,6 +13,12 @@ Deno.test("encode does nothing on numeric characters", () => {
   const exp = src;
   assertEquals(dst, exp);
 });
+Deno.test("encode does nothing on the percent character", () => {
+  const src = "%";
+  const dst = encode(src);
+  const exp = "%";
+  assertEquals(dst, exp);
+});
 Deno.test('encode encodes some symbol characters ("<>|?*)', () => {
   const src = " !\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~";
   const dst = encode(src);
@@ -20,7 +26,7 @@ Deno.test('encode encodes some symbol characters ("<>|?*)', () => {
   assertEquals(dst, exp);
 });
 Deno.test("encode does nothing on 日本語", () => {
-  const src = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const src = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   const dst = encode(src);
   const exp = src;
   assertEquals(dst, exp);
@@ -44,6 +50,18 @@ Deno.test("decode does nothing on numeric characters", () => {
   const exp = src;
   assertEquals(dst, exp);
 });
+Deno.test("decode decodes encoded the percent character", () => {
+  const src = "%25";
+  const dst = decode(src);
+  const exp = "%";
+  assertEquals(dst, exp);
+});
+Deno.test("decode decodes encoded the percent character (only once)", () => {
+  const src = "%2520";
+  const dst = decode(src);
+  const exp = "%20";
+  assertEquals(dst, exp);
+});
 Deno.test('decode decodes encoded characters ("<>|?*)', () => {
   const src = " !%22#$%&'()%2A+,-./:;%3C=%3E%3F@[\\]^`{%7C}~";
   const dst = decode(src);
@@ -51,7 +69,7 @@ Deno.test('decode decodes encoded characters ("<>|?*)', () => {
   assertEquals(dst, exp);
 });
 Deno.test("decode does nothing on 日本語", () => {
-  const src = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const src = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   const dst = decode(src);
   const exp = src;
   assertEquals(dst, exp);
@@ -64,10 +82,10 @@ Deno.test("decode does nothing on emoji (🥃)", () => {
 });
 Deno.test("decode decodes encoded 日本語", () => {
   const src = encodeURIComponent(
-    "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす",
+    "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす",
   );
   const dst = decode(src);
-  const exp = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const exp = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   assertEquals(dst, exp);
 });
 Deno.test("decode decodes encoded emoji (🥃)", () => {

@@ -116,7 +116,7 @@ assertEquals(
     scheme: "denops",
     expr: path.toFileUrl("C:\\Users\John Titor\test.git").pathname,
   }),
-  "denops:///C:/Users/John%20Titor/test.git",
+  "denops:///C:/Users/John%2520Titor/test.git",
 );
 ```
 
@@ -183,10 +183,10 @@ import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import * as path from "https://deno.land/std/path/mod.ts";
 import { parse } from "../bufname/mod.ts";
 
-const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
+const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
 assertEquals(bufname, {
   scheme: "denops",
-  expr: "/C:/Users/John Titor/test.git",
+  expr: "/C:/Users/John%20Titor/test.git",
 });
 // NOTE:
 // Works only on Windows (Use path.win32.fromFileUrl instead on other platforms)
