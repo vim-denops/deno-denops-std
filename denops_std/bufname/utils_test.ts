@@ -20,7 +20,7 @@ Deno.test('encode encodes some symbol characters ("<>|?*)', () => {
   assertEquals(dst, exp);
 });
 Deno.test("encode does nothing on 日本語", () => {
-  const src = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const src = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   const dst = encode(src);
   const exp = src;
   assertEquals(dst, exp);
@@ -51,7 +51,7 @@ Deno.test('decode decodes encoded characters ("<>|?*)', () => {
   assertEquals(dst, exp);
 });
 Deno.test("decode does nothing on 日本語", () => {
-  const src = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const src = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   const dst = decode(src);
   const exp = src;
   assertEquals(dst, exp);
@@ -64,10 +64,10 @@ Deno.test("decode does nothing on emoji (🥃)", () => {
 });
 Deno.test("decode decodes encoded 日本語", () => {
   const src = encodeURIComponent(
-    "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす",
+    "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす",
   );
   const dst = decode(src);
-  const exp = "いろはにへへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
+  const exp = "いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす";
   assertEquals(dst, exp);
 });
 Deno.test("decode decodes encoded emoji (🥃)", () => {
