@@ -191,13 +191,39 @@ Deno.test("format pass example in README.md", () => {
     "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
   );
 
+  const fileUrl = path.win32.toFileUrl("C:\\Users\\John Titor\\test.git");
+  assertEquals(
+    fileUrl.pathname,
+    "/C:/Users/John%20Titor/test.git",
+  );
   assertEquals(
     format({
       scheme: "denops",
-      expr: path.win32.toFileUrl("C:\\Users\\John Titor\\test.git").pathname,
+      expr: fileUrl.pathname,
     }),
-    "denops:///C:/Users/John%20Titor/test.git",
+    "denops:///C:/Users/John%2520Titor/test.git",
   );
+});
+Deno.test("format encodes '%' in 'expr'", () => {
+  const src = {
+    scheme: "denops",
+    expr: "/hello%world",
+  };
+  const dst = format(src);
+  const exp = "denops:///hello%25world";
+  assertEquals(dst, exp);
+});
+Deno.test("format encodes '%' in 'params'", () => {
+  const src = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "%foo",
+    },
+  };
+  const dst = format(src);
+  const exp = "denops:///absolute/path/to/worktree;foo=%25foo";
+  assertEquals(dst, exp);
 });
 
 Deno.test("parse throws exception when 'expr' contains unusable characters", () => {
@@ -375,16 +401,52 @@ Deno.test("parse pass example in README.md", () => {
     },
   );
 
-  const bufname = parse("denops:///C:/Users/John%20Titor/test.git");
+  const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
   assertEquals(
     bufname,
     {
       scheme: "denops",
-      expr: "/C:/Users/John Titor/test.git",
+      expr: "/C:/Users/John%20Titor/test.git",
     },
   );
   assertEquals(
     path.win32.fromFileUrl(`file://${bufname.expr}`),
     "C:\\Users\\John Titor\\test.git",
   );
+});
+Deno.test("parse decode percent-encoded characters ('%') in 'expr'", () => {
+  const src = "denops:///hello%25world";
+  const dst = parse(src);
+  const exp = {
+    scheme: "denops",
+    expr: "/hello%world",
+  };
+  assertEquals(dst, exp);
+});
+Deno.test("parse decode percent-encoded characters ('%') in 'params'", () => {
+  const src = "denops:///absolute/path/to/worktree;foo=%25foo";
+  const dst = parse(src);
+  const exp = {
+    scheme: "denops",
+    expr: "/absolute/path/to/worktree",
+    params: {
+      foo: "%foo",
+    },
+  };
+  assertEquals(dst, exp);
+});
+Deno.test("parse decode bufname that cause 'URI malformed' on denops-std v3.8.1", () => {
+  const src =
+    "ginlog:///Users/alisue/ghq/github.com/lambdalisue/gin.vim;pretty=%22%25C%28yellow%29%25h%25C%28reset%29+%25C%28magenta%29%5B%25ad%5D%25C%28reset%29%25C%28auto%29%25d%25C%28reset%29+%25s+%25C%28cyan%29%40%25an%25C%28reset%29%22#[]$";
+  const dst = parse(src);
+  const exp = {
+    scheme: "ginlog",
+    expr: "/Users/alisue/ghq/github.com/lambdalisue/gin.vim",
+    params: {
+      pretty:
+        '"%C(yellow)%h%C(reset) %C(magenta)[%ad]%C(reset)%C(auto)%d%C(reset) %s %C(cyan)@%an%C(reset)"',
+    },
+    fragment: "[]$",
+  };
+  assertEquals(dst, exp);
 });

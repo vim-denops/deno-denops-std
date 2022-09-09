@@ -13,6 +13,12 @@ Deno.test("encode does nothing on numeric characters", () => {
   const exp = src;
   assertEquals(dst, exp);
 });
+Deno.test("encode does nothing on the percent character", () => {
+  const src = "%";
+  const dst = encode(src);
+  const exp = "%";
+  assertEquals(dst, exp);
+});
 Deno.test('encode encodes some symbol characters ("<>|?*)', () => {
   const src = " !\"#$%&'()*+,-./:;<=>?@[\\]^`{|}~";
   const dst = encode(src);
@@ -42,6 +48,18 @@ Deno.test("decode does nothing on numeric characters", () => {
   const src = "1234567890";
   const dst = decode(src);
   const exp = src;
+  assertEquals(dst, exp);
+});
+Deno.test("decode decodes encoded the percent character", () => {
+  const src = "%25";
+  const dst = decode(src);
+  const exp = "%";
+  assertEquals(dst, exp);
+});
+Deno.test("decode decodes encoded the percent character (only once)", () => {
+  const src = "%2520";
+  const dst = decode(src);
+  const exp = "%20";
   assertEquals(dst, exp);
 });
 Deno.test('decode decodes encoded characters ("<>|?*)', () => {

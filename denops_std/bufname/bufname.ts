@@ -85,10 +85,9 @@ export function format(
       `Scheme '${scheme}' contains unusable characters. Only alphabets are allowed.`,
     );
   }
-  const encodedPath = encode(expr).replaceAll(";", "%3B").replaceAll(
-    "#",
-    "%23",
-  );
+  const encodedPath = encode(expr.replaceAll("%", "%25"))
+    .replaceAll(";", "%3B")
+    .replaceAll("#", "%23");
   const suffix1 = params
     ? `;${encode(toURLSearchParams(params).toString())}`
     : "";
@@ -123,13 +122,14 @@ export function parse(bufname: string): Bufname {
     );
   }
   const remain = decode(bufname.substring(`${scheme}://`.length), [
+    "%25", // %
     "%3B", // ;
     "%23", // #
   ]);
   const m2 = remain.match(exprPattern)!;
   const expr = decode(m2[1]);
   const params = m2[2]
-    ? fromURLSearchParams(new URLSearchParams(decode(m2[2])))
+    ? fromURLSearchParams(new URLSearchParams(decode(m2[2], ["%25"])))
     : undefined;
   const fragment = m2[3] ? decode(m2[3]) : undefined;
   return {
