@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.151.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.1.0/test/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.159.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.2.0/test/mod.ts";
 import { batch, BatchHelper } from "./batch.ts";
 
 test({
