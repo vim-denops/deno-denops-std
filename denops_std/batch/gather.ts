@@ -44,6 +44,10 @@ class GatherHelper implements Denops {
     this.#denops.dispatcher = dispatcher;
   }
 
+  redraw(_force?: boolean): Promise<void> {
+    throw new Error("The 'redraw' method is not available on GatherHelper.");
+  }
+
   call(fn: string, ...args: unknown[]): Promise<unknown> {
     if (this.#closed) {
       throw new Error(

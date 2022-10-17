@@ -93,3 +93,18 @@ test({
     );
   },
 });
+test({
+  mode: "any",
+  name: "gather() throws an error when 'denops.redraw()' is called.",
+  fn: async (denops) => {
+    await assertRejects(
+      async () => {
+        await gather(denops, async (denops) => {
+          await denops.redraw();
+        });
+      },
+      "method is not available",
+    );
+  },
+  prelude: ["let g:denops#enable_workaround_vim_before_8_2_3081 = 1"],
+});

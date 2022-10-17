@@ -5,9 +5,12 @@ import type {
   Meta,
 } from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
 
+type Redraw = undefined | boolean;
+
 class BatchHelper implements Denops {
   #denops: Denops;
   #calls: [string, ...unknown[]][];
+  #redraw: Redraw;
   #closed: boolean;
 
   constructor(denops: Denops) {
@@ -18,6 +21,10 @@ class BatchHelper implements Denops {
 
   static getCalls(helper: BatchHelper): [string, ...unknown[]][] {
     return helper.#calls;
+  }
+
+  static getRedraw(helper: BatchHelper): Redraw {
+    return helper.#redraw;
   }
 
   static close(helper: BatchHelper): void {
@@ -42,6 +49,12 @@ class BatchHelper implements Denops {
 
   set dispatcher(dispatcher: Dispatcher) {
     this.#denops.dispatcher = dispatcher;
+  }
+
+  redraw(force?: boolean): Promise<void> {
+    // Prefer 'force' if the method is called multiple times
+    this.#redraw = !!this.#redraw || !!force;
+    return Promise.resolve();
   }
 
   call(fn: string, ...args: unknown[]): Promise<unknown> {
@@ -96,6 +109,10 @@ export async function batch(
   }
   const calls = BatchHelper.getCalls(helper);
   await denops.batch(...calls);
+  const redraw = BatchHelper.getRedraw(helper);
+  if (redraw != null) {
+    await denops.redraw(redraw);
+  }
 }
 
 export type { BatchHelper };

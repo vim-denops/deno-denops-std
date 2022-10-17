@@ -1,4 +1,9 @@
 import { assertEquals } from "https://deno.land/std@0.159.0/testing/asserts.ts";
+import {
+  assertSpyCall,
+  assertSpyCalls,
+  spy,
+} from "https://deno.land/std@0.159.0/testing/mock.ts";
 import { test } from "https://deno.land/x/denops_core@v3.2.0/test/mod.ts";
 import { batch, BatchHelper } from "./batch.ts";
 
@@ -159,5 +164,89 @@ test({
       "1",
       "1",
     ]);
+  },
+});
+test({
+  mode: "any",
+  name:
+    "batch() invokes 'redraw()' only once after the batch is actually executed.",
+  fn: async (denops) => {
+    await denops.cmd("let g:denops_batch_test = []");
+    await denops.cmd(
+      "command! -nargs=1 DenopsBatchTest let g:denops_batch_test += [<f-args>]",
+    );
+    const redrawSpy = spy(denops, "redraw");
+    try {
+      await batch(denops, async (denops) => {
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 1"),
+          undefined,
+        );
+        await denops.redraw();
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 2"),
+          undefined,
+        );
+        await denops.redraw();
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 3"),
+          undefined,
+        );
+        await denops.redraw();
+      });
+    } finally {
+      redrawSpy.restore();
+    }
+    assertEquals(await denops.eval("g:denops_batch_test") as string[], [
+      "1",
+      "2",
+      "3",
+    ]);
+    assertSpyCalls(redrawSpy, 1);
+    assertSpyCall(redrawSpy, 0, {
+      args: [false],
+    });
+  },
+});
+test({
+  mode: "any",
+  name:
+    "batch() invokes 'redraw(true)' only once after the batch is actually executed.",
+  fn: async (denops) => {
+    await denops.cmd("let g:denops_batch_test = []");
+    await denops.cmd(
+      "command! -nargs=1 DenopsBatchTest let g:denops_batch_test += [<f-args>]",
+    );
+    const redrawSpy = spy(denops, "redraw");
+    try {
+      await batch(denops, async (denops) => {
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 1"),
+          undefined,
+        );
+        await denops.redraw();
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 2"),
+          undefined,
+        );
+        await denops.redraw(true);
+        assertEquals(
+          await denops.call("execute", "DenopsBatchTest 3"),
+          undefined,
+        );
+        await denops.redraw();
+      });
+    } finally {
+      redrawSpy.restore();
+    }
+    assertEquals(await denops.eval("g:denops_batch_test") as string[], [
+      "1",
+      "2",
+      "3",
+    ]);
+    assertSpyCalls(redrawSpy, 1);
+    assertSpyCall(redrawSpy, 0, {
+      args: [true],
+    });
   },
 });

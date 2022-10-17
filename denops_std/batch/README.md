@@ -94,6 +94,11 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
+Note that `denops.redraw()` is executed only once after the batch is actually
+executed, no matter how many times it is called in the `batch()`. If the `force`
+option is specified even once, the last call will be the one with the force
+option specified.
+
 ### gather
 
 Use `gather()` to call multiple denops functions sequentially without overhead
@@ -138,3 +143,6 @@ export async function main(denops: Denops): Promise<void> {
 The `denops` instance passed to the `gather` block is NOT available outside of
 the block. An error is thrown when `denops.call()`, `denops.cmd()`, or
 `denops.eval()` is called.
+
+Note that `denops.redraw()` cannot be called within `gather()`. If it is called,
+an error is raised.
