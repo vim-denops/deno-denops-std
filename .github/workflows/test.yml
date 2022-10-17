@@ -71,7 +71,7 @@ jobs:
           - vim: "v8.2.3452"
             nvim: "v0.6.0"
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
