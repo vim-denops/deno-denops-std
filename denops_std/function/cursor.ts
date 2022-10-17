@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
 import type { Position, ScreenPos } from "./types.ts";
 
 /**

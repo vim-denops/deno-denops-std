@@ -3,7 +3,7 @@ import type {
   Denops,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v3.1.0/mod.ts";
+} from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
 
 class GatherHelper implements Denops {
   #denops: Denops;
@@ -42,6 +42,10 @@ class GatherHelper implements Denops {
 
   set dispatcher(dispatcher: Dispatcher) {
     this.#denops.dispatcher = dispatcher;
+  }
+
+  redraw(_force?: boolean): Promise<void> {
+    throw new Error("The 'redraw' method is not available on GatherHelper.");
   }
 
   call(fn: string, ...args: unknown[]): Promise<unknown> {

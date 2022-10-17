@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.151.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.1.0/test/mod.ts";
+} from "https://deno.land/std@0.159.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_core@v3.2.0/test/mod.ts";
 import { input } from "./input.ts";
 import { execute } from "./execute.ts";
 import * as autocmd from "../autocmd/mod.ts";

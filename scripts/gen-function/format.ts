@@ -1,6 +1,6 @@
 import { Definition, Variant } from "./types.ts";
 
-const denops = "https://deno.land/x/denops_core@v3.1.0/mod.ts";
+const denops = "https://deno.land/x/denops_core@v3.2.0/mod.ts";
 
 const translate: Record<string, string> = {
   "*config": "config",
