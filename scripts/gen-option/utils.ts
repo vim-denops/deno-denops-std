@@ -1,4 +1,4 @@
-import * as io from "https://deno.land/std@0.159.0/io/mod.ts";
+import * as streams from "https://deno.land/std@0.159.0/streams/mod.ts";
 
 export async function downloadString(url: string): Promise<string> {
   const textDecoder = new TextDecoder();
@@ -6,8 +6,8 @@ export async function downloadString(url: string): Promise<string> {
   if (!response.body) {
     throw new Error(`Failed to read ${url}`);
   }
-  const reader = io.readerFromStreamReader(response.body.getReader());
-  return textDecoder.decode(await io.readAll(reader));
+  const reader = streams.readerFromStreamReader(response.body.getReader());
+  return textDecoder.decode(await streams.readAll(reader));
 }
 
 export function regexIndexOf(s: string, pattern: RegExp, offset = 0): number {
