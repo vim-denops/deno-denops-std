@@ -39,11 +39,11 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ${{ env.DENO_DIR }}
           key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
@@ -75,17 +75,17 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: "./repo"
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: "vim-denops/denops.vim"
           path: "./denops.vim"
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: cache
         with:
           path: ${{ env.DENO_DIR }}
