@@ -1,7 +1,7 @@
 import type { Denops } from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
-import * as fs from "https://deno.land/std@0.159.0/fs/mod.ts";
-import * as hash from "https://deno.land/std@0.159.0/hash/mod.ts";
-import * as path from "https://deno.land/std@0.159.0/path/mod.ts";
+import * as fs from "https://deno.land/std@0.160.0/fs/mod.ts";
+import * as hash from "https://deno.land/std@0.160.0/hash/mod.ts";
+import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
 import { execute } from "./execute.ts";
 
 const loaded = new Set<URL>();
