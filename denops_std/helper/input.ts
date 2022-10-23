@@ -58,7 +58,11 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
       if a:completion isnot# v:null
         let options['completion'] = a:completion
       endif
-      let result = input(options)
+      try
+        let result = input(options)
+      catch /^Vim:Interrupt$/
+        return v:null
+      endtry
       if result ==# s:escape_token_${suffix}
         return v:null
       endif
