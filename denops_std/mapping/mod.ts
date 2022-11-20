@@ -118,7 +118,13 @@ export async function list(
 ): Promise<Mapping[]> {
   const mode = options.mode ?? "";
   const result = await fn.execute(denops, `${mode}map ${lhs}`) as string;
-  return result.split(/\r?\n/).filter((v) => v).map(parse);
+  return result.split(/\r?\n/).flatMap((v) => {
+    try {
+      return [parse(v)];
+    } catch {
+      return [];
+    }
+  }).filter((v) => v);
 }
 
 function forceArray<T>(v: T | T[]): T[] {

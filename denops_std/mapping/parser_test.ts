@@ -105,3 +105,11 @@ Deno.test(`parse() throws an error for invalid record`, () => {
     "Failed to parse a mapping record",
   );
 });
+Deno.test(`parse() throws an error for "Nvim builtin"`, () => {
+  assertThrows(
+    () => {
+      parse("                 Nvim builtin");
+    },
+    "Failed to parse a mapping record",
+  );
+});
