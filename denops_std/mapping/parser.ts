@@ -4,7 +4,7 @@ import { Mapping, Mode } from "./types.ts";
  * Parse record displayed by Vim's `map` command and return a `Mapping` instance.
  */
 export function parse(record: string): Mapping {
-  const m = record.match(/^(.)\s+(\S+)\s+(.*)$/);
+  const m = record.match(/^(...)(\S+)\s+(.*)$/);
   if (!m) {
     throw new Error(`Failed to parse a mapping record '${record}'`);
   }

@@ -8,7 +8,17 @@ export type Mode =
   | "s" // Select
   | "o" // Operator-pending
   | "t" // Terminal-Job
-  | "l"; // ":lmap" mappings for Insert, Command-line and Lang-Arg
+  | "l" // ":lmap" mappings for Insert, Command-line and Lang-Arg
+  // See https://github.com/vim-denops/deno-denops-std/issues/152 for detail
+  | "ov"
+  | "nv"
+  | "no"
+  | "os"
+  | "ns"
+  | "ox"
+  | "nx"
+  | "nox"
+  | "nos";
 
 export type Mapping = {
   // Modes for which the mapping is defined

@@ -74,6 +74,22 @@ const testcases: [string, Mapping][] = [
       buffer: false,
     },
   ],
+  ["ov #      <Plug>(asterisk-z#)zv", {
+    mode: "ov",
+    lhs: "#",
+    rhs: "<Plug>(asterisk-z#)zv",
+    noremap: false,
+    script: false,
+    buffer: false,
+  }],
+  ["nosa           * b", {
+    mode: "nos",
+    lhs: "a",
+    rhs: "b",
+    noremap: true,
+    script: false,
+    buffer: false,
+  }],
 ];
 for (const [record, expected] of testcases) {
   Deno.test(`parse() parses '${record}' and return a Mapping instance`, () => {
