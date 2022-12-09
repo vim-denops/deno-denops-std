@@ -87,24 +87,45 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   endfunction
 
   function! DenopsStdBufferConcreteRestore_${suffix}() abort
-    if !exists('b:denops_std_buffer_concrete_cache_${suffix}')
+    let cache = get(s:denops_std_buffer_concrete_cache_${suffix}, bufnr(), v:null)
+    if cache is# v:null
       return
     endif
     call DenopsStdBufferReplace_${suffix}(
           \\ bufnr('%'),
-          \\ b:denops_std_buffer_concrete_cache_${suffix}.content,
+          \\ cache.content,
           \\ v:null,
           \\ v:null,
           \\)
-    let &filetype = b:denops_std_buffer_concrete_cache_${suffix}.filetype
+    let &filetype = cache.filetype
   endfunction
 
   function! DenopsStdBufferConcreteStore_${suffix}() abort
-    let b:denops_std_buffer_concrete_cache_${suffix} = {
+    let s:denops_std_buffer_concrete_cache_${suffix}[bufnr()] = {
           \\ 'filetype': &filetype,
           \\ 'content': getline(1, '$'),
           \\}
   endfunction
+
+  let s:denops_std_buffer_concrete_cache_${suffix} = {}
+
+  augroup denops_std_buffer_${suffix}
+    autocmd!
+    autocmd User DenopsStopped,DenopsClosed ++once 
+          \\ silent! unlet! s:denops_std_buffer_concrete_cache_${suffix}
+    autocmd User DenopsStopped,DenopsClosed ++once 
+          \\ augroup denops_std_buffer_reload_${suffix} |
+          \\   autocmd! |
+          \\ augroup END
+    autocmd User DenopsStopped,DenopsClosed ++once 
+          \\ augroup denops_std_buffer_concrete_${suffix} |
+          \\   autocmd! |
+          \\ augroup END
+    autocmd User DenopsStopped,DenopsClosed ++once 
+          \\ augroup denops_std_buffer_${suffix} |
+          \\   autocmd! |
+          \\ augroup END
+  augroup END
   `;
   await execute(denops, script);
   return suffix;
