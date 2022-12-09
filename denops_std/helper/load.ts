@@ -1,6 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
 import * as fs from "https://deno.land/std@0.160.0/fs/mod.ts";
-import * as hash from "https://deno.land/std@0.160.0/hash/mod.ts";
 import * as path from "https://deno.land/std@0.160.0/path/mod.ts";
 import { execute } from "./execute.ts";
 
@@ -39,7 +38,7 @@ async function ensureLocalFile(url: URL): Promise<string> {
     return path.fromFileUrl(url);
   }
   const cacheDir = await getOrCreateCacheDir();
-  const filename = getLocalFilename(url);
+  const filename = await getLocalFilename(url);
   const filepath = path.join(cacheDir, filename);
   if (await fs.exists(filepath)) {
     return filepath;
@@ -58,11 +57,16 @@ async function ensureLocalFile(url: URL): Promise<string> {
   return filepath;
 }
 
-function getLocalFilename(url: URL): string {
-  const h = hash.createHash("sha256");
-  h.update(url.href);
+async function getLocalFilename(url: URL): Promise<string> {
+  const buf = await crypto.subtle.digest(
+    "sha-256",
+    new TextEncoder().encode(url.href),
+  );
+  const h = Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
   const basename = path.basename(url.pathname);
-  return `${h.toString()}-${basename}`;
+  return `${h}-${basename}`;
 }
 
 async function getOrCreateCacheDir(): Promise<string> {
