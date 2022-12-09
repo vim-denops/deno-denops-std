@@ -1,9 +1,9 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.2.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.2.2/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
 import { execute } from "../helper/mod.ts";
-import * as unknownutil from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
+import * as unknownutil from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import {
   assertFileFormat,
   FileFormat,
