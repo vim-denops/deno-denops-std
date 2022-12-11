@@ -68,7 +68,7 @@ import { open, reload } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // ...
   // Reload the content of the `bufnr` buffer.
   await reload(denops, bufnr);
@@ -90,7 +90,7 @@ import { decode, open, replace } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   const data = await Deno.readFile("README.md");
   const { content } = await decode(denops, bufnr, data);
   await replace(denops, bufnr, content);
@@ -111,7 +111,7 @@ import { append, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // Append the content under the cursor position of the `bufnr` buffer
   await append(denops, bufnr, ["Hello", "World"]);
 }
@@ -131,7 +131,7 @@ import { open, replace } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // Set the content of the `bufnr` buffer
   await replace(denops, bufnr, ["Hello", "World"]);
 }
@@ -153,7 +153,7 @@ import { assign, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   const content = await Deno.readFile("README.md");
   await assign(denops, bufnr, content);
 }
@@ -171,7 +171,7 @@ import { assign, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   const content = await Deno.readFile("README.md");
   // A preprocessor that replace all non words to "-"
   const preprocessor = (repl: string[]): string[] => {
@@ -194,7 +194,7 @@ import { concrete, open, replace } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   await fn.setbufvar(denops, bufnr, "&buftype", "nofile");
   await replace(denops, bufnr, ["Hello", "World"]);
   await concrete(denops, bufnr);
@@ -215,7 +215,7 @@ import { ensure, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // ...
   await ensure(denops, bufnr, async () => {
     await option.buftype.set(denops, "nofile");
@@ -239,7 +239,7 @@ import { modifiable, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // ...
   await modifiable(denops, bufnr, async () => {
     await fn.setline(denops, 1, ["Hello", "World"]);
@@ -258,7 +258,7 @@ import { decorate, open } from "../buffer/mod.ts";
 
 export async function main(denops: Denops): Promise<void> {
   await open(denops, "README.md");
-  const bufnr = await fn.bufnr(denops) as number;
+  const bufnr = (await fn.bufnr(denops)) as number;
   // ...
   await decorate(denops, bufnr, [
     {
@@ -279,3 +279,41 @@ export async function main(denops: Denops): Promise<void> {
 
 It uses `prop_add_list` in Vim and `nvim_buf_add_highlight` in Neovim to
 decorate the buffer.
+
+### undecorate
+
+Use `undecorate()` to undecorate the `bufnr` buffer decorated with `decorate`
+like:
+
+```typescript
+import { Denops } from "../mod.ts";
+import * as fn from "../function/mod.ts";
+import { decorate, open, undecorate } from "../buffer/mod.ts";
+
+export async function main(denops: Denops): Promise<void> {
+  await open(denops, "README.md");
+  const bufnr = (await fn.bufnr(denops)) as number;
+  // ...
+  await decorate(denops, bufnr, [
+    {
+      line: 1,
+      column: 1,
+      length: 10,
+      highlight: "Special",
+    },
+    {
+      line: 2,
+      column: 2,
+      length: 3,
+      highlight: "Comment",
+    },
+  ]);
+
+  // Do something
+
+  await undecorate(denops, bufnr);
+}
+```
+
+It uses `prop_add` in Vim and `nvim_buf_add_highlight` in Neovim to decorate the
+buffer.

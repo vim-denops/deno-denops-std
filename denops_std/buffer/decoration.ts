@@ -36,6 +36,23 @@ export function decorate(
   }
 }
 
+/**
+ * Undecorate the specified buffer
+ */
+export function undecorate(
+  denops: Denops,
+  bufnr: number,
+): Promise<void> {
+  switch (denops.meta.host) {
+    case "vim":
+      return vimUndecorate(denops, bufnr);
+    case "nvim":
+      return nvimUndecorate(denops, bufnr);
+    default:
+      unreachable(denops.meta.host);
+  }
+}
+
 function uniq<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
@@ -74,6 +91,26 @@ async function vimDecorate(
   });
 }
 
+async function vimUndecorate(
+  denops: Denops,
+  bufnr: number,
+): Promise<void> {
+  const propList = await vimFn.prop_list(denops, 1, {
+    bufnr,
+    end_lnum: -1,
+  }) as { id: string; type: string }[];
+  const propIds = new Set(
+    propList.filter((p) =>
+      p.type.startsWith("denops_std:buffer:decoration:decorate:")
+    ).map((p) => p.id),
+  );
+  await batch.batch(denops, async (denops) => {
+    for (const propId of propIds) {
+      await vimFn.prop_remove(denops, { id: propId, bufnr, all: true });
+    }
+  });
+}
+
 async function nvimDecorate(
   denops: Denops,
   bufnr: number,
@@ -98,4 +135,15 @@ async function nvimDecorate(
       }
     });
   }
+}
+
+async function nvimUndecorate(
+  denops: Denops,
+  bufnr: number,
+): Promise<void> {
+  const ns = await nvimFn.nvim_create_namespace(
+    denops,
+    "denops_std:buffer:decoration:decorate",
+  );
+  await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, 0, -1);
 }
