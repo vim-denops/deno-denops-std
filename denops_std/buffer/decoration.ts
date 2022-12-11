@@ -45,7 +45,8 @@ async function vimDecorate(
   bufnr: number,
   decorations: Decoration[],
 ): Promise<void> {
-  const toPropType = (n: string) => `denps_std:buffer:decoration:decorate:${n}`;
+  const toPropType = (n: string) =>
+    `denops_std:buffer:decoration:decorate:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
   denops.context[cacheKey] = rs;
   const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
