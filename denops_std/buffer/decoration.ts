@@ -42,12 +42,14 @@ export function decorate(
 export function undecorate(
   denops: Denops,
   bufnr: number,
+  start = 0,
+  end = -1,
 ): Promise<void> {
   switch (denops.meta.host) {
     case "vim":
-      return vimUndecorate(denops, bufnr);
+      return vimUndecorate(denops, bufnr, start, end);
     case "nvim":
-      return nvimUndecorate(denops, bufnr);
+      return nvimUndecorate(denops, bufnr, start, end);
     default:
       unreachable(denops.meta.host);
   }
@@ -94,10 +96,12 @@ async function vimDecorate(
 async function vimUndecorate(
   denops: Denops,
   bufnr: number,
+  start: number,
+  end: number,
 ): Promise<void> {
-  const propList = await vimFn.prop_list(denops, 1, {
+  const propList = await vimFn.prop_list(denops, start + 1, {
     bufnr,
-    end_lnum: -1,
+    end_lnum: end,
   }) as { id: string; type: string }[];
   const propIds = new Set(
     propList.filter((p) =>
@@ -140,10 +144,12 @@ async function nvimDecorate(
 async function nvimUndecorate(
   denops: Denops,
   bufnr: number,
+  start: number,
+  end: number,
 ): Promise<void> {
   const ns = await nvimFn.nvim_create_namespace(
     denops,
     "denops_std:buffer:decoration:decorate",
   );
-  await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, 0, -1);
+  await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, start, end);
 }

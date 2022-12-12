@@ -282,8 +282,8 @@ decorate the buffer.
 
 ### undecorate
 
-Use `undecorate()` to undecorate the `bufnr` buffer decorated with `decorate`
-like:
+Use `undecorate()` to undecorate the `bufnr` buffer from `start` line to `end`
+line decorated with `decorate` like:
 
 ```typescript
 import { Denops } from "../mod.ts";
@@ -311,7 +311,13 @@ export async function main(denops: Denops): Promise<void> {
 
   // Do something
 
-  await undecorate(denops, bufnr);
+  // Ranges are 0-based and exclusive.
+  // Remove only the first highlight.
+  const start = 0;
+  const end = 1;
+  await undecorate(denops, bufnr, start, end);
+  // Start and end are optional. Defaults are 0 and -1 (entire buffer).
+  // await undecorate(denops, bufnr);
 }
 ```
 
