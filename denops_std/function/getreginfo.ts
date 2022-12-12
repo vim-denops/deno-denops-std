@@ -69,7 +69,7 @@ export async function getreginfo(
     // Vim prior to 9.0.0936 need a workaround
     // https://github.com/vim/vim/issues/11598
     const suffix = await ensurePrerequisites(denops);
-    return await denops.call(`DenopsStdFunctionGetreginfo_${suffix}`, ...args);
+    return denops.call(`DenopsStdFunctionGetreginfo_${suffix}`, ...args);
   }
-  return await denops.call("getreginfo", ...args);
+  return denops.call("getreginfo", ...args);
 }
