@@ -41,7 +41,7 @@ test({
 });
 test({
   mode: "all",
-  name: "open opens a new buffer (symobls with percent-encoding)",
+  name: "open opens a new buffer (symbols with percent-encoding)",
   fn: async (denops) => {
     const symbols = " !%22#$%&'()%2a+,-./:;%3c=%3e%3f@[\\]^`{%7c}~";
     const info = await open(denops, `test://${symbols}`);
