@@ -6,21 +6,21 @@ import type {
 /**
  * Execute Vim script directly
  */
-export async function execute(
+export function execute(
   denops: Denops,
   script: string | string[],
   ctx: Context = {},
 ): Promise<void> {
-  if (Array.isArray(script)) {
-    ctx = {
-      ...ctx,
-      __denops_internal_command: script
-        .map((x) => x.replace(/^\s+|\s+$/g, ""))
-        .filter((x) => !!x),
-    };
-    await denops.cmd("call execute(l:__denops_internal_command, '')", ctx);
-    return;
+  if (!Array.isArray(script)) {
+    // join line-continuation
+    script = script.replace(/\r?\n\s*\\/g, "");
+    // convert to array
+    script = script.split(/\r?\n/g);
   }
-  script = script.replace(/\r?\n\s*\\/g, "");
-  await execute(denops, script.split(/\r?\n/g), ctx);
+  script = script.map((x) => x.trimStart()).filter((x) => !!x);
+  ctx = {
+    ...ctx,
+    __denops_internal_command: script,
+  };
+  return denops.cmd("call execute(l:__denops_internal_command, '')", ctx);
 }
