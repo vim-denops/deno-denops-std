@@ -108,7 +108,7 @@ export async function main(denops: Denops): Promise<void> {
     say: () => {
       return friendlyCall(denops, async () => {
         // Do whatever you want.
-        throw new Error("Some error occured");
+        throw new Error("Some error occurred");
       });
     },
   };
