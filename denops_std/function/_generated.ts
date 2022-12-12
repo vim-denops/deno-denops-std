@@ -2835,40 +2835,6 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Returns detailed information about register {regname} as a
- * Dictionary with the following entries:
- * 	regcontents	List of lines contained in register
- * 			{regname}, like
- * 			|getreg|({regname}, 1, 1).
- * 	regtype		the type of register {regname}, as in
- * 			|getregtype()|.
- * 	isunnamed	Boolean flag, v:true if this register
- * 			is currently pointed to by the unnamed
- * 			register.
- * 	points_to	for the unnamed register, gives the
- * 			single letter name of the register
- * 			currently pointed to (see |quotequote|).
- * 			For example, after deleting a line
- * 			with `dd`, this field will be "1",
- * 			which is the register that got the
- * 			deleted text.
- * The {regname} argument is a string.  If {regname} is invalid
- * or not set, an empty Dictionary will be returned.
- * If {regname} is not specified, |v:register| is used.
- * The returned Dictionary can be passed to |setreg()|.
- * In |Vim9-script| {regname} must be one character.
- * Can also be used as a |method|:
- * 	GetRegname()->getreginfo()
- */
-export function getreginfo(denops: Denops, regname?: unknown): Promise<unknown>;
-export function getreginfo(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getreginfo", ...args);
-}
-
-/**
  * The result is a String, which is type of register {regname}.
  * The value will be one of:
  *     "v"			for |characterwise| text
