@@ -1,5 +1,6 @@
 import {
   assertEquals,
+  assertInstanceOf,
   assertRejects,
 } from "https://deno.land/std@0.167.0/testing/asserts.ts";
 import { test } from "https://deno.land/x/denops_core@v3.2.2/test/mod.ts";
@@ -73,5 +74,43 @@ test({
       },
     );
     assertEquals(await denops.eval("g:denops_std_execute_test") as number, 25);
+  },
+});
+
+test({
+  mode: "any",
+  name: "execute() executes Vim script with line-continuation",
+  fn: async (denops) => {
+    await execute(
+      denops,
+      `
+      let g:denops_std_execute_test = 1
+            \\ + 1
+      `,
+    );
+    assertEquals(await denops.eval("g:denops_std_execute_test") as number, 2);
+  },
+});
+
+test({
+  mode: "any",
+  name: "execute() executes Vim script with trailing spaces",
+  fn: async (denops) => {
+    try {
+      await execute(denops, "setlocal path=foo\\\\\\ ");
+      assertEquals(await denops.eval("&l:path") as string, "foo\\ ");
+    } finally {
+      await denops.cmd("setlocal path&");
+    }
+  },
+});
+
+test({
+  mode: "any",
+  name: "execute() returns Promise<void>",
+  fn: async (denops) => {
+    const actual = execute(denops, "let g:denops_std_execute_test = 1");
+    assertInstanceOf(actual, Promise);
+    assertEquals(await actual, undefined);
   },
 });
