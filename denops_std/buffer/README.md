@@ -277,5 +277,5 @@ export async function main(denops: Denops): Promise<void> {
 }
 ```
 
-It uses `prop_add` in Vim and `nvim_buf_add_highlight` in Neovim to decorate the
-buffer.
+It uses `prop_add_list` in Vim and `nvim_buf_add_highlight` in Neovim to
+decorate the buffer.

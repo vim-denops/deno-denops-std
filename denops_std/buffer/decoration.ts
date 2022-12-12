@@ -52,6 +52,13 @@ async function vimDecorate(
   const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
     !rs.has(v)
   );
+  const decoMap = new Map<string, Set<[number, number, number, number]>>();
+  for (const deco of decorations) {
+    const propType = toPropType(deco.highlight);
+    const props = decoMap.get(propType) ?? new Set();
+    props.add([deco.line, deco.column, deco.line, deco.column + deco.length]);
+    decoMap.set(propType, props);
+  }
   await batch.batch(denops, async (denops) => {
     for (const highlight of hs) {
       const propType = toPropType(highlight);
@@ -61,19 +68,10 @@ async function vimDecorate(
       });
       rs.add(highlight);
     }
+    for (const [type, props] of decoMap.entries()) {
+      await vimFn.prop_add_list(denops, { bufnr, type }, [...props]);
+    }
   });
-  for (const chunk of itertools.chunked(decorations, 1000)) {
-    await batch.batch(denops, async (denops) => {
-      for (const deco of chunk) {
-        const propType = toPropType(deco.highlight);
-        await vimFn.prop_add(denops, deco.line, deco.column, {
-          bufnr,
-          length: deco.length,
-          type: propType,
-        });
-      }
-    });
-  }
 }
 
 async function nvimDecorate(
