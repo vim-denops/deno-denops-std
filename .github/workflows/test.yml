@@ -1,20 +1,11 @@
 name: Test
 
-env:
-  DENOPS_PATH: "../denops.vim"
-  DENO_DIR: ".deno"
-
 on:
   schedule:
     - cron: "0 7 * * 0"
   push:
     branches:
       - main
-    paths:
-      - "**.md"
-      - "**.ts"
-      - ".github/workflows/test.yml"
-      - "Makefile"
   pull_request:
     paths:
       - "**.md"
@@ -43,17 +34,12 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.DENO_DIR }}
-          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-deno-${{ matrix.version }}-
-            ${{ runner.os }}-deno-
       - name: Lint check
         run: make lint
+        if: matrix.version == '1.x'
       - name: Format check
         run: make fmt-check
+        if: matrix.version == '1.x'
       - name: Type check
         run: make type-check
 
@@ -85,14 +71,6 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v3
-        id: cache
-        with:
-          path: ${{ env.DENO_DIR }}
-          key: ${{ runner.os }}-deno-${{ matrix.version }}-${{ hashFiles('**/*.ts') }}
-          restore-keys: |
-            ${{ runner.os }}-deno-${{ matrix.version }}-
-            ${{ runner.os }}-deno-
       - uses: thinca/action-setup-vim@v1
         id: vim
         with:
@@ -117,10 +95,10 @@ jobs:
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
       - name: Test
-        working-directory: ./repo
         run: make test
         env:
-          DENO_DIR: ../.deno
+          DENOPS_PATH: "../denops.vim"
           DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable_path }}
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
         timeout-minutes: 10
+        working-directory: ./repo
