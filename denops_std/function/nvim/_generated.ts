@@ -1,6 +1,6 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 // deno-lint-ignore-file camelcase
-import type { Denops } from "https://deno.land/x/denops_core@v3.2.2/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.3.0/mod.ts";
 
 /**
  * Returns Dictionary of |api-metadata|.
