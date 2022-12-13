@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.2.2/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.3.0/mod.ts";
 import * as fs from "https://deno.land/std@0.167.0/fs/mod.ts";
 import * as path from "https://deno.land/std@0.167.0/path/mod.ts";
 import { execute } from "./execute.ts";

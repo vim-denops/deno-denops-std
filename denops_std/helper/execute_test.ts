@@ -3,7 +3,7 @@ import {
   assertInstanceOf,
   assertRejects,
 } from "https://deno.land/std@0.167.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_core@v3.2.2/test/mod.ts";
+import { test } from "https://deno.land/x/denops_core@v3.3.0/test/mod.ts";
 import { execute } from "./execute.ts";
 
 test({
