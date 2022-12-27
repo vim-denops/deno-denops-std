@@ -1,6 +1,6 @@
 import { Option } from "./types.ts";
 
-const denops = "https://deno.land/x/denops_core@v3.3.0/mod.ts";
+const denops = "https://deno.land/x/denops_core@v3.3.1/mod.ts";
 
 const translate: Record<string, string> = {
   "default": "defaultValue",

@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.167.0/testing/asserts.ts";
+} from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { test } from "../test/mod.ts";
 import { input, inputlist, inputsecret } from "./input.ts";
 import * as autocmd from "../autocmd/mod.ts";

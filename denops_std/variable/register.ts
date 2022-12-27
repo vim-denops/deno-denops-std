@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.3.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.3.1/mod.ts";
 import { Getter, Setter } from "./types.ts";
 
 /**

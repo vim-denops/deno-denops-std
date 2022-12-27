@@ -1,8 +1,8 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.3.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.3.1/mod.ts";
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.167.0/testing/asserts.ts";
+} from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { test } from "../test/mod.ts";
 import { Mapping, Mode } from "./types.ts";
 import * as mapping from "./mod.ts";

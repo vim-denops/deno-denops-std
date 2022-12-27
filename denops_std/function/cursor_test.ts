@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { assertNumber } from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import { test } from "../test/mod.ts";
 import * as cursor from "./cursor.ts";

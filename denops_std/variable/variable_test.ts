@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { test } from "../test/mod.ts";
 import { buffers, globals, tabpages, vim, windows } from "./variable.ts";
 

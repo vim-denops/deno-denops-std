@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { test } from "../test/mod.ts";
 import * as fn from "../function/mod.ts";
 import { batch } from "./batch.ts";

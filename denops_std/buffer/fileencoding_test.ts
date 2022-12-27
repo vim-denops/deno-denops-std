@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { default as Encoding } from "https://cdn.skypack.dev/encoding-japanese@2.0.0/";
 import { tryDecode } from "./fileencoding.ts";
 
