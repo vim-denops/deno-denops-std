@@ -48,11 +48,11 @@ jobs:
           - macos-latest
           - ubuntu-latest
         version:
-          - "1.17.1"
+          - "1.28.0"
           - "1.x"
         host_version:
-          - vim: "v8.2.3452"
-            nvim: "v0.6.0"
+          - vim: "v9.0.0472"
+            nvim: "v0.8.0"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     steps:
