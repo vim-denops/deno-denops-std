@@ -1,0 +1,11 @@
+{
+  "lock": false,
+  "tasks": {
+    "test": "deno test --no-lock --unstable -A --doc --parallel --shuffle",
+    "check": "deno check --no-lock --unstable $(find . -name '*.ts')",
+    "upgrade": "deno run --no-lock -A https://deno.land/x/udd/main.ts $(find . -name '*.ts')",
+    "gen:function": "deno run --no-lock --unstable -A ./scripts/gen-function/gen-function.ts",
+    "gen:option": "deno run --no-lock --unstable -A ./scripts/gen-option/gen-option.ts",
+    "gen": "deno task gen:function && deno task gen:option && deno fmt"
+  }
+}
