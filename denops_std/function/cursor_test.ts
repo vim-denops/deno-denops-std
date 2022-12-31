@@ -6,135 +6,141 @@ import { assertPosition, assertScreenPos, isScreenPos } from "./types.ts";
 
 test({
   mode: "all",
-  name: "col()",
-  fn: async (denops) => {
-    await denops.call("setline", 1, "abcdef");
-    await denops.cmd("norm gg4|mx6|mY2|");
+  name: "cursor",
+  fn: async (denops, t) => {
+    await t.step({
+      name: "col()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        await denops.call("setline", 1, "abcdef");
+        await denops.cmd("norm gg4|mx6|mY2|");
 
-    assertNumber(await cursor.col(denops, "."));
-    assertEquals(await cursor.col(denops, "."), 2);
-    assertEquals(await cursor.col(denops, [1, 2]), 2);
-    assertEquals(await cursor.col(denops, [1, "$"]), 7);
-  },
-});
+        assertNumber(await cursor.col(denops, "."));
+        assertEquals(await cursor.col(denops, "."), 2);
+        assertEquals(await cursor.col(denops, [1, 2]), 2);
+        assertEquals(await cursor.col(denops, [1, "$"]), 7);
+      },
+    });
 
-test({
-  mode: "all",
-  name: "virtcol()",
-  fn: async (denops) => {
-    await denops.call("setline", 1, "\tab");
+    await t.step({
+      name: "virtcol()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        await denops.call("setline", 1, "\tab");
 
-    assertNumber(await cursor.virtcol(denops, "."));
-    assertEquals(await cursor.virtcol(denops, "."), 8);
-    assertEquals(await cursor.virtcol(denops, [1, 1]), 8);
-    assertEquals(await cursor.virtcol(denops, [1, "$"]), 11);
+        assertNumber(await cursor.virtcol(denops, "."));
+        assertEquals(await cursor.virtcol(denops, "."), 8);
+        assertEquals(await cursor.virtcol(denops, [1, 1]), 8);
+        assertEquals(await cursor.virtcol(denops, [1, "$"]), 11);
 
-    await denops.cmd("set virtualedit=all");
-    assertEquals(await cursor.virtcol(denops, [1, 1, 1]), 2);
-  },
-});
+        await denops.cmd("set virtualedit=all");
+        assertEquals(await cursor.virtcol(denops, [1, 1, 1]), 2);
+      },
+    });
 
-test({
-  mode: "all",
-  name: "line()",
-  fn: async (denops) => {
-    await denops.call("setline", 1, ["a", "b", "c"]);
-    assertNumber(await cursor.line(denops, "."));
-    assertEquals(await cursor.line(denops, "."), 1);
-    assertEquals(await cursor.line(denops, "$"), 3);
-  },
-});
+    await t.step({
+      name: "line()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        await denops.call("setline", 1, ["a", "b", "c"]);
+        assertNumber(await cursor.line(denops, "."));
+        assertEquals(await cursor.line(denops, "."), 1);
+        assertEquals(await cursor.line(denops, "$"), 3);
+      },
+    });
 
-test({
-  mode: "all",
-  name: "wincol()",
-  fn: async (denops) => {
-    assertNumber(await cursor.wincol(denops));
-  },
-});
+    await t.step({
+      name: "wincol()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.wincol(denops));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "winline()",
-  fn: async (denops) => {
-    assertNumber(await cursor.winline(denops));
-  },
-});
+    await t.step({
+      name: "winline()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.winline(denops));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "cursor()",
-  fn: async (denops) => {
-    assertNumber(await cursor.cursor(denops, 1, 2));
-    assertNumber(await cursor.cursor(denops, 1, 2, 3));
-    assertNumber(await cursor.cursor(denops, [1, 2, 3]));
-    assertNumber(await cursor.cursor(denops, [1, 2, 3, 4]));
-  },
-});
+    await t.step({
+      name: "cursor()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.cursor(denops, 1, 2));
+        assertNumber(await cursor.cursor(denops, 1, 2, 3));
+        assertNumber(await cursor.cursor(denops, [1, 2, 3]));
+        assertNumber(await cursor.cursor(denops, [1, 2, 3, 4]));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "screenpos()",
-  fn: async (denops) => {
-    assertScreenPos(await cursor.screenpos(denops, "%", 1, 1));
-    // screenpos() returns `{}` if failed
-    assertEquals(
-      isScreenPos(await cursor.screenpos(denops, 9999, 1, 1)),
-      false,
-    );
-  },
-});
+    await t.step({
+      name: "screenpos()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertScreenPos(await cursor.screenpos(denops, "%", 1, 1));
+        // screenpos() returns `{}` if failed
+        assertEquals(
+          isScreenPos(await cursor.screenpos(denops, 9999, 1, 1)),
+          false,
+        );
+      },
+    });
 
-test({
-  mode: "all",
-  name: "getcurpos",
-  fn: async (denops) => {
-    assertPosition(await cursor.getcurpos(denops));
-  },
-});
+    await t.step({
+      name: "getcurpos",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertPosition(await cursor.getcurpos(denops));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "getpos",
-  fn: async (denops) => {
-    assertPosition(await cursor.getpos(denops, "'a"));
-  },
-});
+    await t.step({
+      name: "getpos",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertPosition(await cursor.getpos(denops, "'a"));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "setpos",
-  fn: async (denops) => {
-    assertNumber(
-      await cursor.setpos(denops, "'b", await cursor.getpos(denops, "'a")),
-    );
-    assertNumber(
-      await cursor.setpos(denops, "'b", await cursor.getcurpos(denops)),
-    );
-  },
-});
+    await t.step({
+      name: "setpos",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(
+          await cursor.setpos(denops, "'b", await cursor.getpos(denops, "'a")),
+        );
+        assertNumber(
+          await cursor.setpos(denops, "'b", await cursor.getcurpos(denops)),
+        );
+      },
+    });
 
-test({
-  mode: "all",
-  name: "byte2line",
-  fn: async (denops) => {
-    assertNumber(await cursor.byte2line(denops, 1));
-  },
-});
+    await t.step({
+      name: "byte2line",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.byte2line(denops, 1));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "line2byte",
-  fn: async (denops) => {
-    assertNumber(await cursor.line2byte(denops, 1));
-  },
-});
+    await t.step({
+      name: "line2byte",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.line2byte(denops, 1));
+      },
+    });
 
-test({
-  mode: "all",
-  name: "diff_filler()",
-  fn: async (denops) => {
-    assertNumber(await cursor.diff_filler(denops, 1));
-    assertNumber(await cursor.diff_filler(denops, "."));
+    await t.step({
+      name: "diff_filler()",
+      fn: async () => {
+        await denops.cmd("enew!");
+        assertNumber(await cursor.diff_filler(denops, 1));
+        assertNumber(await cursor.diff_filler(denops, "."));
+      },
+    });
   },
 });
