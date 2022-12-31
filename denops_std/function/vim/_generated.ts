@@ -3,8 +3,175 @@
 import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 
 /**
+ * Adds a List of autocmds and autocmd groups.
+ * The {acmds} argument is a List where each item is a Dict with
+ * the following optional items:
+ *     bufnr	buffer number to add a buffer-local autocmd.
+ * 		If this item is specified, then the "pattern"
+ * 		item is ignored.
+ *     cmd		Ex command to execute for this autocmd event
+ *     event	autocmd event name. Refer to |autocmd-events|.
+ * 		This can be either a String with a single
+ * 		event name or a List of event names.
+ *     group	autocmd group name. Refer to |autocmd-groups|.
+ * 		If this group doesn't exist then it is
+ * 		created.  If not specified or empty, then the
+ * 		default group is used.
+ *     nested	boolean flag, set to v:true to add a nested
+ * 		autocmd.  Refer to |autocmd-nested|.
+ *     once	boolean flag, set to v:true to add an autocmd
+ * 		which executes only once. Refer to
+ * 		|autocmd-once|.
+ *     pattern	autocmd pattern string. Refer to
+ * 		|autocmd-patterns|.  If "bufnr" item is
+ * 		present, then this item is ignored.  This can
+ * 		be a String with a single pattern or a List of
+ * 		patterns.
+ *     replace	boolean flag, set to v:true to remove all the
+ * 		commands associated with the specified autocmd
+ * 		event and group and add the {cmd}.  This is
+ * 		useful to avoid adding the same command
+ * 		multiple times for an autocmd event in a group.
+ * Returns v:true on success and v:false on failure.
+ * Examples:
+ * 	" Create a buffer-local autocmd for buffer 5
+ * 	let acmd = {}
+ * 	let acmd.group = 'MyGroup'
+ * 	let acmd.event = 'BufEnter'
+ * 	let acmd.bufnr = 5
+ * 	let acmd.cmd = 'call BufEnterFunc()'
+ * 	call autocmd_add([acmd])
+ * Can also be used as a |method|:
+ * 	GetAutocmdList()->autocmd_add()
+ */
+export function autocmd_add(denops: Denops, acmds: unknown): Promise<unknown>;
+export function autocmd_add(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("autocmd_add", ...args);
+}
+
+/**
+ * Deletes a List of autocmds and autocmd groups.
+ * The {acmds} argument is a List where each item is a Dict with
+ * the following optional items:
+ *     bufnr	buffer number to delete a buffer-local autocmd.
+ * 		If this item is specified, then the "pattern"
+ * 		item is ignored.
+ *     cmd		Ex command for this autocmd event
+ *     event	autocmd event name. Refer to |autocmd-events|.
+ * 		If '*' then all the autocmd events in this
+ * 		group are deleted.
+ *     group	autocmd group name. Refer to |autocmd-groups|.
+ * 		If not specified or empty, then the default
+ * 		group is used.
+ *     nested	set to v:true for a nested autocmd.
+ * 		Refer to |autocmd-nested|.
+ *     once	set to v:true for an autocmd which executes
+ * 		only once. Refer to |autocmd-once|.
+ *     pattern	autocmd pattern string. Refer to
+ * 		|autocmd-patterns|.  If "bufnr" item is
+ * 		present, then this item is ignored.
+ * If only {group} is specified in a {acmds} entry and {event},
+ * {pattern} and {cmd} are not specified, then that autocmd group
+ * is deleted.
+ * Returns |v:true| on success and |v:false| on failure.
+ * Examples:
+ * 	" :autocmd! BufLeave *.vim
+ * 	let acmd = #{event: 'BufLeave', pattern: '*.vim'}
+ * 	call autocmd_delete([acmd]})
+ * 	" :autocmd! MyGroup1 BufLeave
+ * 	let acmd = #{group: 'MyGroup1', event: 'BufLeave'}
+ * 	call autocmd_delete([acmd])
+ * 	" :autocmd! MyGroup2 BufEnter *.c
+ * 	let acmd = #{group: 'MyGroup2', event: 'BufEnter',
+ * 					\ pattern: '*.c'}
+ * 	" :autocmd! MyGroup2 * *.c
+ * 	let acmd = #{group: 'MyGroup2', event: '*',
+ * 					\ pattern: '*.c'}
+ * 	call autocmd_delete([acmd])
+ * 	" :autocmd! MyGroup3
+ * 	let acmd = #{group: 'MyGroup3'}
+ * 	call autocmd_delete([acmd])
+ * Can also be used as a |method|:
+ * 	GetAutocmdList()->autocmd_delete()
+ */
+export function autocmd_delete(
+  denops: Denops,
+  acmds: unknown,
+): Promise<unknown>;
+export function autocmd_delete(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("autocmd_delete", ...args);
+}
+
+/**
+ * Returns a |List| of autocmds. If {opts} is not supplied, then
+ * returns the autocmds for all the events in all the groups.
+ * The optional {opts} Dict argument supports the following
+ * items:
+ *     group	Autocmd group name. If specified, returns only
+ * 		the autocmds defined in this group. If the
+ * 		specified group doesn't exist, results in an
+ * 		error message.  If set to an empty string,
+ * 		then the default autocmd group is used.
+ *     event	Autocmd event name. If specified, returns only
+ * 		the autocmds defined for this event.  If set
+ * 		to "*", then returns autocmds for all the
+ * 		events.  If the specified event doesn't exist,
+ * 		results in an error message.
+ *     pattern	Autocmd pattern. If specified, returns only
+ * 		the autocmds defined for this pattern.
+ * A combination of the above three times can be supplied in
+ * {opts}.
+ * Each Dict in the returned List contains the following items:
+ *     bufnr	For buffer-local autocmds, buffer number where
+ * 		the autocmd is defined.
+ *     cmd		Command executed for this autocmd.
+ *     event	Autocmd event name.
+ *     group	Autocmd group name.
+ *     nested	Boolean flag, set to v:true for a nested
+ * 		autocmd. See |autocmd-nested|.
+ *     once	Boolean flag, set to v:true, if the autocmd
+ * 		will be executed only once. See |autocmd-once|.
+ *     pattern	Autocmd pattern.  For a buffer-local
+ * 		autocmd, this will be of the form "<buffer=n>".
+ * If there are multiple commands for an autocmd event in a
+ * group, then separate items are returned for each command.
+ * Returns an empty List if an autocmd with the specified group
+ * or event or pattern is not found.
+ * Examples:
+ * 	" :autocmd MyGroup
+ * 	echo autocmd_get(#{group: 'Mygroup'})
+ * 	" :autocmd G BufUnload
+ * 	echo autocmd_get(#{group: 'G', event: 'BufUnload'})
+ * 	" :autocmd G * *.ts
+ * 	let acmd = #{group: 'G', event: '*', pattern: '*.ts'}
+ * 	echo autocmd_get(acmd)
+ * 	" :autocmd Syntax
+ * 	echo autocmd_get(#{event: 'Syntax'})
+ * 	" :autocmd G BufEnter *.ts
+ * 	let acmd = #{group: 'G', event: 'BufEnter',
+ * 					\ pattern: '*.ts'}
+ * 	echo autocmd_get(acmd)
+ * Can also be used as a |method|:
+ * 	Getopts()->autocmd_get()
+ */
+export function autocmd_get(denops: Denops, opts?: unknown): Promise<unknown>;
+export function autocmd_get(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("autocmd_get", ...args);
+}
+
+/**
  * Return the current text in the balloon.  Only for the string,
- * not used for the List.
+ * not used for the List.  Returns an empty string if balloon
+ * is not present.
  */
 export function balloon_gettext(denops: Denops): Promise<unknown>;
 export function balloon_gettext(
@@ -35,9 +202,9 @@ export function balloon_gettext(
  * is initiated from 'balloonexpr'.  It will invoke an
  * asynchronous method, in which a callback invokes
  * balloon_show().  The 'balloonexpr' itself can return an
- * empty string or a placeholder.
- * When showing a balloon is not possible nothing happens, no
- * error message.
+ * empty string or a placeholder, e.g. "loading...".
+ * When showing a balloon is not possible then nothing happens,
+ * no error message is given.
  * {only available when compiled with the |+balloon_eval| or
  * |+balloon_eval_term| feature}
  */
@@ -53,7 +220,8 @@ export function balloon_show(
  * Split String {msg} into lines to be displayed in a balloon.
  * The splits are made for the current window size and optimize
  * to show debugger output.
- * Returns a |List| with the split lines.
+ * Returns a |List| with the split lines.  Returns an empty List
+ * on error.
  * Can also be used as a |method|:
  * 	GetText()->balloon_split()->balloon_show()
  * {only available when compiled with the |+balloon_eval_term|
@@ -123,158 +291,6 @@ export function last_buffer_nr(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("last_buffer_nr", ...args);
-}
-
-/**
- * Return the character class of the first character in {string}.
- * The character class is one of:
- * 	0	blank
- * 	1	punctuation
- * 	2	word character
- * 	3	emoji
- * 	other	specific Unicode class
- * The class is used in patterns and word motions.
- */
-export function charclass(denops: Denops, string: unknown): Promise<unknown>;
-export function charclass(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("charclass", ...args);
-}
-
-/**
- * Same as |col()| but returns the character index of the column
- * position given with {expr} instead of the byte position.
- * Example:
- * With the cursor on '세' in line 5 with text "여보세요":
- * 	charcol('.')		returns 3
- * 	col('.')		returns 7
- * Can also be used as a |method|:
- * 	GetPos()->col()
- */
-export function charcol(denops: Denops, expr: unknown): Promise<unknown>;
-export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("charcol", ...args);
-}
-
-/**
- * Return the digraph of {chars}.  This should be a string with
- * exactly two characters.  If {chars} are not just two
- * characters, or the digraph of {chars} does not exist, an error
- * is given and an empty string is returned.
- * The character will be converted from Unicode to 'encoding'
- * when needed.  This does require the conversion to be
- * available, it might fail.
- * Also see |digraph_getlist()|.
- * Examples:
- * " Get a built-in digraph
- * :echo digraph_get('00')		" Returns '∞'
- * " Get a user-defined digraph
- * :call digraph_set('aa', 'あ')
- * :echo digraph_get('aa')		" Returns 'あ'
- * Can also be used as a |method|:
- * 	GetChars()->digraph_get()
- * This function works only when compiled with the |+digraphs|
- * feature.  If this feature is disabled, this function will
- * display an error message.
- */
-export function digraph_get(denops: Denops, chars: unknown): Promise<unknown>;
-export function digraph_get(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("digraph_get", ...args);
-}
-
-/**
- * Return a list of digraphs.  If the {listall} argument is given
- * and it is TRUE, return all digraphs, including the default
- * digraphs.  Otherwise, return only user-defined digraphs.
- * The characters will be converted from Unicode to 'encoding'
- * when needed.  This does require the conservation to be
- * available, it might fail.
- * Also see |digraph_get()|.
- * Examples:
- * " Get user-defined digraphs
- * :echo digraph_getlist()
- * " Get all the digraphs, including default digraphs
- * :echo digraph_getlist(1)
- * Can also be used as a |method|:
- * 	GetNumber()->digraph_getlist()
- * This function works only when compiled with the |+digraphs|
- * feature.  If this feature is disabled, this function will
- * display an error message.
- */
-export function digraph_getlist(
-  denops: Denops,
-  listall?: unknown,
-): Promise<unknown>;
-export function digraph_getlist(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("digraph_getlist", ...args);
-}
-
-/**
- * Add digraph {chars} to the list.  {chars} must be a string
- * with two characters.  {digraph} is a string with one utf-8
- * encoded character. Be careful, composing characters are NOT
- * ignored.  This function is similar to |:digraphs| command, but
- * useful to add digraphs start with a white space.
- * The function result is v:true if |digraph| is registered.  If
- * this fails an error message is given and v:false is returned.
- * If you want to define multiple digraphs at once, you can use
- * |digraph_setlist()|.
- * Example:
- * 	call digraph_set('  ', 'あ')
- * Can be used as a |method|:
- * 	GetString()->digraph_set('あ')
- * This function works only when compiled with the |+digraphs|
- * feature.  If this feature is disabled, this function will
- * display an error message.
- */
-export function digraph_set(
-  denops: Denops,
-  chars: unknown,
-  digraph: unknown,
-): Promise<unknown>;
-export function digraph_set(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("digraph_set", ...args);
-}
-
-/**
- * Similar to |digraph_set()| but this function can add multiple
- * digraphs at once.  {digraphlist} is a list composed of lists,
- * where each list contains two strings with {chars} and
- * {digraph} as in |digraph_set()|.
- * Example:
- *     call digraph_setlist([['aa', 'あ'], ['ii', 'い']])
- * It is similar to the following:
- *     for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
- * 	  call digraph_set(chars, digraph)
- *     endfor
- * Except that the function returns after the first error,
- * following digraphs will not be added.
- * Can be used as a |method|:
- *     GetList()->digraph_setlist()
- * This function works only when compiled with the |+digraphs|
- * feature.  If this feature is disabled, this function will
- * display an error message.
- */
-export function digraph_setlist(
-  denops: Denops,
-  digraphlist: unknown,
-): Promise<unknown>;
-export function digraph_setlist(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("digraph_setlist", ...args);
 }
 
 /**
@@ -361,71 +377,25 @@ export function flattennew(
 }
 
 /**
- * Get the full command name from a short abbreviated command
- * name; see |20.2| for details on command abbreviations.
- * The string argument {name} may start with a `:` and can
- * include a [range], these are skipped and not returned.
- * Returns an empty string if a command doesn't exist or if it's
- * ambiguous (for user-defined commands).
- * For example `fullcommand('s')`, `fullcommand('sub')`,
- * `fullcommand(':%substitute')` all return "substitute".
- * Can also be used as a |method|:
- * 	GetName()->fullcommand()
+ * Move the Vim window to the foreground.  Useful when sent from
+ * a client to a Vim server. |remote_send()|
+ * On Win32 systems this might not work, the OS does not always
+ * allow a window to bring itself to the foreground.  Use
+ * |remote_foreground()| instead.
+ * {only in the Win32, Motif and GTK GUI versions and the
+ * Win32 console version}
  */
-export function fullcommand(denops: Denops, name: unknown): Promise<unknown>;
-export function fullcommand(
+export function foreground(denops: Denops): Promise<unknown>;
+export function foreground(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("fullcommand", ...args);
-}
-
-/**
- * Get the position for String {expr}. Same as |getpos()| but the
- * column number in the returned List is a character index
- * instead of a byte index.
- * If |getpos()| returns a very large column number, such as
- * 2147483647, then getcharpos() will return the character index
- * of the last character.
- * Example:
- * With the cursor on '세' in line 5 with text "여보세요":
- * 	getcharpos('.')		returns [0, 5, 3, 0]
- * 	getpos('.')		returns [0, 5, 7, 0]
- * Can also be used as a |method|:
- * 	GetMark()->getcharpos()
- */
-export function getcharpos(denops: Denops, expr: unknown): Promise<unknown>;
-export function getcharpos(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getcharpos", ...args);
-}
-
-/**
- * Same as |getcurpos()| but the column number in the returned
- * List is a character index instead of a byte index.
- * Example:
- * With the cursor on '보' in line 3 with text "여보세요":
- * 	getcursorcharpos()	returns [0, 3, 2, 0, 3]
- * 	getcurpos()		returns [0, 3, 4, 0, 3]
- * Can also be used as a |method|:
- * 	GetWinid()->getcursorcharpos()
- */
-export function getcursorcharpos(
-  denops: Denops,
-  winid?: unknown,
-): Promise<unknown>;
-export function getcursorcharpos(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getcursorcharpos", ...args);
+  return denops.call("foreground", ...args);
 }
 
 /**
  * The result is a Number, which is |TRUE| when the IME status is
- * active.
+ * active and |FALSE| otherwise.
  * See 'imstatusfunc'.
  */
 export function getimstatus(denops: Denops): Promise<unknown>;
@@ -434,6 +404,52 @@ export function getimstatus(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getimstatus", ...args);
+}
+
+/**
+ * Returns a |List| with information about all the sourced Vim
+ * scripts in the order they were sourced, like what
+ * `:scriptnames` shows.
+ * The optional Dict argument {opts} supports the following
+ * optional items:
+ *     name	Script name match pattern. If specified,
+ * 		and "sid" is not specified, information about
+ * 		scripts with name that match the pattern
+ * 		"name" are returned.
+ *     sid		Script ID |<SID>|.  If specified, only
+ * 		information about the script with ID "sid" is
+ * 		returned and "name" is ignored.
+ * Each item in the returned List is a |Dict| with the following
+ * items:
+ *     autoload	Set to TRUE for a script that was used with
+ * 		`import autoload` but was not actually sourced
+ * 		yet (see |import-autoload|).
+ *     functions   List of script-local function names defined in
+ * 		the script.  Present only when a particular
+ * 		script is specified using the "sid" item in
+ * 		{opts}.
+ *     name	Vim script file name.
+ *     sid		Script ID |<SID>|.
+ *     sourced	Script ID of the actually sourced script that
+ * 		this script name links to, if any, otherwise
+ * 		zero
+ *     variables   A dictionary with the script-local variables.
+ * 		Present only when the a particular script is
+ * 		specified using the "sid" item in {opts}.
+ * 		Note that this is a copy, the value of
+ * 		script-local variables cannot be changed using
+ * 		this dictionary.
+ *     version	Vimscript version (|scriptversion|)
+ * Examples:
+ * 	:echo getscriptinfo({'name': 'myscript'})
+ * 	:echo getscriptinfo({'sid': 15}).variables
+ */
+export function getscriptinfo(denops: Denops, opts?: unknown): Promise<unknown>;
+export function getscriptinfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getscriptinfo", ...args);
 }
 
 /**
@@ -465,6 +481,109 @@ export function highlight_exists(
 }
 
 /**
+ * Returns a List of all the highlight group attributes.  If the
+ * optional {name} is specified, then returns a List with only
+ * the attributes of the specified highlight group.  Returns an
+ * empty List if the highlight group {name} is not present.
+ * If the optional {resolve} argument is set to v:true and the
+ * highlight group {name} is linked to another group, then the
+ * link is resolved recursively and the attributes of the
+ * resolved highlight group are returned.
+ * Each entry in the returned List is a Dictionary with the
+ * following items:
+ * 	cleared	boolean flag, set to v:true if the highlight
+ * 		group attributes are cleared or not yet
+ * 		specified.  See |highlight-clear|.
+ * 	cterm	cterm attributes. See |highlight-cterm|.
+ * 	ctermbg	cterm background color.
+ * 		See |highlight-ctermbg|.
+ * 	ctermfg	cterm foreground color.
+ * 		See |highlight-ctermfg|.
+ * 	ctermul	cterm underline color.  See |highlight-ctermul|.
+ * 	default boolean flag, set to v:true if the highlight
+ * 		group link is a default link. See
+ * 		|highlight-default|.
+ * 	font	highlight group font.  See |highlight-font|.
+ * 	gui	gui attributes. See |highlight-gui|.
+ * 	guibg	gui background color.  See |highlight-guibg|.
+ * 	guifg	gui foreground color.  See |highlight-guifg|.
+ * 	guisp	gui special color.  See |highlight-guisp|.
+ * 	id	highlight group ID.
+ * 	linksto	linked highlight group name.
+ * 		See |:highlight-link|.
+ * 	name	highlight group name. See |group-name|.
+ * 	start	start terminal keycode.  See |highlight-start|.
+ * 	stop	stop terminal keycode.  See |highlight-stop|.
+ * 	term	term attributes.  See |highlight-term|.
+ * The 'term', 'cterm' and 'gui' items in the above Dictionary
+ * have a dictionary value with the following optional boolean
+ * items: 'bold', 'standout', 'underline', 'undercurl', 'italic',
+ * 'reverse', 'inverse' and 'strikethrough'.
+ * Example(s):
+ * 	:echo hlget()
+ * 	:echo hlget('ModeMsg')
+ * 	:echo hlget('Number', v:true)
+ * Can also be used as a |method|:
+ * 	GetName()->hlget()
+ */
+export function hlget(
+  denops: Denops,
+  name?: unknown,
+  resolve?: unknown,
+): Promise<unknown>;
+export function hlget(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("hlget", ...args);
+}
+
+/**
+ * Creates or modifies the attributes of a List of highlight
+ * groups.  Each item in {list} is a dictionary containing the
+ * attributes of a highlight group. See |hlget()| for the list of
+ * supported items in this dictionary.
+ * In addition to the items described in |hlget()|, the following
+ * additional items are supported in the dictionary:
+ * 	force		boolean flag to force the creation of
+ * 			a link for an existing highlight group
+ * 			with attributes.
+ * The highlight group is identified using the 'name' item and
+ * the 'id' item (if supplied) is ignored.  If a highlight group
+ * with a specified name doesn't exist, then it is created.
+ * Otherwise the attributes of an existing highlight group are
+ * modified.
+ * If an empty dictionary value is used for the 'term' or 'cterm'
+ * or 'gui' entries, then the corresponding attributes are
+ * cleared.  If the 'cleared' item is set to v:true, then all the
+ * attributes of the highlight group are cleared.
+ * The 'linksto' item can be used to link a highlight group to
+ * another highlight group.  See |:highlight-link|.
+ * Returns zero for success, -1 for failure.
+ * Example(s):
+ * 	" add bold attribute to the Visual highlight group
+ * 	:call hlset([#{name: 'Visual',
+ * 			\ term: #{reverse: 1 , bold: 1}}])
+ * 	:call hlset([#{name: 'Type', guifg: 'DarkGreen'}])
+ * 	:let l = hlget()
+ * 	:call hlset(l)
+ * 	" clear the Search highlight group
+ * 	:call hlset([#{name: 'Search', cleared: v:true}])
+ * 	" clear the 'term' attributes for a highlight group
+ * 	:call hlset([#{name: 'Title', term: {}}])
+ * 	" create the MyHlg group linking it to DiffAdd
+ * 	:call hlset([#{name: 'MyHlg', linksto: 'DiffAdd'}])
+ * 	" remove the MyHlg group link
+ * 	:call hlset([#{name: 'MyHlg', linksto: 'NONE'}])
+ * 	" clear the attributes and a link
+ * 	:call hlset([#{name: 'MyHlg', cleared: v:true,
+ * 			\ linksto: 'NONE'}])
+ * Can also be used as a |method|:
+ * 	GetAttrList()->hlset()
+ */
+export function hlset(denops: Denops, list: unknown): Promise<unknown>;
+export function hlset(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("hlset", ...args);
+}
+
+/**
  * Obsolete name: highlightID().
  * Can also be used as a |method|:
  * 	GetName()->hlID()
@@ -475,6 +594,50 @@ export function highlightID(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("highlightID", ...args);
+}
+
+/**
+ * Returns the index of an item in {object} where {expr} is
+ * v:true.  {object} must be a |List| or a |Blob|.
+ * If {object} is a |List|, evaluate {expr} for each item in the
+ * List until the expression is v:true and return the index of
+ * this item.
+ * If {object} is a |Blob| evaluate {expr} for each byte in the
+ * Blob until the expression is v:true and return the index of
+ * this byte.
+ * {expr} must be a |string| or |Funcref|.
+ * If {expr} is a |string|: If {object} is a |List|, inside
+ * {expr} |v:key| has the index of the current List item and
+ * |v:val| has the value of the item.  If {object} is a |Blob|,
+ * inside {expr} |v:key| has the index of the current byte and
+ * |v:val| has the byte value.
+ * If {expr} is a |Funcref| it must take two arguments:
+ * 	1. the key or the index of the current item.
+ * 	2. the value of the current item.
+ * The function must return |TRUE| if the item is found and the
+ * search should stop.
+ * The optional argument {opts} is a Dict and supports the
+ * following items:
+ *     startidx	start evaluating {expr} at the item with this
+ * 		index; may be negative for an item relative to
+ * 		the end
+ * Returns -1 when {expr} evaluates to v:false for all the items.
+ * Example:
+ * 	:let l = [#{n: 10}, #{n: 20}, #{n: 30}]
+ * 	:echo indexof(l, "v:val.n == 20")
+ * 	:echo indexof(l, {i, v -> v.n == 30})
+ * 	:echo indexof(l, "v:val.n == 20", #{startidx: 1})
+ * Can also be used as a |method|:
+ * 	mylist->indexof(expr)
+ */
+export function indexof(
+  denops: Denops,
+  object: unknown,
+  expr: unknown,
+  opts?: unknown,
+): Promise<unknown>;
+export function indexof(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("indexof", ...args);
 }
 
 /**
@@ -504,6 +667,30 @@ export function inputdialog(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("inputdialog", ...args);
+}
+
+/**
+ * The result is a Number, which is |TRUE| when {path} is an
+ * absolute path.
+ * On Unix, a path is considered absolute when it starts with '/'.
+ * On MS-Windows, it is considered absolute when it starts with an
+ * optional drive prefix and is followed by a '\' or '/'. UNC paths
+ * are always absolute.
+ * Example:
+ * 	echo isabsolutepath('/usr/share/')	" 1
+ * 	echo isabsolutepath('./foobar')		" 0
+ * 	echo isabsolutepath('C:\Windows')	" 1
+ * 	echo isabsolutepath('foobar')		" 0
+ * 	echo isabsolutepath('\\remote\file')	" 1
+ * Can also be used as a |method|:
+ * 	GetName()->isabsolutepath()
+ */
+export function isabsolutepath(denops: Denops, path: unknown): Promise<unknown>;
+export function isabsolutepath(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("isabsolutepath", ...args);
 }
 
 /**
@@ -574,18 +761,18 @@ export function list2blob(
  * buffer is used.
  * Returns a unique ID that can be passed to |listener_remove()|.
  * The {callback} is invoked with five arguments:
- *     a:bufnr	the buffer that was changed
- *     a:start	first changed line number
- *     a:end	first line number below the change
- *     a:added	number of lines added, negative if lines were
+ *     bufnr	the buffer that was changed
+ *     start	first changed line number
+ *     end		first line number below the change
+ *     added	number of lines added, negative if lines were
  * 		deleted
- *     a:changes	a List of items with details about the changes
+ *     changes	a List of items with details about the changes
  * Example:
  * 	    func Listener(bufnr, start, end, added, changes)
  * 	      echo 'lines ' .. a:start .. ' until ' .. a:end .. ' changed'
  * 	    endfunc
  * 	    call listener_add('Listener', bufnr)
- * The List cannot be changed.  Each item in a:changes is a
+ * The List cannot be changed.  Each item in "changes" is a
  * dictionary with these entries:
  *     lnum	the first line number of the change
  *     end		the first line below the change
@@ -627,6 +814,7 @@ export function list2blob(
  * of a buffer.
  * The {callback} is also not invoked when the buffer is
  * unloaded, use the |BufUnload| autocmd event for that.
+ * Returns zero if {callback} or {buf} is invalid.
  * Can also be used as a |method|, the base is passed as the
  * second argument:
  * 	GetBuffer()->listener_add(callback)
@@ -703,6 +891,43 @@ export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Returns a |List| of all mappings.  Each List item is a |Dict|,
+ * the same as what is returned by |maparg()|, see
+ * |mapping-dict|.  When {abbr} is there and it is |TRUE| use
+ * abbreviations instead of mappings.
+ * Example to show all mappings with 'MultiMatch' in rhs:
+ * 	vim9script
+ * 	echo maplist()->filter(
+ * 		(_, m) => match(m.rhs, 'MultiMatch') >= 0)
+ * It can be tricky to find mappings for particular |:map-modes|.
+ * |mapping-dict|'s "mode_bits" can simplify this. For example,
+ * the mode_bits for Normal, Insert or Command-line modes are
+ * 0x19. To find all the mappings available in those modes you
+ * can do:
+ * 	vim9script
+ * 	var saved_maps = []
+ * 	for m in maplist()
+ * 	    if and(m.mode_bits, 0x19) != 0
+ * 		saved_maps->add(m)
+ * 	    endif
+ * 	endfor
+ * 	echo saved_maps->mapnew((_, m) => m.lhs)
+ * The values of the mode_bits are defined in Vim's src/vim.h
+ * file and they can be discovered at runtime using
+ * |:map-commands| and "maplist()". Example:
+ * 	vim9script
+ * 	omap xyzzy <Nop
+ * 	var op_bit = maplist()->filter(
+ * 	    (_, m) => m.lhs == 'xyzzy')[0].mode_bits
+ * 	ounmap xyzzy
+ * 	echo printf("Operator-pending mode bit: 0x%x", op_bit)
+ */
+export function maplist(denops: Denops, abbr?: unknown): Promise<unknown>;
+export function maplist(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("maplist", ...args);
+}
+
+/**
  * Like |map()| but instead of replacing items in {expr1} a new
  * List or Dictionary is created and returned.  {expr1} remains
  * unchanged.  Items can still be changed by {expr2}, if you
@@ -715,192 +940,6 @@ export function mapnew(
 ): Promise<unknown>;
 export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mapnew", ...args);
-}
-
-/**
- * Restore a mapping from a dictionary returned by |maparg()|.
- * {mode} and {abbr} should be the same as for the call to
- * |maparg()|.
- * {mode} is used to define the mode in which the mapping is set,
- * not the "mode" entry in {dict}.
- * Example for saving and restoring a mapping:
- * 	let save_map = maparg('K', 'n', 0, 1)
- * 	nnoremap K somethingelse
- * 	...
- * 	call mapset('n', 0, save_map)
- * Note that if you are going to replace a map in several modes,
- * e.g. with `:map!`, you need to save the mapping for all of
- * them, since they can differ.
- */
-export function mapset(
-  denops: Denops,
-  mode: unknown,
-  abbr: unknown,
-  dict: unknown,
-): Promise<unknown>;
-export function mapset(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("mapset", ...args);
-}
-
-/**
- * If {list} is a list of strings, then returns a |List| with all
- * the strings in {list} that fuzzy match {str}. The strings in
- * the returned list are sorted based on the matching score.
- * The optional {dict} argument always supports the following
- * items:
- *     matchseq	When this item is present and {str} contains
- * 		multiple words separated by white space, then
- * 		returns only matches that contain the words in
- * 		the given sequence.
- * If {list} is a list of dictionaries, then the optional {dict}
- * argument supports the following additional items:
- *     key		key of the item which is fuzzy matched against
- * 		{str}. The value of this item should be a
- * 		string.
- *     text_cb	|Funcref| that will be called for every item
- * 		in {list} to get the text for fuzzy matching.
- * 		This should accept a dictionary item as the
- * 		argument and return the text for that item to
- * 		use for fuzzy matching.
- * {str} is treated as a literal string and regular expression
- * matching is NOT supported.  The maximum supported {str} length
- * is 256.
- * When {str} has multiple words each separated by white space,
- * then the list of strings that have all the words is returned.
- * If there are no matching strings or there is an error, then an
- * empty list is returned. If length of {str} is greater than
- * 256, then returns an empty list.
- * Refer to |fuzzy-match| for more information about fuzzy
- * matching strings.
- * Example:
- *    :echo matchfuzzy(["clay", "crow"], "cay")
- * results in ["clay"].
- *    :echo getbufinfo()->map({_, v -> v.name})->matchfuzzy("ndl")
- * results in a list of buffer names fuzzy matching "ndl".
- *    :echo getbufinfo()->matchfuzzy("ndl", {'key' : 'name'})
- * results in a list of buffer information dicts with buffer
- * names fuzzy matching "ndl".
- *    :echo getbufinfo()->matchfuzzy("spl",
- * 				\ {'text_cb' : {v -> v.name}})
- * results in a list of buffer information dicts with buffer
- * names fuzzy matching "spl".
- *    :echo v:oldfiles->matchfuzzy("test")
- * results in a list of file names fuzzy matching "test".
- *    :let l = readfile("buffer.c")->matchfuzzy("str")
- * results in a list of lines in "buffer.c" fuzzy matching "str".
- *    :echo ['one two', 'two one']->matchfuzzy('two one')
- * results in ['two one', 'one two'].
- *    :echo ['one two', 'two one']->matchfuzzy('two one',
- * 				\ {'matchseq': 1})
- * results in ['two one'].
- */
-export function matchfuzzy(
-  denops: Denops,
-  list: unknown,
-  str: unknown,
-  dict?: unknown,
-): Promise<unknown>;
-export function matchfuzzy(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("matchfuzzy", ...args);
-}
-
-/**
- * Same as |matchfuzzy()|, but returns the list of matched
- * strings, the list of character positions where characters
- * in {str} matches and a list of matching scores.  You can
- * use |byteidx()| to convert a character position to a byte
- * position.
- * If {str} matches multiple times in a string, then only the
- * positions for the best match is returned.
- * If there are no matching strings or there is an error, then a
- * list with three empty list items is returned.
- * Example:
- * 	:echo matchfuzzypos(['testing'], 'tsg')
- * results in [['testing'], [[0, 2, 6]], [99]]
- * 	:echo matchfuzzypos(['clay', 'lacy'], 'la')
- * results in [['lacy', 'clay'], [[0, 1], [1, 2]], [153, 133]]
- * 	:echo [{'text': 'hello', 'id' : 10}]->matchfuzzypos('ll', {'key' : 'text'})
- * results in [[{'id': 10, 'text': 'hello'}], [[2, 3]], [127]]
- */
-export function matchfuzzypos(
-  denops: Denops,
-  list: unknown,
-  str: unknown,
-  dict?: unknown,
-): Promise<unknown>;
-export function matchfuzzypos(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("matchfuzzypos", ...args);
-}
-
-/**
- * Return information about the specified menu {name} in
- * mode {mode}. The menu name should be specified without the
- * shortcut character ('&').
- * {mode} can be one of these strings:
- * 	"n"	Normal
- * 	"v"	Visual (including Select)
- * 	"o"	Operator-pending
- * 	"i"	Insert
- * 	"c"	Cmd-line
- * 	"s"	Select
- * 	"x"	Visual
- * 	"t"	Terminal-Job
- * 	""	Normal, Visual and Operator-pending
- * 	"!"	Insert and Cmd-line
- * When {mode} is omitted, the modes for "" are used.
- * Returns a |Dictionary| containing the following items:
- *   accel		menu item accelerator text |menu-text|
- *   display	display name (name without '&')
- *   enabled	v:true if this menu item is enabled
- * 		Refer to |:menu-enable|
- *   icon		name of the icon file (for toolbar)
- * 		|toolbar-icon|
- *   iconidx	index of a built-in icon
- *   modes		modes for which the menu is defined. In
- * 		addition to the modes mentioned above, these
- * 		characters will be used:
- * 		" "	Normal, Visual and Operator-pending
- *   name		menu item name.
- *   noremenu	v:true if the {rhs} of the menu item is not
- * 		remappable else v:false.
- *   priority	menu order priority |menu-priority|
- *   rhs		right-hand-side of the menu item. The returned
- * 		string has special characters translated like
- * 		in the output of the ":menu" command listing.
- * 		When the {rhs} of a menu item is empty, then
- * 		"<Nop>" is returned.
- *   script	v:true if script-local remapping of {rhs} is
- * 		allowed else v:false.  See |:menu-script|.
- *   shortcut	shortcut key (character after '&' in
- * 		the menu name) |menu-shortcut|
- *   silent	v:true if the menu item is created
- * 		with <silent> argument |:menu-silent|
- *   submenus	|List| containing the names of
- * 		all the submenus.  Present only if the menu
- * 		item has submenus.
- * Returns an empty dictionary if the menu item is not found.
- * Examples:
- * 	:echo menu_info('Edit.Cut')
- * 	:echo menu_info('File.Save', 'n')
- * Can also be used as a |method|:
- * 	GetMenuName()->menu_info('v')
- */
-export function menu_info(
-  denops: Denops,
-  name: unknown,
-  mode?: unknown,
-): Promise<unknown>;
-export function menu_info(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("menu_info", ...args);
 }
 
 /**
@@ -926,24 +965,6 @@ export function menu_info(
 export function mzeval(denops: Denops, expr: unknown): Promise<unknown>;
 export function mzeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mzeval", ...args);
-}
-
-/**
- * Return a pseudo-random Number generated with an xoshiro128**
- * algorithm using seed {expr}.  The returned number is 32 bits,
- * also on 64 bits systems, for consistency.
- * {expr} can be initialized by |srand()| and will be updated by
- * rand().  If {expr} is omitted, an internal seed value is used
- * and updated.
- * Examples:
- * 	:echo rand()
- * 	:let seed = srand()
- * 	:echo rand(seed)
- * 	:echo rand(seed) % 16  " random number 0 - 15
- */
-export function rand(denops: Denops, expr?: unknown): Promise<unknown>;
-export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("rand", ...args);
 }
 
 /**
@@ -1026,110 +1047,207 @@ export function readdirex(
 }
 
 /**
- * {func} is called for every item in {object}, which can be a
- * |List| or a |Blob|.  {func} is called with two arguments: the
- * result so far and current item.  After processing all items
- * the result is returned.
- * {initial} is the initial result.  When omitted, the first item
- * in {object} is used and {func} is first called for the second
- * item.  If {initial} is not given and {object} is empty no
- * result can be computed, an E998 error is given.
+ * Send the {string} to {server}.  The {server} argument is a
+ * string, also see |{server}|.
+ * The string is sent as an expression and the result is returned
+ * after evaluation.  The result must be a String or a |List|.  A
+ * |List| is turned into a String by joining the items with a
+ * line break in between (not at the end), like with join(expr,
+ * "\n").
+ * If {idvar} is present and not empty, it is taken as the name
+ * of a variable and a {serverid} for later use with
+ * |remote_read()| is stored there.
+ * If {timeout} is given the read times out after this many
+ * seconds.  Otherwise a timeout of 600 seconds is used.
+ * See also |clientserver| |RemoteReply|.
+ * This function is not available in the |sandbox|.
+ * {only available when compiled with the |+clientserver| feature}
+ * Note: Any errors will cause a local error message to be issued
+ * and the result will be the empty string.
+ * Variables will be evaluated in the global namespace,
+ * independent of a function currently being active.  Except
+ * when in debug mode, then local function variables and
+ * arguments can be evaluated.
  * Examples:
- * 	echo reduce([1, 3, 5], { acc, val -> acc + val })
- * 	echo reduce(['x', 'y'], { acc, val -> acc .. val }, 'a')
- * 	echo reduce(0z1122, { acc, val -> 2 * acc + val })
+ * 	:echo remote_expr("gvim", "2+2")
+ * 	:echo remote_expr("gvim1", "b:current_syntax")
  * Can also be used as a |method|:
- * 	echo mylist->reduce({ acc, val -> acc + val }, 0)
+ * 	ServerName()->remote_expr(expr)
  */
-export function reduce(
+export function remote_expr(
   denops: Denops,
-  object: unknown,
-  func: unknown,
-  initial?: unknown,
+  server: unknown,
+  string: unknown,
+  idvar?: unknown,
+  timeout?: unknown,
 ): Promise<unknown>;
-export function reduce(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("reduce", ...args);
-}
-
-/**
- * Specify overrides for cell widths of character ranges.  This
- * tells Vim how wide characters are, counted in screen cells.
- * This overrides 'ambiwidth'.  Example:
- *    setcellwidths([[0xad, 0xad, 1],
- *    		\ [0x2194, 0x2199, 2]])
- * The {list} argument is a list of lists with each three
- * numbers. These three numbers are [low, high, width].  "low"
- * and "high" can be the same, in which case this refers to one
- * character. Otherwise it is the range of characters from "low"
- * to "high" (inclusive).  "width" is either 1 or 2, indicating
- * the character width in screen cells.
- * An error is given if the argument is invalid, also when a
- * range overlaps with another.
- * Only characters with value 0x100 and higher can be used.
- * To clear the overrides pass an empty list:
- *    setcellwidths([]);
- * You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
- * the effect for known emoji characters.
- */
-export function setcellwidths(denops: Denops, list: unknown): Promise<unknown>;
-export function setcellwidths(
+export function remote_expr(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("setcellwidths", ...args);
+  return denops.call("remote_expr", ...args);
 }
 
 /**
- * Same as |setpos()| but uses the specified column number as the
- * character index instead of the byte index in the line.
+ * Move the Vim server with the name {server} to the foreground.
+ * The {server} argument is a string, also see |{server}|.
+ * This works like:
+ * 	remote_expr({server}, "foreground()")
+ * Except that on Win32 systems the client does the work, to work
+ * around the problem that the OS doesn't always allow the server
+ * to bring itself to the foreground.
+ * Note: This does not restore the window if it was minimized,
+ * like foreground() does.
+ * This function is not available in the |sandbox|.
+ * Can also be used as a |method|:
+ * 	ServerName()->remote_foreground()
+ * {only in the Win32, Motif and GTK GUI versions and the
+ * Win32 console version}
+ */
+export function remote_foreground(
+  denops: Denops,
+  server: unknown,
+): Promise<unknown>;
+export function remote_foreground(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("remote_foreground", ...args);
+}
+
+/**
+ * Returns a positive number if there are available strings
+ * from {serverid}.  Copies any reply string into the variable
+ * {retvar} if specified.  {retvar} must be a string with the
+ * name of a variable.
+ * Returns zero if none are available.
+ * Returns -1 if something is wrong.
+ * See also |clientserver|.
+ * This function is not available in the |sandbox|.
+ * {only available when compiled with the |+clientserver| feature}
+ * Examples:
+ * 	:let repl = ""
+ * 	:echo "PEEK: " .. remote_peek(id, "repl") .. ": " .. repl
+ * Can also be used as a |method|:
+ * 	ServerId()->remote_peek()
+ */
+export function remote_peek(
+  denops: Denops,
+  serverid: unknown,
+  retvar?: unknown,
+): Promise<unknown>;
+export function remote_peek(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("remote_peek", ...args);
+}
+
+/**
+ * Return the oldest available reply from {serverid} and consume
+ * it.  Unless a {timeout} in seconds is given, it blocks until a
+ * reply is available.  Returns an empty string, if a reply is
+ * not available or on error.
+ * See also |clientserver|.
+ * This function is not available in the |sandbox|.
+ * {only available when compiled with the |+clientserver| feature}
  * Example:
- * With the text "여보세요" in line 8:
- * 	call setcharpos('.', [0, 8, 4, 0])
- * positions the cursor on the fourth character '요'.
- * 	call setpos('.', [0, 8, 4, 0])
- * positions the cursor on the second character '보'.
+ * 	:echo remote_read(id)
  * Can also be used as a |method|:
- * 	GetPosition()->setcharpos('.')
+ * 	ServerId()->remote_read()
  */
-export function setcharpos(
+export function remote_read(
   denops: Denops,
-  expr: unknown,
-  list: unknown,
+  serverid: unknown,
+  timeout: unknown,
 ): Promise<unknown>;
-export function setcharpos(
+export function remote_read(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("setcharpos", ...args);
+  return denops.call("remote_read", ...args);
 }
 
 /**
- * Same as |cursor()| but uses the specified column number as the
- * character index instead of the byte index in the line.
- * Example:
- * With the text "여보세요" in line 4:
- * 	call setcursorcharpos(4, 3)
- * positions the cursor on the third character '세'.
- * 	call cursor(4, 3)
- * positions the cursor on the first character '여'.
+ * Send the {string} to {server}.  The {server} argument is a
+ * string, also see |{server}|.
+ * The string is sent as input keys and the function returns
+ * immediately.  At the Vim server the keys are not mapped
+ * |:map|.
+ * If {idvar} is present, it is taken as the name of a variable
+ * and a {serverid} for later use with remote_read() is stored
+ * there.
+ * See also |clientserver| |RemoteReply|.
+ * This function is not available in the |sandbox|.
+ * {only available when compiled with the |+clientserver| feature}
+ * Note: Any errors will be reported in the server and may mess
+ * up the display.
+ * Examples:
+ * :echo remote_send("gvim", ":DropAndReply " .. file, "serverid") ..
+ *  \ remote_read(serverid)
+ * :autocmd NONE RemoteReply *
+ *  \ echo remote_read(expand("<amatch>"))
+ * :echo remote_send("gvim", ":sleep 10 | echo " ..
+ *  \ 'server2client(expand("<client>"), "HELLO")<CR>')
  * Can also be used as a |method|:
- * 	GetCursorPos()->setcursorcharpos()
+ * 	ServerName()->remote_send(keys)
  */
-export function setcursorcharpos(
+export function remote_send(
   denops: Denops,
-  lnum: unknown,
-  col: unknown,
-  off?: unknown,
+  server: unknown,
+  string: unknown,
+  idvar?: unknown,
 ): Promise<unknown>;
-export function setcursorcharpos(
-  denops: Denops,
-  list: unknown,
-): Promise<unknown>;
-export function setcursorcharpos(
+export function remote_send(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("setcursorcharpos", ...args);
+  return denops.call("remote_send", ...args);
+}
+
+/**
+ * Become the server {name}.  This fails if already running as a
+ * server, when |v:servername| is not empty.
+ * Can also be used as a |method|:
+ * 	ServerName()->remote_startserver()
+ * {only available when compiled with the |+clientserver| feature}
+ */
+export function remote_startserver(
+  denops: Denops,
+  name: unknown,
+): Promise<unknown>;
+export function remote_startserver(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("remote_startserver", ...args);
+}
+
+/**
+ * Send a reply string to {clientid}.  The most recent {clientid}
+ * that sent a string can be retrieved with expand("<client>").
+ * {only available when compiled with the |+clientserver| feature}
+ * Returns zero for success, -1 for failure.
+ * Note:
+ * This id has to be stored before the next command can be
+ * received.  I.e. before returning from the received command and
+ * before calling any commands that waits for input.
+ * See also |clientserver|.
+ * Example:
+ * 	:echo server2client(expand("<client>"), "HELLO")
+ * Can also be used as a |method|:
+ * 	GetClientId()->server2client(string)
+ */
+export function server2client(
+  denops: Denops,
+  clientid: unknown,
+  string: unknown,
+): Promise<unknown>;
+export function server2client(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("server2client", ...args);
 }
 
 /**
@@ -1139,6 +1257,7 @@ export function setcursorcharpos(
  * |vim9script|.  Also, composing characters are not counted.
  * When {end} is omitted the slice continues to the last item.
  * When {end} is -1 the last item is omitted.
+ * Returns an empty value if {start} or {end} are invalid.
  * Can also be used as a |method|:
  * 	GetList()->slice(offset)
  */
@@ -1154,6 +1273,8 @@ export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Stop playing all sounds.
+ * On some Linux systems you may need the libcanberra-pulse
+ * package, otherwise sound may not stop.
  * {only available when compiled with the |+sound| feature}
  */
 export function sound_clear(denops: Denops): Promise<unknown>;
@@ -1227,6 +1348,8 @@ export function sound_playfile(
 /**
  * Stop playing sound {id}.  {id} must be previously returned by
  * `sound_playevent()` or `sound_playfile()`.
+ * On some Linux systems you may need the libcanberra-pulse
+ * package, otherwise sound may not stop.
  * On MS-Windows, this does not work for event sound started by
  * `sound_playevent()`. To stop event sounds, use `sound_clear()`.
  * Can also be used as a |method|:
@@ -1239,24 +1362,6 @@ export function sound_stop(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("sound_stop", ...args);
-}
-
-/**
- * Initialize seed used by |rand()|:
- * - If {expr} is not given, seed values are initialized by
- *   reading from /dev/urandom, if possible, or using time(NULL)
- *   a.k.a. epoch time otherwise; this only has second accuracy.
- * - If {expr} is given it must be a Number.  It is used to
- *   initialize the seed values.  This is useful for testing or
- *   when a predictable sequence is intended.
- * Examples:
- * 	:let seed = srand()
- * 	:let seed = srand(userinput)
- * 	:echo rand(seed)
- */
-export function srand(denops: Denops, expr?: unknown): Promise<unknown>;
-export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("srand", ...args);
 }
 
 /**
@@ -1288,7 +1393,7 @@ export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     w	blocked on waiting, e.g. ch_evalexpr(), ch_read() and
  * 	ch_readraw() when reading json
  *     S	not triggering SafeState or SafeStateAgain, e.g. after
- *     	|f| or a count
+ * 	|f| or a count
  *     c	callback invoked, including timer (repeats for
  * 	recursiveness up to "ccc")
  *     s	screen has scrolled for messages
@@ -1303,6 +1408,7 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * in String {string}.  Composing characters are ignored.
  * |strchars()| can count the number of characters, counting
  * composing characters separately.
+ * Returns 0 if {string} is empty or on error.
  * Also see |strlen()|, |strdisplaywidth()| and |strwidth()|.
  * Can also be used as a |method|:
  * 	GetText()->strcharlen()
@@ -1362,934 +1468,6 @@ export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Attach a text property at position {lnum}, {col}.  {col} is
- * counted in bytes, use one for the first column.
- * If {lnum} is invalid an error is given.
- * If {col} is invalid an error is given.
- * {props} is a dictionary with these fields:
- *    length	length of text in bytes, can only be used
- * 		for a property that does not continue in
- * 		another line; can be zero
- *    end_lnum	line number for the end of text (inclusive)
- *    end_col	column just after the text; not used when
- * 		"length" is present; when {col} and "end_col"
- * 		are equal, and "end_lnum" is omitted or equal
- * 		to {lnum}, this is a zero-width text property
- *    bufnr	buffer to add the property to; when omitted
- * 		the current buffer is used
- *    id		user defined ID for the property; must be a
- * 		number; when omitted zero is used
- *    type		name of the text property type
- * All fields except "type" are optional.
- * It is an error when both "length" and "end_lnum" or "end_col"
- * are given.  Either use "length" or "end_col" for a property
- * within one line, or use "end_lnum" and "end_col" for a
- * property that spans more than one line.
- * When neither "length" nor "end_col" are given the property
- * will be zero-width.  That means it will move with the text, as
- * a kind of mark.  One character will be highlighted, if the
- * type specifies highlighting.
- * The property can end exactly at the last character of the
- * text, or just after it.  In the last case, if text is appended
- * to the line, the text property size will increase, also when
- * the property type does not have "end_incl" set.
- * "type" will first be looked up in the buffer the property is
- * added to. When not found, the global property types are used.
- * If not found an error is given.
- * Can also be used as a |method|:
- * 	GetLnum()->prop_add(col, props)
- */
-export function prop_add(
-  denops: Denops,
-  lnum: unknown,
-  col: unknown,
-  props: unknown,
-): Promise<unknown>;
-export function prop_add(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("prop_add", ...args);
-}
-
-/**
- * Remove all text properties from line {lnum}.
- * When {lnum-end} is given, remove all text properties from line
- * {lnum} to {lnum-end} (inclusive).
- * When {props} contains a "bufnr" item use this buffer,
- * otherwise use the current buffer.
- * Can also be used as a |method|:
- * 	GetLnum()->prop_clear()
- */
-export function prop_clear(
-  denops: Denops,
-  lnum: unknown,
-  lnum_end?: unknown,
-  props?: unknown,
-): Promise<unknown>;
-export function prop_clear(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_clear", ...args);
-}
-
-/**
- * Search for a text property as specified with {props}:
- *    id		property with this ID
- *    type		property with this type name
- *    both		"id" and "type" must both match
- *    bufnr	buffer to search in; when present a
- * 		start position with "lnum" and "col"
- * 		must be given; when omitted the
- * 		current buffer is used
- *    lnum		start in this line (when omitted start
- * 		at the cursor)
- *    col		start at this column (when omitted
- * 		and "lnum" is given: use column 1,
- * 		otherwise start at the cursor)
- *    skipstart	do not look for a match at the start
- * 		position
- * A property matches when either "id" or "type" matches.
- * {direction} can be "f" for forward and "b" for backward.  When
- * omitted forward search is performed.
- * If a match is found then a Dict is returned with the entries
- * as with prop_list(), and additionally an "lnum" entry.
- * If no match is found then an empty Dict is returned.
- */
-export function prop_find(
-  denops: Denops,
-  props: unknown,
-  direction?: unknown,
-): Promise<unknown>;
-export function prop_find(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_find", ...args);
-}
-
-/**
- * Return a List with all text properties in line {lnum}.
- * When {props} contains a "bufnr" item, use this buffer instead
- * of the current buffer.
- * The properties are ordered by starting column and priority.
- * Each property is a Dict with these entries:
- *    col		starting column
- *    length	length in bytes, one more if line break is
- * 		included
- *    id		property ID
- *    type		name of the property type, omitted if
- * 		the type was deleted
- *    type_bufnr	buffer number for which this type was defined;
- * 		0 if the type is global
- *    start	when TRUE property starts in this line
- *    end		when TRUE property ends in this line
- * When "start" is zero the property started in a previous line,
- * the current one is a continuation.
- * When "end" is zero the property continues in the next line.
- * The line break after this line is included.
- * Can also be used as a |method|:
- * 	GetLnum()->prop_list()
- */
-export function prop_list(
-  denops: Denops,
-  lnum: unknown,
-  props?: unknown,
-): Promise<unknown>;
-export function prop_list(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_list", ...args);
-}
-
-/**
- * Remove a matching text property from line {lnum}.  When
- * {lnum-end} is given, remove matching text properties from line
- * {lnum} to {lnum-end} (inclusive).
- * When {lnum} is omitted remove matching text properties from
- * all lines (this requires going over all lines, thus will be a
- * bit slow for a buffer with many lines).
- * {props} is a dictionary with these fields:
- *    id		remove text properties with this ID
- *    type		remove text properties with this type name
- *    both		"id" and "type" must both match
- *    bufnr	use this buffer instead of the current one
- *    all		when TRUE remove all matching text properties,
- * 		not just the first one
- * A property matches when either "id" or "type" matches.
- * If buffer "bufnr" does not exist you get an error message.
- * If buffer "bufnr" is not loaded then nothing happens.
- * Returns the number of properties that were removed.
- * Can also be used as a |method|:
- * 	GetProps()->prop_remove()
- */
-export function prop_remove(
-  denops: Denops,
-  props: unknown,
-  lnum?: unknown,
-  lnum_end?: unknown,
-): Promise<unknown>;
-export function prop_remove(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_remove", ...args);
-}
-
-/**
- * Add a text property type {name}.  If a property type with this
- * name already exists an error is given.  Nothing is returned.
- * {props} is a dictionary with these optional fields:
- *    bufnr	define the property only for this buffer; this
- * 		avoids name collisions and automatically
- * 		clears the property types when the buffer is
- * 		deleted.
- *    highlight	name of highlight group to use
- *    priority	when a character has multiple text
- * 		properties the one with the highest priority
- * 		will be used; negative values can be used, the
- * 		default priority is zero
- *    combine	when omitted or TRUE combine the highlight
- * 		with any syntax highlight; when FALSE syntax
- * 		highlight will not be used
- *    start_incl	when TRUE inserts at the start position will
- * 		be included in the text property
- *    end_incl	when TRUE inserts at the end position will be
- * 		included in the text property
- * Can also be used as a |method|:
- * 	GetPropName()->prop_type_add(props)
- */
-export function prop_type_add(
-  denops: Denops,
-  name: unknown,
-  props: unknown,
-): Promise<unknown>;
-export function prop_type_add(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_type_add", ...args);
-}
-
-/**
- * Change properties of an existing text property type.  If a
- * property with this name does not exist an error is given.
- * The {props} argument is just like |prop_type_add()|.
- * Can also be used as a |method|:
- * 	GetPropName()->prop_type_change(props)
- */
-export function prop_type_change(
-  denops: Denops,
-  name: unknown,
-  props: unknown,
-): Promise<unknown>;
-export function prop_type_change(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_type_change", ...args);
-}
-
-/**
- * Remove the text property type {name}.  When text properties
- * using the type {name} are still in place, they will not have
- * an effect and can no longer be removed by name.
- * {props} can contain a "bufnr" item.  When it is given, delete
- * a property type from this buffer instead of from the global
- * property types.
- * When text property type {name} is not found there is no error.
- * Can also be used as a |method|:
- * 	GetPropName()->prop_type_delete()
- */
-export function prop_type_delete(
-  denops: Denops,
-  name: unknown,
-  props?: unknown,
-): Promise<unknown>;
-export function prop_type_delete(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_type_delete", ...args);
-}
-
-/**
- * Returns the properties of property type {name}.  This is a
- * dictionary with the same fields as was given to
- * prop_type_add().
- * When the property type {name} does not exist, an empty
- * dictionary is returned.
- * {props} can contain a "bufnr" item.  When it is given, use
- * this buffer instead of the global property types.
- * Can also be used as a |method|:
- * 	GetPropName()->prop_type_get()
- */
-export function prop_type_get(
-  denops: Denops,
-  name: unknown,
-  props?: unknown,
-): Promise<unknown>;
-export function prop_type_get(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_type_get", ...args);
-}
-
-/**
- * Returns a list with all property type names.
- * {props} can contain a "bufnr" item.  When it is given, use
- * this buffer instead of the global property types.
- */
-export function prop_type_list(
-  denops: Denops,
-  props?: unknown,
-): Promise<unknown>;
-export function prop_type_list(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("prop_type_list", ...args);
-}
-
-/**
- * Open a new window displaying the difference between the two
- * files.  The files must have been created with
- * |term_dumpwrite()|.
- * Returns the buffer number or zero when the diff fails.
- * Also see |terminal-diff|.
- * NOTE: this does not work with double-width characters yet.
- * The top part of the buffer contains the contents of the first
- * file, the bottom part of the buffer contains the contents of
- * the second file.  The middle part shows the differences.
- * The parts are separated by a line of equals.
- * If the {options} argument is present, it must be a Dict with
- * these possible members:
- *    "term_name"	     name to use for the buffer name, instead
- * 		     of the first file name.
- *    "term_rows"	     vertical size to use for the terminal,
- * 		     instead of using 'termwinsize', but
- * 		     respecting the minimal size
- *    "term_cols"	     horizontal size to use for the terminal,
- * 		     instead of using 'termwinsize', but
- * 		     respecting the minimal size
- *    "vertical"	     split the window vertically
- *    "curwin"	     use the current window, do not split the
- * 		     window; fails if the current buffer
- * 		     cannot be |abandon|ed
- *    "bufnr"	     do not create a new buffer, use the
- * 		     existing buffer "bufnr".  This buffer
- * 		     must have been previously created with
- * 		     term_dumpdiff() or term_dumpload() and
- * 		     visible in a window.
- *    "norestore"	     do not add the terminal window to a
- * 		     session file
- * Each character in the middle part indicates a difference. If
- * there are multiple differences only the first in this list is
- * used:
- * 	X	different character
- * 	w	different width
- * 	f	different foreground color
- * 	b	different background color
- * 	a	different attribute
- * 	+	missing position in first file
- * 	-	missing position in second file
- * 	>	cursor position in first file, not in second
- * 	<	cursor position in second file, not in first
- * Using the "s" key the top and bottom parts are swapped.  This
- * makes it easy to spot a difference.
- * Can also be used as a |method|:
- * 	GetFilename()->term_dumpdiff(otherfile)
- */
-export function term_dumpdiff(
-  denops: Denops,
-  filename1: unknown,
-  filename2: unknown,
-  options?: unknown,
-): Promise<unknown>;
-export function term_dumpdiff(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_dumpdiff", ...args);
-}
-
-/**
- * Open a new window displaying the contents of {filename}
- * The file must have been created with |term_dumpwrite()|.
- * Returns the buffer number or zero when it fails.
- * Also see |terminal-diff|.
- * For {options} see |term_dumpdiff()|.
- * Can also be used as a |method|:
- * 	GetFilename()->term_dumpload()
- */
-export function term_dumpload(
-  denops: Denops,
-  filename: unknown,
-  options?: unknown,
-): Promise<unknown>;
-export function term_dumpload(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_dumpload", ...args);
-}
-
-/**
- * Dump the contents of the terminal screen of {buf} in the file
- * {filename}.  This uses a format that can be used with
- * |term_dumpload()| and |term_dumpdiff()|.
- * If the job in the terminal already finished an error is given:
- * If {filename} already exists an error is given:
- * Also see |terminal-diff|.
- * {options} is a dictionary with these optional entries:
- * 	"rows"		maximum number of rows to dump
- * 	"columns"	maximum number of columns to dump
- * Can also be used as a |method|, the base is used for the file
- * name:
- * 	GetFilename()->term_dumpwrite(bufnr)
- */
-export function term_dumpwrite(
-  denops: Denops,
-  buf: unknown,
-  filename: unknown,
-  options?: unknown,
-): Promise<unknown>;
-export function term_dumpwrite(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_dumpwrite", ...args);
-}
-
-/**
- * Returns 1 if the terminal of {buf} is using the alternate
- * screen.
- * {buf} is used as with |term_getsize()|.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getaltscreen()
- */
-export function term_getaltscreen(
-  denops: Denops,
-  buf: unknown,
-): Promise<unknown>;
-export function term_getaltscreen(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getaltscreen", ...args);
-}
-
-/**
- * Get the ANSI color palette in use by terminal {buf}.
- * Returns a List of length 16 where each element is a String
- * representing a color in hexadecimal "#rrggbb" format.
- * Also see |term_setansicolors()| and |g:terminal_ansi_colors|.
- * If neither was used returns the default colors.
- * {buf} is used as with |term_getsize()|.  If the buffer does not
- * exist or is not a terminal window, an empty list is returned.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getansicolors()
- * {only available when compiled with GUI enabled and/or the
- * |+termguicolors| feature}
- */
-export function term_getansicolors(
-  denops: Denops,
-  buf: unknown,
-): Promise<unknown>;
-export function term_getansicolors(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getansicolors", ...args);
-}
-
-/**
- * Given {attr}, a value returned by term_scrape() in the "attr"
- * item, return whether {what} is on.  {what} can be one of:
- * 	bold
- * 	italic
- * 	underline
- * 	strike
- * 	reverse
- * Can also be used as a |method|:
- * 	GetAttr()->term_getattr()
- */
-export function term_getattr(
-  denops: Denops,
-  attr: unknown,
-  what: unknown,
-): Promise<unknown>;
-export function term_getattr(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getattr", ...args);
-}
-
-/**
- * Get the cursor position of terminal {buf}. Returns a list with
- * two numbers and a dictionary: [row, col, dict].
- * "row" and "col" are one based, the first screen cell is row
- * 1, column 1.  This is the cursor position of the terminal
- * itself, not of the Vim window.
- * "dict" can have these members:
- *    "visible"	one when the cursor is visible, zero when it
- * 		is hidden.
- *    "blink"	one when the cursor is blinking, zero when it
- * 		is not blinking.
- *    "shape"	1 for a block cursor, 2 for underline and 3
- * 		for a vertical bar.
- *    "color"	color of the cursor, e.g. "green"
- * {buf} must be the buffer number of a terminal window. If the
- * buffer does not exist or is not a terminal window, an empty
- * list is returned.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getcursor()
- */
-export function term_getcursor(denops: Denops, buf: unknown): Promise<unknown>;
-export function term_getcursor(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getcursor", ...args);
-}
-
-/**
- * Get the Job associated with terminal window {buf}.
- * {buf} is used as with |term_getsize()|.
- * Returns |v:null| when there is no job.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getjob()
- */
-export function term_getjob(denops: Denops, buf: unknown): Promise<unknown>;
-export function term_getjob(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getjob", ...args);
-}
-
-/**
- * Get a line of text from the terminal window of {buf}.
- * {buf} is used as with |term_getsize()|.
- * The first line has {row} one.  When {row} is "." the cursor
- * line is used.  When {row} is invalid an empty string is
- * returned.
- * To get attributes of each character use |term_scrape()|.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getline(row)
- */
-export function term_getline(
-  denops: Denops,
-  buf: unknown,
-  row: unknown,
-): Promise<unknown>;
-export function term_getline(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getline", ...args);
-}
-
-/**
- * Return the number of lines that scrolled to above the top of
- * terminal {buf}.  This is the offset between the row number
- * used for |term_getline()| and |getline()|, so that:
- * 	term_getline(buf, N)
- * is equal to:
- * 	getline(N + term_getscrolled(buf))
- * (if that line exists).
- * {buf} is used as with |term_getsize()|.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getscrolled()
- */
-export function term_getscrolled(
-  denops: Denops,
-  buf: unknown,
-): Promise<unknown>;
-export function term_getscrolled(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getscrolled", ...args);
-}
-
-/**
- * Get the size of terminal {buf}. Returns a list with two
- * numbers: [rows, cols].  This is the size of the terminal, not
- * the window containing the terminal.
- * {buf} must be the buffer number of a terminal window.  Use an
- * empty string for the current buffer.  If the buffer does not
- * exist or is not a terminal window, an empty list is returned.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getsize()
- */
-export function term_getsize(denops: Denops, buf: unknown): Promise<unknown>;
-export function term_getsize(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getsize", ...args);
-}
-
-/**
- * Get the status of terminal {buf}. This returns a String with
- * a comma separated list of these items:
- * 	running		job is running
- * 	finished	job has finished
- * 	normal		in Terminal-Normal mode
- * One of "running" or "finished" is always present.
- * {buf} must be the buffer number of a terminal window. If the
- * buffer does not exist or is not a terminal window, an empty
- * string is returned.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_getstatus()
- */
-export function term_getstatus(denops: Denops, buf: unknown): Promise<unknown>;
-export function term_getstatus(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_getstatus", ...args);
-}
-
-/**
- * Get the title of terminal {buf}. This is the title that the
- * job in the terminal has set.
- * {buf} must be the buffer number of a terminal window. If the
- * buffer does not exist or is not a terminal window, an empty
- * string is returned.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_gettitle()
- */
-export function term_gettitle(denops: Denops, buf: unknown): Promise<unknown>;
-export function term_gettitle(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_gettitle", ...args);
-}
-
-/**
- * Get the name of the controlling terminal associated with
- * terminal window {buf}.  {buf} is used as with |term_getsize()|.
- * When {input} is omitted or 0, return the name for writing
- * (stdout). When {input} is 1 return the name for reading
- * (stdin). On UNIX, both return same name.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_gettty()
- */
-export function term_gettty(
-  denops: Denops,
-  buf: unknown,
-  input?: unknown,
-): Promise<unknown>;
-export function term_gettty(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_gettty", ...args);
-}
-
-/**
- * Return a list with the buffer numbers of all buffers for
- * terminal windows.
- */
-export function term_list(denops: Denops): Promise<unknown>;
-export function term_list(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_list", ...args);
-}
-
-/**
- * Get the contents of {row} of terminal screen of {buf}.
- * For {buf} see |term_getsize()|.
- * The first line has {row} one.  When {row} is "." the cursor
- * line is used.  When {row} is invalid an empty string is
- * returned.
- * Return a List containing a Dict for each screen cell:
- *     "chars"	character(s) at the cell
- *     "fg"	foreground color as #rrggbb
- *     "bg"	background color as #rrggbb
- *     "attr"	attributes of the cell, use |term_getattr()|
- * 		to get the individual flags
- *     "width"	cell width: 1 or 2
- * For a double-width cell there is one item, thus the list can
- * be shorter than the width of the terminal.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_scrape(row)
- */
-export function term_scrape(
-  denops: Denops,
-  buf: unknown,
-  row: unknown,
-): Promise<unknown>;
-export function term_scrape(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_scrape", ...args);
-}
-
-/**
- * Send keystrokes {keys} to terminal {buf}.
- * {buf} is used as with |term_getsize()|.
- * {keys} are translated as key sequences. For example, "\<c-x>"
- * means the character CTRL-X.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_sendkeys(keys)
- */
-export function term_sendkeys(
-  denops: Denops,
-  buf: unknown,
-  keys: unknown,
-): Promise<unknown>;
-export function term_sendkeys(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_sendkeys", ...args);
-}
-
-/**
- * Set the ANSI color palette used by terminal {buf}.
- * {colors} must be a List of 16 valid color names or hexadecimal
- * color codes, like those accepted by |highlight-guifg|.
- * Also see |term_getansicolors()| and |g:terminal_ansi_colors|.
- * The colors normally are:
- * 	0    black
- * 	1    dark red
- * 	2    dark green
- * 	3    brown
- * 	4    dark blue
- * 	5    dark magenta
- * 	6    dark cyan
- * 	7    light grey
- * 	8    dark grey
- * 	9    red
- * 	10   green
- * 	11   yellow
- * 	12   blue
- * 	13   magenta
- * 	14   cyan
- * 	15   white
- * These colors are used in the GUI and in the terminal when
- * 'termguicolors' is set.  When not using GUI colors (GUI mode
- * or 'termguicolors'), the terminal window always uses the 16
- * ANSI colors of the underlying terminal.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_setansicolors(colors)
- * {only available with GUI enabled and/or the |+termguicolors|
- * feature}
- */
-export function term_setansicolors(
-  denops: Denops,
-  buf: unknown,
-  colors: unknown,
-): Promise<unknown>;
-export function term_setansicolors(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setansicolors", ...args);
-}
-
-/**
- * Set the function name prefix to be used for the |terminal-api|
- * function in terminal {buf}.  For example:
- *     :call term_setapi(buf, "Myapi_")
- *     :call term_setapi(buf, "")
- * The default is "Tapi_".  When {expr} is an empty string then
- * no |terminal-api| function can be used for {buf}.
- * When used as a method the base is used for {buf}:
- * 	GetBufnr()->term_setapi({expr})
- */
-export function term_setapi(
-  denops: Denops,
-  buf: unknown,
-  expr: unknown,
-): Promise<unknown>;
-export function term_setapi(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setapi", ...args);
-}
-
-/**
- * When exiting Vim or trying to close the terminal window in
- * another way, {how} defines whether the job in the terminal can
- * be stopped.
- * When {how} is empty (the default), the job will not be
- * stopped, trying to exit will result in |E947|.
- * Otherwise, {how} specifies what signal to send to the job.
- * See |job_stop()| for the values.
- * After sending the signal Vim will wait for up to a second to
- * check that the job actually stopped.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_setkill(how)
- */
-export function term_setkill(
-  denops: Denops,
-  buf: unknown,
-  how: unknown,
-): Promise<unknown>;
-export function term_setkill(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setkill", ...args);
-}
-
-/**
- * Set the command to write in a session file to restore the job
- * in this terminal.  The line written in the session file is:
- * 	terminal ++curwin ++cols=%d ++rows=%d {command}
- * Make sure to escape the command properly.
- * Use an empty {command} to run 'shell'.
- * Use "NONE" to not restore this window.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_setrestore(command)
- */
-export function term_setrestore(
-  denops: Denops,
-  buf: unknown,
-  command: unknown,
-): Promise<unknown>;
-export function term_setrestore(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setrestore", ...args);
-}
-
-/**
- * Set the size of terminal {buf}. The size of the window
- * containing the terminal will also be adjusted, if possible.
- * If {rows} or {cols} is zero or negative, that dimension is not
- * changed.
- * {buf} must be the buffer number of a terminal window.  Use an
- * empty string for the current buffer.  If the buffer does not
- * exist or is not a terminal window, an error is given.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_setsize(rows, cols)
- */
-export function term_setsize(
-  denops: Denops,
-  buf: unknown,
-  rows: unknown,
-  cols: unknown,
-): Promise<unknown>;
-export function term_setsize(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_setsize", ...args);
-}
-
-/**
- * Open a terminal window and run {cmd} in it.
- * {cmd} can be a string or a List, like with |job_start()|. The
- * string "NONE" can be used to open a terminal window without
- * starting a job, the pty of the terminal can be used by a
- * command like gdb.
- * Returns the buffer number of the terminal window.  If {cmd}
- * cannot be executed the window does open and shows an error
- * message.
- * If opening the window fails zero is returned.
- * {options} are similar to what is used for |job_start()|, see
- * |job-options|.  However, not all options can be used.  These
- * are supported:
- *    all timeout options
- *    "stoponexit", "cwd", "env"
- *    "callback", "out_cb", "err_cb", "exit_cb", "close_cb"
- *    "in_io", "in_top", "in_bot", "in_name", "in_buf"
- *    "out_io", "out_name", "out_buf", "out_modifiable", "out_msg"
- *    "err_io", "err_name", "err_buf", "err_modifiable", "err_msg"
- * However, at least one of stdin, stdout or stderr must be
- * connected to the terminal.  When I/O is connected to the
- * terminal then the callback function for that part is not used.
- * There are extra options:
- *    "term_name"	     name to use for the buffer name, instead
- * 		     of the command name.
- *    "term_rows"	     vertical size to use for the terminal,
- * 		     instead of using 'termwinsize'
- *    "term_cols"	     horizontal size to use for the terminal,
- * 		     instead of using 'termwinsize'
- *    "vertical"	     split the window vertically; note that
- * 		     other window position can be defined with
- * 		     command modifiers, such as |:belowright|.
- *    "curwin"	     use the current window, do not split the
- * 		     window; fails if the current buffer
- * 		     cannot be |abandon|ed
- *    "hidden"	     do not open a window
- *    "norestore"	     do not add the terminal window to a
- * 		     session file
- *    "term_kill"	     what to do when trying to close the
- * 		     terminal window, see |term_setkill()|
- *    "term_finish"     What to do when the job is finished:
- * 			"close": close any windows
- * 			"open": open window if needed
- * 		     Note that "open" can be interruptive.
- * 		     See |term++close| and |term++open|.
- *    "term_opencmd"    command to use for opening the window when
- * 		     "open" is used for "term_finish"; must
- * 		     have "%d" where the buffer number goes,
- * 		     e.g. "10split|buffer %d"; when not
- * 		     specified "botright sbuf %d" is used
- *    "term_highlight"  highlight group to use instead of
- * 		     "Terminal"
- *    "eof_chars"	     Text to send after all buffer lines were
- * 		     written to the terminal.  When not set
- * 		     CTRL-D is used on MS-Windows. For Python
- * 		     use CTRL-Z or "exit()". For a shell use
- * 		     "exit".  A CR is always added.
- *    "ansi_colors"     A list of 16 color names or hex codes
- * 		     defining the ANSI palette used in GUI
- * 		     color modes.  See |g:terminal_ansi_colors|.
- *    "tty_type"	     (MS-Windows only): Specify which pty to
- * 		     use.  See 'termwintype' for the values.
- *    "term_api"	     function name prefix for the
- * 		     |terminal-api| function.  See
- * 		     |term_setapi()|.
- * Can also be used as a |method|:
- * 	GetCommand()->term_start()
- */
-export function term_start(
-  denops: Denops,
-  cmd: unknown,
-  options?: unknown,
-): Promise<unknown>;
-export function term_start(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_start", ...args);
-}
-
-/**
- * Wait for pending updates of {buf} to be handled.
- * {buf} is used as with |term_getsize()|.
- * {time} is how long to wait for updates to arrive in msec.  If
- * not set then 10 msec will be used.
- * Can also be used as a |method|:
- * 	GetBufnr()->term_wait()
- */
-export function term_wait(
-  denops: Denops,
-  buf: unknown,
-  time?: unknown,
-): Promise<unknown>;
-export function term_wait(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("term_wait", ...args);
-}
-
-/**
  * Return non-zero when there is something to read from {handle}.
  * {handle} can be a Channel or a Job that has a Channel.
  * This is useful to read from a channel at a convenient time,
@@ -2339,12 +1517,14 @@ export function ch_close_in(
  * according to the type of channel.  The function cannot be used
  * with a raw channel.  See |channel-use|.
  * {handle} can be a Channel or a Job that has a Channel.
+ * When using the "lsp" channel mode, {expr} must be a |Dict|.
  * {options} must be a Dictionary.  It must not have a "callback"
  * entry.  It can have a "timeout" entry to specify the timeout
  * for this specific request.
  * ch_evalexpr() waits for a response and returns the decoded
  * expression.  When there is an error or timeout it returns an
- * empty string.
+ * empty |String| or, when using the "lsp" channel mode, returns an
+ * empty |Dict|.
  * Note that while waiting for the response, Vim handles other
  * messages.  You need to make sure this doesn't cause trouble.
  * Can also be used as a |method|:
@@ -2436,10 +1616,13 @@ export function ch_getjob(
  * When opened with ch_open():
  *    "hostname"	  the hostname of the address
  *    "port"	  the port of the address
+ *    "path"	  the path of the Unix-domain socket
  *    "sock_status"  "open" or "closed"
  *    "sock_mode"	  "NL", "RAW", "JSON" or "JS"
  *    "sock_io"	  "socket"
  *    "sock_timeout" timeout in msec
+ * Note that "path" is only present for Unix-domain sockets, for
+ * regular ones "hostname" and "port" are present instead.
  * When opened with job_start():
  *    "out_status"	  "open", "buffered" or "closed"
  *    "out_mode"	  "NL", "RAW", "JSON" or "JS"
@@ -2450,7 +1633,7 @@ export function ch_getjob(
  *    "err_io"	  "out", "null", "pipe", "file" or "buffer"
  *    "err_timeout"  timeout in msec
  *    "in_status"	  "open" or "closed"
- *    "in_mode"	  "NL", "RAW", "JSON" or "JS"
+ *    "in_mode"	  "NL", "RAW", "JSON", "JS" or "LSP"
  *    "in_io"	  "null", "pipe", "file" or "buffer"
  *    "in_timeout"	  timeout in msec
  * Can also be used as a |method|:
@@ -2483,14 +1666,17 @@ export function ch_log(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Start logging channel activity to {fname}.
  * When {fname} is an empty string: stop logging.
- * When {mode} is omitted or "a" append to the file.
- * When {mode} is "w" start with an empty file.
+ * When {mode} is omitted or contains "a" or is "o" then append
+ * to the file.
+ * When {mode} contains "w" and not "a" start with an empty file.
+ * When {mode} contains "o" then log all terminal output.
+ * Otherwise only some interesting terminal output is logged.
  * Use |ch_log()| to write log messages.  The file is flushed
  * after every message, on Unix you can use "tail -f" to see what
  * is going on in real time.
  * To enable the log very early, to see what is received from a
- * terminal during startup, use |--cmd|:
- * 	vim --cmd "call ch_logfile('logfile', 'w')"
+ * terminal during startup, use |--log| (this uses mode "ao"):
+ * 	vim --log logfile
  * This function is not available in the |sandbox|.
  * NOTE: the channel communication is stored in the file, be
  * aware that this may contain confidential and privacy sensitive
@@ -2513,10 +1699,8 @@ export function ch_logfile(
 /**
  * Open a channel to {address}.  See |channel|.
  * Returns a Channel.  Use |ch_status()| to check for failure.
- * {address} is a String and has the form "hostname:port", e.g.,
- * "localhost:8765".
- * When using an IPv6 address, enclose it within square brackets.
- * E.g., "[2001:db8::1]:8765".
+ * {address} is a String, see |channel-address| for the possible
+ * accepted forms.
  * If {options} is given it must be a |Dictionary|.
  * See |channel-open-options|.
  * Can also be used as a |method|:
@@ -2593,6 +1777,15 @@ export function ch_readraw(
  * with a raw channel.
  * See |channel-use|.
  * {handle} can be a Channel or a Job that has a Channel.
+ * When using the "lsp" channel mode, {expr} must be a |Dict|.
+ * If the channel mode is "lsp", then returns a Dict. Otherwise
+ * returns an empty String.  If the "callback" item is present in
+ * {options}, then the returned Dict contains the ID of the
+ * request message.  The ID can be used to send a cancellation
+ * request to the LSP server (if needed).  Returns an empty Dict
+ * on error.
+ * If a response message is not expected for {expr}, then don't
+ * specify the "callback" item in {options}.
  * Can also be used as a |method|:
  * 	GetChannel()->ch_sendexpr(expr)
  */
@@ -2882,6 +2075,645 @@ export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Open a new window displaying the difference between the two
+ * files.  The files must have been created with
+ * |term_dumpwrite()|.
+ * Returns the buffer number or zero when the diff fails.
+ * Also see |terminal-diff|.
+ * NOTE: this does not work with double-width characters yet.
+ * The top part of the buffer contains the contents of the first
+ * file, the bottom part of the buffer contains the contents of
+ * the second file.  The middle part shows the differences.
+ * The parts are separated by a line of equals.
+ * If the {options} argument is present, it must be a Dict with
+ * these possible members:
+ *    "term_name"	     name to use for the buffer name, instead
+ * 		     of the first file name.
+ *    "term_rows"	     vertical size to use for the terminal,
+ * 		     instead of using 'termwinsize', but
+ * 		     respecting the minimal size
+ *    "term_cols"	     horizontal size to use for the terminal,
+ * 		     instead of using 'termwinsize', but
+ * 		     respecting the minimal size
+ *    "vertical"	     split the window vertically
+ *    "curwin"	     use the current window, do not split the
+ * 		     window; fails if the current buffer
+ * 		     cannot be |abandon|ed
+ *    "bufnr"	     do not create a new buffer, use the
+ * 		     existing buffer "bufnr".  This buffer
+ * 		     must have been previously created with
+ * 		     term_dumpdiff() or term_dumpload() and
+ * 		     visible in a window.
+ *    "norestore"	     do not add the terminal window to a
+ * 		     session file
+ * Each character in the middle part indicates a difference. If
+ * there are multiple differences only the first in this list is
+ * used:
+ * 	X	different character
+ * 	w	different width
+ * 	f	different foreground color
+ * 	b	different background color
+ * 	a	different attribute
+ * 	+	missing position in first file
+ * 	-	missing position in second file
+ * 	>	cursor position in first file, not in second
+ * 	<	cursor position in second file, not in first
+ * Using the "s" key the top and bottom parts are swapped.  This
+ * makes it easy to spot a difference.
+ * Can also be used as a |method|:
+ * 	GetFilename()->term_dumpdiff(otherfile)
+ */
+export function term_dumpdiff(
+  denops: Denops,
+  filename1: unknown,
+  filename2: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpdiff(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpdiff", ...args);
+}
+
+/**
+ * Open a new window displaying the contents of {filename}
+ * The file must have been created with |term_dumpwrite()|.
+ * Returns the buffer number or zero when it fails.
+ * Also see |terminal-diff|.
+ * For {options} see |term_dumpdiff()|.
+ * Can also be used as a |method|:
+ * 	GetFilename()->term_dumpload()
+ */
+export function term_dumpload(
+  denops: Denops,
+  filename: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpload(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpload", ...args);
+}
+
+/**
+ * Dump the contents of the terminal screen of {buf} in the file
+ * {filename}.  This uses a format that can be used with
+ * |term_dumpload()| and |term_dumpdiff()|.
+ * If the job in the terminal already finished an error is given:
+ * If {filename} already exists an error is given:
+ * Also see |terminal-diff|.
+ * {options} is a dictionary with these optional entries:
+ * 	"rows"		maximum number of rows to dump
+ * 	"columns"	maximum number of columns to dump
+ * Can also be used as a |method|, the base is used for the file
+ * name:
+ * 	GetFilename()->term_dumpwrite(bufnr)
+ */
+export function term_dumpwrite(
+  denops: Denops,
+  buf: unknown,
+  filename: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_dumpwrite(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_dumpwrite", ...args);
+}
+
+/**
+ * Returns 1 if the terminal of {buf} is using the alternate
+ * screen.
+ * {buf} is used as with |term_getsize()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getaltscreen()
+ */
+export function term_getaltscreen(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getaltscreen(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getaltscreen", ...args);
+}
+
+/**
+ * Get the ANSI color palette in use by terminal {buf}.
+ * Returns a List of length 16 where each element is a String
+ * representing a color in hexadecimal "#rrggbb" format.
+ * Also see |term_setansicolors()| and |g:terminal_ansi_colors|.
+ * If neither was used returns the default colors.
+ * {buf} is used as with |term_getsize()|.  If the buffer does not
+ * exist or is not a terminal window, an empty list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getansicolors()
+ * {only available when compiled with GUI enabled and/or the
+ * |+termguicolors| feature}
+ */
+export function term_getansicolors(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getansicolors(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getansicolors", ...args);
+}
+
+/**
+ * Given {attr}, a value returned by term_scrape() in the "attr"
+ * item, return whether {what} is on.  {what} can be one of:
+ * 	bold
+ * 	italic
+ * 	underline
+ * 	strike
+ * 	reverse
+ * Can also be used as a |method|:
+ * 	GetAttr()->term_getattr()
+ */
+export function term_getattr(
+  denops: Denops,
+  attr: unknown,
+  what: unknown,
+): Promise<unknown>;
+export function term_getattr(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getattr", ...args);
+}
+
+/**
+ * Get the cursor position of terminal {buf}. Returns a list with
+ * two numbers and a dictionary: [row, col, dict].
+ * "row" and "col" are one based, the first screen cell is row
+ * 1, column 1.  This is the cursor position of the terminal
+ * itself, not of the Vim window.
+ * "dict" can have these members:
+ *    "visible"	one when the cursor is visible, zero when it
+ * 		is hidden.
+ *    "blink"	one when the cursor is blinking, zero when it
+ * 		is not blinking.
+ *    "shape"	1 for a block cursor, 2 for underline and 3
+ * 		for a vertical bar.
+ *    "color"	color of the cursor, e.g. "green"
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getcursor()
+ */
+export function term_getcursor(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getcursor(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getcursor", ...args);
+}
+
+/**
+ * Get the Job associated with terminal window {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * Returns |v:null| when there is no job.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getjob()
+ */
+export function term_getjob(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getjob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getjob", ...args);
+}
+
+/**
+ * Get a line of text from the terminal window of {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * The first line has {row} one.  When {row} is "." the cursor
+ * line is used.  When {row} is invalid an empty string is
+ * returned.
+ * To get attributes of each character use |term_scrape()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getline(row)
+ */
+export function term_getline(
+  denops: Denops,
+  buf: unknown,
+  row: unknown,
+): Promise<unknown>;
+export function term_getline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getline", ...args);
+}
+
+/**
+ * Return the number of lines that scrolled to above the top of
+ * terminal {buf}.  This is the offset between the row number
+ * used for |term_getline()| and |getline()|, so that:
+ * 	term_getline(buf, N)
+ * is equal to:
+ * 	getline(N + term_getscrolled(buf))
+ * (if that line exists).
+ * {buf} is used as with |term_getsize()|.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getscrolled()
+ */
+export function term_getscrolled(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown>;
+export function term_getscrolled(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getscrolled", ...args);
+}
+
+/**
+ * Get the size of terminal {buf}. Returns a list with two
+ * numbers: [rows, cols].  This is the size of the terminal, not
+ * the window containing the terminal.
+ * {buf} must be the buffer number of a terminal window.  Use an
+ * empty string for the current buffer.  If the buffer does not
+ * exist or is not a terminal window, an empty list is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getsize()
+ */
+export function term_getsize(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getsize(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getsize", ...args);
+}
+
+/**
+ * Get the status of terminal {buf}. This returns a String with
+ * a comma-separated list of these items:
+ * 	running		job is running
+ * 	finished	job has finished
+ * 	normal		in Terminal-Normal mode
+ * One of "running" or "finished" is always present.
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * string is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_getstatus()
+ */
+export function term_getstatus(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getstatus(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_getstatus", ...args);
+}
+
+/**
+ * Get the title of terminal {buf}. This is the title that the
+ * job in the terminal has set.
+ * {buf} must be the buffer number of a terminal window. If the
+ * buffer does not exist or is not a terminal window, an empty
+ * string is returned.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_gettitle()
+ */
+export function term_gettitle(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_gettitle(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_gettitle", ...args);
+}
+
+/**
+ * Get the name of the controlling terminal associated with
+ * terminal window {buf}.  {buf} is used as with |term_getsize()|.
+ * When {input} is omitted or 0, return the name for writing
+ * (stdout). When {input} is 1 return the name for reading
+ * (stdin). On UNIX, both return same name.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_gettty()
+ */
+export function term_gettty(
+  denops: Denops,
+  buf: unknown,
+  input?: unknown,
+): Promise<unknown>;
+export function term_gettty(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_gettty", ...args);
+}
+
+/**
+ * Return a list with the buffer numbers of all buffers for
+ * terminal windows.
+ */
+export function term_list(denops: Denops): Promise<unknown>;
+export function term_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_list", ...args);
+}
+
+/**
+ * Get the contents of {row} of terminal screen of {buf}.
+ * For {buf} see |term_getsize()|.
+ * The first line has {row} one.  When {row} is "." the cursor
+ * line is used.  When {row} is invalid an empty string is
+ * returned.
+ * Return a List containing a Dict for each screen cell:
+ *     "chars"	character(s) at the cell
+ *     "fg"	foreground color as #rrggbb
+ *     "bg"	background color as #rrggbb
+ *     "attr"	attributes of the cell, use |term_getattr()|
+ * 		to get the individual flags
+ *     "width"	cell width: 1 or 2
+ * For a double-width cell there is one item, thus the list can
+ * be shorter than the width of the terminal.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_scrape(row)
+ */
+export function term_scrape(
+  denops: Denops,
+  buf: unknown,
+  row: unknown,
+): Promise<unknown>;
+export function term_scrape(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_scrape", ...args);
+}
+
+/**
+ * Send keystrokes {keys} to terminal {buf}.
+ * {buf} is used as with |term_getsize()|.
+ * {keys} are translated as key sequences. For example, "\<c-x>"
+ * means the character CTRL-X.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_sendkeys(keys)
+ */
+export function term_sendkeys(
+  denops: Denops,
+  buf: unknown,
+  keys: unknown,
+): Promise<unknown>;
+export function term_sendkeys(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_sendkeys", ...args);
+}
+
+/**
+ * Set the ANSI color palette used by terminal {buf}.
+ * {colors} must be a List of 16 valid color names or hexadecimal
+ * color codes, like those accepted by |highlight-guifg|.
+ * Also see |term_getansicolors()| and |g:terminal_ansi_colors|.
+ * The colors normally are:
+ * 	0    black
+ * 	1    dark red
+ * 	2    dark green
+ * 	3    brown
+ * 	4    dark blue
+ * 	5    dark magenta
+ * 	6    dark cyan
+ * 	7    light grey
+ * 	8    dark grey
+ * 	9    red
+ * 	10   green
+ * 	11   yellow
+ * 	12   blue
+ * 	13   magenta
+ * 	14   cyan
+ * 	15   white
+ * These colors are used in the GUI and in the terminal when
+ * 'termguicolors' is set.  When not using GUI colors (GUI mode
+ * or 'termguicolors'), the terminal window always uses the 16
+ * ANSI colors of the underlying terminal.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setansicolors(colors)
+ * {only available with GUI enabled and/or the |+termguicolors|
+ * feature}
+ */
+export function term_setansicolors(
+  denops: Denops,
+  buf: unknown,
+  colors: unknown,
+): Promise<unknown>;
+export function term_setansicolors(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setansicolors", ...args);
+}
+
+/**
+ * Set the function name prefix to be used for the |terminal-api|
+ * function in terminal {buf}.  For example:
+ *     :call term_setapi(buf, "Myapi_")
+ *     :call term_setapi(buf, "")
+ * The default is "Tapi_".  When {expr} is an empty string then
+ * no |terminal-api| function can be used for {buf}.
+ * When used as a method the base is used for {buf}:
+ * 	GetBufnr()->term_setapi({expr})
+ */
+export function term_setapi(
+  denops: Denops,
+  buf: unknown,
+  expr: unknown,
+): Promise<unknown>;
+export function term_setapi(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setapi", ...args);
+}
+
+/**
+ * When exiting Vim or trying to close the terminal window in
+ * another way, {how} defines whether the job in the terminal can
+ * be stopped.
+ * When {how} is empty (the default), the job will not be
+ * stopped, trying to exit will result in |E947|.
+ * Otherwise, {how} specifies what signal to send to the job.
+ * See |job_stop()| for the values.
+ * After sending the signal Vim will wait for up to a second to
+ * check that the job actually stopped.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setkill(how)
+ */
+export function term_setkill(
+  denops: Denops,
+  buf: unknown,
+  how: unknown,
+): Promise<unknown>;
+export function term_setkill(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setkill", ...args);
+}
+
+/**
+ * Set the command to write in a session file to restore the job
+ * in this terminal.  The line written in the session file is:
+ * 	terminal ++curwin ++cols=%d ++rows=%d {command}
+ * Make sure to escape the command properly.
+ * Use an empty {command} to run 'shell'.
+ * Use "NONE" to not restore this window.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setrestore(command)
+ */
+export function term_setrestore(
+  denops: Denops,
+  buf: unknown,
+  command: unknown,
+): Promise<unknown>;
+export function term_setrestore(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setrestore", ...args);
+}
+
+/**
+ * Set the size of terminal {buf}. The size of the window
+ * containing the terminal will also be adjusted, if possible.
+ * If {rows} or {cols} is zero or negative, that dimension is not
+ * changed.
+ * {buf} must be the buffer number of a terminal window.  Use an
+ * empty string for the current buffer.  If the buffer does not
+ * exist or is not a terminal window, an error is given.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_setsize(rows, cols)
+ */
+export function term_setsize(
+  denops: Denops,
+  buf: unknown,
+  rows: unknown,
+  cols: unknown,
+): Promise<unknown>;
+export function term_setsize(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_setsize", ...args);
+}
+
+/**
+ * Open a terminal window and run {cmd} in it.
+ * {cmd} can be a string or a List, like with |job_start()|. The
+ * string "NONE" can be used to open a terminal window without
+ * starting a job, the pty of the terminal can be used by a
+ * command like gdb.
+ * Returns the buffer number of the terminal window.  If {cmd}
+ * cannot be executed the window does open and shows an error
+ * message.
+ * If opening the window fails zero is returned.
+ * {options} are similar to what is used for |job_start()|, see
+ * |job-options|.  However, not all options can be used.  These
+ * are supported:
+ *    all timeout options
+ *    "stoponexit", "cwd", "env"
+ *    "callback", "out_cb", "err_cb", "exit_cb", "close_cb"
+ *    "in_io", "in_top", "in_bot", "in_name", "in_buf"
+ *    "out_io", "out_name", "out_buf", "out_modifiable", "out_msg"
+ *    "err_io", "err_name", "err_buf", "err_modifiable", "err_msg"
+ * However, at least one of stdin, stdout or stderr must be
+ * connected to the terminal.  When I/O is connected to the
+ * terminal then the callback function for that part is not used.
+ * There are extra options:
+ *    "term_name"	     name to use for the buffer name, instead
+ * 		     of the command name.
+ *    "term_rows"	     vertical size to use for the terminal,
+ * 		     instead of using 'termwinsize'; valid
+ * 		     range is from zero to 1000
+ *    "term_cols"	     horizontal size to use for the terminal,
+ * 		     instead of using 'termwinsize'
+ *    "vertical"	     split the window vertically; note that
+ * 		     other window position can be defined with
+ * 		     command modifiers, such as |:belowright|.
+ *    "curwin"	     use the current window, do not split the
+ * 		     window; fails if the current buffer
+ * 		     cannot be |abandon|ed
+ *    "hidden"	     do not open a window
+ *    "norestore"	     do not add the terminal window to a
+ * 		     session file
+ *    "term_kill"	     what to do when trying to close the
+ * 		     terminal window, see |term_setkill()|
+ *    "term_finish"     What to do when the job is finished:
+ * 			"close": close any windows
+ * 			"open": open window if needed
+ * 		     Note that "open" can be interruptive.
+ * 		     See |term++close| and |term++open|.
+ *    "term_opencmd"    command to use for opening the window when
+ * 		     "open" is used for "term_finish"; must
+ * 		     have "%d" where the buffer number goes,
+ * 		     e.g. "10split|buffer %d"; when not
+ * 		     specified "botright sbuf %d" is used
+ *    "term_highlight"  highlight group to use instead of
+ * 		     "Terminal"
+ *    "eof_chars"	     Text to send after all buffer lines were
+ * 		     written to the terminal.  When not set
+ * 		     CTRL-D is used on MS-Windows. For Python
+ * 		     use CTRL-Z or "exit()". For a shell use
+ * 		     "exit".  A CR is always added.
+ *    "ansi_colors"     A list of 16 color names or hex codes
+ * 		     defining the ANSI palette used in GUI
+ * 		     color modes.  See |g:terminal_ansi_colors|.
+ *    "tty_type"	     (MS-Windows only): Specify which pty to
+ * 		     use.  See 'termwintype' for the values.
+ *    "term_api"	     function name prefix for the
+ * 		     |terminal-api| function.  See
+ * 		     |term_setapi()|.
+ * Can also be used as a |method|:
+ * 	GetCommand()->term_start()
+ */
+export function term_start(
+  denops: Denops,
+  cmd: unknown,
+  options?: unknown,
+): Promise<unknown>;
+export function term_start(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_start", ...args);
+}
+
+/**
+ * Wait for pending updates of {buf} to be handled.
+ * {buf} is used as with |term_getsize()|.
+ * {time} is how long to wait for updates to arrive in msec.  If
+ * not set then 10 msec will be used.
+ * Can also be used as a |method|:
+ * 	GetBufnr()->term_wait()
+ */
+export function term_wait(
+  denops: Denops,
+  buf: unknown,
+  time?: unknown,
+): Promise<unknown>;
+export function term_wait(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("term_wait", ...args);
+}
+
+/**
  * This is for testing: If the memory allocation with {id} is
  * called, then decrement {countdown}, and when it reaches zero
  * let memory allocation fail {repeat} times.  When {repeat} is
@@ -2937,6 +2769,8 @@ export function test_feedinput(
  * only be called directly to avoid any structure to exist
  * internally, and |v:testing| must have been set before calling
  * any function.
+ * This will not work when called from a :def function, because
+ * variables on the stack will be freed.
  */
 export function test_garbagecollect_now(denops: Denops): Promise<unknown>;
 export function test_garbagecollect_now(
@@ -2974,68 +2808,128 @@ export function test_getvalue(
 }
 
 /**
- * Drop one or more files in {list} in the window at {row}, {col}.
- * This function only works when the GUI is running and the
- * |drag-n-drop| feature is present.
- * The supported values for {mods} are:
- * 	0x4	Shift
- * 	0x8	Alt
- * 	0x10	Ctrl
- * The files are added to the argument list and the first file in
- * {list} is edited in the window.  See |drag-n-drop| for more
- * information.
- */
-export function test_gui_drop_files(
-  denops: Denops,
-  list: unknown,
-  row: unknown,
-  col: unknown,
-  mods: unknown,
-): Promise<unknown>;
-export function test_gui_drop_files(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("test_gui_drop_files", ...args);
-}
-
-/**
- * Inject a mouse button click event.  This function only works
- * when the GUI is running.
- * The supported values for {button} are:
- * 	0	right mouse button
- * 	1	middle mouse button
- * 	2	left mouse button
- * 	3	mouse button release
- * 	4	scroll wheel down
- * 	5	scroll wheel up
- * 	6	scroll wheel left
- * 	7	scroll wheel right
- * {row} and {col} specify the location of the mouse click. The
- * first row of the Vim window is 1 and the last row is 'lines'.
- * The maximum value of {col} is 'columns'.
- * To inject a multiclick event, set {multiclick} to 1.
- * The supported values for {modifiers} are:
- * 	4	shift is pressed
- * 	8	alt is pressed
- * 	16	ctrl is pressed
- * After injecting the mouse event you probably should call
+ * Generate a GUI {event} with arguments {args} for testing Vim
+ * functionality. This function works only when the GUI is
+ * running.
+ * {event} is a String and the supported values are:
+ *     "dropfiles"	drop one or more files in a window.
+ *     "findrepl"  search and replace text.
+ *     "mouse"	mouse button click event.
+ *     "scrollbar" move or drag the scrollbar.
+ *     "sendevent" send a low-level GUI event.
+ *     "tabline"	select a tab page by mouse click.
+ *     "tabmenu"	select a tabline menu entry.
+ * {args} is a Dict and contains the arguments for the event.
+ * "dropfiles":
+ *   Drop one or more files in a specified window.  The supported
+ *   items in {args} are:
+ *     files:	List of file names
+ *     row:	window row number
+ *     col:	window column number
+ *     modifiers:	key modifiers. The supported values are:
+ * 		    0x4	Shift
+ * 		    0x8	Alt
+ * 		   0x10	Ctrl
+ *   The files are added to the |argument-list| and the first
+ *   file in {files} is edited in the window.  See |drag-n-drop|
+ *   for more information.  This event works only when the
+ *   |drop_file| feature is present.
+ * "findrepl":
+ *   {only available when the GUI has a find/replace dialog}
+ *   Perform a search and replace of text.  The supported items
+ *   in {args} are:
+ *     find_text:	string to find.
+ *     repl_text:	replacement string.
+ *     flags:	flags controlling the find/replace. Supported
+ * 		values are:
+ * 		    1	search next string (find dialog)
+ * 		    2	search next string (replace dialog)
+ * 		    3	replace string once
+ * 		    4	replace all matches
+ * 		    8	match whole words only
+ * 		   16	match case
+ *     forward:	set to 1 for forward search.
+ * "mouse":
+ *   Inject either a mouse button click, or a mouse move, event.
+ *   The supported items in {args} are:
+ *     button:	mouse button.  The supported values are:
+ * 		    0	right mouse button
+ * 		    1	middle mouse button
+ * 		    2	left mouse button
+ * 		    3	mouse button release
+ * 		    4	scroll wheel down
+ * 		    5	scroll wheel up
+ * 		    6	scroll wheel left
+ * 		    7	scroll wheel right
+ *     row:	mouse click row number.  The first row of the
+ * 		Vim window is 1 and the last row is 'lines'.
+ *     col:	mouse click column number.  The maximum value
+ * 		of {col} is 'columns'.
+ *     multiclick:	set to 1 to inject a multiclick mouse event.
+ *     modifiers:	key modifiers.  The supported values are:
+ * 		    4	shift is pressed
+ * 		    8	alt is pressed
+ * 		   16	ctrl is pressed
+ *     move:	Optional; if used and TRUE then a mouse move
+ * 	        event can be generated.
+ * 		Only {args} row: and col: are used and
+ * 		required; they are interpreted as pixels or
+ * 		screen cells, depending on "cell".
+ * 		Only results in an event when 'mousemoveevent'
+ * 		is set or a popup uses mouse move events.
+ *     cell:	Optional: when present and TRUE then "move"
+ * 		uses screen cells instead of pixel positions
+ * "scrollbar":
+ *   Set or drag the left, right or horizontal scrollbar.  Only
+ *   works when the scrollbar actually exists.  The supported
+ *   items in {args} are:
+ *     which:	scrollbar. The supported values are:
+ * 		    left  Left scrollbar of the current window
+ * 		    right Right scrollbar of the current window
+ * 		    hor   Horizontal scrollbar
+ *     value:	amount to scroll.  For the vertical scrollbars
+ * 		the value can be 1 to the line-count of the
+ * 		buffer.  For the horizontal scrollbar the
+ * 		value can be between 1 and the maximum line
+ * 		length, assuming 'wrap' is not set.
+ *     dragging:	1 to drag the scrollbar and 0 to click in the
+ * 		scrollbar.
+ * "sendevent":
+ *   Send a low-level GUI event (e.g. key-up or down).
+ *   Currently only supported on MS-Windows.
+ *   The supported items in {args} are:
+ *     event:	The supported string values are:
+ * 		    keyup   generate a keyup event
+ * 		    keydown generate a keydown event
+ *     keycode:    Keycode to use for a keyup or a keydown event.
+ * "tabline":
+ *   Inject a mouse click event on the tabline to select a
+ *   tabpage. The supported items in {args} are:
+ *     tabnr:	tab page number
+ * "tabmenu":
+ *   Inject an event to select a tabline menu entry. The
+ *   supported items in {args} are:
+ *     tabnr:	tab page number
+ *     item: 	tab page menu item number. 1 for the first
+ * 		menu item, 2 for the second item and so on.
+ * After injecting the GUI events you probably should call
  * |feedkeys()| to have them processed, e.g.:
  * 	call feedkeys("y", 'Lx!')
+ * Returns TRUE if the event is successfully added, FALSE if
+ * there is a failure.
+ * Can also be used as a |method|:
+ * 	GetEvent()->test_gui_event({args})
  */
-export function test_gui_mouse_event(
+export function test_gui_event(
   denops: Denops,
-  button: unknown,
-  row: unknown,
-  col: unknown,
-  multiclick: unknown,
-  modifiers: unknown,
+  event: unknown,
+  args: unknown,
 ): Promise<unknown>;
-export function test_gui_mouse_event(
+export function test_gui_event(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("test_gui_mouse_event", ...args);
+  return denops.call("test_gui_event", ...args);
 }
 
 /**
@@ -3178,24 +3072,32 @@ export function test_option_not_set(
  * to run tests. Only to be used for testing Vim!
  * The override is enabled when {val} is non-zero and removed
  * when {val} is zero.
- * Current supported values for name are:
- * name	     effect when {val} is non-zero ~
- * redraw       disable the redrawing() function
- * redraw_flag  ignore the RedrawingDisabled flag
+ * Current supported values for {name} are:
+ * {name}	     effect when {val} is non-zero ~
+ * alloc_lines  make a copy of every buffer line into allocated
+ * 	     memory, so that memory access errors can be found
+ * 	     by valgrind
+ * autoload     `import autoload` will load the script right
+ * 	     away, not postponed until an item is used
  * char_avail   disable the char_avail() function
- * starting     reset the "starting" variable, see below
  * nfa_fail     makes the NFA regexp engine fail to force a
  * 	     fallback to the old engine
  * no_query_mouse  do not query the mouse position for "dec"
  * 		terminals
  * no_wait_return	set the "no_wait_return" flag.  Not restored
  * 		with "ALL".
- * ui_delay     time in msec to use in ui_delay(); overrules a
- * 	     wait time of up to 3 seconds for messages
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * starting     reset the "starting" variable, see below
  * term_props   reset all terminal properties when the version
  * 	     string is detected
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
  * uptime 	     overrules sysinfo.uptime
- * ALL	     clear all overrides ({val} is not used)
+ * vterm_title  setting the window title by a job running in a
+ * 	     terminal window
+ * ALL	     clear all overrides, except alloc_lines ({val} is
+ * 	     not used)
  * "starting" is to be used when a test should behave like
  * startup was done.  Since the tests are run by sourcing a
  * script the "starting" variable is non-zero. This is usually a
@@ -3233,36 +3135,6 @@ export function test_refcount(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("test_refcount", ...args);
-}
-
-/**
- * Pretend using scrollbar {which} to move it to position
- * {value}.  {which} can be:
- * 	left	Left scrollbar of the current window
- * 	right	Right scrollbar of the current window
- * 	hor	Horizontal scrollbar
- * For the vertical scrollbars {value} can be 1 to the
- * line-count of the buffer.  For the horizontal scrollbar the
- * {value} can be between 1 and the maximum line length, assuming
- * 'wrap' is not set.
- * When {dragging} is non-zero it's like dragging the scrollbar,
- * otherwise it's like clicking in the scrollbar.
- * Only works when the {which} scrollbar actually exists,
- * obviously only when using the GUI.
- * Can also be used as a |method|:
- * 	GetValue()->test_scrollbar('right', 0)
- */
-export function test_scrollbar(
-  denops: Denops,
-  which: unknown,
-  value: unknown,
-  dragging: unknown,
-): Promise<unknown>;
-export function test_scrollbar(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("test_scrollbar", ...args);
 }
 
 /**
@@ -3649,6 +3521,8 @@ export function assert_report(
  * only be called directly to avoid any structure to exist
  * internally, and |v:testing| must have been set before calling
  * any function.
+ * This will not work when called from a :def function, because
+ * variables on the stack will be freed.
  * Set the flag to call the garbagecollector as if in the main
  * loop.  Only to be used in tests.
  * Get the value of an internal variable.  These values for
@@ -3656,38 +3530,117 @@ export function assert_report(
  * 	need_fileinfo
  * Can also be used as a |method|:
  * 	GetName()->test_getvalue()
- * Drop one or more files in {list} in the window at {row}, {col}.
- * This function only works when the GUI is running and the
- * |drag-n-drop| feature is present.
- * The supported values for {mods} are:
- * 	0x4	Shift
- * 	0x8	Alt
- * 	0x10	Ctrl
- * The files are added to the argument list and the first file in
- * {list} is edited in the window.  See |drag-n-drop| for more
- * information.
- * Inject a mouse button click event.  This function only works
- * when the GUI is running.
- * The supported values for {button} are:
- * 	0	right mouse button
- * 	1	middle mouse button
- * 	2	left mouse button
- * 	3	mouse button release
- * 	4	scroll wheel down
- * 	5	scroll wheel up
- * 	6	scroll wheel left
- * 	7	scroll wheel right
- * {row} and {col} specify the location of the mouse click. The
- * first row of the Vim window is 1 and the last row is 'lines'.
- * The maximum value of {col} is 'columns'.
- * To inject a multiclick event, set {multiclick} to 1.
- * The supported values for {modifiers} are:
- * 	4	shift is pressed
- * 	8	alt is pressed
- * 	16	ctrl is pressed
- * After injecting the mouse event you probably should call
+ * Generate a GUI {event} with arguments {args} for testing Vim
+ * functionality. This function works only when the GUI is
+ * running.
+ * {event} is a String and the supported values are:
+ *     "dropfiles"	drop one or more files in a window.
+ *     "findrepl"  search and replace text.
+ *     "mouse"	mouse button click event.
+ *     "scrollbar" move or drag the scrollbar.
+ *     "sendevent" send a low-level GUI event.
+ *     "tabline"	select a tab page by mouse click.
+ *     "tabmenu"	select a tabline menu entry.
+ * {args} is a Dict and contains the arguments for the event.
+ * "dropfiles":
+ *   Drop one or more files in a specified window.  The supported
+ *   items in {args} are:
+ *     files:	List of file names
+ *     row:	window row number
+ *     col:	window column number
+ *     modifiers:	key modifiers. The supported values are:
+ * 		    0x4	Shift
+ * 		    0x8	Alt
+ * 		   0x10	Ctrl
+ *   The files are added to the |argument-list| and the first
+ *   file in {files} is edited in the window.  See |drag-n-drop|
+ *   for more information.  This event works only when the
+ *   |drop_file| feature is present.
+ * "findrepl":
+ *   {only available when the GUI has a find/replace dialog}
+ *   Perform a search and replace of text.  The supported items
+ *   in {args} are:
+ *     find_text:	string to find.
+ *     repl_text:	replacement string.
+ *     flags:	flags controlling the find/replace. Supported
+ * 		values are:
+ * 		    1	search next string (find dialog)
+ * 		    2	search next string (replace dialog)
+ * 		    3	replace string once
+ * 		    4	replace all matches
+ * 		    8	match whole words only
+ * 		   16	match case
+ *     forward:	set to 1 for forward search.
+ * "mouse":
+ *   Inject either a mouse button click, or a mouse move, event.
+ *   The supported items in {args} are:
+ *     button:	mouse button.  The supported values are:
+ * 		    0	right mouse button
+ * 		    1	middle mouse button
+ * 		    2	left mouse button
+ * 		    3	mouse button release
+ * 		    4	scroll wheel down
+ * 		    5	scroll wheel up
+ * 		    6	scroll wheel left
+ * 		    7	scroll wheel right
+ *     row:	mouse click row number.  The first row of the
+ * 		Vim window is 1 and the last row is 'lines'.
+ *     col:	mouse click column number.  The maximum value
+ * 		of {col} is 'columns'.
+ *     multiclick:	set to 1 to inject a multiclick mouse event.
+ *     modifiers:	key modifiers.  The supported values are:
+ * 		    4	shift is pressed
+ * 		    8	alt is pressed
+ * 		   16	ctrl is pressed
+ *     move:	Optional; if used and TRUE then a mouse move
+ * 	        event can be generated.
+ * 		Only {args} row: and col: are used and
+ * 		required; they are interpreted as pixels or
+ * 		screen cells, depending on "cell".
+ * 		Only results in an event when 'mousemoveevent'
+ * 		is set or a popup uses mouse move events.
+ *     cell:	Optional: when present and TRUE then "move"
+ * 		uses screen cells instead of pixel positions
+ * "scrollbar":
+ *   Set or drag the left, right or horizontal scrollbar.  Only
+ *   works when the scrollbar actually exists.  The supported
+ *   items in {args} are:
+ *     which:	scrollbar. The supported values are:
+ * 		    left  Left scrollbar of the current window
+ * 		    right Right scrollbar of the current window
+ * 		    hor   Horizontal scrollbar
+ *     value:	amount to scroll.  For the vertical scrollbars
+ * 		the value can be 1 to the line-count of the
+ * 		buffer.  For the horizontal scrollbar the
+ * 		value can be between 1 and the maximum line
+ * 		length, assuming 'wrap' is not set.
+ *     dragging:	1 to drag the scrollbar and 0 to click in the
+ * 		scrollbar.
+ * "sendevent":
+ *   Send a low-level GUI event (e.g. key-up or down).
+ *   Currently only supported on MS-Windows.
+ *   The supported items in {args} are:
+ *     event:	The supported string values are:
+ * 		    keyup   generate a keyup event
+ * 		    keydown generate a keydown event
+ *     keycode:    Keycode to use for a keyup or a keydown event.
+ * "tabline":
+ *   Inject a mouse click event on the tabline to select a
+ *   tabpage. The supported items in {args} are:
+ *     tabnr:	tab page number
+ * "tabmenu":
+ *   Inject an event to select a tabline menu entry. The
+ *   supported items in {args} are:
+ *     tabnr:	tab page number
+ *     item: 	tab page menu item number. 1 for the first
+ * 		menu item, 2 for the second item and so on.
+ * After injecting the GUI events you probably should call
  * |feedkeys()| to have them processed, e.g.:
  * 	call feedkeys("y", 'Lx!')
+ * Returns TRUE if the event is successfully added, FALSE if
+ * there is a failure.
+ * Can also be used as a |method|:
+ * 	GetEvent()->test_gui_event({args})
  * Ignore any error containing {expr}.  A normal message is given
  * instead.
  * This is only meant to be used in tests, where catching the
@@ -3721,24 +3674,32 @@ export function assert_report(
  * to run tests. Only to be used for testing Vim!
  * The override is enabled when {val} is non-zero and removed
  * when {val} is zero.
- * Current supported values for name are:
- * name	     effect when {val} is non-zero ~
- * redraw       disable the redrawing() function
- * redraw_flag  ignore the RedrawingDisabled flag
+ * Current supported values for {name} are:
+ * {name}	     effect when {val} is non-zero ~
+ * alloc_lines  make a copy of every buffer line into allocated
+ * 	     memory, so that memory access errors can be found
+ * 	     by valgrind
+ * autoload     `import autoload` will load the script right
+ * 	     away, not postponed until an item is used
  * char_avail   disable the char_avail() function
- * starting     reset the "starting" variable, see below
  * nfa_fail     makes the NFA regexp engine fail to force a
  * 	     fallback to the old engine
  * no_query_mouse  do not query the mouse position for "dec"
  * 		terminals
  * no_wait_return	set the "no_wait_return" flag.  Not restored
  * 		with "ALL".
- * ui_delay     time in msec to use in ui_delay(); overrules a
- * 	     wait time of up to 3 seconds for messages
+ * redraw       disable the redrawing() function
+ * redraw_flag  ignore the RedrawingDisabled flag
+ * starting     reset the "starting" variable, see below
  * term_props   reset all terminal properties when the version
  * 	     string is detected
+ * ui_delay     time in msec to use in ui_delay(); overrules a
+ * 	     wait time of up to 3 seconds for messages
  * uptime 	     overrules sysinfo.uptime
- * ALL	     clear all overrides ({val} is not used)
+ * vterm_title  setting the window title by a job running in a
+ * 	     terminal window
+ * ALL	     clear all overrides, except alloc_lines ({val} is
+ * 	     not used)
  * "starting" is to be used when a test should behave like
  * startup was done.  Since the tests are run by sourcing a
  * script the "starting" variable is non-zero. This is usually a
@@ -3755,21 +3716,6 @@ export function assert_report(
  * to be used for testing.
  * Can also be used as a |method|:
  * 	GetVarname()->test_refcount()
- * Pretend using scrollbar {which} to move it to position
- * {value}.  {which} can be:
- * 	left	Left scrollbar of the current window
- * 	right	Right scrollbar of the current window
- * 	hor	Horizontal scrollbar
- * For the vertical scrollbars {value} can be 1 to the
- * line-count of the buffer.  For the horizontal scrollbar the
- * {value} can be between 1 and the maximum line length, assuming
- * 'wrap' is not set.
- * When {dragging} is non-zero it's like dragging the scrollbar,
- * otherwise it's like clicking in the scrollbar.
- * Only works when the {which} scrollbar actually exists,
- * obviously only when using the GUI.
- * Can also be used as a |method|:
- * 	GetValue()->test_scrollbar('right', 0)
  * Set the mouse position to be used for the next mouse action.
  * {row} and {col} are one based.
  * For example:
@@ -3921,18 +3867,8 @@ export function assert_true(denops: Denops, string: unknown): Promise<unknown>;
 export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
 export function assert_true(
   denops: Denops,
-  list: unknown,
-  row: unknown,
-  col: unknown,
-  mods: unknown,
-): Promise<unknown>;
-export function assert_true(
-  denops: Denops,
-  button: unknown,
-  row: unknown,
-  col: unknown,
-  multiclick: unknown,
-  modifiers: unknown,
+  event: unknown,
+  args: unknown,
 ): Promise<unknown>;
 export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
 export function assert_true(denops: Denops, name: unknown): Promise<unknown>;
@@ -3942,12 +3878,6 @@ export function assert_true(
   val: unknown,
 ): Promise<unknown>;
 export function assert_true(denops: Denops, expr: unknown): Promise<unknown>;
-export function assert_true(
-  denops: Denops,
-  which: unknown,
-  value: unknown,
-  dragging: unknown,
-): Promise<unknown>;
 export function assert_true(
   denops: Denops,
   row: unknown,
@@ -4018,4 +3948,385 @@ export function assert_true(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("assert_true", ...args);
+}
+
+/**
+ * Attach a text property at position {lnum}, {col}.  {col} is
+ * counted in bytes, use one for the first column.
+ * If {lnum} is invalid an error is given.
+ * If {col} is invalid an error is given.
+ * {props} is a dictionary with these fields:
+ *    type		name of the text property type
+ *    length	length of text in bytes, can only be used
+ * 		for a property that does not continue in
+ * 		another line; can be zero
+ *    end_lnum	line number for the end of text (inclusive)
+ *    end_col	column just after the text; not used when
+ * 		"length" is present; when {col} and "end_col"
+ * 		are equal, and "end_lnum" is omitted or equal
+ * 		to {lnum}, this is a zero-width text property
+ *    bufnr	buffer to add the property to; when omitted
+ * 		the current buffer is used
+ *    id		user defined ID for the property; must be a
+ * 		number, should be positive; when using "text"
+ * 		then "id" must not be present and will be set
+ * 		automatically to a negative number; otherwise
+ * 		zero is used
+ *    text		text to be displayed before {col}, or after the
+ * 		line if {col} is zero; prepend and/or append
+ * 		spaces for padding with highlighting
+ *    text_align	when "text" is present and {col} is zero;
+ * 		specifies where to display the text:
+ * 		   after   after the end of the line
+ * 		   right   right aligned in the window (unless
+ * 			   the text wraps to the next screen
+ * 			   line)
+ * 		   below   in the next screen line
+ * 		   above   just above the line
+ * 		When omitted "after" is used.  Only one
+ * 		"right" property can fit in each line, if
+ * 		there are two ore more these will go in a
+ * 		separate line (still right aligned).
+ *    text_padding_left
+ * 		used when "text" is present and {col} is zero;
+ * 		padding between the end of the text line
+ * 		(leftmost column for "below") and the virtual
+ * 		text, not highlighted
+ *    text_wrap	when "text" is present and {col} is zero,
+ * 		specifies what happens if the text doesn't
+ * 		fit:
+ * 		   wrap      wrap the text to the next line
+ * 		   truncate  truncate the text to make it fit
+ *    		When omitted "truncate" is used.
+ * All fields except "type" are optional.
+ * It is an error when both "length" and "end_lnum" or "end_col"
+ * are given.  Either use "length" or "end_col" for a property
+ * within one line, or use "end_lnum" and "end_col" for a
+ * property that spans more than one line.
+ * When neither "length" nor "end_col" are given the property
+ * will be zero-width.  That means it will move with the text, as
+ * a kind of mark.  One character will be highlighted, if the
+ * type specifies highlighting.
+ * The property can end exactly at the last character of the
+ * text, or just after it.  In the last case, if text is appended
+ * to the line, the text property size will increase, also when
+ * the property type does not have "end_incl" set.
+ * "type" will first be looked up in the buffer the property is
+ * added to. When not found, the global property types are used.
+ * If not found an error is given.
+ * When "text" is used and the column is non-zero then this text
+ * will be displayed at the start location of the text property
+ * after the text.  The text of the buffer line will be shifted
+ * to make room.  This is called "virtual text".
+ * When the column is zero the virtual text will appear after the
+ * buffer text.  The "text_align" and "text_wrap" arguments
+ * determine how it is displayed.
+ * The text will be displayed but it is not part of the actual
+ * buffer line, the cursor cannot be placed on it.  A mouse click
+ * in the text will move the cursor to the first character after
+ * the text, or the last character of the line.
+ * Any Tab and other control character in the text will be
+ * changed to a space (Rationale: otherwise the size of the text
+ * is difficult to compute).
+ * A negative "id" will be chosen and is returned.  Once a
+ * property with "text" has been added for a buffer then using a
+ * negative "id" for any other property will give an error:
+ * Make sure to use a highlight that makes clear to the user that
+ * this is virtual text, otherwise it will be very confusing that
+ * the text cannot be edited.
+ * To separate the virtual text from the buffer text prepend
+ * and/or append spaces to the "text" field.
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_add(col, props)
+ */
+export function prop_add(
+  denops: Denops,
+  lnum: unknown,
+  col: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_add(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("prop_add", ...args);
+}
+
+/**
+ * Remove all text properties from line {lnum}.
+ * When {lnum-end} is given, remove all text properties from line
+ * {lnum} to {lnum-end} (inclusive).
+ * When {props} contains a "bufnr" item use this buffer,
+ * otherwise use the current buffer.
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_clear()
+ */
+export function prop_clear(
+  denops: Denops,
+  lnum: unknown,
+  lnum_end?: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_clear(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_clear", ...args);
+}
+
+/**
+ * Search for a text property as specified with {props}:
+ *    id		property with this ID
+ *    type		property with this type name
+ *    both		"id" and "type" must both match
+ *    bufnr	buffer to search in; when present a
+ * 		start position with "lnum" and "col"
+ * 		must be given; when omitted the
+ * 		current buffer is used
+ *    lnum		start in this line (when omitted start
+ * 		at the cursor)
+ *    col		start at this column (when omitted
+ * 		and "lnum" is given: use column 1,
+ * 		otherwise start at the cursor)
+ *    skipstart	do not look for a match at the start
+ * 		position
+ * A property matches when either "id" or "type" matches.
+ * {direction} can be "f" for forward and "b" for backward.  When
+ * omitted forward search is performed.
+ * If a match is found then a Dict is returned with the entries
+ * as with prop_list(), and additionally an "lnum" entry.
+ * If no match is found then an empty Dict is returned.
+ */
+export function prop_find(
+  denops: Denops,
+  props: unknown,
+  direction?: unknown,
+): Promise<unknown>;
+export function prop_find(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_find", ...args);
+}
+
+/**
+ * Returns a List with all the text properties in line {lnum}.
+ * The following optional items are supported in {props}:
+ *    bufnr	use this buffer instead of the current buffer
+ *    end_lnum	return text properties in all the lines
+ * 		between {lnum} and {end_lnum} (inclusive).
+ * 		A negative value is used as an offset from the
+ * 		last buffer line; -1 refers to the last buffer
+ * 		line.
+ *    types	List of property type names. Return only text
+ * 		properties that match one of the type names.
+ *    ids		List of property identifiers. Return only text
+ * 		properties with one of these identifiers.
+ * The properties are ordered by starting column and priority.
+ * Each property is a Dict with these entries:
+ *    lnum		starting line number. Present only when
+ * 		returning text properties between {lnum} and
+ * 		{end_lnum}.
+ *    col		starting column
+ *    length	length in bytes, one more if line break is
+ * 		included
+ *    id		property ID
+ *    type		name of the property type, omitted if
+ * 		the type was deleted
+ *    type_bufnr	buffer number for which this type was defined;
+ * 		0 if the type is global
+ *    start	when TRUE property starts in this line
+ *    end		when TRUE property ends in this line
+ * When "start" is zero the property started in a previous line,
+ * the current one is a continuation.
+ * When "end" is zero the property continues in the next line.
+ * The line break after this line is included.
+ * Returns an empty list on error.
+ * Examples:
+ *    " get text properties placed in line 5
+ *    echo prop_list(5)
+ *    " get text properties placed in line 20 in buffer 4
+ *    echo prop_list(20, {'bufnr': 4})
+ *    " get all the text properties between line 1 and 20
+ *    echo prop_list(1, {'end_lnum': 20})
+ *    " get all the text properties of type 'myprop'
+ *    echo prop_list(1, {'types': ['myprop'],
+ * 				\ 'end_lnum': -1})
+ *    " get all the text properties of type 'prop1' or 'prop2'
+ *    echo prop_list(1, {'types': ['prop1', 'prop2'],
+ * 				\ 'end_lnum': -1})
+ *    " get all the text properties with ID 8
+ *    echo prop_list(1, {'ids': [8], 'end_lnum': line('$')})
+ *    " get all the text properties with ID 10 and 20
+ *    echo prop_list(1, {'ids': [10, 20], 'end_lnum': -1})
+ *    " get text properties with type 'myprop' and ID 100
+ *    " in buffer 4.
+ *    echo prop_list(1, {'bufnr': 4, 'types': ['myprop'],
+ * 			\ 'ids': [100], 'end_lnum': -1})
+ * Can also be used as a |method|:
+ * 	GetLnum()->prop_list()
+ */
+export function prop_list(
+  denops: Denops,
+  lnum: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_list", ...args);
+}
+
+/**
+ * Remove a matching text property from line {lnum}.  When
+ * {lnum-end} is given, remove matching text properties from line
+ * {lnum} to {lnum-end} (inclusive).
+ * When {lnum} is omitted remove matching text properties from
+ * all lines (this requires going over all lines, thus will be a
+ * bit slow for a buffer with many lines).
+ * {props} is a dictionary with these fields:
+ *    id		remove text properties with this ID
+ *    type		remove text properties with this type name
+ *    types	remove text properties with type names in this
+ * 		List
+ *    both		"id" and "type"/"types" must both match
+ *    bufnr	use this buffer instead of the current one
+ *    all		when TRUE remove all matching text properties,
+ * 		not just the first one
+ * Only one of "type" and "types" may be supplied.
+ * A property matches when either "id" or one of the supplied
+ * types matches.
+ * If buffer "bufnr" does not exist you get an error message.
+ * If buffer "bufnr" is not loaded then nothing happens.
+ * Returns the number of properties that were removed.
+ * Can also be used as a |method|:
+ * 	GetProps()->prop_remove()
+ */
+export function prop_remove(
+  denops: Denops,
+  props: unknown,
+  lnum?: unknown,
+  lnum_end?: unknown,
+): Promise<unknown>;
+export function prop_remove(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_remove", ...args);
+}
+
+/**
+ * Add a text property type {name}.  If a property type with this
+ * name already exists an error is given.  Nothing is returned.
+ * {props} is a dictionary with these optional fields:
+ *    bufnr	define the property only for this buffer; this
+ * 		avoids name collisions and automatically
+ * 		clears the property types when the buffer is
+ * 		deleted.
+ *    highlight	name of highlight group to use
+ *    priority	when a character has multiple text
+ * 		properties the one with the highest priority
+ * 		will be used; negative values can be used, the
+ * 		default priority is zero
+ *    combine	when omitted or TRUE combine the highlight
+ * 		with any syntax highlight; when FALSE syntax
+ * 		highlight will not be used
+ *    override	when TRUE the highlight overrides any other,
+ * 		including 'cursorline' and Visual
+ *    start_incl	when TRUE inserts at the start position will
+ * 		be included in the text property
+ *    end_incl	when TRUE inserts at the end position will be
+ * 		included in the text property
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_add(props)
+ */
+export function prop_type_add(
+  denops: Denops,
+  name: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_type_add(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_add", ...args);
+}
+
+/**
+ * Change properties of an existing text property type.  If a
+ * property with this name does not exist an error is given.
+ * The {props} argument is just like |prop_type_add()|.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_change(props)
+ */
+export function prop_type_change(
+  denops: Denops,
+  name: unknown,
+  props: unknown,
+): Promise<unknown>;
+export function prop_type_change(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_change", ...args);
+}
+
+/**
+ * Remove the text property type {name}.  When text properties
+ * using the type {name} are still in place, they will not have
+ * an effect and can no longer be removed by name.
+ * {props} can contain a "bufnr" item.  When it is given, delete
+ * a property type from this buffer instead of from the global
+ * property types.
+ * When text property type {name} is not found there is no error.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_delete()
+ */
+export function prop_type_delete(
+  denops: Denops,
+  name: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_delete(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_delete", ...args);
+}
+
+/**
+ * Returns the properties of property type {name}.  This is a
+ * dictionary with the same fields as was given to
+ * prop_type_add().
+ * When the property type {name} does not exist, an empty
+ * dictionary is returned.
+ * {props} can contain a "bufnr" item.  When it is given, use
+ * this buffer instead of the global property types.
+ * Can also be used as a |method|:
+ * 	GetPropName()->prop_type_get()
+ */
+export function prop_type_get(
+  denops: Denops,
+  name: unknown,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_get(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_get", ...args);
+}
+
+/**
+ * Returns a list with all property type names.
+ * {props} can contain a "bufnr" item.  When it is given, use
+ * this buffer instead of the global property types.
+ */
+export function prop_type_list(
+  denops: Denops,
+  props?: unknown,
+): Promise<unknown>;
+export function prop_type_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("prop_type_list", ...args);
 }

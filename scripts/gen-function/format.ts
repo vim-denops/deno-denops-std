@@ -3,8 +3,10 @@ import { Definition, Variant } from "./types.ts";
 const denops = "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 
 const translate: Record<string, string> = {
+  "*cmd": "cmd",
   "*config": "config",
   "*opts": "opts",
+  "*val": "val",
   "default": "defaultValue",
   "delete": "delete_",
   "end-col": "end_col",

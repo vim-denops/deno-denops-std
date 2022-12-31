@@ -159,7 +159,7 @@ export const scrollback = {
 
 /**
  * When non-empty, the shada file is read upon startup and written
- * when exiting Vim (see |shada-file|).  The string should be a comma
+ * when exiting Vim (see |shada-file|).  The string should be a comma-
  * separated list of parameters, each consisting of a single character
  * identifying the particular parameter, followed by a number or string
  * which specifies the value of that parameter.  If a particular
@@ -283,7 +283,7 @@ export const shadafile = {
 };
 
 /**
- * A comma separated list of options for specifying control characters
+ * A comma-separated list of options for specifying control characters
  * to be removed from the text pasted into the terminal window. The
  * supported values are:
  */
@@ -309,36 +309,38 @@ export const termpastefilter = {
 };
 
 /**
- * This option specifies a function to be used for thesaurus completion
- * with CTRL-X CTRL-T. |i_CTRL-X_CTRL-T| See |compl-thesaurusfunc|.
+ * When non-empty, this option enables the window bar and determines its
+ * contents. The window bar is a bar that's shown at the top of every
+ * window with it enabled. The value of 'winbar' is evaluated like with
+ * 'statusline'.
  */
-export const thesaurusfunc = {
+export const winbar = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "thesaurusfunc") ?? "";
+    return await options.get(denops, "winbar") ?? "";
   },
   set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "thesaurusfunc", value);
+    return options.set(denops, "winbar", value);
   },
   reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "thesaurusfunc");
+    return options.remove(denops, "winbar");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "thesaurusfunc") ?? "";
+    return await globalOptions.get(denops, "winbar") ?? "";
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "thesaurusfunc", value);
+    return globalOptions.set(denops, "winbar", value);
   },
   resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "thesaurusfunc");
+    return globalOptions.remove(denops, "winbar");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "thesaurusfunc") ?? "";
+    return await localOptions.get(denops, "winbar") ?? "";
   },
   setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "thesaurusfunc", value);
+    return localOptions.set(denops, "winbar", value);
   },
   resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "thesaurusfunc");
+    return localOptions.remove(denops, "winbar");
   },
 };
 
@@ -370,10 +372,9 @@ export const winblend = {
 
 /**
  * Window-local highlights.  Comma-delimited list of highlight
- * |group-name| pairs "{hl-builtin}:{hl},..." where each {hl-builtin} is
- * a built-in |highlight-groups| item to be overridden by {hl} group in
- * the window.  Only built-in |highlight-groups| are supported, not
- * syntax highlighting (use |:ownsyntax| for that).
+ * |group-name| pairs "{hl-from}:{hl-to},..." where each {hl-from} is
+ * a |highlight-groups| item to be overridden by {hl-to} group in
+ * the window.
  */
 export const winhighlight = {
   async get(denops: Denops): Promise<string> {

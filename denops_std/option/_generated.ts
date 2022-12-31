@@ -96,7 +96,8 @@ export const ambiwidth = {
  * When on, Vim will change the current working directory whenever you
  * open a file, switch buffers, delete a buffer or open/close a window.
  * It will change to the directory containing the file which was opened
- * or selected.
+ * or selected.  When a buffer has no name it also has no directory, thus
+ * the current directory won't change when navigating to it.
  * Note: When this option is on some plugins may not work.
  */
 export const autochdir = {
@@ -270,9 +271,12 @@ export const autoread = {
 
 /**
  * Write the contents of the file, if it has been modified, on each
- * :next, :rewind, :last, :first, :previous, :stop, :suspend, :tag, :!,
- * :make, CTRL-] and CTRL-^ command; and when a :buffer, CTRL-O, CTRL-I,
- * '{A-Z0-9}, or `{A-Z0-9} command takes one to another file.
+ * `:next`, `:rewind`, `:last`, `:first`, `:previous`, `:stop`,
+ * `:suspend`, `:tag`, `:!`, `:make`, CTRL-] and CTRL-^ command; and when
+ * a `:buffer`, CTRL-O, CTRL-I, '{A-Z0-9}, or `{A-Z0-9} command takes one
+ * to another file.
+ * A buffer is not written if it becomes hidden, e.g. when 'bufhidden' is
+ * set to "hide" and `:next` is used.
  * Note that for some commands the 'autowrite' option is not used, see
  * 'autowriteall' for that.
  * Some buffers will not be written, specifically when 'buftype' is
@@ -426,7 +430,7 @@ export const backup = {
 
 /**
  * When writing a file and a backup is made, this option tells how it's
- * done.  This is a comma separated list of words.
+ * done.  This is a comma-separated list of words.
  */
 export const backupcopy = {
   async get(denops: Denops): Promise<string> {
@@ -528,7 +532,7 @@ export const backupdir = {
  * accidentally overwriting existing files with a backup file.  You might
  * prefer using ".bak", but make sure that you don't have files with
  * ".bak" that you want to keep.
- * Only normal file name characters can be used, "/\*?[|<>" are illegal.
+ * Only normal file name characters can be used; "/\*?[|<>" are illegal.
  */
 export const backupext = {
   async get(denops: Denops): Promise<string> {
@@ -552,8 +556,6 @@ export const backupext = {
 };
 
 /**
- * 		{not available when compiled without the |+wildignore|
- * 		feature}
  * A list of file patterns.  When one of the patterns matches with the
  * name of the file which is written, no backup file is created.  Both
  * the specified file name and the full path name of the file are used.
@@ -584,99 +586,11 @@ export const backupskip = {
 };
 
 /**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
- * Delay in milliseconds before a balloon may pop up.  See |balloon-eval|.
- */
-export const balloondelay = {
-  async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "balloondelay") ?? 0;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "balloondelay", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "balloondelay");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "balloondelay") ?? 0;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "balloondelay", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "balloondelay");
-  },
-};
-
-/**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
- * Switch on the |balloon-eval| functionality for the GUI.
- */
-export const ballooneval = {
-  async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "ballooneval") ?? false;
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "ballooneval", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "ballooneval");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "ballooneval") ?? false;
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "ballooneval", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "ballooneval");
-  },
-};
-
-/**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
- * Expression for text to show in evaluation balloon.  It is only used
- * when 'ballooneval' or 'balloonevalterm' is on.  These variables can be
- * used:
- */
-export const balloonexpr = {
-  async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "balloonexpr") ?? "";
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "balloonexpr", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "balloonexpr");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "balloonexpr") ?? "";
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "balloonexpr", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "balloonexpr");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "balloonexpr") ?? "";
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "balloonexpr", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "balloonexpr");
-  },
-};
-
-/**
  * Specifies for which events the bell will not be rung. It is a comma
  * separated list of items. For each item that is present, the bell
  * will be silenced. This is most useful to specify specific events in
  * insert mode to be silenced.
+ * You can also make it flash by using 'visualbell'.
  */
 export const belloff = {
   async get(denops: Denops): Promise<string> {
@@ -815,19 +729,26 @@ export const breakindent = {
  * 		    text should normally be narrower. This prevents
  * 		    text indented almost to the right window border
  * 		    occupying lot of vertical space when broken.
+ * 		    (default: 20)
  * 	shift:{n}   After applying 'breakindent', the wrapped line's
  * 		    beginning will be shifted by the given number of
  * 		    characters.  It permits dynamic French paragraph
  * 		    indentation (negative) or emphasizing the line
  * 		    continuation (positive).
+ * 		    (default: 0)
  * 	sbr	    Display the 'showbreak' value before applying the
  * 		    additional indent.
+ * 		    (default: off)
  * 	list:{n}    Adds an additional indent for lines that match a
  * 		    numbered or bulleted list (using the
  * 		    'formatlistpat' setting).
  * 	list:-1	    Uses the length of a match with 'formatlistpat'
  * 		    for indentation.
- * The default value for min is 20, shift and list is 0.
+ * 		    (default: 0)
+ * 	column:{n}  Indent at column {n}. Will overrule the other
+ * 		    sub-options. Note: an additional indent may be
+ * 		    added for the 'showbreak' setting.
+ * 		    (default: off)
  */
 export const breakindentopt = {
   async get(denops: Denops): Promise<string> {
@@ -851,7 +772,7 @@ export const breakindentopt = {
 };
 
 /**
- * 		{only for Motif, Athena, GTK, Mac and Win32 GUI}
+ * 		{only for Motif, GTK, Mac and Win32 GUI}
  * Which directory to use for the file browser:
  *    last		Use same directory as with last file browser, where a
  * 		file was opened or saved.
@@ -884,16 +805,16 @@ export const browsedir = {
  * This option specifies what happens when a buffer is no longer
  * displayed in a window:
  *   <empty>	follow the global 'hidden' option
- *   hide		hide the buffer (don't unload it), also when 'hidden'
- * 		is not set
- *   unload	unload the buffer, also when 'hidden' is set or using
- * 		|:hide|
- *   delete	delete the buffer from the buffer list, also when
- * 		'hidden' is set or using |:hide|, like using
- * 		|:bdelete|
- *   wipe		wipe out the buffer from the buffer list, also when
- * 		'hidden' is set or using |:hide|, like using
- * 		|:bwipeout|
+ *   hide		hide the buffer (don't unload it), even if 'hidden' is
+ * 		not set
+ *   unload	unload the buffer, even if 'hidden' is set; the
+ * 		|:hide| command will also unload the buffer
+ *   delete	delete the buffer from the buffer list, even if
+ * 		'hidden' is set; the |:hide| command will also delete
+ * 		the buffer, making it behave like |:bdelete|
+ *   wipe		wipe the buffer from the buffer list, even if
+ * 		'hidden' is set; the |:hide| command will also wipe
+ * 		out the buffer, making it behave like |:bwipeout|
  */
 export const bufhidden = {
   async get(denops: Denops): Promise<string> {
@@ -1020,8 +941,34 @@ export const casemap = {
 };
 
 /**
- * 		{not available when compiled without the
- * 		|+file_in_path| feature}
+ * When on, |:cd|, |:tcd| and |:lcd| without an argument changes the
+ * current working directory to the |$HOME| directory like in Unix.
+ * When off, those commands just print the current directory name.
+ * On Unix this option has no effect.
+ * NOTE: This option is reset when 'compatible' is set.
+ */
+export const cdhome = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "cdhome") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "cdhome", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "cdhome");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "cdhome") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "cdhome", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "cdhome");
+  },
+};
+
+/**
  * This is a list of directories which will be searched when using the
  * |:cd|, |:tcd| and |:lcd| commands, provided that the directory being
  * searched for has a relative path, not an absolute part starting with
@@ -1033,7 +980,7 @@ export const casemap = {
  * If the default value taken from $CDPATH is not what you want, include
  * a modified version of the following command in your vimrc file to
  * override it: >
- *   :let &cdpath = ',' . substitute(substitute($CDPATH, '[, ]', '\\\0', 'g'), ':', ',', 'g')
+ *   :let &cdpath = ',' .. substitute(substitute($CDPATH, '[, ]', '\\\0', 'g'), ':', ',', 'g')
  * <	This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  * (parts of 'cdpath' can be passed to the shell to expand file names).
@@ -1069,8 +1016,8 @@ export const cdpath = {
  * preferred, because it is much faster.
  * 'charconvert' is not used when reading stdin |--|, because there is no
  * file to convert from.  You will have to save the text in a file first.
- * The expression must return zero or an empty string for success,
- * non-zero for failure.
+ * The expression must return zero, false or an empty string for success,
+ * non-zero or true for failure.
  * The possible encoding names encountered are in 'encoding'.
  * Additionally, names given in 'fileencodings' and 'fileencoding' are
  * used.
@@ -1082,8 +1029,8 @@ export const cdpath = {
  * 	set charconvert=CharConvert()
  * 	fun CharConvert()
  * 	  system("recode "
- * 		\ . v:charconvert_from . ".." . v:charconvert_to
- * 		\ . " <" . v:fname_in . " >" v:fname_out)
+ * 		\ .. v:charconvert_from .. ".." .. v:charconvert_to
+ * 		\ .. " <" .. v:fname_in .. " >" .. v:fname_out)
  * 	  return v:shell_error
  * 	endfun
  * <	The related Vim variables are:
@@ -1094,11 +1041,6 @@ export const cdpath = {
  * Note that v:fname_in and v:fname_out will never be the same.
  * Note that v:charconvert_from and v:charconvert_to may be different
  * from 'encoding'.  Vim internally uses UTF-8 instead of UCS-2 or UCS-4.
- * Encryption is not done by Vim when using 'charconvert'.  If you want
- * to encrypt the file after conversion, 'charconvert' should take care
- * of this.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
- * security reasons.
  */
 export const charconvert = {
   async get(denops: Denops): Promise<string> {
@@ -1122,8 +1064,6 @@ export const charconvert = {
 };
 
 /**
- * 		{not available when compiled without the |+cindent|
- * 		feature}
  * Enables automatic C program indenting.  See 'cinkeys' to set the keys
  * that trigger reindenting in insert mode and 'cinoptions' to set your
  * preferred indent style.
@@ -1159,8 +1099,6 @@ export const cindent = {
 };
 
 /**
- * 		{not available when compiled without the |+cindent|
- * 		feature}
  * A list of keys that, when typed in Insert mode, cause reindenting of
  * the current line.  Only used if 'cindent' is on and 'indentexpr' is
  * empty.
@@ -1189,8 +1127,6 @@ export const cinkeys = {
 };
 
 /**
- * 		{not available when compiled without the |+cindent|
- * 		feature}
  * The 'cinoptions' affect the way 'cindent' reindents lines in a C
  * program.  See |cinoptions-values| for the values of this option, and
  * |C-indenting| for info on C indenting in general.
@@ -1217,8 +1153,6 @@ export const cinoptions = {
 };
 
 /**
- * 		{not available when compiled without both the
- * 		|+cindent| and the |+smartindent| features}
  * These keywords start an extra indent in the next line when
  * 'smartindent' or 'cindent' is set.  For 'cindent' this is only done at
  * an appropriate place (inside {}).
@@ -1248,11 +1182,38 @@ export const cinwords = {
 };
 
 /**
+ * Keywords that are interpreted as a C++ scope declaration by |cino-g|.
+ * Useful e.g. for working with the Qt framework that defines additional
+ * scope declarations "signals", "public slots" and "private slots": >
+ * 	set cinscopedecls+=signals,public\ slots,private\ slots
+ */
+export const cinscopedecls = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "cinscopedecls") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "cinscopedecls", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "cinscopedecls");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "cinscopedecls") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "cinscopedecls", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "cinscopedecls");
+  },
+};
+
+/**
  * 		{only in GUI versions or when the |+xterm_clipboard|
  * 		feature is included}
- * This option is a list of comma separated names.
+ * This option is a list of comma-separated names.
  * Note: if one of the items is "exclude:", then you can't add an item
- * after that.  Therefore do append an item with += but use ^= to
+ * after that.  Therefore do not append an item with += but use ^= to
  * prepend, e.g.: >
  * 	set clipboard^=unnamed
  * <	These names are recognized:
@@ -1279,8 +1240,8 @@ export const clipboard = {
 };
 
 /**
- * Number of screen lines to use for the command-line.  Helps avoiding
- * |hit-enter| prompts.
+ * Number of screen lines to use for the command-line.  A larger value
+ * helps avoiding |hit-enter| prompts.
  * The value of this option is stored with the tab page, so that each tab
  * page can have a different value.
  */
@@ -1302,6 +1263,15 @@ export const cmdheight = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "cmdheight");
+  },
+  async getLocal(denops: Denops): Promise<number> {
+    return await localOptions.get(denops, "cmdheight") ?? 0;
+  },
+  setLocal(denops: Denops, value: number): Promise<void> {
+    return localOptions.set(denops, "cmdheight", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "cmdheight");
   },
 };
 
@@ -1332,7 +1302,7 @@ export const cmdwinheight = {
 /**
  * 		{not available when compiled without the |+syntax|
  * 		feature}
- * 'colorcolumn' is a comma separated list of screen columns that are
+ * 'colorcolumn' is a comma-separated list of screen columns that are
  * highlighted with ColorColumn |hl-ColorColumn|.  Useful to align
  * text.  Will make screen redrawing slower.
  * The screen column can be an absolute number, or a number preceded with
@@ -1396,7 +1366,7 @@ export const columns = {
 };
 
 /**
- * A comma separated list of strings that can start a comment line.  See
+ * A comma-separated list of strings that can start a comment line.  See
  * |format-comments|.  See |option-backslash| about using backslashes to
  * insert a space.
  */
@@ -1453,7 +1423,7 @@ export const commentstring = {
  * This option specifies how keyword completion |ins-completion| works
  * when CTRL-P or CTRL-N are used.  It is also used for whole-line
  * completion |i_CTRL-X_CTRL-L|.  It indicates the type of completion
- * and the places to scan.  It is a comma separated list of flags:
+ * and the places to scan.  It is a comma-separated list of flags:
  * .	scan the current buffer ('wrapscan' is ignored)
  * w	scan buffers from other windows
  * b	scan other loaded buffers that are in the buffer list
@@ -1500,7 +1470,9 @@ export const complete = {
  * This option specifies a function to be used for Insert mode completion
  * with CTRL-X CTRL-U. |i_CTRL-X_CTRL-U|
  * See |complete-functions| for an explanation of how the function is
- * invoked and what it should return.
+ * invoked and what it should return.  The value can be the name of a
+ * function, a |lambda| or a |Funcref|. See |option-value-function| for
+ * more information.
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -1560,7 +1532,7 @@ export const completeslash = {
 };
 
 /**
- * A comma separated list of options for Insert mode completion
+ * A comma-separated list of options for Insert mode completion
  * |ins-completion|.  The supported values are:
  */
 export const completeopt = {
@@ -1715,12 +1687,6 @@ export const copyindent = {
  * Commas can be added for readability.
  * To avoid problems with flags that are added in the future, use the
  * "+=" and "-=" feature of ":set" |add-option-flags|.
- * NOTE: This option is set to the Vi default value when 'compatible' is
- * set and to the Vim default value when 'compatible' is reset.
- * NOTE: This option is set to the POSIX default value at startup when
- * the Vi default value would be used and the $VIM_POSIX environment
- * variable exists |posix|.  This means Vim tries to behave like the
- * POSIX specification.
  */
 export const cpoptions = {
   async get(denops: Denops): Promise<string> {
@@ -2005,7 +1971,7 @@ export const cursorline = {
 /**
  * 		{not available when compiled without the |+syntax|
  * 		feature}
- * Comma separated list of settings for how 'cursorline' is displayed.
+ * Comma-separated list of settings for how 'cursorline' is displayed.
  * Valid values:
  * "line"		Highlight the text line of the cursor with
  * 		CursorLine |hl-CursorLine|.
@@ -2264,7 +2230,7 @@ export const directory = {
 };
 
 /**
- * Change the way text is displayed.  This is comma separated list of
+ * Change the way text is displayed.  This is comma-separated list of
  * flags:
  * lastline	When included, as much as possible of the last line
  * 		in a window will be displayed.  "@@@" is put in the
@@ -2591,7 +2557,7 @@ export const errorformat = {
  * A list of autocommand event names, which are to be ignored.
  * When set to "all" or when "all" is one of the items, all autocommand
  * events are ignored, autocommands will not be executed.
- * Otherwise this is a comma separated list of event names.  Example: >
+ * Otherwise this is a comma-separated list of event names.  Example: >
  *     :set ei=WinEnter,WinLeave
  * <
  */
@@ -2911,8 +2877,10 @@ export const filetype = {
 /**
  * 		{not available when compiled without the |+folding|
  * 		feature}
- * Characters to fill the statuslines and vertical separators.
- * It is a comma separated list of items:
+ * Characters to fill the statuslines, vertical separators and special
+ * lines in the window.
+ * It is a comma-separated list of items.  Each item has a name, a colon
+ * and the value of that item:
  */
 export const fillchars = {
   async get(denops: Denops): Promise<string> {
@@ -2932,6 +2900,15 @@ export const fillchars = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "fillchars");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "fillchars") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "fillchars", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "fillchars");
   },
 };
 
@@ -3057,7 +3034,9 @@ export const foldenable = {
  * 		{not available when compiled without the |+folding|
  * 		or |+eval| features}
  * The expression used for when 'foldmethod' is "expr".  It is evaluated
- * for each line to obtain its fold level.  See |fold-expr|.
+ * for each line to obtain its fold level.  The context is set to the
+ * script where 'foldexpr' was set, script-local items can be accessed.
+ * See |fold-expr| for the usage.
  */
 export const foldexpr = {
   async get(denops: Denops): Promise<string> {
@@ -3298,7 +3277,7 @@ export const foldnestmax = {
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * Specifies for which type of commands folds will be opened, if the
- * command moves the cursor into a closed fold.  It is a comma separated
+ * command moves the cursor into a closed fold.  It is a comma-separated
  * list of items.
  * NOTE: When the command is part of a mapping this option is not used.
  * Add the |zv| command to the mapping to get the same effect.
@@ -3329,7 +3308,9 @@ export const foldopen = {
  * 		{not available when compiled without the |+folding|
  * 		feature}
  * An expression which is used to specify the text displayed for a closed
- * fold.  See |fold-foldtext|.
+ * fold.  The context is set to the script where 'foldexpr' was set,
+ * script-local items can be accessed.  See |fold-foldtext| for the
+ * usage.
  */
 export const foldtext = {
   async get(denops: Denops): Promise<string> {
@@ -3496,8 +3477,8 @@ export const formatprg = {
  * systems without an fsync() implementation, this variable is always
  * off.
  * Also see 'swapsync' for controlling fsync() on swap files.
- * 'fsync' also applies to |writefile()|, unless a flag is used to
- * overrule it.
+ * 'fsync' also applies to |writefile()| (unless a flag is used to
+ * overrule it) and when writing undo files (see |undo-persistence|).
  * This option cannot be set from a |modeline| or in the |sandbox|, for
  * security reasons.
  */
@@ -3740,7 +3721,7 @@ export const guioptions = {
 
 /**
  * 		{only available when compiled with GUI enabled}
- * When nonempty describes the text to use in a label of the GUI tab
+ * When non-empty describes the text to use in a label of the GUI tab
  * pages line.  When empty and when the result is empty Vim will use a
  * default label.  See |setting-guitablabel| for more info.
  */
@@ -3767,7 +3748,7 @@ export const guitablabel = {
 
 /**
  * 		{only available when compiled with GUI enabled}
- * When nonempty describes the text to use in a tooltip for the GUI tab
+ * When non-empty describes the text to use in a tooltip for the GUI tab
  * pages line.  When empty Vim will use a default tooltip.
  * This option is otherwise just like 'guitablabel' above.
  * You can include a line break.  Simplest method is to use |:let|: >
@@ -3858,7 +3839,7 @@ export const helpheight = {
 /**
  * 		{only available when compiled with the |+multi_lang|
  * 		feature}
- * Comma separated list of languages.  Vim will use the first language
+ * Comma-separated list of languages.  Vim will use the first language
  * for which the desired help can be found.  The English help will always
  * be used as a last resort.  You can add "en" to prefer English over
  * another language, but that will only find tags that exist in that
@@ -3896,14 +3877,6 @@ export const helplang = {
  * When off a buffer is unloaded when it is |abandon|ed.  When on a
  * buffer becomes hidden when it is |abandon|ed.  If the buffer is still
  * displayed in another window, it does not become hidden, of course.
- * The commands that move through the buffer list sometimes make a buffer
- * hidden although the 'hidden' option is off: When the buffer is
- * modified, 'autowrite' is off or writing is not possible, and the '!'
- * flag was used.  See also |windows.txt|.
- * To only make one buffer hidden use the 'bufhidden' option.
- * This option is set for one command with ":hide {command}" |:hide|.
- * WARNING: It's easy to forget that you have changes in hidden buffers.
- * Think twice when using ":q!" or ":qa!".
  */
 export const hidden = {
   async get(denops: Denops): Promise<boolean> {
@@ -4020,7 +3993,8 @@ export const hkmapp = {
  * The type of highlighting used can be set with the 'l' occasion in the
  * 'highlight' option.  This uses the "Search" highlight group by
  * default.  Note that only the matching text is highlighted, any offsets
- * are not applied.
+ * are not applied.  If the "CurSearch" highlight group is set then the
+ * current match is highlighted with that.
  * See also: 'incsearch' and |:match|.
  * When you get bored looking at the highlighted matches, you can turn it
  * off with |:nohlsearch|.  This does not change the option value, as
@@ -4154,7 +4128,7 @@ export const imdisable = {
  * |i_CTRL-^|.
  * The value is set to 1 when setting 'keymap' to a valid keymap name.
  * It is also used for the argument of commands like "r" and "f".
- * The value 0 may not work correctly with Athena and Motif with some XIM
+ * The value 0 may not work correctly with Motif with some XIM
  * methods.  Use 'imdisable' to disable XIM then.
  */
 export const iminsert = {
@@ -4190,7 +4164,7 @@ export const iminsert = {
  * |c_CTRL-^|.
  * The value is set to 1 when it is not -1 and setting the 'keymap'
  * option to a valid keymap name.
- * The value 0 may not work correctly with Athena and Motif with some XIM
+ * The value 0 may not work correctly with Motif with some XIM
  * methods.  Use 'imdisable' to disable XIM then.
  */
 export const imsearch = {
@@ -4358,8 +4332,8 @@ export const incsearch = {
 };
 
 /**
- * 		{not available when compiled without the |+cindent|
- * 		or |+eval| features}
+ * 		{not available when compiled without the |+eval|
+ * 		feature}
  * Expression which is evaluated to obtain the proper indent for a line.
  * It is used when a new line is created, for the |=| operator and
  * in Insert mode as specified with the 'indentkeys' option.
@@ -4370,20 +4344,6 @@ export const incsearch = {
  * The expression is evaluated with |v:lnum| set to the line number for
  * which the indent is to be computed.  The cursor is also in this line
  * when the expression is evaluated (but it may be moved around).
- * The expression must return the number of spaces worth of indent.  It
- * can return "-1" to keep the current indent (this means 'autoindent' is
- * used for the indent).
- * Functions useful for computing the indent are |indent()|, |cindent()|
- * and |lispindent()|.
- * The evaluation of the expression must not have side effects!  It must
- * not change the text, jump to another window, etc.  Afterwards the
- * cursor position is always restored, thus the cursor may be moved.
- * Normally this option would be set to call a function: >
- * 	:set indentexpr=GetMyIndent()
- * <	Error messages will be suppressed, unless the 'debug' option contains
- * "msg".
- * See |indent-expression|.
- * NOTE: This option is set to "" when 'compatible' is set.
  */
 export const indentexpr = {
   async get(denops: Denops): Promise<string> {
@@ -4407,8 +4367,6 @@ export const indentexpr = {
 };
 
 /**
- * 		{not available when compiled without the |+cindent|
- * 		feature}
  * A list of keys that, when typed in Insert mode, cause reindenting of
  * the current line.  Only happens if 'indentexpr' isn't empty.
  * The format is identical to 'cinkeys', see |indentkeys-format|.
@@ -4463,39 +4421,6 @@ export const infercase = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "infercase");
-  },
-};
-
-/**
- * Makes Vim work in a way that Insert mode is the default mode.  Useful
- * if you want to use Vim as a modeless editor.  Used for |evim|.
- * These Insert mode commands will be useful:
- * - Use the cursor keys to move around.
- * - Use CTRL-O to execute one Normal mode command |i_CTRL-O|.  When
- *   this is a mapping, it is executed as if 'insertmode' was off.
- *   Normal mode remains active until the mapping is finished.
- * - Use CTRL-L to execute a number of Normal mode commands, then use
- *   <Esc> to get back to Insert mode.  Note that CTRL-L moves the cursor
- *   left, like <Esc> does when 'insertmode' isn't set.  |i_CTRL-L|
- */
-export const insertmode = {
-  async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "insertmode") ?? false;
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "insertmode", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "insertmode");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "insertmode") ?? false;
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "insertmode", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "insertmode");
   },
 };
 
@@ -4686,7 +4611,7 @@ export const keymap = {
 };
 
 /**
- * List of comma separated words, which enable special things that keys
+ * List of comma-separated words, which enable special things that keys
  * can do.  These values can be used:
  *    startsel	Using a shifted special key starts selection (either
  * 		Select mode or Visual mode, depending on "key" being
@@ -4723,7 +4648,7 @@ export const keymodel = {
  * help.  (Note that previously setting the global option to the empty
  * value did this, which is now deprecated.)
  * When the first character is ":", the command is invoked as a Vim
- * Ex command prefixed with [count].
+ * Ex command with [count] added as an argument if it is not zero.
  * When "man", "man -s" or an Ex command is used, Vim will automatically
  * translate a count for the "K" command and pass it as the first
  * argument.  For "man -s" the "-s" is removed when there is no count.
@@ -4805,7 +4730,7 @@ export const langmap = {
  * 		|+multi_lang| features}
  * Language to use for menu translation.  Tells which file is loaded
  * from the "lang" directory in 'runtimepath': >
- * 	"lang/menu_" . &langmenu . ".vim"
+ * 	"lang/menu_" .. &langmenu .. ".vim"
  * <	(without the spaces).  For example, to always use the Dutch menus, no
  * matter what $LANG is set to: >
  * 	:set langmenu=nl_NL.ISO_8859-1
@@ -4908,6 +4833,9 @@ export const laststatus = {
  * executing macros, registers and other commands that have not been
  * typed.  Also, updating the window title is postponed.  To force an
  * update use |:redraw|.
+ * This may occasionally cause display errors.  It is only meant to be set
+ * temporarily when performing an operation where redrawing may cause
+ * flickering or cause a slow down.
  */
 export const lazyredraw = {
   async get(denops: Denops): Promise<boolean> {
@@ -4996,10 +4924,8 @@ export const linespace = {
 };
 
 /**
- * 		{not available when compiled without the |+lispindent|
- * 		feature}
- * Comma separated list of words that influence the Lisp indenting.
- * |'lisp'|
+ * Comma-separated list of words that influence the Lisp indenting when
+ * enabled with the |'lisp'| option.
  */
 export const lispwords = {
   async get(denops: Denops): Promise<string> {
@@ -5033,7 +4959,7 @@ export const lispwords = {
 
 /**
  * Strings to use in 'list' mode and for the |:list| command.  It is a
- * comma separated list of string settings.
+ * comma-separated list of string settings.
  *   eol:c		Character to show at the end of each line.  When
  * 		omitted, there is no extra character at the end of the
  * 		line.
@@ -5272,36 +5198,6 @@ export const matchtime = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "matchtime");
-  },
-};
-
-/**
- * The maximum number of combining characters supported for displaying.
- * Only used when 'encoding' is "utf-8".
- * The default is OK for most languages.  Hebrew may require 4.
- * Maximum value is 6.
- * Even when this option is set to 2 you can still edit text with more
- * combining characters, you just can't see them.  Use |g8| or |ga|.
- * See |mbyte-combining|.
- */
-export const maxcombine = {
-  async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "maxcombine") ?? 0;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "maxcombine", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "maxcombine");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "maxcombine") ?? 0;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "maxcombine", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "maxcombine");
   },
 };
 
@@ -5712,10 +5608,41 @@ export const mousemodel = {
 };
 
 /**
+ * 		{only works in the GUI}
+ * When on, mouse move events are delivered to the input queue and are
+ * available for mapping. The default, off, avoids the mouse movement
+ * overhead except when needed. See |gui-mouse-mapping|.
+ * Warning: Setting this option can make pending mappings to be aborted
+ * when the mouse is moved.
+ * Currently only works in the GUI, may be made to work in a terminal
+ * later.
+ */
+export const mousemoveevent = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "mousemoveevent") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "mousemoveevent", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "mousemoveevent");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "mousemoveevent") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "mousemoveevent", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "mousemoveevent");
+  },
+};
+
+/**
  * 		{only available when compiled with the |+mouseshape|
  * 		feature}
  * This option tells Vim what the mouse pointer should look like in
- * different modes.  The option is a comma separated list of parts, much
+ * different modes.  The option is a comma-separated list of parts, much
  * like used for 'guicursor'.  Each part consist of a mode/location-list
  * and an argument-list:
  * 	mode-list:shape,mode-list:shape,..
@@ -5833,8 +5760,8 @@ export const nrformats = {
  * number.
  * When a long, wrapped line doesn't start with the first character, '-'
  * characters are put before the number.
- * See |hl-LineNr|  and |hl-CursorLineNr| for the highlighting used for
- * the number.
+ * For highlighting see |hl-LineNr|, and |hl-CursorLineNr|, and the
+ * |:sign-define| "numhl" argument.
  * The 'relativenumber' option changes the displayed number to be
  * relative to the cursor.  Together with 'number' there are these
  * four combinations (cursor in line 3):
@@ -5903,7 +5830,9 @@ export const numberwidth = {
  * This option specifies a function to be used for Insert mode omni
  * completion with CTRL-X CTRL-O. |i_CTRL-X_CTRL-O|
  * See |complete-functions| for an explanation of how the function is
- * invoked and what it should return.
+ * invoked and what it should return.  The value can be the name of a
+ * function, a |lambda| or a |Funcref|. See |option-value-function| for
+ * more information.
  * This option is usually set by a filetype plugin:
  * |:filetype-plugin-on|
  * This option cannot be set from a |modeline| or in the |sandbox|, for
@@ -5961,7 +5890,9 @@ export const opendevice = {
 
 /**
  * This option specifies a function to be called by the |g@| operator.
- * See |:map-operator| for more info and an example.
+ * See |:map-operator| for more info and an example.  The value can be
+ * the name of a function, a |lambda| or a |Funcref|. See
+ * |option-value-function| for more information.
  */
 export const operatorfunc = {
   async get(denops: Denops): Promise<string> {
@@ -6168,7 +6099,6 @@ export const patchmode = {
  *   "http://www.vim.org" will make ":find index.html" work.
  * - Search upwards and downwards in a directory tree using "*" and
  *   ";".  See |file-searching| for info and syntax.
- *   {not available when compiled without the |+path_extra| feature}
  * - Careful with '\' characters, type two to get one in the option: >
  * 	:set path=.,c:\\include
  * <	  Or just use '/' instead: >
@@ -6188,7 +6118,7 @@ export const patchmode = {
  * <	To use an environment variable, you probably need to replace the
  * separator.  Here is an example to append $INCL, in which directory
  * names are separated with a semi-colon: >
- * 	:let &path = &path . "," . substitute($INCL, ';', ',', 'g')
+ * 	:let &path = &path .. "," .. substitute($INCL, ';', ',', 'g')
  * <	Replace the ';' with a ':' or whatever separator is used.  Note that
  * this doesn't work when $INCL contains a comma or white space.
  */
@@ -6619,8 +6549,9 @@ export const pyxversion = {
  * customize the information displayed in the quickfix or location window
  * for each entry in the corresponding quickfix or location list.  See
  * |quickfix-window-function| for an explanation of how to write the
- * function and an example. The value can be the name of a function or a
- * lambda.
+ * function and an example.  The value can be the name of a function, a
+ * |lambda| or a |Funcref|. See |option-value-function| for more
+ * information.
  */
 export const quickfixtextfunc = {
   async get(denops: Denops): Promise<string> {
@@ -6914,7 +6845,7 @@ export const rightleftcmd = {
  * Each window has its own ruler.  If a window has a status line, the
  * ruler is shown there.  Otherwise it is shown in the last line of the
  * screen.  If the statusline is given by 'statusline' (i.e. not empty),
- * this option takes precedence over 'ruler' and 'rulerformat'
+ * this option takes precedence over 'ruler' and 'rulerformat'.
  * If the number of characters displayed is different from the number of
  * bytes in the text (e.g., for a TAB or a multibyte character), both
  * the text column (byte number) and the screen column are shown,
@@ -7272,7 +7203,7 @@ export const selection = {
 };
 
 /**
- * This is a comma separated list of words, which specifies when to start
+ * This is a comma-separated list of words, which specifies when to start
  * Select mode instead of Visual mode, when a selection is started.
  * Possible values:
  *    mouse	when using the mouse
@@ -8146,8 +8077,6 @@ export const smartcase = {
 };
 
 /**
- * 		{not available when compiled without the
- * 		|+smartindent| feature}
  * Do smart autoindenting when starting a new line.  Works for C-like
  * programs, but can also be used for other languages.  'cindent' does
  * something like this, works better in most cases, but is more strict,
@@ -8306,7 +8235,8 @@ export const spellcapcheck = {
  * Name of the word list file where words are added for the |zg| and |zw|
  * commands.  It must end in ".{encoding}.add".  You need to include the
  * path, otherwise the file is placed in the current directory.
- * It may also be a comma separated list of names.  A count before the
+ * The path may include characters from 'isfname', space, comma and '@'.
+ * It may also be a comma-separated list of names.  A count before the
  * |zg| and |zw| commands can be used to access each.  This allows using
  * a personal word list file and a project word list file.
  * When a word is added while this option is empty Vim will set it for
@@ -8347,7 +8277,7 @@ export const spellfile = {
 /**
  * 		{not available when compiled without the |+syntax|
  * 		feature}
- * A comma separated list of word list names.  When the 'spell' option is
+ * A comma-separated list of word list names.  When the 'spell' option is
  * on spellchecking will be done for these languages.  Example: >
  * 	set spelllang=en_us,nl,medical
  * <	This means US English, Dutch and medical words are recognized.  Words
@@ -8401,7 +8331,7 @@ export const spelllang = {
 /**
  * 		{not available when compiled without the |+syntax|
  * 		feature}
- * A comma separated list of options for spell checking:
+ * A comma-separated list of options for spell checking:
  *    camel	When a word is CamelCased, assume "Cased" is a
  * 		separate word: every upper-case character in a word
  * 		that comes after a lower case character indicates the
@@ -8542,7 +8472,7 @@ export const startofline = {
 /**
  * 		{not available when compiled without the |+statusline|
  * 		feature}
- * When nonempty, this option determines the content of the status line.
+ * When non-empty, this option determines the content of the status line.
  * Also see |status-line|.
  */
 export const statusline = {
@@ -8609,9 +8539,7 @@ export const suffixes = {
 };
 
 /**
- * 		{not available when compiled without the
- * 		|+file_in_path| feature}
- * Comma separated list of suffixes, which are used when searching for a
+ * Comma-separated list of suffixes, which are used when searching for a
  * file for the "gf", "[I", etc. commands.  Example: >
  * 	:set suffixesadd=.java
  * <
@@ -8679,7 +8607,7 @@ export const swapfile = {
  * This option controls the behavior when switching between buffers.
  * Mostly for |quickfix| commands some values are also used for other
  * commands, as mentioned below.
- * Possible values (comma separated list):
+ * Possible values (comma-separated list):
  *    useopen	If included, jump to the first open window that
  * 		contains the specified buffer (if there is one).
  * 		Otherwise: Do not examine other windows.
@@ -8801,7 +8729,7 @@ export const syntax = {
 };
 
 /**
- * When nonempty, this option determines the content of the tab pages
+ * When non-empty, this option determines the content of the tab pages
  * line at the top of the Vim window.  When empty Vim will use a default
  * tab pages line.  See |setting-tabline| for more info.
  */
@@ -8853,7 +8781,7 @@ export const tabpagemax = {
 
 /**
  * Number of spaces that a <Tab> in the file counts for.  Also see
- * |:retab| command, and 'softtabstop' option.
+ * the |:retab| command, and the 'softtabstop' option.
  */
 export const tabstop = {
   async get(denops: Denops): Promise<number> {
@@ -8953,7 +8881,9 @@ export const tagcase = {
  * This option specifies a function to be used to perform tag searches.
  * The function gets the tag pattern and should return a List of matching
  * tags.  See |tag-function| for an explanation of how to write the
- * function and an example.
+ * function and an example.  The value can be the name of a function, a
+ * |lambda| or a |Funcref|. See |option-value-function| for more
+ * information.
  */
 export const tagfunc = {
   async get(denops: Denops): Promise<string> {
@@ -9039,8 +8969,7 @@ export const tagrelative = {
  * a directory tree.  See |file-searching|.  E.g., "/lib/** /tags" will
  * find all files named "tags" below "/lib".  The filename itself cannot
  * contain wildcards, it is used as-is.  E.g., "/lib/** /tags?" will find
- * files called "tags?".  {not available when compiled without the
- * |+path_extra| feature}
+ * files called "tags?".
  * The |tagfiles()| function can be used to get a list of the file names
  * actually used.
  * If Vim was compiled with the |+emacs_tags| feature, Emacs-style tag
@@ -9206,7 +9135,8 @@ export const textwidth = {
 
 /**
  * List of file names, separated by commas, that are used to lookup words
- * for thesaurus completion commands |i_CTRL-X_CTRL-T|.
+ * for thesaurus completion commands |i_CTRL-X_CTRL-T|.  See
+ * |compl-thesaurus|.
  */
 export const thesaurus = {
   async get(denops: Denops): Promise<string> {
@@ -9235,6 +9165,44 @@ export const thesaurus = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "thesaurus");
+  },
+};
+
+/**
+ * 		{not available when compiled without the |+eval|
+ * 		feature}
+ * This option specifies a function to be used for thesaurus completion
+ * with CTRL-X CTRL-T. |i_CTRL-X_CTRL-T| See |compl-thesaurusfunc|.
+ * The value can be the name of a function, a |lambda| or a |Funcref|.
+ * See |option-value-function| for more information.
+ */
+export const thesaurusfunc = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "thesaurusfunc") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "thesaurusfunc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "thesaurusfunc");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "thesaurusfunc") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "thesaurusfunc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "thesaurusfunc");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "thesaurusfunc") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "thesaurusfunc", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "thesaurusfunc");
   },
 };
 
@@ -9337,36 +9305,6 @@ export const ttimeoutlen = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "ttimeoutlen");
-  },
-};
-
-/**
- * Indicates a fast terminal connection.  More characters will be sent to
- * the screen for redrawing, instead of using insert/delete line
- * commands.  Improves smoothness of redrawing when there are multiple
- * windows and the terminal does not support a scrolling region.
- * Also enables the extra writing of characters at the end of each screen
- * line for lines that wrap.  This helps when using copy/paste with the
- * mouse in an xterm and other terminals.
- */
-export const ttyfast = {
-  async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "ttyfast") ?? false;
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "ttyfast", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "ttyfast");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "ttyfast") ?? false;
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "ttyfast", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "ttyfast");
   },
 };
 
@@ -9736,7 +9674,7 @@ export const viewdir = {
 /**
  * 		{not available when compiled without the |+mksession|
  * 		feature}
- * Changes the effect of the |:mkview| command.  It is a comma separated
+ * Changes the effect of the |:mkview| command.  It is a comma-separated
  * list of words.  Each word enables saving and restoring something:
  *    word		save and restore ~
  *    cursor	cursor position in file and in window
@@ -9773,7 +9711,7 @@ export const viewoptions = {
 };
 
 /**
- * A comma separated list of these words:
+ * A comma-separated list of these words:
  *     block	Allow virtual editing in Visual block mode.
  *     insert	Allow virtual editing in Insert mode.
  *     all		Allow virtual editing in all modes.
@@ -9901,8 +9839,9 @@ export const whichwrap = {
  * More info here: |cmdline-completion|.
  * The character is not recognized when used inside a macro.  See
  * 'wildcharm' for that.
+ * Some keys will not work, such as CTRL-C, <CR> and Enter.
  * Although 'wc' is a number option, you can set it to a special key: >
- * 	:set wc=<Esc>
+ * 	:set wc=<Tab>
  * <	NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
  */
@@ -9959,8 +9898,6 @@ export const wildcharm = {
 };
 
 /**
- * 		{not available when compiled without the |+wildignore|
- * 		feature}
  * A list of file patterns.  A file that matches with one of these
  * patterns is ignored when expanding |wildcards|, completing file or
  * directory names, and influences the result of |expand()|, |glob()| and
@@ -10022,13 +9959,14 @@ export const wildignorecase = {
 };
 
 /**
- * 		{not available if compiled without the |+wildmenu|
- * 		feature}
  * When 'wildmenu' is on, command-line completion operates in an enhanced
  * mode.  On pressing 'wildchar' (usually <Tab>) to invoke completion,
- * the possible matches are shown just above the command line, with the
- * first match highlighted (overwriting the status line, if there is
- * one).  Keys that show the previous/next match, such as <Tab> or
+ * the possible matches are shown.
+ * When 'wildoptions' contains "pum", then the completion matches are
+ * shown in a popup menu.  Otherwise they are displayed just above the
+ * command line, with the first match highlighted (overwriting the status
+ * line, if there is one).
+ * Keys that show the previous/next match, such as <Tab> or
  * CTRL-P/CTRL-N, cause the highlight to move to the appropriate match.
  * When 'wildmode' is used, "wildmenu" mode is used where "full" is
  * specified.  "longest" and "list" do not start "wildmenu" mode.
@@ -10038,8 +9976,8 @@ export const wildignorecase = {
  * as needed.
  * The "wildmenu" mode is abandoned when a key is hit that is not used
  * for selecting a completion.
- * While the "wildmenu" is active the following keys have special
- * meanings:
+ * While the "wildmenu" is active, not using the popup menu, the
+ * following keys have special meanings:
  */
 export const wildmenu = {
   async get(denops: Denops): Promise<boolean> {
@@ -10064,7 +10002,7 @@ export const wildmenu = {
 
 /**
  * Completion mode that is used for the character specified with
- * 'wildchar'.  It is a comma separated list of up to four parts.  Each
+ * 'wildchar'.  It is a comma-separated list of up to four parts.  Each
  * part specifies what to do for each consecutive use of 'wildchar'.  The
  * first part specifies the behavior for the first use of 'wildchar',
  * The second part for the second use, etc.
@@ -10091,16 +10029,23 @@ export const wildmode = {
 };
 
 /**
- * 		{not available when compiled without the |+wildignore|
- * 		feature}
- * A list of words that change how command line completion is done.
- * Currently only one word is allowed:
+ * A list of words that change how |cmdline-completion| is done.
+ * The following values are supported:
+ *   fuzzy		Use |fuzzy-matching| to find completion matches. When
+ * 		this value is specified, wildcard expansion will not
+ * 		be used for completion.  The matches will be sorted by
+ * 		the "best match" rather than alphabetically sorted.
+ * 		This will find more matches than the wildcard
+ * 		expansion. Currently fuzzy matching based completion
+ * 		is not supported for file and directory names and
+ * 		instead wildcard expansion is used.
+ *   pum		Display the completion matches using the popup menu
+ * 		in the same style as the |ins-completion-menu|.
  *   tagfile	When using CTRL-D to list matching tags, the kind of
  * 		tag and the file of the tag is listed.	Only one match
  * 		is displayed per line.  Often used tag kinds are:
  * 			d	#define
  * 			f	function
- * Also see |cmdline-completion|.
  */
 export const wildoptions = {
   async get(denops: Denops): Promise<string> {
