@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.170.0/testing/asserts.ts";
 import { test } from "https://deno.land/x/denops_test@v1.0.1/mod.ts";
 import { globalOptions, localOptions, options } from "./option.ts";
 
