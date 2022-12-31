@@ -1,4 +1,4 @@
-import { Denops } from "https://deno.land/x/denops_core@v3.3.0/mod.ts";
+import { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 import { AutocmdEvent } from "./types.ts";
 
 type CommonOptions = {

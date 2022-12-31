@@ -24,7 +24,6 @@ jobs:
         runner:
           - ubuntu-latest
         version:
-          - "1.17.1"
           - "1.x"
     runs-on: ${{ matrix.runner }}
     steps:
@@ -97,8 +96,7 @@ jobs:
       - name: Test
         run: make test
         env:
-          DENOPS_PATH: "../denops.vim"
-          DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable_path }}
-          DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
-        timeout-minutes: 10
+          DENOPS_TEST_DENOPS_PATH: "../denops.vim"
+          DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim.outputs.executable_path }}
+          DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable_path }}
         working-directory: ./repo
