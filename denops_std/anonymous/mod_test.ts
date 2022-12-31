@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertRejects,
 } from "https://deno.land/std@0.167.0/testing/asserts.ts";
-import { test } from "../test/mod.ts";
+import { test } from "https://deno.land/x/denops_test@v1.0.1/mod.ts";
 import * as anonymous from "./mod.ts";
 
 test({
