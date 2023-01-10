@@ -2,7 +2,22 @@ import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 import { Getter, Setter } from "./types.ts";
 
 /**
- * Register
+ * Register (`register` or `r`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { register } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set register
+ *   await register.set(denops, "a", "world");
+ *
+ *   // Get register
+ *   console.log(await register.get(denops, "a"));
+ * }
+ * ```
+ *
+ * Note that `register.get()` returns `defaultValue` when the register is falsy.
  */
 export const register: Getter & Setter = {
   /**

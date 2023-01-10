@@ -1,3 +1,8 @@
+/**
+ * A module to provide helper functions
+ *
+ * @module
+ */
 export * from "./batch.ts";
 export * from "./echo.ts";
 export * from "./execute.ts";

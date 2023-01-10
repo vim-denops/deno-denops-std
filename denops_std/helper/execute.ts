@@ -4,7 +4,38 @@ import type {
 } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 
 /**
- * Execute Vim script directly
+ * Execute multi-lined Vim script directly
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { execute } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await execute(
+ *     denops,
+ *     `
+ *     command! CommandA echo "A"
+ *     command! CommandB echo "B"
+ *     command! CommandC echo "C"
+ *     `,
+ *   );
+ *
+ *   // You can pass context like
+ *   await execute(
+ *     denops,
+ *     `
+ *     command! CommandA echo msg_a
+ *     command! CommandB echo msg_b
+ *     command! CommandC echo l:msg_c
+ *     `,
+ *     {
+ *       msg_a: "Hello A",
+ *       msg_b: "Hello B",
+ *       msg_c: "Hello C",
+ *     },
+ *   );
+ * }
+ * ```
  */
 export function execute(
   denops: Denops,

@@ -40,6 +40,31 @@ export function getSilent(denops: Denops): Silent {
 
 /**
  * Set global silent status
+ *
+ * By setting the silent state with this function, you can control `silent` and
+ * `silent!` messages as follows.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { echo, echoerr, setSilent } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
+ *   setSilent(denops, "silent!");
+ *   await echo(denops, "Hello\nWorld!");
+ *   await echoerr(denops, "This is error message");
+ *
+ *   // Because silent is "silent", `echo` doesn't show messages.
+ *   setSilent(denops, "silent");
+ *   await echo(denops, "Hello\nWorld!");
+ *   await echoerr(denops, "This is error message");
+ *
+ *   // Because silent is "", both show messages.
+ *   setSilent(denops, "");
+ *   await echo(denops, "Hello\nWorld!");
+ *   await echoerr(denops, "This is error message");
+ * }
+ * ```
  */
 export function setSilent(denops: Denops, silent: Silent): void {
   denops.context[cacheKeySilent] = silent;
@@ -47,6 +72,34 @@ export function setSilent(denops: Denops, silent: Silent): void {
 
 /**
  * Ensure global silent status during given function
+ *
+ * To control `silent` and `silent!` messages while executing a particular
+ * function, use this function as follows
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { echo, echoerr, ensureSilent } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
+ *   await ensureSilent(denops, "silent!", async () => {
+ *     await echo(denops, "Hello\nWorld!");
+ *     await echoerr(denops, "This is error message");
+ *   });
+ *
+ *   // Because silent is "silent", `echo` doesn't show messages.
+ *   await ensureSilent(denops, "silent", async () => {
+ *     await echo(denops, "Hello\nWorld!");
+ *     await echoerr(denops, "This is error message");
+ *   });
+ *
+ *   // Because silent is "", both shows messages.
+ *   await ensureSilent(denops, "", async () => {
+ *     await echo(denops, "Hello\nWorld!");
+ *     await echoerr(denops, "This is error message");
+ *   });
+ * }
+ * ```
  */
 export async function ensureSilent<T>(
   denops: Denops,
@@ -73,7 +126,17 @@ export async function ensureSilent<T>(
  * Note that it does nothing and return immediately when denops is
  * running as 'test' mode to avoid unwilling test failures.
  *
- * WARNING:
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { echo } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await echo(denops, "Hello\nWorld!");
+ * }
+ * ```
+ *
+ * ##### WARNING
+ *
  * In order to make the behavior of Vim and Neovim consistent,
  * `timer_start()` is used internally not only in Vim but also in
  * Neovim. Note that this means that you cannot control the message
@@ -106,7 +169,17 @@ export function echo(
  * Note that this function just use ErrorMsg highlight and is not
  * equivalent to `echoerr` command in Vim/Neovim.
  *
- * WARNING:
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { echoerr } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await echoerr(denops, "This is error message");
+ * }
+ * ```
+ *
+ * ##### WARNING
+ *
  * In order to make the behavior of Vim and Neovim consistent,
  * `timer_start()` is used internally not only in Vim but also in
  * Neovim. Note that this means that you cannot control the message
@@ -139,7 +212,24 @@ export async function echoerr(
 /**
  * Call given function and print a friendly error message (without stack trace) on failure.
  *
+ * It's mainly designed for `dispatcher` functions.
  * Print a stack trace when denops is running in debug mode.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { friendlyCall } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   denops.dispatcher = {
+ *     say: () => {
+ *       return friendlyCall(denops, async () => {
+ *         // Do whatever you want.
+ *         throw new Error("Some error occurred");
+ *       });
+ *     },
+ *   };
+ * }
+ * ```
  */
 export async function friendlyCall(
   denops: Denops,

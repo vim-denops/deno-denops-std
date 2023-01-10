@@ -1,4 +1,9 @@
+// https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
+// deno-lint-ignore ban-types
+type AnyString = string & {};
+
 export type AutocmdEvent =
+  | AnyString
   | "BufAdd"
   | "BufDelete"
   | "BufEnter"
@@ -113,3 +118,20 @@ export type AutocmdEvent =
   | "WinLeave"
   | "WinNew"
   | "WinScrolled";
+
+type CommonOptions = {
+  group?: string;
+};
+
+export type DefineOptions = CommonOptions & {
+  once?: boolean;
+  nested?: boolean;
+};
+
+export type RemoveOptions = CommonOptions;
+
+export type ListOptions = CommonOptions;
+
+export type EmitOptions = CommonOptions & {
+  nomodeline?: boolean;
+};

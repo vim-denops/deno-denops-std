@@ -132,7 +132,53 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
 }
 
 /**
- * Open a buffer
+ * Open a `bufname` buffer with given options on the current window
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Open `README.md`
+ *   // Same as `:edit README.md`
+ *   await open(denops, "README.md");
+ *
+ *   // Open `LICENSE` with given options
+ *   // Same as `:keepjumps keepalt edit ++enc=sjis ++ff=dos LICENSE`
+ *   await open(denops, "LICENSE", {
+ *     mods: "keepjumps keepalt",
+ *     cmdarg: "++enc=sjis ++ff=dos",
+ *   });
+ * }
+ * ```
+ *
+ * Use `split`, `vsplit`, `tabedit`, `pedit`, or whatever in `opener` attribute of
+ * the option like:
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md", { opener: "split" });
+ * }
+ * ```
+ *
+ * Use a result value if you need window id, buffer number, window number, or
+ * tabpage number like:
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const info = await open(denops, "README.md");
+ *   console.log("winid:", info.winid);
+ *   console.log("bufnr:", info.bufnr);
+ *   console.log("winnr:", info.winnr);
+ *   console.log("tabpagenr:", info.tabpagenr);
+ * }
+ * ```
  */
 export async function open(
   denops: Denops,
@@ -152,21 +198,38 @@ export async function open(
   ) as OpenResult;
 }
 
-export type OpenOptions = {
+export interface OpenOptions {
   mods?: string;
   cmdarg?: string;
   opener?: string;
-};
+}
 
-export type OpenResult = {
+export interface OpenResult {
   winid: number;
   bufnr: number;
   winnr: number;
   tabpagenr: number;
-};
+}
 
 /**
- * Edit a buffer
+ * Reload the content of the `bufnr` buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { open, reload } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // ...
+ *   // Reload the content of the `bufnr` buffer.
+ *   await reload(denops, bufnr);
+ * }
+ * ```
+ *
+ * It may temporary change a current buffer or a current window to properly reload
+ * the content of the `bufnr` buffer.
  */
 export async function reload(denops: Denops, bufnr: number): Promise<void> {
   const suffix = await ensurePrerequisites(denops);
@@ -177,7 +240,24 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
 }
 
 /**
- * Decode content for the buffer with given format and encoding.
+ * Decode raw binary content for string array for the `bufnr` buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { decode, open, replace } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const data = await Deno.readFile("README.md");
+ *   const { content } = await decode(denops, bufnr, data);
+ *   await replace(denops, bufnr, content);
+ * }
+ * ```
+ *
+ * It follows Vim's rule to find a corresponding `fileformat` and `fileencoding` to
+ * decode the `data` if the one is not given by `options`.
  */
 export async function decode(
   denops: Denops,
@@ -217,19 +297,35 @@ export async function decode(
   };
 }
 
-export type DecodeOptions = {
+export interface DecodeOptions {
   fileformat?: string;
   fileencoding?: string;
-};
+}
 
-export type DecodeResult = {
+export interface DecodeResult {
   content: string[];
   fileformat: FileFormat;
   fileencoding: string;
-};
+}
 
 /**
  * Append content under the current cursor position or given lnum of the buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { append, open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // Append the content under the cursor position of the `bufnr` buffer
+ *   await append(denops, bufnr, ["Hello", "World"]);
+ * }
+ * ```
+ *
+ * It temporary change `modified`, `modifiable`, and `foldmethod` options to append
+ * the content of the `buffer` buffer without unmodifiable error or so on.
  */
 export async function append(
   denops: Denops,
@@ -248,12 +344,28 @@ export async function append(
   );
 }
 
-export type AppendOptions = {
+export interface AppendOptions {
   lnum?: number;
-};
+}
 
 /**
- * Replace the buffer content
+ * Replace the content of the `bufnr` buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { open, replace } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // Set the content of the `bufnr` buffer
+ *   await replace(denops, bufnr, ["Hello", "World"]);
+ * }
+ * ```
+ *
+ * It temporary change `modified`, `modifiable`, and `foldmethod` options to
+ * replace the content of the `buffer` buffer without unmodifiable error or so on.
  */
 export async function replace(
   denops: Denops,
@@ -271,10 +383,10 @@ export async function replace(
   );
 }
 
-export type ReplaceOptions = {
+export interface ReplaceOptions {
   fileformat?: string;
   fileencoding?: string;
-};
+}
 
 /**
  * Assign content to the buffer with given format and encoding.
@@ -301,17 +413,38 @@ export async function assign(
   });
 }
 
-export type AssignOptions = DecodeOptions & {
+export interface AssignOptions extends DecodeOptions {
   preprocessor?: (repl: string[]) => string[];
-};
+}
 
 /**
- * Concrete the buffer.
+ * Concrete the buffer
+ *
+ * This function will perform the followings
  *
  * - The `buftype` option become "nofile"
  * - The `swapfile` become disabled
  * - The `modifiable` become disabled
  * - The content of the buffer is restored on `BufReadCmd` synchronously
+ *
+ * Vim will discard the content of a non-file buffer when `:edit` is invoked. Use
+ * this function to concrete the content of such buffer to prevent this discard.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { concrete, open, replace } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   await fn.setbufvar(denops, bufnr, "&buftype", "nofile");
+ *   await replace(denops, bufnr, ["Hello", "World"]);
+ *   await concrete(denops, bufnr);
+ * }
+ * ```
+ *
+ * Then `:edit` on the buffer won't discard the content.
  */
 export async function concrete(
   denops: Denops,
@@ -346,6 +479,27 @@ export async function concrete(
 
 /**
  * Ensure the executor is executed under the specified buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as option from "../option/mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { ensure, open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // ...
+ *   await ensure(denops, bufnr, async () => {
+ *     await option.buftype.set(denops, "nofile");
+ *     await option.swapfile.set(denops, false);
+ *     await fn.setline(denops, 1, ["Hello", "World"]);
+ *   });
+ * }
+ * ```
+ *
+ * Note that it's better to use `setbufvar` or whatever instead. It's mainly
+ * designed to define mappings that is not possible from outside of the buffer.
  */
 export async function ensure<T>(
   denops: Denops,
@@ -385,6 +539,21 @@ export async function ensure<T>(
 
 /**
  * Ensure the executor is executed under a modifiable buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { modifiable, open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // ...
+ *   await modifiable(denops, bufnr, async () => {
+ *     await fn.setline(denops, 1, ["Hello", "World"]);
+ *   });
+ * }
+ * ```
  */
 export async function modifiable<T>(
   denops: Denops,

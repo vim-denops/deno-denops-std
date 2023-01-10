@@ -88,7 +88,50 @@ class GatherHelper implements Denops {
 }
 
 /**
- * Perform gather call
+ * Call multiple denops functions sequentially without RPC overhead and return values
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { gather } from "./gather.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const results = await gather(denops, async (denops) => {
+ *     await denops.eval("&modifiable");
+ *     await denops.eval("&modified");
+ *     await denops.eval("&filetype");
+ *   });
+ *   // results contains the value of modifiable, modified, and filetype
+ * }
+ * ```
+ *
+ * Not like `batch`, the function can NOT be nested.
+ *
+ * Note that `denops.call()` or `denops.eval()` always return falsy value in
+ * `gather()`, indicating that you **cannot** write code like below:
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { gather } from "./gather.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const results = await gather(denops, async (denops) => {
+ *     // !!! DON'T DO THIS !!!
+ *     if (await denops.call("has", "nvim")) {
+ *       // deno-lint-ignore no-explicit-any
+ *       await (denops.call("api_info") as any).version;
+ *     } else {
+ *       await denops.eval("v:version");
+ *     }
+ *   });
+ * }
+ * ```
+ *
+ * The `denops` instance passed to the `gather` block is NOT available outside of
+ * the block. An error is thrown when `denops.call()`, `denops.cmd()`, or
+ * `denops.eval()` is called.
+ *
+ * Note that `denops.redraw()` cannot be called within `gather()`. If it is called,
+ * an error is raised.
  */
 export async function gather(
   denops: Denops,

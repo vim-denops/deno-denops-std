@@ -9,7 +9,9 @@ export const bufnameUnusablePattern = /["<>\|\?\*]/g;
  * Users must encode the percent character themselves before using this
  * function like:
  *
- * ```
+ * ```typescript
+ * import { encode } from "./utils.ts";
+ *
  * const expr = "%Hello world%";
  * const encoded = encode(expr.replaceAll("%", "%25"));
  * ```

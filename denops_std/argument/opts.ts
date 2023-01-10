@@ -22,6 +22,31 @@ const optPattern = /^\+\+([a-zA-Z0-9-]+)(?:=(.*))?/;
 
 /**
  * Parse string array to extract opts (++opt).
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { parseOpts } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [opts, residues] = parseOpts(args);
+ *
+ *   console.log(opts);
+ *   // { "enc": "sjis", "ff": "dos" }
+ *
+ *   console.log(residues);
+ *   // ["-f", "--foo=foo", "--bar=bar", "--bar=baz", "hello", "world"]
+ * }
+ * ```
  */
 export function parseOpts(args: string[]): [Opts, string[]] {
   const opts: Opts = {};
@@ -50,6 +75,30 @@ export function parseOpts(args: string[]): [Opts, string[]] {
 
 /**
  * Validate if `opts` has unknown attributes.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { builtinOpts, parse, validateOpts } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [opts, _flags, residues] = parse(args);
+ *
+ *   validateOpts(opts, ["enc", "ff"]);
+ *
+ *   // Or use `builtinOpts` to validate Vim's builtin `++opts`
+ *   validateOpts(opts, builtinOpts);
+ * }
+ * ```
  */
 export function validateOpts(opts: Opts, knownAttributes: string[]): void {
   Object.keys(opts).forEach((v) => {
@@ -61,6 +110,16 @@ export function validateOpts(opts: Opts, knownAttributes: string[]): void {
 
 /**
  * Format `key` and `value` to construct string array.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { formatOpt } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   console.log(formatOpt("enc", "sjis"));
+ *   // "++enc=sjis"
+ * }
+ * ```
  */
 export function formatOpt(key: string, value: string | undefined): string[] {
   if (value == undefined) {
@@ -71,6 +130,28 @@ export function formatOpt(key: string, value: string | undefined): string[] {
 
 /**
  * Format `opts` to construct string array.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { formatOpts, parse } from "../argument/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [opts, _flags, _residues] = parse(args);
+ *
+ *   console.log(formatOpts(opts));
+ *   // "++enc=sjis ++ff=dos"
+ * }
+ * ```
  */
 export function formatOpts(opts: Opts, includes?: string[]): string[] {
   let entries = Object.entries(opts);

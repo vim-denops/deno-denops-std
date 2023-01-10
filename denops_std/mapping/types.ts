@@ -20,7 +20,7 @@ export type Mode =
   | "nox"
   | "nos";
 
-export type Mapping = {
+export interface Mapping {
   // Modes for which the mapping is defined
   mode: Mode;
   // The {lhs} of the mapping
@@ -49,4 +49,4 @@ export type Mapping = {
   // True for a :map-silent mapping, else False
   // This attribute is missing if the Mapping is returned from `list()`
   silent?: boolean;
-};
+}

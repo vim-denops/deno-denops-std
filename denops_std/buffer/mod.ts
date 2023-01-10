@@ -1,3 +1,8 @@
+/**
+ * A module to provide Vim buffer utility functions
+ *
+ * @module
+ */
 export * from "./buffer.ts";
 export * from "./decoration.ts";
 export {
