@@ -118,3 +118,20 @@ export type AutocmdEvent =
   | "WinLeave"
   | "WinNew"
   | "WinScrolled";
+
+type CommonOptions = {
+  group?: string;
+};
+
+export type DefineOptions = CommonOptions & {
+  once?: boolean;
+  nested?: boolean;
+};
+
+export type RemoveOptions = CommonOptions;
+
+export type ListOptions = CommonOptions;
+
+export type EmitOptions = CommonOptions & {
+  nomodeline?: boolean;
+};
