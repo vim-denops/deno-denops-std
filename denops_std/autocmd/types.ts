@@ -1,4 +1,9 @@
+// https://github.com/microsoft/TypeScript/issues/29729#issuecomment-567871939
+// deno-lint-ignore ban-types
+type AnyString = string & {};
+
 export type AutocmdEvent =
+  | AnyString
   | "BufAdd"
   | "BufDelete"
   | "BufEnter"
