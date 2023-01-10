@@ -37,7 +37,25 @@ async function removeOption(
 }
 
 /**
- * Options
+ * Options (`options` or `o`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { options } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set option
+ *   await options.set(denops, "filetype", "world");
+ *
+ *   // Get option
+ *   console.log(await options.get(denops, "filetype"));
+ *
+ *   // Reset option
+ *   await options.remove(denops, "filetype");
+ * }
+ * ```
+ *
+ * Note that `options.get()` returns `defaultValue` when the option is falsy.
  */
 export const options: Getter & Setter & Remover = {
   /**
@@ -72,7 +90,25 @@ export const options: Getter & Setter & Remover = {
 export const o = options;
 
 /**
- * Local options
+ * Local options (`localOptions` or `lo`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { localOptions } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set option
+ *   await localOptions.set(denops, "filetype", "world");
+ *
+ *   // Get option
+ *   console.log(await localOptions.get(denops, "filetype"));
+ *
+ *   // Reset option
+ *   await localOptions.remove(denops, "filetype");
+ * }
+ * ```
+ *
+ * Note that `localOptions.get()` returns `defaultValue` when the option is falsy.
  */
 export const localOptions: Getter & Setter & Remover = {
   /**
@@ -107,7 +143,25 @@ export const localOptions: Getter & Setter & Remover = {
 export const lo = localOptions;
 
 /**
- * Global options
+ * Global options (`globalOptions` or `go`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { globalOptions } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set option
+ *   await globalOptions.set(denops, "filetype", "world");
+ *
+ *   // Get option
+ *   console.log(await globalOptions.get(denops, "filetype"));
+ *
+ *   // Reset option
+ *   await globalOptions.remove(denops, "filetype");
+ * }
+ * ```
+ *
+ * Note that `globalOption.get()` returns `defaultValue` when the option is falsy.
  */
 export const globalOptions: Getter & Setter & Remover = {
   /**

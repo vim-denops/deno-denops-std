@@ -2,7 +2,23 @@ import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
 import { Getter, Remover, Setter } from "./types.ts";
 
 /**
- * Environment variables
+ * Environment variables (`environment` or `e`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { environment } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set environment variable
+ *   await environment.set(denops, "DENOPS_HELLO", "world");
+ *
+ *   // Get environment variable
+ *   console.log(await environment.get(denops, "DENOPS_HELLO"));
+ *
+ *   // Remove environment variable
+ *   await environment.remove(denops, "DENOPS_HELLO");
+ * }
+ * ```
  */
 export const environment: Getter & Setter & Remover = {
   /**

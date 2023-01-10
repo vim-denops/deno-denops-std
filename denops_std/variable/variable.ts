@@ -40,7 +40,23 @@ async function removeVar(
 }
 
 /**
- * Global variables
+ * Global variables (`globals` or `g`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { globals } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set global variable
+ *   await globals.set(denops, "hello", "world");
+ *
+ *   // Get global variable
+ *   console.log(await globals.get(denops, "hello"));
+ *
+ *   // Remove global variable
+ *   await globals.remove(denops, "hello");
+ * }
+ * ```
  */
 export const globals: Getter & Setter & Remover = {
   /**
@@ -71,7 +87,23 @@ export const globals: Getter & Setter & Remover = {
 export const g = globals;
 
 /**
- * Buffer local variables
+ * Buffer local variables (`buffers` or `b`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { buffers } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set buffer variable
+ *   await buffers.set(denops, "hello", "world");
+ *
+ *   // Get buffer variable
+ *   console.log(await buffers.get(denops, "hello"));
+ *
+ *   // Remove buffer variable
+ *   await buffers.remove(denops, "hello");
+ * }
+ * ```
  */
 export const buffers: Getter & Setter & Remover = {
   /**
@@ -102,7 +134,23 @@ export const buffers: Getter & Setter & Remover = {
 export const b = buffers;
 
 /**
- * Window local variables
+ * Window local variables (`windows` or `w`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { windows } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set window variable
+ *   await windows.set(denops, "hello", "world");
+ *
+ *   // Get window variable
+ *   console.log(await windows.get(denops, "hello"));
+ *
+ *   // Remove window variable
+ *   await windows.remove(denops, "hello");
+ * }
+ * ```
  */
 export const windows: Getter & Setter & Remover = {
   /**
@@ -133,7 +181,23 @@ export const windows: Getter & Setter & Remover = {
 export const w = windows;
 
 /**
- * Tabpage local variables
+ * Tabpage local variables (`tabpages` or `t`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { tabpages } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set tabpage variable
+ *   await tabpages.set(denops, "hello", "world");
+ *
+ *   // Get tabpage variable
+ *   console.log(await tabpages.get(denops, "hello"));
+ *
+ *   // Remove tabpage variable
+ *   await tabpages.remove(denops, "hello");
+ * }
+ * ```
  */
 export const tabpages: Getter & Setter & Remover = {
   /**
@@ -164,7 +228,20 @@ export const tabpages: Getter & Setter & Remover = {
 export const t = tabpages;
 
 /**
- * Vim variables
+ * Vim variables (`vim` or `v`)
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { vim } from "../variable/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Set vim variable
+ *   await vim.set(denops, "version", "world");
+ *
+ *   // Get vim variable
+ *   console.log(await vim.get(denops, "version"));
+ * }
+ * ```
  */
 export const vim: Getter & Setter = {
   /**
