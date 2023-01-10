@@ -44,7 +44,7 @@ export type BufnameParams = Record<string, string | string[] | undefined>;
  *   scheme             expr                       params            fragment
  * ```
  */
-export type Bufname = {
+export interface Bufname {
   // Scheme part of a buffer name. Note that Vim supports only alphabets in scheme part.
   scheme: string;
   // Expression part of a buffer name. Note that '<>|?*' are not supported in Vim on Windows.
@@ -53,7 +53,7 @@ export type Bufname = {
   params?: BufnameParams;
   // Fragment part of a buffer name. This is mainly used to regulate the suffix of the buffer name.
   fragment?: string;
-};
+}
 
 // Vim only supports alphabet characters in the scheme part of a buffer name.
 // That behavior has slightly improved from Vim 8.2.3153 but we suppor Vim 8.2.0662
@@ -76,6 +76,74 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * All unusable characters ("<>|?*) are replaced with percent-encoded characters.
  * In addition to the above, all semicolons (;) and sharps (#) in `path` are replaced with
  * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
+ *
+ * ```typescript
+ * import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+ * import { format } from "../bufname/mod.ts";
+ *
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *   }),
+ *   "denops:///Users/John Titor/test.git",
+ * );
+ *
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *   }),
+ *   "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2",
+ * );
+ *
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     fragment: "README.md",
+ *   }),
+ *   "denops:///Users/John Titor/test.git#README.md",
+ * );
+ *
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *     fragment: "README.md",
+ *   }),
+ *   "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+ * );
+ * ```
+ *
+ * This function does not handle path separator differences among platforms (Unix
+ * uses `/` but Windows uses `\`). That's why it's recommended to normalize the
+ * `expr` with [`toFileUrl`](https://deno.land/std/path#tofileurl) before when
+ * constructing a buffer name from a real path. For example
+ *
+ * ```typescript
+ * import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+ * import * as path from "https://deno.land/std/path/mod.ts";
+ * import { format } from "../bufname/mod.ts";
+ *
+ * // NOTE:
+ * // Works only on Windows (Use path.win32.toFileUrl instead on other platforms)
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: path.toFileUrl("C:\\Users\John Titor\test.git").pathname,
+ *   }),
+ *   "denops:///C:/Users/John%2520Titor/test.git",
+ * );
+ * ```
  */
 export function format(
   { scheme, expr, params, fragment }: Bufname,
@@ -100,6 +168,78 @@ export function format(
  *
  * It throws errors when a given `bufname` is not valid Vim's buffer name.
  * For example, if it contains unusable characters ("<>|?*).
+ *
+ * ```typescript
+ * import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+ * import { parse } from "../bufname/mod.ts";
+ *
+ * assertEquals(
+ *   parse("denops:///Users/John Titor/test.git"),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *   },
+ * );
+ *
+ * assertEquals(
+ *   parse("denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2"),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *   },
+ * );
+ *
+ * assertEquals(
+ *   parse("denops:///Users/John Titor/test.git#README.md"),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     fragment: "README.md",
+ *   },
+ * );
+ *
+ * assertEquals(
+ *   parse(
+ *     "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+ *   ),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *     fragment: "README.md",
+ *   },
+ * );
+ * ```
+ *
+ * This function does not handle path separator differences among platforms. That's
+ * why it's recommended to restore the `expr` with
+ * [`fromFileUrl`](https://deno.land/std/path#fromfileurl) after if a buffer name
+ * was constructed from a real path. For example
+ *
+ * ```typescript
+ * import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+ * import * as path from "https://deno.land/std/path/mod.ts";
+ * import { parse } from "../bufname/mod.ts";
+ *
+ * const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
+ * assertEquals(bufname, {
+ *   scheme: "denops",
+ *   expr: "/C:/Users/John%20Titor/test.git",
+ * });
+ * // NOTE:
+ * // Works only on Windows (Use path.win32.fromFileUrl instead on other platforms)
+ * assertEquals(
+ *   path.fromFileUrl(`file://${bufname.expr}`),
+ *   "C:\\Users\\John Titor\\test.git",
+ * );
+ * ```
  */
 export function parse(bufname: string): Bufname {
   if (bufnameUnusablePattern.test(bufname)) {
