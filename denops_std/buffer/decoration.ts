@@ -7,7 +7,7 @@ import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 
 const cacheKey = Symbol("denops_std/buffer/decoration/vimDecorate/rs");
 
-export type Decoration = {
+export interface Decoration {
   // Line number
   line: number;
   // Column number (bytes)
@@ -16,10 +16,39 @@ export type Decoration = {
   length: number;
   // Highlight name
   highlight: string;
-};
+}
 
 /**
  * Decorate the specified buffer with decorations
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { decorate, open } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // ...
+ *   await decorate(denops, bufnr, [
+ *     {
+ *       line: 1,
+ *       column: 1,
+ *       length: 10,
+ *       highlight: "Special",
+ *     },
+ *     {
+ *       line: 2,
+ *       column: 2,
+ *       length: 3,
+ *       highlight: "Comment",
+ *     },
+ *   ]);
+ * }
+ * ```
+ *
+ * It uses `prop_add_list` in Vim and `nvim_buf_add_highlight` in Neovim to
+ * decorate the buffer.
  */
 export function decorate(
   denops: Denops,
@@ -38,6 +67,45 @@ export function decorate(
 
 /**
  * Undecorate the specified buffer
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import * as fn from "../function/mod.ts";
+ * import { decorate, open, undecorate } from "../buffer/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   await open(denops, "README.md");
+ *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   // ...
+ *   await decorate(denops, bufnr, [
+ *     {
+ *       line: 1,
+ *       column: 1,
+ *       length: 10,
+ *       highlight: "Special",
+ *     },
+ *     {
+ *       line: 2,
+ *       column: 2,
+ *       length: 3,
+ *       highlight: "Comment",
+ *     },
+ *   ]);
+ *
+ *   // Do something
+ *
+ *   // Ranges are 0-based and exclusive.
+ *   // Remove only the first highlight.
+ *   const start = 0;
+ *   const end = 1;
+ *   await undecorate(denops, bufnr, start, end);
+ *   // Start and end are optional. Defaults are 0 and -1 (entire buffer).
+ *   // await undecorate(denops, bufnr);
+ * }
+ * ```
+ *
+ * It uses `prop_add` in Vim and `nvim_buf_add_highlight` in Neovim to decorate the
+ * buffer.
  */
 export function undecorate(
   denops: Denops,
