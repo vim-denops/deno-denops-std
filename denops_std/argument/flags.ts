@@ -7,6 +7,31 @@ const shortPattern = /^-([a-zA-Z0-9])(.*)/;
 
 /**
  * Parse string array to extract flags (-f/--flag).
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { parseFlags } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [flags, residues] = parseFlags(args);
+ *
+ *   console.log(flags);
+ *   // { "f": "", "foo": "foo", "bar": ["bar", "baz"] }
+ *
+ *   console.log(residues);
+ *   // ["++enc=sjis", "++ff=dos", "hello", "world"]
+ * }
+ * ```
  */
 export function parseFlags(args: string[]): [Flags, string[]] {
   const patterns = [longPattern, shortPattern];
@@ -39,6 +64,27 @@ export function parseFlags(args: string[]): [Flags, string[]] {
 
 /**
  * Validate if `flags` has unknown attributes.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { parse, validateFlags } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [_opts, flags, _residues] = parse(args);
+ *
+ *   validateFlags(flags, ["f", "foo", "bar"]);
+ * }
+ * ```
  */
 export function validateFlags(flags: Flags, knownAttributes: string[]): void {
   Object.keys(flags).forEach((v) => {
@@ -54,6 +100,19 @@ export function validateFlags(flags: Flags, knownAttributes: string[]): void {
 
 /**
  * Format `key` and `value` to construct string array.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { formatFlag } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   console.log(formatFlag("f", ""));
+ *   // "-f"
+ *
+ *   console.log(formatFlag("foo", "value"));
+ *   // "--foo=value"
+ * }
+ * ```
  */
 export function formatFlag(
   key: string,
@@ -72,6 +131,28 @@ export function formatFlag(
 
 /**
  * Format `flags` to construct string array.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { formatFlags, parse } from "./mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const args = [
+ *     "++enc=sjis",
+ *     "++ff=dos",
+ *     "-f",
+ *     "--foo=foo",
+ *     "--bar=bar",
+ *     "--bar=baz",
+ *     "hello",
+ *     "world",
+ *   ];
+ *   const [_opts, flags, _residues] = parse(args);
+ *
+ *   console.log(formatFlags(flags));
+ *   // "-f --foo=foo --bar=bar --bar=baz"
+ * }
+ * ```
  */
 export function formatFlags(flags: Flags, includes?: string[]): string[] {
   let entries = Object.entries(flags);
