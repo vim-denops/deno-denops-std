@@ -14,6 +14,72 @@ export type LoadOptions = {
  *
  * It does nothing if the `url` is already loaded unless `force` option is specified.
  * It returns `true` when the script is loaded. Otherwise, it returns `false`.
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { load } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Load '../../foo.vim' from this file
+ *   await load(denops, new URL("../../foo.vim", import.meta.url));
+ *
+ *   // Load 'https://example.com/foo.vim'
+ *   await load(denops, new URL("https://example.com/foo.vim"));
+ * }
+ * ```
+ *
+ * It does nothing if the `url` is already loaded unless `force` option is
+ * specified like:
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { load } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const url = new URL("../../foo.vim", import.meta.url);
+ *
+ *   // Line below loads a script
+ *   await load(denops, url);
+ *
+ *   // Line below does nothing while `url` is already loaded.
+ *   await load(denops, url);
+ *
+ *   // Line below loads the script while `force` option is specified.
+ *   await load(denops, url, { force: true });
+ * }
+ * ```
+ *
+ * It returns `true` when the script is loaded. Otherwise, it returns `false` like:
+ *
+ * ```typescript
+ * import { Denops } from "../mod.ts";
+ * import { load } from "../helper/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const url = new URL("../../foo.vim", import.meta.url);
+ *
+ *   console.log(await load(denops, url));
+ *   // -> true
+ *
+ *   console.log(await load(denops, url));
+ *   // -> false
+ *
+ *   console.log(await load(denops, url, { force: true }));
+ *   // -> true
+ * }
+ * ```
+ *
+ * Note that denops plugins works on individual threads so developers should add a
+ * source guard on a Vim script as well like:
+ *
+ * ```vim
+ * if has('g:loaded_xxxxx')
+ *   finish
+ * endif
+ * let g:loaded_xxxxx = 1
+ *
+ * " Define functions or whatever
+ * ```
  */
 export async function load(
   denops: Denops,
