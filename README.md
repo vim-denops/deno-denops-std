@@ -11,8 +11,8 @@
 used in denops plugin and the code is assumed to be called in a worker thread
 for a plugin.
 
-See [Module README](./denops_std/README.md) for quick usage and API
-documentations and see
+See [deno doc](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts) for
+quick usage and API documentations and see
 [Denops Documentation](https://vim-denops.github.io/denops-documentation/) for
 learning how to write Vim/Neovim plugins.
 
