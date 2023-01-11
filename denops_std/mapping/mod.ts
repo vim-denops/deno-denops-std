@@ -3,7 +3,7 @@
  *
  * @module
  */
-import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v3.4.2/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as batch from "../batch/mod.ts";
 import { Mapping, Mode } from "./types.ts";
