@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
@@ -389,38 +389,7 @@ export interface ReplaceOptions {
 }
 
 /**
- * Assign content to the buffer with given format and encoding.
- *
- * @deprecated Use `decode()` and `replace()` individually instead.
- */
-export async function assign(
-  denops: Denops,
-  bufnr: number,
-  data: Uint8Array,
-  options: AssignOptions = {},
-): Promise<void> {
-  const { content, fileformat, fileencoding } = await decode(
-    denops,
-    bufnr,
-    data,
-    options,
-  );
-  const preprocessor = options.preprocessor ?? ((v: string[]) => v);
-  const repl = preprocessor(content);
-  await replace(denops, bufnr, repl, {
-    fileformat,
-    fileencoding,
-  });
-}
-
-export interface AssignOptions extends DecodeOptions {
-  preprocessor?: (repl: string[]) => string[];
-}
-
-/**
- * Concrete the buffer
- *
- * This function will perform the followings
+ * Concrete the buffer.
  *
  * - The `buftype` option become "nofile"
  * - The `swapfile` become disabled

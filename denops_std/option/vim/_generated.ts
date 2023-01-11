@@ -1,5 +1,5 @@
 // NOTE: This file is generated. Do NOT modify it manually.
-import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
@@ -64,8 +64,34 @@ export const antialias = {
  * When on, Vim will change the current working directory whenever you
  * change the directory of the shell running in a terminal window. You
  * need proper setting-up, so whenever the shell's pwd changes an OSC 7
- * escape sequence will be emitted. For example, on Linux, you can source
- * /etc/profile.d/vte.sh in your shell profile if you use bash or zsh.
+ * escape sequence will be emitted.  For example, on Linux, you can
+ * source /etc/profile.d/vte.sh in your shell profile if you use bash or
+ * zsh.  For bash this should work (put it in a bash init file): >
+ * 	if [[ -n "$VIM_TERMINAL" ]]; then
+ * 	    PROMPT_COMMAND='_vim_sync_PWD'
+ * 	    function _vim_sync_PWD() {
+ * 		printf '\033]7;file://%s\033\\' "$PWD"
+ * 	    }
+ * 	fi
+ * <
+ * Or, in a zsh init file: >
+ * 	if [[ -n "$VIM_TERMINAL" ]]; then
+ * 	    autoload -Uz add-zsh-hook
+ * 	    add-zsh-hook -Uz chpwd _vim_sync_PWD
+ * 	    function _vim_sync_PWD() {
+ * 		printf '\033]7;file://%s\033\\' "$PWD"
+ * 	    }
+ * 	fi
+ * <
+ * In a fish init file: >
+ * 	if test -n "$VIM_TERMINAL"
+ * 	    function _vim_sync_PWD --on-variable=PWD
+ * 		printf '\033]7;file://%s\033\\' "$PWD"
+ * 	    end
+ * 	end
+ * <
+ * You can find an alternative method at |terminal-autoshelldir|.
+ * When the parsing of the OSC sequence fails you get  .
  */
 export const autoshelldir = {
   async get(denops: Denops): Promise<boolean> {
@@ -85,6 +111,58 @@ export const autoshelldir = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "autoshelldir");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+balloon_eval|
+ * 		feature}
+ * Delay in milliseconds before a balloon may pop up.  See |balloon-eval|.
+ */
+export const balloondelay = {
+  async get(denops: Denops): Promise<number> {
+    return await options.get(denops, "balloondelay") ?? 0;
+  },
+  set(denops: Denops, value: number): Promise<void> {
+    return options.set(denops, "balloondelay", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "balloondelay");
+  },
+  async getGlobal(denops: Denops): Promise<number> {
+    return await globalOptions.get(denops, "balloondelay") ?? 0;
+  },
+  setGlobal(denops: Denops, value: number): Promise<void> {
+    return globalOptions.set(denops, "balloondelay", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "balloondelay");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+balloon_eval|
+ * 		feature}
+ * Switch on the |balloon-eval| functionality for the GUI.
+ */
+export const ballooneval = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "ballooneval") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "ballooneval", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "ballooneval");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "ballooneval") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "ballooneval", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "ballooneval");
   },
 };
 
@@ -111,6 +189,43 @@ export const balloonevalterm = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "balloonevalterm");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+balloon_eval|
+ * 		feature}
+ * Expression for text to show in evaluation balloon.  It is only used
+ * when 'ballooneval' or 'balloonevalterm' is on.  These variables can be
+ * used:
+ */
+export const balloonexpr = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "balloonexpr") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "balloonexpr", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "balloonexpr");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "balloonexpr") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "balloonexpr", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "balloonexpr");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "balloonexpr") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "balloonexpr", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "balloonexpr");
   },
 };
 
@@ -237,7 +352,7 @@ export const conskey = {
  *    xchacha20	XChaCha20 Cipher with Poly1305 Message Authentication
  * 		Code.  Medium strong till strong encryption.
  * 		Encryption is provided by the libsodium library, it
- * 		requires Vim to be built with |+sodium|
+ * 		requires Vim to be built with |+sodium|.
  * 		It adds a seed and a message authentication code (MAC)
  * 		to the file.  This needs at least a Vim 8.2.3022 to
  * 		read the encrypted file.
@@ -484,8 +599,39 @@ export const guiheadroom = {
 };
 
 /**
+ * 		{only for GTK GUI}
+ * List of ASCII characters that, when combined together, can create more
+ * complex shapes. Each character must be a printable ASCII character
+ * with a value in the 32-127 range.
+ * Example: >
+ * 	:set guiligatures=!\"#$%&()*+-./:<=>?@[]^_{\|~
+ * <	Changing this option updates screen output immediately. Set it to an
+ * empty string to disable ligatures.
+ */
+export const guiligatures = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "guiligatures") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "guiligatures", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "guiligatures");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "guiligatures") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "guiligatures", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "guiligatures");
+  },
+};
+
+/**
  * This option can be used to set highlighting mode for various
- * occasions.  It is a comma separated list of character pairs.  The
+ * occasions.  It is a comma-separated list of character pairs.  The
  * first character in a pair gives the occasion, the second the mode to
  * use for that occasion.  The occasions are:
  * |hl-SpecialKey|	 8  Meta and special keys listed with ":map"
@@ -497,6 +643,7 @@ export const guiheadroom = {
  * |hl-ErrorMsg|	 e  error messages
  * 		 h  (obsolete, ignored)
  * |hl-IncSearch|	 i  'incsearch' highlighting
+ * |hl-CurSearch|	 y  current instance of last search pattern
  * |hl-Search|	 l  last search pattern highlighting (see 'hlsearch')
  * |hl-MoreMsg|	 m  |more-prompt|
  * |hl-ModeMsg|	 M  Mode (e.g., "-- INSERT --")
@@ -560,7 +707,9 @@ export const highlight = {
 
 /**
  * This option specifies a function that will be called to
- * activate or deactivate the Input Method.
+ * activate or deactivate the Input Method.  The value can be the name of
+ * a function, a |lambda| or a |Funcref|. See |option-value-function| for
+ * more information.
  * It is not used in the MS-Windows GUI version.
  * The expression will be evaluated in the |sandbox| when set from a
  * modeline, see |sandbox-option|.
@@ -621,6 +770,8 @@ export const imactivatekey = {
 /**
  * This option specifies a function that is called to obtain the status
  * of Input Method.  It must return a positive number when IME is active.
+ * The value can be the name of a function, a |lambda| or a |Funcref|.
+ * See |option-value-function| for more information.
  * It is not used in the MS-Windows GUI version.
  */
 export const imstatusfunc = {
@@ -674,6 +825,39 @@ export const imstyle = {
 };
 
 /**
+ * Makes Vim work in a way that Insert mode is the default mode.  Useful
+ * if you want to use Vim as a modeless editor.  Used for |evim|.
+ * These Insert mode commands will be useful:
+ * - Use the cursor keys to move around.
+ * - Use CTRL-O to execute one Normal mode command |i_CTRL-O|.  When
+ *   this is a mapping, it is executed as if 'insertmode' was off.
+ *   Normal mode remains active until the mapping is finished.
+ * - Use CTRL-L to execute a number of Normal mode commands, then use
+ *   <Esc> to get back to Insert mode.  Note that CTRL-L moves the cursor
+ *   left, like <Esc> does when 'insertmode' isn't set.  |i_CTRL-L|
+ */
+export const insertmode = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "insertmode") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "insertmode", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "insertmode");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "insertmode") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "insertmode", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "insertmode");
+  },
+};
+
+/**
  * 		{only available when compiled with the |+langmap|
  * 		feature}
  * This is just like 'langremap' but with the value inverted.  It only
@@ -698,6 +882,36 @@ export const langnoremap = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "langnoremap");
+  },
+};
+
+/**
+ * The maximum number of combining characters supported for displaying.
+ * Only used when 'encoding' is "utf-8".
+ * The default is OK for most languages.  Hebrew may require 4.
+ * Maximum value is 6.
+ * Even when this option is set to 2 you can still edit text with more
+ * combining characters, you just can't see them.  Use |g8| or |ga|.
+ * See |mbyte-combining|.
+ */
+export const maxcombine = {
+  async get(denops: Denops): Promise<number> {
+    return await options.get(denops, "maxcombine") ?? 0;
+  },
+  set(denops: Denops, value: number): Promise<void> {
+    return options.set(denops, "maxcombine", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "maxcombine");
+  },
+  async getGlobal(denops: Denops): Promise<number> {
+    return await globalOptions.get(denops, "maxcombine") ?? 0;
+  },
+  setGlobal(denops: Denops, value: number): Promise<void> {
+    return globalOptions.set(denops, "maxcombine", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "maxcombine");
   },
 };
 
@@ -987,6 +1201,37 @@ export const shortname = {
 };
 
 /**
+ * The value of this option determines the scroll behavior when opening,
+ * closing or resizing horizontal splits. When "on", splitting a window
+ * horizontally will keep the same relative cursor position in the old and
+ * new window, as well windows that are resized. When "off", scrolling
+ * will be avoided to stabilize the window content. Instead, the cursor
+ * position will be changed when necessary. In this case, the jumplist
+ * will be populated with the previous cursor position. Scrolling cannot
+ * be guaranteed to be avoided when 'wrap' is enabled.
+ */
+export const splitscroll = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "splitscroll") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "splitscroll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "splitscroll");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "splitscroll") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "splitscroll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "splitscroll");
+  },
+};
+
+/**
  * When this option is not empty a swap file is synced to disk after
  * writing to it.  This takes some time, especially on busy unix systems.
  * When this option is empty parts of the swap file may be in memory and
@@ -1101,6 +1346,9 @@ export const termwinkey = {
  * Number of scrollback lines to keep.  When going over this limit the
  * first 10% of the scrollback lines are deleted.  This is just to reduce
  * the memory usage.  See |Terminal-Normal|.
+ * Also used as a limit for text sent to the terminal in one write,
+ * multiplied by the number of columns times 3 (average number of bytes
+ * per cell).
  */
 export const termwinscroll = {
   async get(denops: Denops): Promise<number> {
@@ -1244,8 +1492,7 @@ export const textmode = {
 };
 
 /**
- * 		{only for |+GUI_GTK|, |+GUI_Athena|, |+GUI_Motif| and
- * 		|+GUI_Photon|}
+ * 		{only for |+GUI_GTK|, |+GUI_Motif| and |+GUI_Photon|}
  * The contents of this option controls various toolbar settings.  The
  * possible values are:
  * 	icons		Toolbar buttons are shown with icons.
@@ -1341,6 +1588,36 @@ export const ttybuiltin = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "ttybuiltin");
+  },
+};
+
+/**
+ * Indicates a fast terminal connection.  More characters will be sent to
+ * the screen for redrawing, instead of using insert/delete line
+ * commands.  Improves smoothness of redrawing when there are multiple
+ * windows and the terminal does not support a scrolling region.
+ * Also enables the extra writing of characters at the end of each screen
+ * line for lines that wrap.  This helps when using copy/paste with the
+ * mouse in an xterm and other terminals.
+ */
+export const ttyfast = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "ttyfast") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "ttyfast", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "ttyfast");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "ttyfast") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "ttyfast", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "ttyfast");
   },
 };
 
@@ -1460,7 +1737,7 @@ export const ttytype = {
  * When non-empty, the viminfo file is read upon startup and written
  * when exiting Vim (see |viminfo-file|). Except when 'viminfofile' is
  * "NONE".
- * The string should be a comma separated list of parameters, each
+ * The string should be a comma-separated list of parameters, each
  * consisting of a single character identifying the particular parameter,
  * followed by a number or string which specifies the value of that
  * parameter.  If a particular character is left out, then the default

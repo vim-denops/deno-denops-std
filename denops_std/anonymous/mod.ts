@@ -2,9 +2,10 @@
  * A module to provide anonymous function which is callable from
  * outside of the plugin (Vim or other plugins.)
  *
+ * @deprecated Use `lambda` module instead.
  * @module
  */
-import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
 // https://github.com/microsoft/TypeScript/issues/26223#issuecomment-674500430
 export type TupleOf<T, N extends number> = N extends N
@@ -55,6 +56,8 @@ export type Callback = (...args: unknown[]) => Promise<unknown> | unknown;
  *   });
  * }
  * ```
+ *
+ * @deprecated Use `lambda.register()` function instead.
  */
 export function add<N extends number>(
   denops: Denops,
@@ -98,6 +101,8 @@ export function add<N extends number>(
  *   await denops.dispatch(denops.name, ids[0]);
  * }
  * ```
+ *
+ * @deprecated Use `lambda.register()` function instead.
  */
 export function once<N extends number>(
   denops: Denops,
@@ -147,6 +152,8 @@ export function once<N extends number>(
  *   await denops.dispatch(denops.name, ids[1]);
  * }
  * ```
+ *
+ * @deprecated Use `lambda.unregister()` function instead.
  */
 export function remove<N extends number>(
   denops: Denops,
