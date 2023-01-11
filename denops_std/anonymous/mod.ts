@@ -5,7 +5,7 @@
  * @deprecated Use `lambda` module instead.
  * @module
  */
-import type { Denops } from "https://deno.land/x/denops_core@v3.4.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
 // https://github.com/microsoft/TypeScript/issues/26223#issuecomment-674500430
 export type TupleOf<T, N extends number> = N extends N

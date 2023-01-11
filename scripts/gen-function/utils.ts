@@ -1,4 +1,4 @@
-import * as streams from "https://deno.land/std@0.170.0/streams/mod.ts";
+import * as streams from "https://deno.land/std@0.171.0/streams/mod.ts";
 
 export async function downloadString(url: string): Promise<string> {
   const textDecoder = new TextDecoder();
