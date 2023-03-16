@@ -24,8 +24,8 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   }
   denops.context[cacheKey] = true;
   const script = `
-  function! DenopsStdBufferOpen_${suffix}(mods, opener, cmdarg, bufname) abort
-    execute printf('%s %s %s \`=a:bufname\`', a:mods, a:opener, a:cmdarg)
+  function! DenopsStdBufferOpen_${suffix}(bang, mods, opener, cmdarg, bufname) abort
+    execute printf('%s %s%s %s \`=a:bufname\`', a:mods, a:opener, a:bang ? '!' : '', a:cmdarg)
     return {
           \\ 'winid': win_getid(),
           \\ 'bufnr': bufnr(),
@@ -186,11 +186,13 @@ export async function open(
   options: OpenOptions = {},
 ): Promise<OpenResult> {
   const suffix = await ensurePrerequisites(denops);
+  const bang = options.bang ?? false;
   const mods = options.mods ?? "";
   const cmdarg = options.cmdarg ?? "";
   const opener = options.opener ?? "edit";
   return await denops.call(
     `DenopsStdBufferOpen_${suffix}`,
+    bang,
     mods,
     opener,
     cmdarg,
@@ -199,6 +201,7 @@ export async function open(
 }
 
 export interface OpenOptions {
+  bang?: boolean;
   mods?: string;
   cmdarg?: string;
   opener?: string;

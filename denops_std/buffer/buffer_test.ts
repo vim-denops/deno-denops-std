@@ -1,4 +1,7 @@
-import { assertEquals } from "https://deno.land/std@0.171.0/testing/asserts.ts";
+import {
+  assertEquals,
+  assertRejects,
+} from "https://deno.land/std@0.171.0/testing/asserts.ts";
 import { test } from "https://deno.land/x/denops_test@v1.0.1/mod.ts";
 import { default as Encoding } from "https://cdn.skypack.dev/encoding-japanese@2.0.0/";
 import * as fn from "../function/mod.ts";
@@ -57,6 +60,32 @@ test({
             assertEquals(await fn.bufnr(denops), info.bufnr);
             assertEquals(await fn.winnr(denops), info.winnr);
             assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+          },
+        });
+        await t.step({
+          name: "opens a new buffer fails when modified (nohidden)",
+          fn: async () => {
+            await denops.cmd("set modified nohidden");
+            await assertRejects(
+              () => open(denops, "Hello world"),
+              Error,
+              "No write since last change (add ! to override)",
+            );
+            await denops.cmd("set nomodified");
+          },
+        });
+        await t.step({
+          name: "opens a new buffer when modified with bang (nohidden)",
+          fn: async () => {
+            await denops.cmd("set modified nohidden");
+            const info = await open(denops, "Hello world", { bang: true });
+            const bufname = await fn.bufname(denops);
+            assertEquals("Hello world", bufname);
+            assertEquals(await fn.win_getid(denops), info.winid);
+            assertEquals(await fn.bufnr(denops), info.bufnr);
+            assertEquals(await fn.winnr(denops), info.winnr);
+            assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+            await denops.cmd("set nomodified");
           },
         });
       },
