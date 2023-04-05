@@ -1,6 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import { execute } from "./execute.ts";
-import { batch } from "../batch/mod.ts";
 import { generateUniqueString } from "../util.ts";
 
 const cacheKey = Symbol("denops_std/helper/echo");
@@ -16,13 +15,15 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   let g:loaded_denops_std_helper_echo_${suffix} = 1
   let s:denops_std_helper_echo_timer = 0
 
-  function! DenopsStdHelperEcho_${suffix}(message) abort
+  function! DenopsStdHelperEcho_${suffix}(message, highlight) abort
     call timer_stop(s:denops_std_helper_echo_timer)
-    let s:denops_std_helper_echo_timer = timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message) })
+    let s:denops_std_helper_echo_timer = timer_start(0, { -> s:DenopsStdHelperEchoInternal_${suffix}(a:message, a:highlight) })
   endfunction
 
-  function! s:DenopsStdHelperEchoInternal_${suffix}(message) abort
+  function! s:DenopsStdHelperEchoInternal_${suffix}(message, highlight) abort
+    if a:highlight !=# '' | execute 'echohl' a:highlight | endif
     redraw | echo a:message
+    if a:highlight !=# '' | echohl None | endif
   endfunction
   `;
   await execute(denops, script);
@@ -201,11 +202,7 @@ export async function echoerr(
   if (denops.meta.mode === "test") {
     return Promise.resolve();
   } else {
-    await batch(denops, async (denops) => {
-      await denops.cmd("echohl ErrorMsg");
-      await echoInternal(denops, message);
-      await denops.cmd("echohl None");
-    });
+    await echoInternal(denops, message, "ErrorMsg");
   }
 }
 
@@ -250,7 +247,11 @@ export async function friendlyCall(
   }
 }
 
-async function echoInternal(denops: Denops, message: string): Promise<void> {
+async function echoInternal(
+  denops: Denops,
+  message: string,
+  highlight?: string,
+): Promise<void> {
   const suffix = await ensurePrerequisites(denops);
-  await denops.call(`DenopsStdHelperEcho_${suffix}`, message);
+  await denops.call(`DenopsStdHelperEcho_${suffix}`, message, highlight ?? "");
 }
