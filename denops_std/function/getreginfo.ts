@@ -51,6 +51,7 @@ export type GetreginfoResult = {
  * 			deleted text.
  * The {regname} argument is a string.  If {regname} is invalid
  * or not set, an empty Dictionary will be returned.
+ * If {regname} is "" or "@", the unnamed register '"' is used.
  * If {regname} is not specified, |v:register| is used.
  * The returned Dictionary can be passed to |setreg()|.
  * In |Vim9-script| {regname} must be one character.
