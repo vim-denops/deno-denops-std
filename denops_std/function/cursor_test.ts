@@ -42,10 +42,14 @@ test({
       name: "line()",
       fn: async () => {
         await denops.cmd("enew!");
+        const winid = await denops.call("bufwinid", "%") as number;
         await denops.call("setline", 1, ["a", "b", "c"]);
+
         assertNumber(await cursor.line(denops, "."));
         assertEquals(await cursor.line(denops, "."), 1);
         assertEquals(await cursor.line(denops, "$"), 3);
+        assertNumber(await cursor.line(denops, ".", winid));
+        assertEquals(await cursor.line(denops, ".", winid), 1);
       },
     });
 
@@ -80,6 +84,9 @@ test({
       name: "screenpos()",
       fn: async () => {
         await denops.cmd("enew!");
+        const winid = await denops.call("bufwinid", "%") as number;
+
+        assertScreenPos(await cursor.screenpos(denops, winid, 1, 1));
         assertScreenPos(await cursor.screenpos(denops, "%", 1, 1));
         // screenpos() returns `{}` if failed
         assertEquals(
@@ -93,7 +100,14 @@ test({
       name: "getcurpos",
       fn: async () => {
         await denops.cmd("enew!");
+        const winid = await denops.call("bufwinid", "%") as number;
+
         assertPosition(await cursor.getcurpos(denops));
+        assertEquals(await cursor.getcurpos(denops), [0, 1, 1, 0, 1]);
+        assertPosition(await cursor.getcurpos(denops, winid));
+        assertEquals(await cursor.getcurpos(denops, winid), [0, 1, 1, 0, 1]);
+        assertEquals(await cursor.getcurpos(denops, "%"), [0, 1, 1, 0, 1]);
+        assertEquals(await cursor.getcurpos(denops, -1), [0, 0, 0, 0, 0]);
       },
     });
 
