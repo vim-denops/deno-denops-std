@@ -14,10 +14,12 @@ import { BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
  * 	:if input("Coffee or beer? ") == "beer"
  * 	:  echo "Cheers!"
  * 	:endif
+ *
  * If the optional {text} argument is present and not empty, this
  * is used for the default reply, as if the user typed this.
  * Example:
  * 	:let color = input("Color? ", "white")
+ *
  * The optional {completion} argument specifies the type of
  * completion supported for the input.  Without it completion is
  * not performed.  The supported completion types are the same as
@@ -25,6 +27,7 @@ import { BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
  * "-complete=" argument.  Refer to |:command-completion| for
  * more information.  Example:
  * 	let fname = input("File: ", "", "file")
+ *
  * NOTE: This function must not be used in a startup file, for
  * the versions that only run in GUI mode (e.g., the Win32 GUI).
  * Note: When input() is called from within a mapping it will
@@ -34,13 +37,15 @@ import { BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
  * after input() to avoid that.  Another solution is to avoid
  * that further characters follow in the mapping, e.g., by using
  * |:execute| or |:normal|.
+ *
  * Example with a mapping:
- * 	:nmap \x :call GetFoo()<CR>:exe "/" . Foo<CR
+ * 	:nmap \x :call GetFoo()<CR>:exe "/" .. Foo<CR>
  * 	:function GetFoo()
  * 	:  call inputsave()
  * 	:  let g:Foo = input("enter search pattern: ")
  * 	:  call inputrestore()
  * 	:endfunction
+ *
  * Can also be used as a |method|:
  * 	GetPrompt()->input()
  */
@@ -65,16 +70,18 @@ export function input(
  * displayed, one string per line.  The user will be prompted to
  * enter a number, which is returned.
  * The user can also select an item by clicking on it with the
- * mouse.  For the first string 0 is returned.  When clicking
- * above the first item a negative number is returned.  When
- * clicking on the prompt one more than the length of {textlist}
- * is returned.
+ * mouse, if the mouse is enabled in the command line ('mouse' is
+ * "a" or includes "c").  For the first string 0 is returned.
+ * When clicking above the first item a negative number is
+ * returned.  When clicking on the prompt one more than the
+ * length of {textlist} is returned.
  * Make sure {textlist} has less than 'lines' entries, otherwise
  * it won't work.  It's a good idea to put the entry number at
  * the start of the string.  And put a prompt in the first item.
  * Example:
  * 	let color = inputlist(['Select color:', '1. red',
  * 		\ '2. green', '3. blue'])
+ *
  * Can also be used as a |method|:
  * 	GetChoices()->inputlist()
  */
@@ -86,10 +93,11 @@ export function inputlist(denops: Denops, textlist: string[]): Promise<number> {
  * Restore typeahead that was saved with a previous |inputsave()|.
  * Should be called the same number of times inputsave() is
  * called.  Calling it more often is harmless though.
- * Returns 1 when there is nothing to restore, 0 otherwise.
+ * Returns TRUE when there is nothing to restore, FALSE otherwise.
  */
-export function inputrestore(denops: Denops): Promise<void> {
-  return denops.call("inputrestore") as Promise<void>;
+export async function inputrestore(denops: Denops): Promise<boolean> {
+  const result = await denops.call("inputrestore") as number;
+  return !!result;
 }
 
 /**
@@ -98,10 +106,11 @@ export function inputrestore(denops: Denops): Promise<void> {
  * followed by a matching inputrestore() after the prompt.  Can
  * be used several times, in which case there must be just as
  * many inputrestore() calls.
- * Returns 1 when out of memory, 0 otherwise.
+ * Returns TRUE when out of memory, FALSE otherwise.
  */
-export function inputsave(denops: Denops): Promise<void> {
-  return denops.call("inputsave") as Promise<void>;
+export async function inputsave(denops: Denops): Promise<boolean> {
+  const result = await denops.call("inputsave") as number;
+  return !!result;
 }
 
 /**
@@ -114,6 +123,7 @@ export function inputsave(denops: Denops): Promise<void> {
  * The result is a String, which is whatever the user actually
  * typed on the command-line in response to the issued prompt.
  * NOTE: Command-line completion is not supported.
+ *
  * Can also be used as a |method|:
  * 	GetPrompt()->inputsecret()
  */
