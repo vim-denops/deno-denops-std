@@ -6,7 +6,8 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  * a non-empty String (|non-zero-arg|), then the full mode is
  * returned, otherwise only the first letter is returned.
  * Also see |state()|.
- *    n	    Normal, Terminal-Normal
+ *
+ *    n	    Normal
  *    no	    Operator-pending
  *    nov	    Operator-pending (forced characterwise |o_v|)
  *    noV	    Operator-pending (forced linewise |o_V|)
@@ -15,9 +16,13 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *    niI	    Normal using |i_CTRL-O| in |Insert-mode|
  *    niR	    Normal using |i_CTRL-O| in |Replace-mode|
  *    niV	    Normal using |i_CTRL-O| in |Virtual-Replace-mode|
+ *    nt	    Terminal-Normal (insert goes to Terminal-Job mode)
  *    v	    Visual by character
+ *    vs	    Visual by character using |v_CTRL-O| in Select mode
  *    V	    Visual by line
+ *    Vs	    Visual by line using |v_CTRL-O| in Select mode
  *    CTRL-V   Visual blockwise
+ *    CTRL-Vs  Visual blockwise using |v_CTRL-O| in Select mode
  *    s	    Select by character
  *    S	    Select by line
  *    CTRL-S   Select blockwise
@@ -26,8 +31,10 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *    ix	    Insert mode |i_CTRL-X| completion
  *    R	    Replace |R|
  *    Rc	    Replace mode completion |compl-generic|
- *    Rv	    Virtual Replace |gR|
  *    Rx	    Replace mode |i_CTRL-X| completion
+ *    Rv	    Virtual Replace |gR|
+ *    Rvc	    Virtual Replace mode completion |compl-generic|
+ *    Rvx	    Virtual Replace mode |i_CTRL-X| completion
  *    c	    Command-line editing
  *    cv	    Vim Ex mode |gQ|
  *    ce	    Normal Ex mode |Q|
@@ -36,12 +43,14 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *    r?	    A |:confirm| query of some sort
  *    !	    Shell or external command is executing
  *    t	    Terminal-Job mode: keys go to the job
+ *
  * This is useful in the 'statusline' option or when used
  * with |remote_expr()| In most other places it always returns
  * "c" or "n".
  * Note that in the future more modes and more specific modes may
  * be added. It's better not to compare the whole string but only
  * the leading character(s).
+ *
  * Also see |visualmode()|.
  * Can also be used as a |method|:
  * 	DoFull()->mode()
