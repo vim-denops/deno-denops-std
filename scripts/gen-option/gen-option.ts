@@ -8,7 +8,7 @@ import * as vimManual from "../../denops_std/option/vim/_manual.ts";
 import * as nvimManual from "../../denops_std/option/nvim/_manual.ts";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
-import { downloadString } from "./utils.ts";
+import { downloadString } from "../utils.ts";
 
 const VIM_VERSION = "9.0.0472";
 const NVIM_VERSION = "0.8.0";

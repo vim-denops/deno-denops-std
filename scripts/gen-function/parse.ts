@@ -1,5 +1,5 @@
 import { Definition, Variant } from "./types.ts";
-import { Counter, regexIndexOf } from "./utils.ts";
+import { Counter, regexIndexOf } from "../utils.ts";
 
 /**
  * Parse Vim/Neovim help.

@@ -1,5 +1,5 @@
 import { isOptionType, type Option, type OptionType } from "./types.ts";
-import { regexIndexOf } from "./utils.ts";
+import { regexIndexOf } from "../utils.ts";
 
 const fallbackTypes: Record<string, OptionType> = {
   "encoding": "string", // not defined type in nvim 0.8.0
