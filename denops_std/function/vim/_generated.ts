@@ -253,46 +253,6 @@ export function blob2list(
   return denops.call("blob2list", ...args);
 }
 
-/** */
-export function buffer_exists(denops: Denops): Promise<unknown>;
-export function buffer_exists(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("buffer_exists", ...args);
-}
-
-/**
- * Obsolete name: buffer_name().
- */
-export function buffer_name(denops: Denops): Promise<unknown>;
-export function buffer_name(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("buffer_name", ...args);
-}
-
-/**
- * Obsolete name for bufnr("$"): last_buffer_nr().
- */
-export function buffer_number(denops: Denops): Promise<unknown>;
-export function buffer_number(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("buffer_number", ...args);
-}
-
-/** */
-export function last_buffer_nr(denops: Denops): Promise<unknown>;
-export function last_buffer_nr(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("last_buffer_nr", ...args);
-}
-
 /**
  * Output {string} as-is, including unprintable characters.
  * This can be used to output a terminal code. For example, to
@@ -348,17 +308,6 @@ export function extendnew(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("extendnew", ...args);
-}
-
-/**
- * Obsolete name: file_readable().
- */
-export function file_readable(denops: Denops): Promise<unknown>;
-export function file_readable(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("file_readable", ...args);
 }
 
 /**
@@ -469,18 +418,6 @@ export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Can also be used as a |method|:
- * 	GetName()->hlexists()
- */
-export function highlight_exists(denops: Denops): Promise<unknown>;
-export function highlight_exists(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("highlight_exists", ...args);
-}
-
-/**
  * Returns a List of all the highlight group attributes.  If the
  * optional {name} is specified, then returns a List with only
  * the attributes of the specified highlight group.  Returns an
@@ -581,19 +518,6 @@ export function hlget(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function hlset(denops: Denops, list: unknown): Promise<unknown>;
 export function hlset(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hlset", ...args);
-}
-
-/**
- * Obsolete name: highlightID().
- * Can also be used as a |method|:
- * 	GetName()->hlID()
- */
-export function highlightID(denops: Denops): Promise<unknown>;
-export function highlightID(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("highlightID", ...args);
 }
 
 /**
