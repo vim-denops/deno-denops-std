@@ -15,13 +15,16 @@ import { Counter, regexIndexOf } from "./utils.ts";
  * ```
  */
 export function parse(content: string): Definition[] {
+  // Remove modeline
+  content = content.replace(/\n vim:[^\n]*\s*$/, "");
+
   const definitions: Definition[] = [];
   for (const match of content.matchAll(/\*(\w+?)\(\)\*/g)) {
     const fn = match[1];
-    const i = match.index || 0;
+    const i = match.index ?? 0;
     const s = content.lastIndexOf("\n", i);
-    const ms = regexIndexOf(content, /\n[<>\s]/, i);
-    const me = regexIndexOf(content, /\n[^<>\s]/, ms);
+    const ms = regexIndexOf(content, /\n[<>\s]|$/, i);
+    const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
     const e = content.lastIndexOf("\n", me);
     const block = content
       .substring(s, e)
@@ -49,11 +52,11 @@ export function parse(content: string): Definition[] {
  */
 function parseBlock(fn: string, body: string): Definition {
   // Remove '\n' in {variant} to make {variant} single line (ex. `searchpairpos`)
-  body = body.replaceAll(new RegExp(`^\(${fn}\\([^\)]*?\)\n\t*`, "g"), "$1");
+  body = body.replaceAll(new RegExp(`^(${fn}\\([^)]*?)\\n\\t*`, "gm"), "$1");
   // Append ')' for an invalid {variant}. (ex. `win_id2tabwin` in Neovim)
-  body = body.replaceAll(new RegExp(`^\(${fn}\\([^\)]*?\)\t+`, "g"), "$1)\t");
+  body = body.replaceAll(new RegExp(`^(${fn}\\([^)]*?)\\t+`, "gm"), "$1)\t");
   // Insert '\n' between {variant} and {document} (ex. `argidx`)
-  body = body.replaceAll(new RegExp(`^\(${fn}\\(.*?\\)\)\t`, "g"), "$1\n\t\t");
+  body = body.replaceAll(new RegExp(`^(${fn}\\(.*?\\))\\t`, "gm"), "$1\n\t\t");
 
   // Remove leading '>' or trailing '<' which is used to define code block in help
   body = body.replaceAll(/\n<|>\n/g, "\n");
