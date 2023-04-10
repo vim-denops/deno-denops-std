@@ -4147,6 +4147,7 @@ export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * The result is a Number, which is the length of the argument.
  * When {expr} is a String or a Number the length in bytes is
  * used, as with |strlen()|.
  * When {expr} is a |List| the number of items in the |List| is
@@ -5231,6 +5232,7 @@ export function menu_info(
 }
 
 /**
+ * Return the minimum value of all items in {expr}. Example:
  * 	echo min([apples, pears, oranges])
  * {expr} can be a |List| or a |Dictionary|.  For a Dictionary,
  * it returns the minimum of all values in the Dictionary.
