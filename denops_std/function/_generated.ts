@@ -4633,104 +4633,6 @@ export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * 	:let sepidx = match(line, '[.,;: \t]')
- * Vim doesn't have a strcasestr() function.  But you can add
- * "\c" to the pattern to ignore case:
- * 	:let idx = match(haystack, '\cneedle')
- * If {start} is given, the search starts from byte index
- * {start} in a String or item {start} in a |List|.
- * The result, however, is still the index counted from the
- * first character/item.  Example:
- * 	:echo match("testing", "ing", 2)
- * result is again "4".
- * 	:echo match("testing", "ing", 4)
- * result is again "4".
- * 	:echo match("testing", "t", 2)
- * result is "3".
- * For a String, if {start} > 0 then it is like the string starts
- * {start} bytes later, thus "^" will match at {start}.  Except
- * when {count} is given, then it's like matches before the
- * {start} byte are ignored (this is a bit complicated to keep it
- * backwards compatible).
- * For a String, if {start} < 0, it will be set to 0.  For a list
- * the index is counted from the end.
- * If {start} is out of range ({start} > strlen({expr}) for a
- * String or {start} > len({expr}) for a |List|) -1 is returned.
- * When {count} is given use the {count}'th match.  When a match
- * is found in a String the search for the next one starts one
- * character further.  Thus this example results in 1:
- * 	echo match("testing", "..", 0, 2)
- * In a |List| the search continues in the next item.
- * Note that when {count} is added the way {start} works changes,
- * see above.
- * See |pattern| for the patterns that are accepted.
- * The 'ignorecase' option is used to set the ignore-caseness of
- * the pattern.  'smartcase' is NOT used.  The matching is always
- * done like 'magic' is set and 'cpoptions' is empty.
- * Note that a match at the start is preferred, thus when the
- * pattern is using "*" (any number of matches) it tends to find
- * zero matches at the start instead of a number of matches
- * further down in the text.
- * Can also be used as a |method|:
- * 	GetText()->match('word')
- * 	GetList()->match('word')
- */
-export function strpbrk(denops: Denops): Promise<unknown>;
-export function strpbrk(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strpbrk", ...args);
-}
-
-/**
- * Vim doesn't have a strcasestr() function.  But you can add
- * "\c" to the pattern to ignore case:
- * 	:let idx = match(haystack, '\cneedle')
- * If {start} is given, the search starts from byte index
- * {start} in a String or item {start} in a |List|.
- * The result, however, is still the index counted from the
- * first character/item.  Example:
- * 	:echo match("testing", "ing", 2)
- * result is again "4".
- * 	:echo match("testing", "ing", 4)
- * result is again "4".
- * 	:echo match("testing", "t", 2)
- * result is "3".
- * For a String, if {start} > 0 then it is like the string starts
- * {start} bytes later, thus "^" will match at {start}.  Except
- * when {count} is given, then it's like matches before the
- * {start} byte are ignored (this is a bit complicated to keep it
- * backwards compatible).
- * For a String, if {start} < 0, it will be set to 0.  For a list
- * the index is counted from the end.
- * If {start} is out of range ({start} > strlen({expr}) for a
- * String or {start} > len({expr}) for a |List|) -1 is returned.
- * When {count} is given use the {count}'th match.  When a match
- * is found in a String the search for the next one starts one
- * character further.  Thus this example results in 1:
- * 	echo match("testing", "..", 0, 2)
- * In a |List| the search continues in the next item.
- * Note that when {count} is added the way {start} works changes,
- * see above.
- * See |pattern| for the patterns that are accepted.
- * The 'ignorecase' option is used to set the ignore-caseness of
- * the pattern.  'smartcase' is NOT used.  The matching is always
- * done like 'magic' is set and 'cpoptions' is empty.
- * Note that a match at the start is preferred, thus when the
- * pattern is using "*" (any number of matches) it tends to find
- * zero matches at the start instead of a number of matches
- * further down in the text.
- * Can also be used as a |method|:
- * 	GetText()->match('word')
- * 	GetList()->match('word')
- */
-export function strcasestr(denops: Denops): Promise<unknown>;
-export function strcasestr(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("strcasestr", ...args);
-}
-
-/**
  * Defines a pattern to be highlighted in the current window (a
  * "match").  It will be highlighted with {group}.  Returns an
  * identification number (ID), which can be used to delete the
@@ -4910,44 +4812,6 @@ export function matchend(
 ): Promise<unknown>;
 export function matchend(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("matchend", ...args);
-}
-
-/**
- * do it with matchend():
- * 	:let span = matchend(line, '[a-zA-Z]')
- * 	:let span = matchend(line, '[^a-zA-Z]')
- * Except that -1 is returned when there are no matches.
- * The {start}, if given, has the same meaning as for |match()|.
- * 	:echo matchend("testing", "ing", 2)
- * results in "7".
- * 	:echo matchend("testing", "ing", 5)
- * result is "-1".
- * When {expr} is a |List| the result is equal to |match()|.
- * Can also be used as a |method|:
- * 	GetText()->matchend('word')
- */
-export function strspn(denops: Denops): Promise<unknown>;
-export function strspn(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strspn", ...args);
-}
-
-/**
- * do it with matchend():
- * 	:let span = matchend(line, '[a-zA-Z]')
- * 	:let span = matchend(line, '[^a-zA-Z]')
- * Except that -1 is returned when there are no matches.
- * The {start}, if given, has the same meaning as for |match()|.
- * 	:echo matchend("testing", "ing", 2)
- * results in "7".
- * 	:echo matchend("testing", "ing", 5)
- * result is "-1".
- * When {expr} is a |List| the result is equal to |match()|.
- * Can also be used as a |method|:
- * 	GetText()->matchend('word')
- */
-export function strcspn(denops: Denops): Promise<unknown>;
-export function strcspn(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strcspn", ...args);
 }
 
 /**
@@ -8012,28 +7876,6 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * stridx() works similar to the C function strstr().  When used
- * with a single character it works similar to strchr().
- * Can also be used as a |method|:
- * 	GetHaystack()->stridx(needle)
- */
-export function strstr(denops: Denops): Promise<unknown>;
-export function strstr(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strstr", ...args);
-}
-
-/**
- * stridx() works similar to the C function strstr().  When used
- * with a single character it works similar to strchr().
- * Can also be used as a |method|:
- * 	GetHaystack()->stridx(needle)
- */
-export function strchr(denops: Denops): Promise<unknown>;
-export function strchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strchr", ...args);
-}
-
-/**
  * Return {expr} converted to a String.  If {expr} is a Number,
  * Float, String, Blob or a composition of them, then the result
  * can be parsed back with |eval()|.
@@ -8169,17 +8011,6 @@ export function strridx(
 ): Promise<unknown>;
 export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strridx", ...args);
-}
-
-/**
- * When used with a single character it works similar to the C
- * function strrchr().
- * Can also be used as a |method|:
- * 	GetHaystack()->strridx(needle)
- */
-export function strrchr(denops: Denops): Promise<unknown>;
-export function strrchr(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("strrchr", ...args);
 }
 
 /**

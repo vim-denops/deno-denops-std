@@ -19,18 +19,23 @@ export function parse(content: string): Definition[] {
   content = content.replace(/\n vim:[^\n]*\s*$/, "");
 
   const definitions: Definition[] = [];
+  let last = -1;
   for (const match of content.matchAll(/\*(\w+?)\(\)\*/g)) {
     const fn = match[1];
     const i = match.index ?? 0;
+    if (i < last) {
+      // It is contained previous block
+      continue;
+    }
     const s = content.lastIndexOf("\n", i);
     const ms = regexIndexOf(content, /\n[<>\s]|$/, i);
     const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
     const e = content.lastIndexOf("\n", me);
     const block = content
       .substring(s, e)
-      .replaceAll(/\*\S+?\*/g, "") // Remove tags
-      .replaceAll(/\s+\n/g, "\n") // Remove trailing '\s'
-      .trim();
+      .replace(/\n<?(?:\s+\*\S+?\*)+\s*$/, "") // Remove next block tag
+      .trimEnd();
+    last = s + block.length;
     definitions.push(parseBlock(fn, block));
   }
   return definitions;
@@ -51,6 +56,11 @@ export function parse(content: string): Definition[] {
  * This function parse content like above and return `Definition`.
  */
 function parseBlock(fn: string, body: string): Definition {
+  // Remove tags
+  body = body.replaceAll(/\*\S+?\*/g, "");
+  // Remove trailing spaces
+  body = body.split("\n").map((v) => v.trimEnd()).join("\n");
+
   // Remove '\n' in {variant} to make {variant} single line (ex. `searchpairpos`)
   body = body.replaceAll(new RegExp(`^(${fn}\\([^)]*?)\\n\\t*`, "gm"), "$1");
   // Append ')' for an invalid {variant}. (ex. `win_id2tabwin` in Neovim)
