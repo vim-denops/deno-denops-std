@@ -3,7 +3,45 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
- * 		global
+ * |channel| connected to the buffer, or 0 if no channel is connected.
+ * In a |:terminal| buffer this is the terminal channel.
+ * Read-only.
+ */
+export const channel = {
+  async get(denops: Denops): Promise<number> {
+    return await options.get(denops, "channel") ?? 0;
+  },
+  set(denops: Denops, value: number): Promise<void> {
+    return options.set(denops, "channel", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "channel");
+  },
+  async getLocal(denops: Denops): Promise<number> {
+    return await localOptions.get(denops, "channel") ?? 0;
+  },
+  setLocal(denops: Denops, value: number): Promise<void> {
+    return localOptions.set(denops, "channel", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "channel");
+  },
+};
+
+/**
+ * When nonempty, shows the effects of |:substitute|, |:smagic|,
+ * |:snomagic| and user commands with the |:command-preview| flag as you
+ * type.
+ *
+ * Possible values:
+ * 	nosplit	Shows the effects of a command incrementally in the
+ * 		buffer.
+ * 	split	Like "nosplit", but also shows partial off-screen
+ * 		results in a preview window.
+ *
+ * If the preview for built-in commands is too slow (exceeds
+ * 'redrawtime') then 'inccommand' is automatically disabled until
+ * |Command-line-mode| is done.
  */
 export const inccommand = {
   async get(denops: Denops): Promise<string> {
@@ -34,6 +72,10 @@ export const inccommand = {
  * 		subsequent entries when navigating backwards in the
  * 		jumplist and then jumping to a location.
  * 		|jumplist-stack|
+ *
+ *   view          When moving through the jumplist, |changelist|,
+ * 		|alternate-file| or using |mark-motions| try to
+ * 		restore the |mark-view| in which the action occurred.
  */
 export const jumpoptions = {
   async get(denops: Denops): Promise<string> {
@@ -57,9 +99,57 @@ export const jumpoptions = {
 };
 
 /**
+ * This option controls the number of lines / columns to scroll by when
+ * scrolling with a mouse. The option is a comma separated list of parts.
+ * Each part consists of a direction and a count as follows:
+ * 	direction:count,direction:count
+ * Direction is one of either "hor" or "ver". "hor" controls horizontal
+ * scrolling and "ver" controls vertical scrolling. Count sets the amount
+ * to scroll by for the given direction, it should be a non negative
+ * integer. Each direction should be set at most once. If a direction
+ * is omitted, a default value is used (6 for horizontal scrolling and 3
+ * for vertical scrolling). You can disable mouse scrolling by using
+ * a count of 0.
+ *
+ * Example: >
+ * 	:set mousescroll=ver:5,hor:2
+ * <	Will make Nvim scroll 5 lines at a time when scrolling vertically, and
+ * scroll 2 columns at a time when scrolling horizontally.
+ */
+export const mousescroll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "mousescroll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "mousescroll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "mousescroll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "mousescroll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "mousescroll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "mousescroll");
+  },
+};
+
+/**
  * Enables pseudo-transparency for the |popup-menu|. Valid values are in
  * the range of 0 for fully opaque popupmenu (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.
+ *
+ * It is possible to override the level for individual highlights within
+ * the popupmenu using |highlight-blend|. For instance, to enable
+ * transparency but force the current selected element to be fully opaque: >
+ *
+ * 	:set pumblend=15
+ * 	:hi PmenuSel blend=0
+ * <
+ * UI-dependent. Works best with RGB colors. 'termguicolors'
  */
 export const pumblend = {
   async get(denops: Denops): Promise<number> {
@@ -167,15 +257,18 @@ export const scrollback = {
  * parameter.  The following is a list of the identifying characters and
  * the effect of their value.
  * CHAR	VALUE	~
+ *
  * !	When included, save and restore global variables that start
  * 	with an uppercase letter, and don't contain a lowercase
  * 	letter.  Thus "KEEPTHIS and "K_L_M" are stored, but "KeepThis"
  * 	and "_K_L_M" are not.  Nested List and Dict items may not be
  * 	read back correctly, you end up with an empty item.
+ *
  * "	Maximum number of lines saved for each register.  Old name of
  * 	the '<' item, with the disadvantage that you need to put a
  * 	backslash before the ", otherwise it will be recognized as the
  * 	start of a comment!
+ *
  * %	When included, save and restore the buffer list.  If Vim is
  * 	started with a file name argument, the buffer list is not
  * 	restored.  If Vim is started without a file name argument, the
@@ -185,44 +278,55 @@ export const scrollback = {
  * 	When followed by a number, the number specifies the maximum
  * 	number of buffers that are stored.  Without a number all
  * 	buffers are stored.
+ *
  * '	Maximum number of previously edited files for which the marks
  * 	are remembered.  This parameter must always be included when
  * 	'shada' is non-empty.
  * 	Including this item also means that the |jumplist| and the
  * 	|changelist| are stored in the shada file.
+ *
  * /	Maximum number of items in the search pattern history to be
  * 	saved.  If non-zero, then the previous search and substitute
  * 	patterns are also saved.  When not included, the value of
  * 	'history' is used.
+ *
  * :	Maximum number of items in the command-line history to be
  * 	saved.  When not included, the value of 'history' is used.
+ *
  * <	Maximum number of lines saved for each register.  If zero then
  * 	registers are not saved.  When not included, all lines are
  * 	saved.  '"' is the old name for this item.
  * 	Also see the 's' item below: limit specified in KiB.
+ *
  * @	Maximum number of items in the input-line history to be
  * 	saved.  When not included, the value of 'history' is used.
+ *
  * c	Dummy option, kept for compatibility reasons.  Has no actual
  * 	effect: ShaDa always uses UTF-8 and 'encoding' value is fixed
  * 	to UTF-8 as well.
+ *
  * f	Whether file marks need to be stored.  If zero, file marks ('0
  * 	to '9, 'A to 'Z) are not stored.  When not present or when
  * 	non-zero, they are all stored.  '0 is used for the current
  * 	cursor position (when exiting or when doing |:wshada|).
+ *
  * h	Disable the effect of 'hlsearch' when loading the shada
  * 	file.  When not included, it depends on whether ":nohlsearch"
  * 	has been used since the last search command.
+ *
  * n	Name of the shada file.  The name must immediately follow
  * 	the 'n'.  Must be at the end of the option!  If the
  * 	'shadafile' option is set, that file name overrides the one
  * 	given here with 'shada'.  Environment variables are
  * 	expanded when opening the file, not when setting the option.
+ *
  * r	Removable media.  The argument is a string (up to the next
  * 	',').  This parameter can be given several times.  Each
  * 	specifies the start of a path for which no marks will be
  * 	stored.  This is to avoid removable media.  For Windows you
  * 	could use "ra:,rb:".  You can also use it for temp files,
  * 	e.g., for Unix: "r/tmp".  Case is ignored.
+ *
  * s	Maximum size of an item contents in KiB.  If zero then nothing
  * 	is saved.  Unlike Vim this applies to all items, except for
  * 	the buffer list and header.  Full item size is off by three
@@ -231,6 +335,29 @@ export const scrollback = {
  * 	integer) + 3 bytes (item size: up to 16-bit integer because
  * 	2^8 < 10240 < 2^16) + 10240 bytes (requested maximum item
  * 	contents size) = 10253 bytes.
+ *
+ * Example: >
+ *     :set shada='50,<1000,s100,:0,n~/nvim/shada
+ * <
+ * '50		Marks will be remembered for the last 50 files you
+ * 		edited.
+ * <1000		Contents of registers (up to 1000 lines each) will be
+ * 		remembered.
+ * s100		Items with contents occupying more then 100 KiB are
+ * 		skipped.
+ * :0		Command-line history will not be saved.
+ * n~/nvim/shada	The name of the file to use is "~/nvim/shada".
+ * no /		Since '/' is not specified, the default will be used,
+ * 		that is, save all of the search history, and also the
+ * 		previous search and substitute patterns.
+ * no %		The buffer list will not be saved nor read back.
+ * no h		'hlsearch' highlighting will be restored.
+ *
+ * When setting 'shada' from an empty value you can use |:rshada| to
+ * load the contents of the file, this is not done automatically.
+ *
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
  */
 export const shada = {
   async get(denops: Denops): Promise<string> {
@@ -286,6 +413,21 @@ export const shadafile = {
  * A comma-separated list of options for specifying control characters
  * to be removed from the text pasted into the terminal window. The
  * supported values are:
+ *
+ *    BS	    Backspace
+ *
+ *    HT	    TAB
+ *
+ *    FF	    Form feed
+ *
+ *    ESC	    Escape
+ *
+ *    DEL	    DEL
+ *
+ *    C0	    Other control characters, excluding Line feed and
+ * 	    Carriage return < ' '
+ *
+ *    C1	    Control characters 0x80...0x9F
  */
 export const termpastefilter = {
   async get(denops: Denops): Promise<string> {
@@ -313,6 +455,15 @@ export const termpastefilter = {
  * contents. The window bar is a bar that's shown at the top of every
  * window with it enabled. The value of 'winbar' is evaluated like with
  * 'statusline'.
+ *
+ * When changing something that is used in 'winbar' that does not trigger
+ * it to be updated, use |:redrawstatus|.
+ *
+ * Floating windows do not use the global value of 'winbar'. The
+ * window-local value of 'winbar' must be set for a floating window to
+ * have a window bar.
+ *
+ * This option cannot be set in a modeline when 'modelineexpr' is off.
  */
 export const winbar = {
   async get(denops: Denops): Promise<string> {
@@ -348,6 +499,8 @@ export const winbar = {
  * Enables pseudo-transparency for a floating window. Valid values are in
  * the range of 0 for fully opaque window (disabled) to 100 for fully
  * transparent background. Values between 0-30 are typically most useful.
+ *
+ * UI-dependent. Works best with RGB colors. 'termguicolors'
  */
 export const winblend = {
   async get(denops: Denops): Promise<number> {
@@ -375,6 +528,19 @@ export const winblend = {
  * |group-name| pairs "{hl-from}:{hl-to},..." where each {hl-from} is
  * a |highlight-groups| item to be overridden by {hl-to} group in
  * the window.
+ *
+ * Note: highlight namespaces take precedence over 'winhighlight'.
+ * See |nvim_win_set_hl_ns()| and |nvim_set_hl()|.
+ *
+ * Highlights of vertical separators are determined by the window to the
+ * left of the separator.  The 'tabline' highlight of a tabpage is
+ * decided by the last-focused window of the tabpage.  Highlights of
+ * the popupmenu are determined by the current window.  Highlights in the
+ * message area cannot be overridden.
+ *
+ * Example: show a different color for non-current windows: >
+ * 	set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC
+ * <
  */
 export const winhighlight = {
   async get(denops: Denops): Promise<string> {
