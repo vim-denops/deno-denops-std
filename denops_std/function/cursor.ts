@@ -19,23 +19,24 @@ import type { Position, ScreenPos } from "./types.ts";
  * out of range then col() returns zero.
  * To get the line number use |line()|.  To get both use
  * |getpos()|.
- * For the screen column position use |virtcol()|.
+ * For the screen column position use |virtcol()|.  For the
+ * character position use |charcol()|.
  * Note that only marks in the current file can be used.
  * Examples:
  * 	col(".")		column of cursor
  * 	col("$")		length of cursor line plus one
  * 	col("'t")		column of mark t
- * 	col("'" . markname)	column of mark markname
- * The first column is 1.  0 is returned for an error.
+ * 	col("'" .. markname)	column of mark markname
+ * The first column is 1.  Returns 0 if {expr} is invalid.
  * For an uppercase mark the column may actually be in another
  * buffer.
  * For the cursor position, when 'virtualedit' is active, the
  * column is one higher if the cursor is after the end of the
  * line.  This can be used to obtain the column in Insert mode:
- * 	:imap <F2> <C-O>:let save_ve = &ve<CR
- * 		\<C-O>:set ve=all<CR
- * 		\<C-O>:echo col(".") . "\n" <Bar
- * 		\let &ve = save_ve<CR
+ * 	:imap <F2> <C-O>:let save_ve = &ve<CR>
+ * 		\<C-O>:set ve=all<CR>
+ * 		\<C-O>:echo col(".") .. "\n" <Bar>
+ * 		\let &ve = save_ve<CR>
  * 	GetPos()->col()
  */
 export async function col(
@@ -57,12 +58,13 @@ export async function col(
  * set to 8, it returns 8. |conceal| is ignored.
  * For the byte position use |col()|.
  * For the use of {expr} see |col()|.
- * When 'virtualedit' is used {expr} can be [lnum, col, off], where
- * "off" is the offset in screen columns from the start of the
- * character.  E.g., a position within a <Tab> or after the last
- * character.  When "off" is omitted zero is used.
- * When Virtual editing is active in the current mode, a position
- * beyond the end of the line can be returned. |'virtualedit'|
+ * When 'virtualedit' is used {expr} can be [lnum, col, off],
+ * where "off" is the offset in screen columns from the start of
+ * the character.  E.g., a position within a <Tab> or after the
+ * last character.  When "off" is omitted zero is used.  When
+ * Virtual editing is active in the current mode, a position
+ * beyond the end of the line can be returned.  Also see
+ * |'virtualedit'|
  * The accepted positions are:
  *     .	    the cursor position
  *     $	    the end of the cursor line (the result is the
@@ -101,7 +103,8 @@ export async function virtcol(
 
 /**
  * The result is a Number, which is the line number of the file
- * position given with {expr}.  The accepted positions are:
+ * position given with {expr}.  The {expr} argument is a string.
+ * The accepted positions are:
  *     .	    the cursor position
  *     $	    the last line in the current buffer
  *     'x	    position of mark x (if the mark is not set, 0 is
@@ -118,17 +121,27 @@ export async function virtcol(
  * then applies to another buffer.
  * To get the column number use |col()|.  To get both use
  * |getpos()|.
+ * With the optional {winid} argument the values are obtained for
+ * that window instead of the current window.
+ * Returns 0 for invalid values of {expr} and {winid}.
  * Examples:
  * 	line(".")		line number of the cursor
+ * 	line(".", winid)	idem, in window "winid"
  * 	line("'t")		line number of mark t
- * 	line("'" . marker)	line number of mark marker
+ * 	line("'" .. marker)	line number of mark marker
+ *
  * To jump to the last known position when opening a file see
  * |last-position-jump|.
+ *
  * Can also be used as a |method|:
  * 	GetValue()->line()
  */
-export async function line(denops: Denops, expr: string): Promise<number> {
-  return await denops.call("line", expr) as number;
+export async function line(
+  denops: Denops,
+  expr: string,
+  winid?: number | string,
+): Promise<number> {
+  return await denops.call("line", expr, winid) as number;
 }
 
 /**
@@ -154,6 +167,7 @@ export async function winline(denops: Denops): Promise<number> {
 /**
  * Positions the cursor at the column (byte count) {col} in the
  * line {lnum}.  The first column is one.
+ *
  * When there is one argument {list} this is used as a |List|
  * with two, three or four item:
  * 	[{lnum}, {col}]
@@ -161,7 +175,12 @@ export async function winline(denops: Denops): Promise<number> {
  * 	[{lnum}, {col}, {off}, {curswant}]
  * This is like the return value of |getpos()| or |getcurpos()|,
  * but without the first item.
+ *
+ * To position the cursor using the character count, use
+ * |setcursorcharpos()|.
+ *
  * Does not change the jumplist.
+ * {lnum} is used like with |getline()|.
  * If {lnum} is greater than the number of lines in the buffer,
  * the cursor will be positioned at the last line in the buffer.
  * If {lnum} is zero, the cursor will stay in the current line.
@@ -171,10 +190,12 @@ export async function winline(denops: Denops): Promise<number> {
  * If {col} is zero, the cursor will stay in the current column.
  * If {curswant} is given it is used to set the preferred column
  * for vertical movement.  Otherwise {col} is used.
+ *
  * When 'virtualedit' is used {off} specifies the offset in
  * screen columns from the start of the character.  E.g., a
  * position within a <Tab> or after the last character.
  * Returns 0 when the position could be set, -1 otherwise.
+ *
  * Can also be used as a |method|:
  * 	GetCursorPos()->cursor()
  */
@@ -218,6 +239,14 @@ export async function cursor(
  * The "curscol" value is where the cursor would be placed.  For
  * a Tab it would be the same as "endcol", while for a double
  * width character it would be the same as "col".
+ * The |conceal| feature is ignored here, the column numbers are
+ * as if 'conceallevel' is zero.  You can set the cursor to the
+ * right position and use |screencol()| to get the value with
+ * |conceal| taken into account.
+ * If the position is in a closed fold the screen position of the
+ * first character is returned, {col} is not used.
+ * Returns an empty Dict if {winid} is invalid.
+ *
  * Can also be used as a |method|:
  * 	GetWinid()->screenpos(lnum, col)
  */
@@ -232,26 +261,42 @@ export async function screenpos(
 
 /**
  * Get the position of the cursor.  This is like getpos('.'), but
- * includes an extra item in the list:
- *     [bufnum, lnum, col, off, curswant] ~
+ * includes an extra "curswant" item in the list:
+ *     [0, lnum, col, off, curswant] ~
  * The "curswant" number is the preferred column when moving the
- * cursor vertically.  Also see |getpos()|.
+ * cursor vertically.  After |$| command it will be a very large
+ * number equal to |v:maxcol|.  Also see |getcursorcharpos()| and
+ * |getpos()|.
+ * The first "bufnum" item is always zero. The byte position of
+ * the cursor is returned in 'col'. To get the character
+ * position, use |getcursorcharpos()|.
+ *
+ * The optional {winid} argument can specify the window.  It can
+ * be the window number or the |window-ID|.  The last known
+ * cursor position is returned, this may be invalid for the
+ * current value of the buffer if it is not the current window.
+ * If {winid} is invalid a list with zeroes is returned.
+ *
  * This can be used to save and restore the cursor position:
  * 	let save_cursor = getcurpos()
  * 	MoveTheCursorAround
  * 	call setpos('.', save_cursor)
  * Note that this only works within the window.  See
  * |winrestview()| for restoring more state.
+ *
+ * Can also be used as a |method|:
+ * 	GetWinid()->getcurpos()
  */
 export async function getcurpos(
   denops: Denops,
+  winid?: number | string,
 ): Promise<Position> {
-  return await denops.call("getcurpos") as Position;
+  return await denops.call("getcurpos", winid) as Position;
 }
 
 /**
- * Get the position for {expr}.  For possible values of {expr}
- * see |line()|.  For getting the cursor position see
+ * Get the position for String {expr}.  For possible values of
+ * {expr} see |line()|.  For getting the cursor position see
  * |getcurpos()|.
  * The result is a |List| with four numbers:
  *     [bufnum, lnum, col, off]
@@ -265,12 +310,19 @@ export async function getcurpos(
  * character.
  * Note that for '< and '> Visual mode matters: when it is "V"
  * (visual line mode) the column of '< is zero and the column of
- * '> is a large number.
+ * '> is a large number equal to |v:maxcol|.
+ * The column number in the returned List is the byte position
+ * within the line. To get the character position in the line,
+ * use |getcharpos()|.
+ * A very large column number equal to |v:maxcol| can be returned,
+ * in which case it means "after the end of the line".
+ * If {expr} is invalid, returns a list with all zeros.
  * This can be used to save and restore the position of a mark:
  * 	let save_a_mark = getpos("'a")
  * 	...
  * 	call setpos("'a", save_a_mark)
- * Also see |getcurpos()| and |setpos()|.
+ * Also see |getcharpos()|, |getcurpos()| and |setpos()|.
+ *
  * Can also be used as a |method|:
  * 	GetMark()->getpos()
  */
@@ -279,12 +331,13 @@ export async function getpos(denops: Denops, expr: string): Promise<Position> {
 }
 
 /**
- * Set the position for {expr}.  Possible values:
+ * Set the position for String {expr}.  Possible values:
  * 	.	the cursor
  * 	'x	mark x
  * {list} must be a |List| with four or five numbers:
  *     [bufnum, lnum, col, off]
  *     [bufnum, lnum, col, off, curswant]
+ *
  * "bufnum" is the buffer number.  Zero can be used for the
  * current buffer.  When setting an uppercase mark "bufnum" is
  * used for the mark position.  For other marks it specifies the
@@ -293,29 +346,38 @@ export async function getpos(denops: Denops, expr: string): Promise<Position> {
  * For setting the cursor and the ' mark "bufnum" is ignored,
  * since these are associated with a window, not a buffer.
  * Does not change the jumplist.
+ *
  * "lnum" and "col" are the position in the buffer.  The first
  * column is 1.  Use a zero "lnum" to delete a mark.  If "col" is
- * smaller than 1 then 1 is used.
+ * smaller than 1 then 1 is used. To use the character count
+ * instead of the byte count, use |setcharpos()|.
+ *
  * The "off" number is only used when 'virtualedit' is set. Then
  * it is the offset in screen columns from the start of the
  * character.  E.g., a position within a <Tab> or after the last
  * character.
+ *
  * The "curswant" number is only used when setting the cursor
  * position.  It sets the preferred column for when moving the
  * cursor vertically.  When the "curswant" number is missing the
  * preferred column is not set.  When it is present and setting a
  * mark position it is not used.
+ *
  * Note that for '< and '> changing the line number may result in
  * the marks to be effectively be swapped, so that '< is always
  * before '>.
+ *
  * Returns 0 when the position could be set, -1 otherwise.
  * An error message is given if {expr} is invalid.
- * Also see |getpos()| and |getcurpos()|.
+ *
+ * Also see |setcharpos()|, |getpos()| and |getcurpos()|.
+ *
  * This does not restore the preferred column for moving
  * vertically; if you set the cursor position with this, |j| and
  * |k| motions will jump to previous columns!  Use |cursor()| to
  * also set the preferred column.  Also see the "curswant" key in
  * |winrestview()|.
+ *
  * Can also be used as a |method|:
  * 	GetPosition()->setpos('.')
  */
@@ -334,6 +396,9 @@ export async function setpos(
  * for the current buffer.  The first character has byte count
  * one.
  * Also see |line2byte()|, |go| and |:goto|.
+ *
+ * Returns -1 if the {byte} value is invalid.
+ *
  * Can also be used as a |method|:
  * 	GetOffset()->byte2line()
  * {not available when compiled without the |+byte_offset|
@@ -352,10 +417,11 @@ export async function byte2line(denops: Denops, byte: number): Promise<number> {
  * below the last line:
  * 	line2byte(line("$") + 1)
  * This is the buffer size plus one.  If 'fileencoding' is empty
- * it is the file size plus one.
- * When {lnum} is invalid, or the |+byte_offset| feature has been
- * disabled at compile time, -1 is returned.
+ * it is the file size plus one.  {lnum} is used like with
+ * |getline()|.  When {lnum} is invalid, or the |+byte_offset|
+ * feature has been disabled at compile time, -1 is returned.
  * Also see |byte2line()|, |go| and |:goto|.
+ *
  * Can also be used as a |method|:
  * 	GetLnum()->line2byte()
  */
@@ -371,6 +437,7 @@ export async function line2byte(denops: Denops, lnum: number): Promise<number> {
  * {lnum} is used like with |getline()|.  Thus "." is the current
  * line, "'m" mark m, etc.
  * Returns 0 if the current window is not in diff mode.
+ *
  * Can also be used as a |method|:
  * 	GetLnum()->diff_filler()
  */
