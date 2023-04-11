@@ -198,6 +198,59 @@ export const balloonevalterm = {
  * Expression for text to show in evaluation balloon.  It is only used
  * when 'ballooneval' or 'balloonevalterm' is on.  These variables can be
  * used:
+ *
+ * v:beval_bufnr	number of the buffer in which balloon is going to show
+ * v:beval_winnr	number of the window
+ * v:beval_winid	ID of the window
+ * v:beval_lnum	line number
+ * v:beval_col	column number (byte index)
+ * v:beval_text	word under or after the mouse pointer
+ *
+ * Instead of showing a balloon, which is limited to plain text, consider
+ * using a popup window, see |popup_beval_example|.  A popup window can
+ * use highlighting and show a border.
+ *
+ * The evaluation of the expression must not have side effects!
+ * Example: >
+ *     function MyBalloonExpr()
+ * return 'Cursor is at line ' .. v:beval_lnum ..
+ * 	\ ', column ' .. v:beval_col ..
+ * 	\ ' of file ' ..  bufname(v:beval_bufnr) ..
+ * 	\ ' on word "' .. v:beval_text .. '"'
+ *     endfunction
+ *     set bexpr=MyBalloonExpr()
+ *     set ballooneval
+ * <
+ * Also see |balloon_show()|, it can be used if the content of the balloon
+ * is to be fetched asynchronously.  In that case evaluating
+ * 'balloonexpr' should result in an empty string.  If you get a balloon
+ * with only "0" you probably didn't return anything from your function.
+ *
+ * NOTE: The balloon is displayed only if the cursor is on a text
+ * character.  If the result of evaluating 'balloonexpr' is not empty,
+ * Vim does not try to send a message to an external debugger (Netbeans
+ * or Sun Workshop).
+ *
+ * If the expression starts with s: or |<SID>|, then it is replaced with
+ * the script ID (|local-function|). Example: >
+ * 	set bexpr=s:MyBalloonExpr()
+ * 	set bexpr=<SID>SomeBalloonExpr()
+ * <	Otherwise, the expression is evaluated in the context of the script
+ * where the option was set, thus script-local items are available.
+ *
+ * The expression will be evaluated in the |sandbox| when set from a
+ * modeline, see |sandbox-option|.
+ * This option cannot be set in a modeline when 'modelineexpr' is off.
+ *
+ * It is not allowed to change text or jump to another window while
+ * evaluating 'balloonexpr', see |textlock|.
+ *
+ * To check whether line breaks in the balloon text work use this check: >
+ * 	if has("balloon_multiline")
+ * <	When they are supported "\n" characters will start a new line.  If the
+ * expression evaluates to a |List| this is equal to using each List item
+ * as a string and putting "\n" in between them.
+ * NOTE: This option is set to "" when 'compatible' is set.
  */
 export const balloonexpr = {
   async get(denops: Denops): Promise<string> {
@@ -257,6 +310,121 @@ export const bioskey = {
 /**
  * This option has the effect of making Vim either more Vi-compatible, or
  * make Vim behave in a more useful way.
+ *
+ * This is a special kind of option, because when it's set or reset,
+ * other options are also changed as a side effect.
+ * NOTE: Setting or resetting this option can have a lot of unexpected
+ * effects: Mappings are interpreted in another way, undo behaves
+ * differently, etc.  If you set this option in your vimrc file, you
+ * should probably put it at the very start.
+ *
+ * By default this option is on and the Vi defaults are used for the
+ * options.  This default was chosen for those people who want to use Vim
+ * just like Vi, and don't even (want to) know about the 'compatible'
+ * option.
+ * When a |vimrc| or |gvimrc| file is found while Vim is starting up,
+ * this option is switched off, and all options that have not been
+ * modified will be set to the Vim defaults.  Effectively, this means
+ * that when a |vimrc| or |gvimrc| file exists, Vim will use the Vim
+ * defaults, otherwise it will use the Vi defaults.  (Note: This doesn't
+ * happen for the system-wide vimrc or gvimrc file, nor for a file given
+ * with the |-u| argument).  Also see |compatible-default| and
+ * |posix-compliance|.
+ * You can also set this option with the "-C" argument, and reset it with
+ * "-N".  See |-C| and |-N|.
+ * See 'cpoptions' for more fine tuning of Vi compatibility.
+ *
+ * When this option is set, numerous other options are set to make Vim as
+ * Vi-compatible as possible.  When this option is unset, various options
+ * are set to make Vim more useful.  The table below lists all the
+ * options affected.
+ * The {?} column indicates when the options are affected:
+ * +  Means that the option is set to the value given in {set value} when
+ *    'compatible' is set.
+ * &  Means that the option is set to the value given in {set value} when
+ *    'compatible' is set AND is set to its Vim default value when
+ *    'compatible' is unset.
+ * -  Means the option is NOT changed when setting 'compatible' but IS
+ *    set to its Vim default when 'compatible' is unset.
+ * The {effect} column summarises the change when 'compatible' is set.
+ *
+ * option		? set value	effect ~
+ *
+ * 'allowrevins'	+ off		no CTRL-_ command
+ * 'antialias'	+ off		don't use antialiased fonts
+ * 'arabic'	+ off	 	reset arabic-related options
+ * 'arabicshape'	+ on		correct character shapes
+ * 'backspace'	+ ""		normal backspace
+ * 'backup'	+ off		no backup file
+ * 'backupcopy'	& Unix: "yes"	backup file is a copy
+ * 		  else: "auto"	copy or rename backup file
+ * 'balloonexpr'	+ ""		text to show in evaluation balloon
+ * 'breakindent'	+ off		don't indent when wrapping lines
+ * 'cedit'		- {unchanged}	{set vim default only on resetting 'cp'}
+ * 'cdhome'	+ off		":cd" don't chdir to home on non-Unix
+ * 'cindent'	+ off		no C code indentation
+ * 'compatible'	- {unchanged}	{set vim default only on resetting 'cp'}
+ * 'copyindent'	+ off		don't copy indent structure
+ * 'cpoptions'	& (all flags)	Vi-compatible flags
+ * 'cscopepathcomp'+ 0		don't show directories in tags list
+ * 'cscoperelative'+ off		don't use basename of path as prefix
+ * 'cscopetag'	+ off		don't use cscope for ":tag"
+ * 'cscopetagorder'+ 0		see |cscopetagorder|
+ * 'cscopeverbose'	+ off		see |cscopeverbose|
+ * 'delcombine'	+ off		unicode: delete whole char combination
+ * 'digraph'	+ off		no digraphs
+ * 'esckeys'	& off		no <Esc>-keys in Insert mode
+ * 'expandtab'	+ off		tabs not expanded to spaces
+ * 'fileformats'	& ""		no automatic file format detection,
+ * 		  "dos,unix"	except for MS-Windows
+ * 'formatexpr'	+ ""		use 'formatprg' for auto-formatting
+ * 'formatoptions'	& "vt"		Vi compatible formatting
+ * 'gdefault'	+ off		no default 'g' flag for ":s"
+ * 'history'	& 0		no commandline history
+ * 'hkmap'		+ off		no Hebrew keyboard mapping
+ * 'hkmapp'	+ off		no phonetic Hebrew keyboard mapping
+ * 'hlsearch'	+ off		no highlighting of search matches
+ * 'incsearch'	+ off		no incremental searching
+ * 'indentexpr'	+ ""		no indenting by expression
+ * 'insertmode'	+ off		do not start in Insert mode
+ * 'iskeyword'	& "@,48-57,_"	keywords contain alphanumeric
+ * 					characters and '_'
+ * 'joinspaces'	+ on		insert 2 spaces after period
+ * 'modeline'	& off		no modelines
+ * 'more'		& off		no pauses in listings
+ * 'mzquantum'	- {unchanged}	{set vim default only on resetting 'cp'}
+ * 'numberwidth'	& 8		min number of columns for line number
+ * 'preserveindent'+ off		don't preserve current indent structure
+ * 					when changing it
+ * 'revins'	+ off		no reverse insert
+ * 'ruler'		+ off		no ruler
+ * 'scrolljump'	+ 1		no jump scroll
+ * 'scrolloff'	+ 0		no scroll offset
+ * 'shelltemp'	- {unchanged}	{set vim default only on resetting 'cp'}
+ * 'shiftround'	+ off		indent not rounded to shiftwidth
+ * 'shortmess'	& "S"		no shortening of messages
+ * 'showcmd'	& off		command characters not shown
+ * 'showmode'	& off		current mode not shown
+ * 'sidescrolloff'	+ 0		cursor moves to edge of screen in scroll
+ * 'smartcase'	+ off		no automatic ignore case switch
+ * 'smartindent'	+ off		no smart indentation
+ * 'smarttab'	+ off		no smart tab size
+ * 'softtabstop'	+ 0		tabs are always 'tabstop' positions
+ * 'startofline'	+ on		goto startofline with some commands
+ * 'tagcase'	& "followic"	'ignorecase' when searching tags file
+ * 'tagrelative'	& off		tag file names are not relative
+ * 'termguicolors'	+ off		don't use highlight-(guifg|guibg)
+ * 'textauto'	& off		no automatic textmode detection
+ * 'textwidth'	+ 0		no automatic line wrap
+ * 'tildeop'	+ off		tilde is not an operator
+ * 'ttimeout'	+ off		no terminal timeout
+ * 'undofile'	+ off		don't use an undo file
+ * 'viminfo'       - {unchanged}	{set Vim default only on resetting 'cp'}
+ * 'virtualedit'	+ ""		cursor can only be placed on characters
+ * 'whichwrap'	& ""		left-right movements don't wrap
+ * 'wildchar'	& CTRL-E	only when the current value is <Tab>
+ * 				use CTRL-E for cmdline completion
+ * 'writebackup'	+ on or off	depends on the |+writebackup| feature
  */
 export const compatible = {
   async get(denops: Denops): Promise<boolean> {
@@ -336,19 +504,23 @@ export const conskey = {
 
 /**
  * Method used for encryption when the buffer is written to a file:
+ *
  *    zip		PkZip compatible method.  A weak kind of encryption.
  * 		Backwards compatible with Vim 7.2 and older.
+ *
  *    blowfish	Blowfish method.  Medium strong encryption but it has
  * 		an implementation flaw.  Requires Vim 7.3 or later,
  * 		files can NOT be read by Vim 7.2 and older.  This adds
  * 		a "seed" to the file, every time you write the file
  * 		the encrypted bytes will be different.
+ *
  *    blowfish2	Blowfish method.  Medium strong encryption.  Requires
  * 		Vim 7.4.401 or later, files can NOT be read by Vim 7.3
  * 		and older.  This adds a "seed" to the file, every time
  * 		you write the file the encrypted bytes will be
  * 		different.  The whole undo file is encrypted, not just
  * 		the pieces of text.
+ *
  *    xchacha20	XChaCha20 Cipher with Poly1305 Message Authentication
  * 		Code.  Medium strong till strong encryption.
  * 		Encryption is provided by the libsodium library, it
@@ -364,6 +536,23 @@ export const conskey = {
  * 		CURRENTLY EXPERIMENTAL: Files written with this method
  * 		might have to be read back with the same version of
  * 		Vim if the binary format changes later.
+ *
+ * You should use "blowfish2", also to re-encrypt older files.
+ *
+ * When reading an encrypted file 'cryptmethod' will be set automatically
+ * to the detected method of the file being read.  Thus if you write it
+ * without changing 'cryptmethod' the same method will be used.
+ * Changing 'cryptmethod' does not mark the file as modified, you have to
+ * explicitly write it, you don't get a warning unless there are other
+ * modifications.  Also see |:X|.
+ *
+ * When setting the global value to an empty string, it will end up with
+ * the value "blowfish2".  When setting the local value to an empty
+ * string the buffer will use the global value.
+ *
+ * When a new encryption method is added in a later version of Vim, and
+ * the current version does not recognize it, you will get	 .
+ * You need to edit this file with the later version of Vim.
  */
 export const cryptmethod = {
   async get(denops: Denops): Promise<string> {
@@ -489,6 +678,18 @@ export const esckeys = {
 /**
  * Enables the reading of .vimrc, .exrc and .gvimrc in the current
  * directory.
+ *
+ * Setting this option is a potential security leak.  E.g., consider
+ * unpacking a package or fetching files from github, a .vimrc in there
+ * might be a trojan horse.  BETTER NOT SET THIS OPTION!
+ * Instead, define an autocommand in your .vimrc to set options for a
+ * matching directory.
+ *
+ * If you do switch this option on you should also consider setting the
+ * 'secure' option (see |initialization|).
+ * Also see |.vimrc| and |gui-init|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
  */
 export const exrc = {
   async get(denops: Denops): Promise<boolean> {
@@ -630,6 +831,32 @@ export const guiligatures = {
 };
 
 /**
+ * 		{only available when compiled with GUI enabled}
+ * Only in the GUI: If on, an attempt is made to open a pseudo-tty for
+ * I/O to/from shell commands.  See |gui-pty|.
+ */
+export const guipty = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "guipty") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "guipty", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "guipty");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "guipty") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "guipty", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "guipty");
+  },
+};
+
+/**
  * This option can be used to set highlighting mode for various
  * occasions.  It is a comma-separated list of character pairs.  The
  * first character in a pair gives the occasion, the second the mode to
@@ -683,6 +910,29 @@ export const guiligatures = {
  * |hl-PmenuSel|	 =  popup menu selected line
  * |hl-PmenuSbar|	 x  popup menu scrollbar
  * |hl-PmenuThumb|	 X  popup menu scrollbar thumb
+ *
+ * The display modes are:
+ * 	r	reverse		(termcap entry "mr" and "me")
+ * 	i	italic		(termcap entry "ZH" and "ZR")
+ * 	b	bold		(termcap entry "md" and "me")
+ * 	s	standout	(termcap entry "so" and "se")
+ * 	u	underline	(termcap entry "us" and "ue")
+ * 	c	undercurl	(termcap entry "Us" and "Ce")
+ * 	2	double underline (termcap entry "Ds" and "Ce")
+ * 	d	dotted underline (termcap entry "ds" and "Ce")
+ * 	=	dashed underline (termcap entry "Ds" and "Ce")
+ * 	t	strikethrough	(termcap entry "Ts" and "Te")
+ * 	n	no highlighting
+ * 	-	no highlighting
+ * 	:	use a highlight group
+ * The default is used for occasions that are not included.
+ * If you want to change what the display modes do, see |dos-colors|
+ * for an example.
+ * When using the ':' display mode, this must be followed by the name of
+ * a highlight group.  A highlight group can be used to define any type
+ * of highlighting, including using color.  See |:highlight| on how to
+ * define one.  The default uses a different group for each occasion.
+ * See |highlight-default| for the default highlight groups.
  */
 export const highlight = {
   async get(denops: Denops): Promise<string> {
@@ -713,6 +963,18 @@ export const highlight = {
  * It is not used in the MS-Windows GUI version.
  * The expression will be evaluated in the |sandbox| when set from a
  * modeline, see |sandbox-option|.
+ *
+ * Example: >
+ * 	function ImActivateFunc(active)
+ * 	  if a:active
+ * 	    ... do something
+ * 	  else
+ * 	    ... do something
+ * 	  endif
+ * 	  " return value is not used
+ * 	endfunction
+ * 	set imactivatefunc=ImActivateFunc
+ * <
  */
 export const imactivatefunc = {
   async get(denops: Denops): Promise<string> {
@@ -745,6 +1007,24 @@ export const imactivatefunc = {
  * tells Vim what the key is.
  * Format:
  * 	[MODIFIER_FLAG-]KEY_STRING
+ *
+ * These characters can be used for MODIFIER_FLAG (case is ignored):
+ * 	S	    Shift key
+ * 	L	    Lock key
+ * 	C	    Control key
+ * 	1	    Mod1 key
+ * 	2	    Mod2 key
+ * 	3	    Mod3 key
+ * 	4	    Mod4 key
+ * 	5	    Mod5 key
+ * Combinations are allowed, for example "S-C-space" or "SC-space" are
+ * both shift+ctrl+space.
+ * See <X11/keysymdef.h> and XStringToKeysym for KEY_STRING.
+ *
+ * Example: >
+ * 	:set imactivatekey=S-space
+ * <	"S-space" means shift+space.  This is the activation key for kinput2 +
+ * canna (Japanese), and ami (Korean).
  */
 export const imactivatekey = {
   async get(denops: Denops): Promise<string> {
@@ -773,6 +1053,17 @@ export const imactivatekey = {
  * The value can be the name of a function, a |lambda| or a |Funcref|.
  * See |option-value-function| for more information.
  * It is not used in the MS-Windows GUI version.
+ *
+ * Example: >
+ * 	function ImStatusFunc()
+ * 	  let is_active = ...do something
+ * 	  return is_active ? 1 : 0
+ * 	endfunction
+ * 	set imstatusfunc=ImStatusFunc
+ * <
+ * NOTE: This function is invoked very often.  Keep it fast.
+ * The expression will be evaluated in the |sandbox| when set from a
+ * modeline, see |sandbox-option|.
  */
 export const imstatusfunc = {
   async get(denops: Denops): Promise<string> {
@@ -802,6 +1093,14 @@ export const imstatusfunc = {
  * 0   use on-the-spot style
  * 1   over-the-spot style
  * See: |xim-input-style|
+ *
+ * For a long time on-the-spot style had been used in the GTK version of
+ * vim, however, it is known that it causes troubles when using mappings,
+ * |single-repeat|, etc.  Therefore over-the-spot style becomes the
+ * default now.  This should work fine for most people, however if you
+ * have any problem with it, try using on-the-spot style.
+ * The expression will be evaluated in the |sandbox| when set from a
+ * modeline, see |sandbox-option|.
  */
 export const imstyle = {
   async get(denops: Denops): Promise<number> {
@@ -835,6 +1134,19 @@ export const imstyle = {
  * - Use CTRL-L to execute a number of Normal mode commands, then use
  *   <Esc> to get back to Insert mode.  Note that CTRL-L moves the cursor
  *   left, like <Esc> does when 'insertmode' isn't set.  |i_CTRL-L|
+ *
+ * These items change when 'insertmode' is set:
+ * - when starting to edit of a file, Vim goes to Insert mode.
+ * - <Esc> in Insert mode is a no-op and beeps.
+ * - <Esc> in Normal mode makes Vim go to Insert mode.
+ * - CTRL-L in Insert mode is a command, it is not inserted.
+ * - CTRL-Z in Insert mode suspends Vim, see |CTRL-Z|.
+ * However, when <Esc> is used inside a mapping, it behaves like
+ * 'insertmode' was not set.  This was done to be able to use the same
+ * mappings with 'insertmode' set or not set.
+ * When executing commands with |:normal| 'insertmode' is not used.
+ *
+ * NOTE: This option is reset when 'compatible' is set.
  */
 export const insertmode = {
   async get(denops: Denops): Promise<boolean> {
@@ -854,6 +1166,42 @@ export const insertmode = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "insertmode");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+cryptv|
+ * 		feature}
+ * The key that is used for encrypting and decrypting the current buffer.
+ * See |encryption| and 'cryptmethod'.
+ * Careful: Do not set the key value by hand, someone might see the typed
+ * key.  Use the |:X| command.  But you can make 'key' empty: >
+ * 	:set key=
+ * <	It is not possible to get the value of this option with ":set key" or
+ * "echo &key".  This is to avoid showing it to someone who shouldn't
+ * know.  It also means you cannot see it yourself once you have set it,
+ * be careful not to make a typing error!
+ * You can use "&key" in an expression to detect whether encryption is
+ * enabled.  When 'key' is set it returns "**" (five stars).
+ */
+export const key = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "key") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "key", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "key");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    return await localOptions.get(denops, "key") ?? "";
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "key", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "key");
   },
 };
 
@@ -882,6 +1230,61 @@ export const langnoremap = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "langnoremap");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+lua/dyn|
+ * 		feature}
+ * Specifies the name of the Lua shared library. The default is
+ * DYNAMIC_LUA_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const luadll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "luadll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "luadll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "luadll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "luadll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "luadll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "luadll");
+  },
+};
+
+/**
+ * 		{not supported}
+ * No longer supported, as the Mac OS X GUI code was removed.
+ */
+export const macatsui = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "macatsui") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "macatsui", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "macatsui");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "macatsui") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "macatsui", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "macatsui");
   },
 };
 
@@ -979,6 +1382,69 @@ export const maxmemtot = {
 };
 
 /**
+ * 		{only available when compiled with the |+mzscheme/dyn|
+ * 		feature}
+ * Specifies the name of the MzScheme shared library. The default is
+ * DYNAMIC_MZSCH_DLL which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * The value must be set in the |vimrc| script or earlier.  In the
+ * startup, before the |load-plugins| step.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const mzschemedll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "mzschemedll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "mzschemedll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "mzschemedll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "mzschemedll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "mzschemedll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "mzschemedll");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+mzscheme/dyn|
+ * 		feature}
+ * Specifies the name of the MzScheme GC shared library. The default is
+ * DYNAMIC_MZGC_DLL which was specified at compile time.
+ * The value can be equal to 'mzschemedll' if it includes the GC code.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const mzschemegcdll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "mzschemegcdll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "mzschemegcdll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "mzschemegcdll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "mzschemegcdll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "mzschemegcdll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "mzschemegcdll");
+  },
+};
+
+/**
  * 		{not available when compiled without the |+mzscheme|
  * 		feature}
  * The number of milliseconds between polls for MzScheme threads.
@@ -1032,6 +1498,36 @@ export const osfiletype = {
 };
 
 /**
+ * 		{only available when compiled with the |+perl/dyn|
+ * 		feature}
+ * Specifies the name of the Perl shared library. The default is
+ * DYNAMIC_PERL_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const perldll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "perldll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "perldll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "perldll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "perldll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "perldll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "perldll");
+  },
+};
+
+/**
  * 		{not available when compiled without the |+textprop|
  * 		or |+quickfix| feature}
  * When not empty a popup window is used for commands that would open a
@@ -1061,10 +1557,275 @@ export const previewpopup = {
 };
 
 /**
+ * When on a ":" prompt is used in Ex mode.
+ */
+export const prompt = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "prompt") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "prompt", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "prompt");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "prompt") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "prompt", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "prompt");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+python/dyn|
+ * 		feature}
+ * Specifies the name of the Python 2.x shared library. The default is
+ * DYNAMIC_PYTHON_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const pythondll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "pythondll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "pythondll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "pythondll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "pythondll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "pythondll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "pythondll");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+python/dyn|
+ * 		feature}
+ * Specifies the name of the Python 2.x home directory. When 'pythonhome'
+ * and the PYTHONHOME environment variable are not set, PYTHON_HOME,
+ * which was specified at compile time, will be used for the Python 2.x
+ * home directory.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const pythonhome = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "pythonhome") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "pythonhome", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "pythonhome");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "pythonhome") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "pythonhome", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "pythonhome");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+python3/dyn|
+ * 		feature}
+ * Specifies the name of the Python 3 shared library. The default is
+ * DYNAMIC_PYTHON3_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const pythonthreedll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "pythonthreedll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "pythonthreedll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "pythonthreedll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "pythonthreedll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "pythonthreedll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "pythonthreedll");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+python3/dyn|
+ * 		feature}
+ * Specifies the name of the Python 3 home directory. When
+ * 'pythonthreehome' and the PYTHONHOME environment variable are not set,
+ * PYTHON3_HOME, which was specified at compile time, will be used for
+ * the Python 3 home directory.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const pythonthreehome = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "pythonthreehome") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "pythonthreehome", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "pythonthreehome");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "pythonthreehome") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "pythonthreehome", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "pythonthreehome");
+  },
+};
+
+/**
+ * Allows for mappings to work recursively.  If you do not want this for
+ * a single entry, use the :noremap[!] command.
+ * NOTE: To avoid portability problems with Vim scripts, always keep
+ * this option at the default "on".  Only switch it off when working with
+ * old Vi scripts.
+ */
+export const remap = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "remap") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "remap", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "remap");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "remap") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "remap", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "remap");
+  },
+};
+
+/**
  * 		{only available when compiled with GUI and DIRECTX on
  * 		MS-Windows}
  * Select a text renderer and set its options.  The options depend on the
  * renderer.
+ *
+ * Syntax: >
+ * 	set rop=type:{renderer}(,{name}:{value})*
+ * <
+ * Currently, only one optional renderer is available.
+ *
+ * render	behavior    ~
+ * directx	Vim will draw text using DirectX (DirectWrite).  It makes
+ * 	drawn glyphs more beautiful than default GDI.
+ * 	It requires 'encoding' is "utf-8", and only works on
+ * 	MS-Windows Vista or newer version.
+ *
+ * 	Options:
+ * 	  name	    meaning		type	value       ~
+ * 	  gamma	    gamma		float	1.0 - 2.2 (maybe)
+ * 	  contrast  enhancedContrast	float	(unknown)
+ * 	  level	    clearTypeLevel	float	(unknown)
+ * 	  geom	    pixelGeometry	int	0 - 2 (see below)
+ * 	  renmode   renderingMode	int	0 - 6 (see below)
+ * 	  taamode   textAntialiasMode	int	0 - 3 (see below)
+ * 	  scrlines  Scroll Lines	int	(deprecated)
+ *
+ * 	See this URL for detail (except for scrlines):
+ * 	  https://msdn.microsoft.com/en-us/library/dd368190.aspx
+ *
+ * 	For geom: structure of a device pixel.
+ * 	  0 - DWRITE_PIXEL_GEOMETRY_FLAT
+ * 	  1 - DWRITE_PIXEL_GEOMETRY_RGB
+ * 	  2 - DWRITE_PIXEL_GEOMETRY_BGR
+ *
+ * 	See this URL for detail:
+ * 	  https://msdn.microsoft.com/en-us/library/dd368114.aspx
+ *
+ * 	For renmode: method of rendering glyphs.
+ * 	  0 - DWRITE_RENDERING_MODE_DEFAULT
+ * 	  1 - DWRITE_RENDERING_MODE_ALIASED
+ * 	  2 - DWRITE_RENDERING_MODE_GDI_CLASSIC
+ * 	  3 - DWRITE_RENDERING_MODE_GDI_NATURAL
+ * 	  4 - DWRITE_RENDERING_MODE_NATURAL
+ * 	  5 - DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC
+ * 	  6 - DWRITE_RENDERING_MODE_OUTLINE
+ *
+ * 	See this URL for detail:
+ * 	  https://msdn.microsoft.com/en-us/library/dd368118.aspx
+ *
+ * 	For taamode: antialiasing mode used for drawing text.
+ * 	  0 - D2D1_TEXT_ANTIALIAS_MODE_DEFAULT
+ * 	  1 - D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE
+ * 	  2 - D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE
+ * 	  3 - D2D1_TEXT_ANTIALIAS_MODE_ALIASED
+ *
+ * 	See this URL for detail:
+ * 	  https://msdn.microsoft.com/en-us/library/dd368170.aspx
+ *
+ * 	For scrlines:
+ * 	This was used for optimizing scrolling behavior, however this
+ * 	is now deprecated.  If specified, it is simply ignored.
+ *
+ * 	Example: >
+ * 	  set encoding=utf-8
+ * 	  set gfn=Ricty_Diminished:h12
+ * 	  set rop=type:directx
+ * <
+ * 	If select a raster font (Courier, Terminal or FixedSys which
+ * 	have ".fon" extension in file name) to 'guifont', it will be
+ * 	drawn by GDI as a fallback.
+ *
+ * 	NOTE: It is known that some fonts and options combination
+ * 	causes trouble on drawing glyphs.
+ *
+ * 	  - 'renmode:5' and 'renmode:6' will not work with some
+ * 	    special made fonts (True-Type fonts which includes only
+ * 	    bitmap glyphs).
+ * 	  - 'taamode:3' will not work with some vector fonts.
+ *
+ * 	NOTE: With this option, you can display colored emoji
+ * 	(emoticon) in Windows 8.1 or later.  To display colored emoji,
+ * 	there are some conditions which you should notice.
+ *
+ * 	  - If your font includes non-colored emoji already, it will
+ * 	    be used.
+ * 	  - If your font doesn't have emoji, the system chooses an
+ * 	    alternative symbol font.  On Windows 10, "Segoe UI Emoji"
+ * 	    will be used.
+ * 	  - When this alternative font didn't have fixed width glyph,
+ * 	    emoji might be rendered beyond the bounding box of drawing
+ * 	    cell.
+ *
+ * Other render types are currently not supported.
  */
 export const renderoptions = {
   async get(denops: Denops): Promise<string> {
@@ -1091,6 +1852,13 @@ export const renderoptions = {
  * 		{only in MS-Windows console version}
  * When set, the screen contents is restored when exiting Vim.  This also
  * happens when executing external commands.
+ *
+ * For non-Windows Vim: You can set or reset the 't_ti' and 't_te'
+ * options in your .vimrc.  To disable restoring:
+ * 	set t_ti= t_te=
+ * To enable restoring (for an xterm):
+ * 	set t_ti=^[7^[[r^[[?47h t_te=^[[?47l^[8
+ * (Where ^[ is an <Esc>, type CTRL-V <Esc> to insert it)
  */
 export const restorescreen = {
   async get(denops: Denops): Promise<boolean> {
@@ -1110,6 +1878,36 @@ export const restorescreen = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "restorescreen");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |+ruby/dyn|
+ * 		feature}
+ * Specifies the name of the Ruby shared library. The default is
+ * DYNAMIC_RUBY_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const rubydll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "rubydll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "rubydll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "rubydll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "rubydll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "rubydll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "rubydll");
   },
 };
 
@@ -1149,6 +1947,9 @@ export const scrollfocus = {
  * 2 and 3: use the shell only to filter lines
  * 4 and 5: use shell only for ':sh' command
  * When not using the shell, the command is executed directly.
+ *
+ * 0 and 2: use "shell 'shellcmdflag' cmd" to start external commands
+ * 1 and 3: use "shell cmd" to start external commands
  */
 export const shelltype = {
   async get(denops: Denops): Promise<number> {
@@ -1265,10 +2066,69 @@ export const swapsync = {
 };
 
 /**
+ * 		{only available when compiled with the |+tcl/dyn|
+ * 		feature}
+ * Specifies the name of the Tcl shared library. The default is
+ * DYNAMIC_TCL_DLL, which was specified at compile time.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const tcldll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "tcldll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "tcldll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "tcldll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "tcldll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "tcldll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "tcldll");
+  },
+};
+
+/**
+ * Name of the terminal.  Used for choosing the terminal control
+ * characters.  Environment variables are expanded |:set_env|.
+ * For example: >
+ * 	:set term=$TERM
+ * <	See |termcap|.
+ */
+export const term = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "term") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "term", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "term");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "term") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "term", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "term");
+  },
+};
+
+/**
  * Encoding used for the terminal.  This specifies what character
  * encoding the keyboard produces and the display will understand.  For
  * the GUI it only applies to the keyboard ('encoding' is used for the
  * display).
+ *
  * Note: This does not apply to the GTK+ GUI.  After the GUI has been
  * successfully initialized, 'termencoding' is forcibly set to "utf-8".
  * Any attempts to set a different value will be rejected, and an error
@@ -1378,7 +2238,7 @@ export const termwinscroll = {
  * - When set with a "x" (e.g., "24x80") the terminal size is not
  *   adjusted to the window size.  If the window is smaller only the
  *   top-left part is displayed.
- * - When set with a "50") the terminal size follows the
+ * - When set with a "*" (e.g., "10*50") the terminal size follows the
  *   window size, but will not be smaller than the specified rows and/or
  *   columns.
  * - When rows is zero then use the height of the window.
@@ -1386,6 +2246,14 @@ export const termwinscroll = {
  * - Using "0x0" or "0*0" is the same as empty.
  * - Can be overruled in the |term_start()| options with "term_rows" and
  *   "term_cols".
+ *
+ * Examples:
+ *   "30x0" uses 30 rows and the current window width.
+ *   "20*0" uses at least 20 rows and the current window width.
+ *   "0*40" uses the current window height and at least 40 columns.
+ * Note that the command running in the terminal window may still change
+ * the size of the terminal.  In that case the Vim window will be
+ * adjusted to that size, if possible.
  */
 export const termwinsize = {
   async get(denops: Denops): Promise<string> {
@@ -1413,6 +2281,17 @@ export const termwinsize = {
  * 		feature on MS-Windows}
  * Specify the virtual console (pty) used when opening the terminal
  * window.
+ *
+ * Possible values are:
+ *     ""		use ConPTY if it is stable, winpty otherwise
+ *     "winpty"	use winpty, fail if not supported
+ *     "conpty"	use |ConPTY|, fail if not supported
+ *
+ * |ConPTY| support depends on the platform.  Windows 10 October 2018
+ * Update is the first version that supports ConPTY, however it is still
+ * considered unstable.  ConPTY might become stable in the next release
+ * of Windows 10.  winpty support needs to be installed.  If neither is
+ * supported then you cannot open a terminal window.
  */
 export const termwintype = {
   async get(denops: Denops): Promise<string> {
@@ -1432,6 +2311,33 @@ export const termwintype = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "termwintype");
+  },
+};
+
+/**
+ * When set: Add 's' flag to 'shortmess' option (this makes the message
+ * for a search that hits the start or end of the file not being
+ * displayed).  When reset: Remove 's' flag from 'shortmess' option.  {Vi
+ * shortens a lot of messages}
+ */
+export const terse = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "terse") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "terse", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "terse");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "terse") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "terse", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "terse");
   },
 };
 
@@ -1502,6 +2408,18 @@ export const textmode = {
  * 	tooltips	Tooltips are active for toolbar buttons.
  * Tooltips refer to the popup help text which appears after the mouse
  * cursor is placed over a toolbar button for a brief moment.
+ *
+ * If you want the toolbar to be shown with icons as well as text, do the
+ * following: >
+ * 	:set tb=icons,text
+ * <	Motif cannot display icons and text at the same time.  They
+ * will show icons if both are requested.
+ *
+ * If none of the strings specified in 'toolbar' are valid or if
+ * 'toolbar' is empty, this option is ignored.  If you want to disable
+ * the toolbar, you need to set the 'guioptions' option.  For example: >
+ * 	:set guioptions-=T
+ * <	Also see |gui-toolbar|.
  */
 export const toolbar = {
   async get(denops: Denops): Promise<string> {
@@ -1525,7 +2443,6 @@ export const toolbar = {
 };
 
 /**
- * 			global
  * 			{only in the GTK+ GUI}
  * Controls the size of toolbar icons.  The possible values are:
  * 	tiny		Use tiny icons.
@@ -1537,6 +2454,9 @@ export const toolbar = {
  * The exact dimensions in pixels of the various icon sizes depend on
  * the current theme.  Common dimensions are giant=48x48, huge=32x32,
  * large=24x24, medium=24x24, small=20x20 and tiny=16x16.
+ *
+ * If 'toolbariconsize' is empty, the global default size as determined
+ * by user preferences or the current theme is used.
  */
 export const toolbariconsize = {
   async get(denops: Denops): Promise<string> {
@@ -1626,6 +2546,7 @@ export const ttyfast = {
  * 		available when compiled without |+mouse|}
  * Name of the terminal type for which mouse codes are to be recognized.
  * Currently these strings are valid:
+ *
  *    xterm	xterm-like mouse handling.  The mouse generates
  * 		"<Esc>[Mscr", where "scr" is three bytes:
  * 			"s"  = button state
@@ -1639,25 +2560,55 @@ export const ttyfast = {
  * 		least at patchlevel 88 / XFree 3.3.3 for this to
  * 		work.  See below for how Vim detects this
  * 		automatically.
+ *
  *    netterm	NetTerm mouse handling.  A left mouse click generates
  * 		"<Esc>}r,c<CR>", where "r,c" are two decimal numbers
  * 		for the row and column.  No other mouse events are
  * 		supported.
+ *
  *    dec		DEC terminal mouse handling.  The mouse generates a
  * 		rather complex sequence, starting with "<Esc>[".
  * 		This is also available for an Xterm, if it was
  * 		configured with "--enable-dec-locator".
+ *
  *    jsbterm	JSB term mouse handling.
+ *
  *    pterm	QNX pterm mouse handling.
+ *
  *    urxvt	Mouse handling for the urxvt (rxvt-unicode) terminal.
  * 		The mouse works only if the terminal supports this
  * 		encoding style, but it does not have 223 columns limit
  * 		unlike "xterm" or "xterm2".
+ *
  *    sgr		Mouse handling for the terminal that emits SGR-styled
  * 		mouse reporting.  The mouse works even in columns
  * 		beyond 223.  This option is backward compatible with
  * 		"xterm2" because it can also decode "xterm2" style
  * 		mouse codes.
+ *
+ * The mouse handling must be enabled at compile time |+mouse_xterm|
+ * |+mouse_dec| |+mouse_netterm| |+mouse_jsbterm| |+mouse_urxvt|
+ * |+mouse_sgr|.
+ * Only "xterm"(2) is really recognized.  NetTerm mouse codes are always
+ * recognized, if enabled at compile time.  DEC terminal mouse codes
+ * are recognized if enabled at compile time, and 'ttymouse' is not
+ * "xterm", "xterm2", "urxvt" or "sgr" (because dec mouse codes conflict
+ * with them).
+ * This option is automatically set to "xterm", when the 'term' option is
+ * set to a name that starts with "xterm", "mlterm", "screen", "tmux",
+ * "st" (full match only), "st-" or "stterm", and 'ttymouse' is not set
+ * already.
+ * Additionally, if vim is compiled with the |+termresponse| feature and
+ * |t_RV| is set to the escape sequence to request the xterm version
+ * number, more intelligent detection is done.
+ * The "xterm2" value will be set if the xterm version is reported to be
+ * from 95 to 276.  The "sgr" value will be set if Vim detects Mac
+ * Terminal.app, iTerm2 or mintty, and when the xterm version is 277 or
+ * higher.
+ * If you do not want 'ttymouse' to be set to "xterm2" or "sgr"
+ * automatically, set t_RV to an empty string: >
+ * 	:set t_RV=
+ * <
  */
 export const ttymouse = {
   async get(denops: Denops): Promise<string> {
@@ -1744,15 +2695,18 @@ export const ttytype = {
  * value is used for that parameter.  The following is a list of the
  * identifying characters and the effect of their value.
  * CHAR	VALUE	~
+ *
  * !	When included, save and restore global variables that start
  * 	with an uppercase letter, and don't contain a lowercase
  * 	letter.  Thus "KEEPTHIS and "K_L_M" are stored, but "KeepThis"
  * 	and "_K_L_M" are not.  Nested List and Dict items may not be
  * 	read back correctly, you end up with an empty item.
+ *
  * "	Maximum number of lines saved for each register.  Old name of
  * 	the '<' item, with the disadvantage that you need to put a
  * 	backslash before the ", otherwise it will be recognized as the
  * 	start of a comment!
+ *
  * %	When included, save and restore the buffer list.  If Vim is
  * 	started with a file name argument, the buffer list is not
  * 	restored.  If Vim is started without a file name argument, the
@@ -1762,38 +2716,48 @@ export const ttytype = {
  * 	When followed by a number, the number specifies the maximum
  * 	number of buffers that are stored.  Without a number all
  * 	buffers are stored.
+ *
  * '	Maximum number of previously edited files for which the marks
  * 	are remembered.  This parameter must always be included when
  * 	'viminfo' is non-empty.
  * 	Including this item also means that the |jumplist| and the
  * 	|changelist| are stored in the viminfo file.
+ *
  * /	Maximum number of items in the search pattern history to be
  * 	saved.  If non-zero, then the previous search and substitute
  * 	patterns are also saved.  When not included, the value of
  * 	'history' is used.
+ *
  * :	Maximum number of items in the command-line history to be
  * 	saved.  When not included, the value of 'history' is used.
+ *
  * <	Maximum number of lines saved for each register.  If zero then
  * 	registers are not saved.  When not included, all lines are
  * 	saved.  '"' is the old name for this item.
  * 	Also see the 's' item below: limit specified in Kbyte.
+ *
  * @	Maximum number of items in the input-line history to be
  * 	saved.  When not included, the value of 'history' is used.
+ *
  * c	When included, convert the text in the viminfo file from the
  * 	'encoding' used when writing the file to the current
  * 	'encoding'.  See |viminfo-encoding|.
+ *
  * f	Whether file marks need to be stored.  If zero, file marks ('0
  * 	to '9, 'A to 'Z) are not stored.  When not present or when
  * 	non-zero, they are all stored.  '0 is used for the current
  * 	cursor position (when exiting or when doing ":wviminfo").
+ *
  * h	Disable the effect of 'hlsearch' when loading the viminfo
  * 	file.  When not included, it depends on whether ":nohlsearch"
  * 	has been used since the last search command.
+ *
  * n	Name of the viminfo file.  The name must immediately follow
  * 	the 'n'.  Must be at the end of the option!  If the
  * 	'viminfofile' option is set, that file name overrides the one
  * 	given here with 'viminfo'.  Environment variables are
  * 	expanded when opening the file, not when setting the option.
+ *
  * r	Removable media.  The argument is a string (up to the next
  * 	',').  This parameter can be given several times.  Each
  * 	specifies the start of a path for which no marks will be
@@ -1802,10 +2766,35 @@ export const ttytype = {
  * 	also use it for temp files, e.g., for Unix: "r/tmp".  Case is
  * 	ignored.  Maximum length of each 'r' argument is 50
  * 	characters.
+ *
  * s	Maximum size of an item in Kbyte.  If zero then registers are
  * 	not saved.  Currently only applies to registers.  The default
  * 	"s10" will exclude registers with more than 10 Kbyte of text.
  * 	Also see the '<' item above: line count limit.
+ *
+ * Example: >
+ *     :set viminfo='50,<1000,s100,:0,n~/vim/viminfo
+ * <
+ * '50		Marks will be remembered for the last 50 files you
+ * 		edited.
+ * <1000		Contents of registers (up to 1000 lines each) will be
+ * 		remembered.
+ * s100		Registers with more than 100 Kbyte text are skipped.
+ * :0		Command-line history will not be saved.
+ * n~/vim/viminfo	The name of the file to use is "~/vim/viminfo".
+ * no /		Since '/' is not specified, the default will be used,
+ * 		that is, save all of the search history, and also the
+ * 		previous search and substitute patterns.
+ * no %		The buffer list will not be saved nor read back.
+ * no h		'hlsearch' highlighting will be restored.
+ *
+ * When setting 'viminfo' from an empty value you can use |:rviminfo| to
+ * load the contents of the file, this is not done automatically.
+ *
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ * NOTE: This option is set to the Vim default value when 'compatible'
+ * is reset.
  */
 export const viminfo = {
   async get(denops: Denops): Promise<string> {
@@ -1908,5 +2897,67 @@ export const wincolor = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "wincolor");
+  },
+};
+
+/**
+ * 		{only available when compiled with the |terminal|
+ * 		feature on MS-Windows}
+ * Specifies the name of the winpty shared library, used for the
+ * |:terminal| command. The default depends on whether Vim was built as a
+ * 32-bit or 64-bit executable.  If not found, "winpty.dll" is tried as
+ * a fallback.
+ * Environment variables are expanded |:set_env|.
+ * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * security reasons.
+ */
+export const winptydll = {
+  async get(denops: Denops): Promise<string> {
+    return await options.get(denops, "winptydll") ?? "";
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "winptydll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "winptydll");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    return await globalOptions.get(denops, "winptydll") ?? "";
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "winptydll", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "winptydll");
+  },
+};
+
+/**
+ * When detecting xterm patchlevel 141 or higher with the termresponse
+ * mechanism and this option is set, Vim will request the actual terminal
+ * key codes and number of colors from the terminal.  This takes care of
+ * various configuration options of the terminal that cannot be obtained
+ * from the termlib/terminfo entry, see |xterm-codes|.
+ * A side effect may be that t_Co changes and Vim will redraw the
+ * display.
+ */
+export const xtermcodes = {
+  async get(denops: Denops): Promise<boolean> {
+    return await options.get(denops, "xtermcodes") ?? false;
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "xtermcodes", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "xtermcodes");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    return await globalOptions.get(denops, "xtermcodes") ?? false;
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "xtermcodes", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "xtermcodes");
   },
 };

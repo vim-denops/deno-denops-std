@@ -1,11 +1,15 @@
-import { Option } from "./types.ts";
+import { isOptionType, type Option, type OptionType } from "./types.ts";
 import { regexIndexOf } from "./utils.ts";
+
+const fallbackTypes: Record<string, OptionType> = {
+  "encoding": "string", // not defined type in nvim 0.8.0
+};
 
 /**
  * Parse Vim/Neovim help.
  *
  * It extract a option definition block like below and return
- * a list of `Definition`.
+ * a list of `Option`.
  *
  * ```text
  * 					*'aleph'* *'al'* *aleph* *Aleph*
@@ -17,44 +21,57 @@ import { regexIndexOf } from "./utils.ts";
  * ```
  */
 export function parse(content: string) {
+  // Remove modeline
+  content = content.replace(/\n vim:[^\n]*\s*$/, "");
+
   const options: Option[] = [];
-  const optionNames = [...content.matchAll(/\*'(\w+)'\*/g)].map((m) => m[1]);
-  for (const name of optionNames) {
-    const pattern = new RegExp(`\n'${name}' (?:'\\w+'\\s*)*\\s+(\\w+)`);
-    const m1 = content.match(pattern);
-    if (!m1) {
-      continue;
+  for (const match of content.matchAll(/\*'(\w+)'\*/g)) {
+    const name = match[1];
+    const block = extractBlock(content, match.index ?? 0);
+    const option = parseBlock(name, block);
+    if (option) {
+      options.push(option);
     }
-    const type = m1[1];
-    const block = extractBlock(content, m1.index || 0);
-
-    const m2 = block.match(/\n\t\t\t(global or local|global|local)\s/);
-    const scope = (m2 ? m2[1] : "global").split(" or ");
-
-    const docs = block
-      .substring(block.indexOf("\n", (m2 ? m2.index || 0 : 0) + 1))
-      .split("\n")
-      .map((v) => v.replace(/^\t/, ""))
-      .join("\n");
-    options.push({
-      name,
-      type,
-      scope,
-      docs,
-    });
   }
   return options;
 }
 
 function extractBlock(content: string, index: number): string {
   const s = content.lastIndexOf("\n", index);
-  const ms = regexIndexOf(content, /\n[<>\s]/, index);
-  const me = regexIndexOf(content, /\n[^<>\t]/, ms);
+  const ms = regexIndexOf(content, /\n[^<>\s]|$/, s);
+  const me = regexIndexOf(content, /\n[^<>\s]|$/, ms + 1);
   const e = content.lastIndexOf("\n", me);
   const block = content
     .substring(s, e)
-    .replaceAll(/\*.+?\*/g, "") // Remove tags
-    .replaceAll(/\s+\n/g, "\n") // Remove trailing '\s'
-    .trim();
+    .replace(/(\n<?)(?:\s+\*\S+?\*)+\s*$/, "$1") // Remove next block tag
+    .trimEnd();
   return block;
+}
+
+function parseBlock(name: string, body: string): Option | undefined {
+  const m1 = body.match(
+    new RegExp(`^'${name}'(?:\\s+'\\w+')*\\s+(\\w+)\\s`, "m"),
+  );
+  const type = m1?.[1] ?? fallbackTypes[name];
+  if (!isOptionType(type)) {
+    return;
+  }
+
+  const m2 = body.match(/\n\t{3,}(global or local|global|local)(?:\s|$)/);
+  const scope = (m2?.[1].split(" or ") ?? ["global"]) as Array<
+    "global" | "local"
+  >;
+
+  const s = regexIndexOf(body, /\n|$/, (m2?.index ?? m1?.index ?? 0) + 1);
+  body = body.substring(s);
+
+  // Remove tags
+  body = body.replaceAll(/\*\S+?\*/g, "");
+  // Remove trailing spaces
+  body = body.split("\n").map((v) => v.trimEnd()).join("\n");
+  // Remove indent
+  body = body.split("\n").map((v) => v.replace(/^\t/, "")).join("\n");
+
+  const docs = body;
+  return { name, type, scope, docs };
 }

@@ -1,4 +1,4 @@
-import { Option } from "./types.ts";
+import type { Option, OptionType } from "./types.ts";
 
 const denops = "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
@@ -9,7 +9,7 @@ const translate: Record<string, string> = {
   "function": "function_",
 };
 
-function defaultValue(type: string): string {
+function defaultValue(type: OptionType): string {
   switch (type) {
     case "string":
       return `""`;
@@ -17,8 +17,10 @@ function defaultValue(type: string): string {
       return `0`;
     case "boolean":
       return `false`;
-    default:
-      throw new Error(`Unknown type ${type}`);
+    default: {
+      const unknownType: never = type;
+      throw new Error(`Unknown type ${unknownType}`);
+    }
   }
 }
 
@@ -46,7 +48,7 @@ function formatOption({ name, type, scope, docs }: Option): string[] {
   return lines;
 }
 
-function formatOptionBody(name: string, type: string): string[] {
+function formatOptionBody(name: string, type: OptionType): string[] {
   const lines = [
     `  async get(denops: Denops): Promise<${type}> {`,
     `    return await options.get(denops, "${name}") ?? ${defaultValue(type)};`,
@@ -61,7 +63,7 @@ function formatOptionBody(name: string, type: string): string[] {
   return lines;
 }
 
-function formatGlobalOptionBody(name: string, type: string): string[] {
+function formatGlobalOptionBody(name: string, type: OptionType): string[] {
   const lines = [
     `  async getGlobal(denops: Denops): Promise<${type}> {`,
     `    return await globalOptions.get(denops, "${name}") ?? ${
@@ -78,7 +80,7 @@ function formatGlobalOptionBody(name: string, type: string): string[] {
   return lines;
 }
 
-function formatLocalOptionBody(name: string, type: string): string[] {
+function formatLocalOptionBody(name: string, type: OptionType): string[] {
   const lines = [
     `  async getLocal(denops: Denops): Promise<${type}> {`,
     `    return await localOptions.get(denops, "${name}") ?? ${
