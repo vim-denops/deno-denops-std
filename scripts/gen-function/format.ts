@@ -20,11 +20,7 @@ const translate: Record<string, string> = {
 
 function formatDocs(docs: string): string[] {
   const lines = docs.replaceAll(/\*\//g, "* /").split("\n");
-  const leading =
-    lines.map((v) => v.match(/^\s*/)![0]).reduce((a, v) =>
-      a.length < v.length ? a : v
-    ).length;
-  const normalizedLines = lines.map((v) => ` * ${v.substring(leading)}`);
+  const normalizedLines = lines.map((v) => ` * ${v}`.trimEnd());
   return ["/**", ...normalizedLines, " */"];
 }
 

@@ -28,6 +28,49 @@ export function regexIndexOf(s: string, pattern: RegExp, offset = 0): number {
   }
 }
 
+/**
+ * Converts TABs to spaces, preserving column position.
+ * Throws if `line` contains newline.
+ * Throws if `tabstop` less or equals 0.
+ */
+export function replaceTabToSpaces(line: string, tabstop = 8): string {
+  if (line.includes("\n")) {
+    throw new TypeError("'line' contains newline");
+  }
+  if (tabstop <= 0) {
+    throw new TypeError("'tabstop' less or equals 0");
+  }
+  let col = 0;
+  return Array.from(line).map((v): string => {
+    if (v === "\t") {
+      const spaces = tabstop - (col % tabstop);
+      col += spaces;
+      return Array(spaces + 1).join(" ");
+    } else {
+      ++col; // Wide characters are not considered
+      return v;
+    }
+  }).join("");
+}
+
+/**
+ * Trims the shortest leading spaces.
+ * Blank lines are not used in length calculations.
+ * __TABs are not trimed.__
+ * __Only zero-length lines are blank line.__
+ */
+export function removeIndentSpaces(lines: string[]): string[] {
+  const leading = Math.min(
+    ...lines.map((v) => v.length === 0 ? Infinity : v.match(/^ */)![0].length),
+  );
+  return lines.map((v) => v.substring(leading));
+}
+
+/** Trim leading and trailing blank lines. */
+export function trimLines(s: string): string {
+  return s.replace(/^\s*\n/, "").trimEnd();
+}
+
 /** Count the number of occurrences of a name. */
 export class Counter {
   #map: Map<string, number>;

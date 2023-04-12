@@ -2,10 +2,18 @@ import {
   assertEquals,
   assertInstanceOf,
   assertRejects,
+  assertThrows,
 } from "https://deno.land/std@0.183.0/testing/asserts.ts";
 import { stub } from "https://deno.land/std@0.183.0/testing/mock.ts";
 
-import { Counter, downloadString, regexIndexOf } from "./utils.ts";
+import {
+  Counter,
+  downloadString,
+  regexIndexOf,
+  removeIndentSpaces,
+  replaceTabToSpaces,
+  trimLines,
+} from "./utils.ts";
 
 async function mockFetch({ body, init, fn }: {
   body?: BodyInit;
@@ -110,6 +118,232 @@ Deno.test(regexIndexOf.name, async (t) => {
     await t.step(`Returns -1 if pattern not match: ${args}`, () => {
       const actual = regexIndexOf(...args);
       assertEquals(actual, -1);
+    });
+  }
+});
+
+Deno.test(replaceTabToSpaces.name, async (t) => {
+  // Converts TABs to spaces
+  for (
+    const { args, expected } of [
+      { args: ["\tfoo"], expected: "        foo" },
+      // Preserving column position
+      { args: ["  \tfoo"], expected: "        foo" },
+      { args: ["\t  foo"], expected: "          foo" },
+    ] as Array<{
+      args: Parameters<typeof replaceTabToSpaces>;
+      expected: ReturnType<typeof replaceTabToSpaces>;
+    }>
+  ) {
+    await t.step(`Converts TABs to spaces: ${args}`, () => {
+      const actual = replaceTabToSpaces(...args);
+      assertEquals(actual, expected);
+    });
+  }
+
+  // With tabstop
+  for (
+    const { args, expected } of [
+      { args: ["\tfoo", 5], expected: "     foo" },
+      // Preserving column position
+      { args: ["  \tfoo", 3], expected: "   foo" },
+      { args: ["  \tfoo", 2], expected: "    foo" },
+    ] as Array<{
+      args: Parameters<typeof replaceTabToSpaces>;
+      expected: ReturnType<typeof replaceTabToSpaces>;
+    }>
+  ) {
+    await t.step(`With tabstop: ${args}`, () => {
+      const actual = replaceTabToSpaces(...args);
+      assertEquals(actual, expected);
+    });
+  }
+
+  // Throws if 'line' contains newline
+  await t.step(`Throws if 'line' contains newline`, () => {
+    assertThrows(
+      () => replaceTabToSpaces("\tfoo\n"),
+      TypeError,
+      "'line' contains newline",
+    );
+  });
+
+  // Throws if 'tabstop' less or equals 0
+  for (
+    const { args } of [
+      { args: ["\tfoo", 0] },
+      { args: ["\tfoo", -1] },
+    ] as Array<{ args: Parameters<typeof replaceTabToSpaces> }>
+  ) {
+    await t.step(`Throws if 'tabstop' less or equals 0: ${args}`, () => {
+      assertThrows(
+        () => replaceTabToSpaces(...args),
+        TypeError,
+        "'tabstop' less or equals 0",
+      );
+    });
+  }
+});
+
+Deno.test(removeIndentSpaces.name, async (t) => {
+  // Trims the shortest leading spaces
+  for (
+    const { name, args, expected } of [
+      {
+        name: "Removed 2 spaces",
+        args: [[
+          "  foo",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          "foo",
+          "  bar",
+          " baz",
+        ],
+      },
+      {
+        name: "Removed 3 spaces",
+        args: [[
+          "      foo",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          "   foo",
+          " bar",
+          "baz",
+        ],
+      },
+      {
+        name: "No removed",
+        args: [[
+          "foo",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          "foo",
+          "    bar",
+          "   baz",
+        ],
+      },
+      {
+        name: "Blank lines are not used in length calculations",
+        args: [[
+          "  foo",
+          "",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          "foo",
+          "",
+          "  bar",
+          " baz",
+        ],
+      },
+      {
+        name: "TABs are not trimed",
+        args: [[
+          "\t\tfoo",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          "\t\tfoo",
+          "    bar",
+          "   baz",
+        ],
+      },
+      {
+        name: "Only zero-length lines are blank line",
+        args: [[
+          "  foo",
+          " ",
+          "    bar",
+          "   baz",
+        ]],
+        expected: [
+          " foo",
+          "",
+          "   bar",
+          "  baz",
+        ],
+      },
+    ] as Array<{
+      name: string;
+      args: Parameters<typeof removeIndentSpaces>;
+      expected: ReturnType<typeof removeIndentSpaces>;
+    }>
+  ) {
+    await t.step(`Trims the shortest leading spaces: ${name}`, () => {
+      const actual = removeIndentSpaces(...args);
+      assertEquals(actual, expected);
+    });
+  }
+});
+
+Deno.test(trimLines.name, async (t) => {
+  // Trim leading and trailing blank lines
+  for (
+    const { name, args, expected } of [
+      {
+        name: "Trimed leading",
+        args: [[
+          "   ",
+          "",
+          "foo",
+          "    bar",
+          "   baz",
+        ].join("\n")],
+        expected: [
+          "foo",
+          "    bar",
+          "   baz",
+        ].join("\n"),
+      },
+      {
+        name: "Trimed trailing",
+        args: [[
+          "foo",
+          "    bar",
+          "   baz",
+          "     ",
+          "",
+        ].join("\n")],
+        expected: [
+          "foo",
+          "    bar",
+          "   baz",
+        ].join("\n"),
+      },
+      {
+        name: "Trimed leading and trailing",
+        args: [[
+          "",
+          "   ",
+          "foo",
+          "    bar",
+          "   baz",
+          "",
+          "     ",
+        ].join("\n")],
+        expected: [
+          "foo",
+          "    bar",
+          "   baz",
+        ].join("\n"),
+      },
+    ] as Array<{
+      name: string;
+      args: Parameters<typeof trimLines>;
+      expected: ReturnType<typeof trimLines>;
+    }>
+  ) {
+    await t.step(`Trim leading and trailing blank lines: ${name}`, () => {
+      const actual = trimLines(...args);
+      assertEquals(actual, expected);
     });
   }
 });
