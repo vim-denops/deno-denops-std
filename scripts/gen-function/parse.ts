@@ -22,23 +22,40 @@ export function parse(content: string): Definition[] {
   let last = -1;
   for (const match of content.matchAll(/\*(\w+?)\(\)\*/g)) {
     const fn = match[1];
-    const i = match.index ?? 0;
-    if (i < last) {
+    const index = match.index!;
+    if (index < last) {
       // It is contained previous block
       continue;
     }
-    const s = content.lastIndexOf("\n", i);
-    const ms = regexIndexOf(content, /\n[<>\s]|$/, i);
-    const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
-    const e = content.lastIndexOf("\n", me);
-    const block = content
-      .substring(s, e)
-      .replace(/\n<?(?:\s+\*\S+?\*)+\s*$/, "") // Remove next block tag
-      .trimEnd();
-    last = s + block.length;
-    definitions.push(parseBlock(fn, block));
+    const { block, start, end } = extractBlock(content, index);
+    const definition = parseBlock(fn, block);
+    if (definition) {
+      definitions.push(definition);
+      last = end;
+    } else {
+      const line = content.substring(0, start + 1).split("\n").length;
+      console.error(
+        `Failed to parse function definition for ${fn} at line ${line}`,
+      );
+    }
   }
   return definitions;
+}
+
+function extractBlock(content: string, index: number): {
+  block: string;
+  start: number;
+  end: number;
+} {
+  const s = content.lastIndexOf("\n", index);
+  const ms = regexIndexOf(content, /\n[<>\s]|$/, index);
+  const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
+  const e = content.lastIndexOf("\n", me);
+  const block = content
+    .substring(s, e)
+    .replace(/\n<?(?:\s+\*\S+?\*)+\s*$/, "") // Remove next block tag
+    .trimEnd();
+  return { block, start: s, end: s + block.length };
 }
 
 /**

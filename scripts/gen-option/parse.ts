@@ -25,18 +25,46 @@ export function parse(content: string) {
   content = content.replace(/\n vim:[^\n]*\s*$/, "");
 
   const options: Option[] = [];
+  const succeeds = new Set<number>();
+  const errors: Array<{ name: string; start: number }> = [];
+  let last = -1;
   for (const match of content.matchAll(/\*'(\w+)'\*/g)) {
     const name = match[1];
-    const block = extractBlock(content, match.index ?? 0);
+    const index = match.index!;
+    if (index < last) {
+      // It is contained previous block
+      continue;
+    }
+    const { block, start, end } = extractBlock(content, index);
     const option = parseBlock(name, block);
     if (option) {
       options.push(option);
+      succeeds.add(start);
+      last = end;
+    } else {
+      errors.push({ name, start });
     }
   }
+
+  if (errors.length) {
+    for (const { name, start } of errors) {
+      if (!succeeds.has(start)) {
+        const line = content.substring(0, start + 1).split("\n").length;
+        console.error(
+          `Failed to parse option definition for ${name} at line ${line}`,
+        );
+      }
+    }
+  }
+
   return options;
 }
 
-function extractBlock(content: string, index: number): string {
+function extractBlock(content: string, index: number): {
+  block: string;
+  start: number;
+  end: number;
+} {
   const s = content.lastIndexOf("\n", index);
   const ms = regexIndexOf(content, /\n[^<>\s]|$/, s);
   const me = regexIndexOf(content, /\n[^<>\s]|$/, ms + 1);
@@ -45,7 +73,7 @@ function extractBlock(content: string, index: number): string {
     .substring(s, e)
     .replace(/(\n<?)(?:\s+\*\S+?\*)+\s*$/, "$1") // Remove next block tag
     .trimEnd();
-  return block;
+  return { block, start: s, end: s + block.length };
 }
 
 function parseBlock(name: string, body: string): Option | undefined {
