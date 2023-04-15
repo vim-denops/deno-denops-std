@@ -21,7 +21,11 @@ export async function downloadString(url: string): Promise<string> {
  */
 export function regexIndexOf(s: string, pattern: RegExp, offset = 0): number {
   const index = s.slice(offset).search(pattern);
-  return index < 0 ? index : index + offset;
+  if (index < 0 || offset <= -s.length) {
+    return index;
+  } else {
+    return index + offset + (offset < 0 ? s.length : 0);
+  }
 }
 
 /** Count the number of occurrences of a name. */
