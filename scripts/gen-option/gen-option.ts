@@ -3,21 +3,34 @@ import {
   intersection,
 } from "https://deno.land/x/set_operations@v1.1.0/mod.ts";
 import * as path from "https://deno.land/std@0.183.0/path/mod.ts";
-import * as commonManual from "../../denops_std/option/_manual.ts";
-import * as vimManual from "../../denops_std/option/vim/_manual.ts";
-import * as nvimManual from "../../denops_std/option/nvim/_manual.ts";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
+import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
 const VIM_VERSION = "9.0.0472";
 const NVIM_VERSION = "0.8.0";
 
-const manualOptionSet = new Set([
-  ...Object.keys(commonManual),
-  ...Object.keys(vimManual),
-  ...Object.keys(nvimManual),
-]);
+const commonGenerateModule = "../../denops_std/option/_generated.ts";
+const vimGenerateModule = "../../denops_std/option/vim/_generated.ts";
+const nvimGenerateModule = "../../denops_std/option/nvim/_generated.ts";
+
+const commonManualModule = "../../denops_std/option/_manual.ts";
+const vimManualModule = "../../denops_std/option/vim/_manual.ts";
+const nvimManualModule = "../../denops_std/option/nvim/_manual.ts";
+
+const manualModules = [
+  commonManualModule,
+  vimManualModule,
+  nvimManualModule,
+];
+const manualOptionSet = new Set(
+  (await Promise.all(
+    manualModules.map(async (moduleName) =>
+      Object.keys(await import(moduleName))
+    ),
+  )).flat(),
+);
 
 const vimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/options.txt`,
@@ -63,20 +76,22 @@ const nvimOnlyCode = format(
 );
 
 await Deno.writeTextFile(
-  path.fromFileUrl(
-    new URL("../../denops_std/option/_generated.ts", import.meta.url),
-  ),
+  resolvePath(commonGenerateModule),
   commonCode.join("\n"),
 );
 await Deno.writeTextFile(
-  path.fromFileUrl(
-    new URL("../../denops_std/option/vim/_generated.ts", import.meta.url),
-  ),
+  resolvePath(vimGenerateModule),
   vimOnlyCode.join("\n"),
 );
 await Deno.writeTextFile(
-  path.fromFileUrl(
-    new URL("../../denops_std/option/nvim/_generated.ts", import.meta.url),
-  ),
+  resolvePath(nvimGenerateModule),
   nvimOnlyCode.join("\n"),
 );
+
+await transform(resolvePath(commonManualModule), vimDefs);
+await transform(resolvePath(vimManualModule), vimDefs);
+await transform(resolvePath(nvimManualModule), nvimDefs);
+
+function resolvePath(p: string): string {
+  return path.fromFileUrl(new URL(p, import.meta.url));
+}
