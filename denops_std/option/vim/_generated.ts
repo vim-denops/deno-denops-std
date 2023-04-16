@@ -3,10 +3,12 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
- * 		{only available when compiled with the |+farsi|
- * 		feature}
  * This option was for using Farsi, which has been removed.  See
- * |farsi.txt|.
+ * `farsi.txt`.
+ *
+ * (default off)
+ *
+ * *only available when compiled with the `+farsi` feature*
  */
 export const altkeymap = {
   async get(denops: Denops): Promise<boolean> {
@@ -30,14 +32,16 @@ export const altkeymap = {
 };
 
 /**
- * 		{only available when compiled with GUI enabled
- * 		on macOS}
  * This option only has an effect in the GUI version of Vim on macOS
  * v10.2 or later.  When on, Vim will use smooth ("antialiased") fonts,
  * which can be easier to read at certain sizes on certain displays.
  * Setting this option can sometimes cause problems if 'guifont' is set
  * to its default (empty string).
  * NOTE: This option is reset when 'compatible' is set.
+ *
+ * (default: off)
+ *
+ * *only available when compiled with GUI enabled on macOS*
  */
 export const antialias = {
   async get(denops: Denops): Promise<boolean> {
@@ -66,32 +70,37 @@ export const antialias = {
  * need proper setting-up, so whenever the shell's pwd changes an OSC 7
  * escape sequence will be emitted.  For example, on Linux, you can
  * source /etc/profile.d/vte.sh in your shell profile if you use bash or
- * zsh.  For bash this should work (put it in a bash init file): >
- * 	if [[ -n "$VIM_TERMINAL" ]]; then
- * 	    PROMPT_COMMAND='_vim_sync_PWD'
- * 	    function _vim_sync_PWD() {
- * 		printf '\033]7;file://%s\033\\' "$PWD"
- * 	    }
- * 	fi
- * <
- * Or, in a zsh init file: >
- * 	if [[ -n "$VIM_TERMINAL" ]]; then
- * 	    autoload -Uz add-zsh-hook
- * 	    add-zsh-hook -Uz chpwd _vim_sync_PWD
- * 	    function _vim_sync_PWD() {
- * 		printf '\033]7;file://%s\033\\' "$PWD"
- * 	    }
- * 	fi
- * <
- * In a fish init file: >
- * 	if test -n "$VIM_TERMINAL"
- * 	    function _vim_sync_PWD --on-variable=PWD
- * 		printf '\033]7;file://%s\033\\' "$PWD"
- * 	    end
- * 	end
- * <
- * You can find an alternative method at |terminal-autoshelldir|.
- * When the parsing of the OSC sequence fails you get  .
+ * zsh.  For bash this should work (put it in a bash init file):
+ *
+ *     if [[ -n "$VIM_TERMINAL" ]]; then
+ *         PROMPT_COMMAND='_vim_sync_PWD'
+ *         function _vim_sync_PWD() {
+ *             printf '\033]7;file://%s\033\\' "$PWD"
+ *         }
+ *     fi
+ *
+ * Or, in a zsh init file:
+ *
+ *     if [[ -n "$VIM_TERMINAL" ]]; then
+ *         autoload -Uz add-zsh-hook
+ *         add-zsh-hook -Uz chpwd _vim_sync_PWD
+ *         function _vim_sync_PWD() {
+ *             printf '\033]7;file://%s\033\\' "$PWD"
+ *         }
+ *     fi
+ *
+ * In a fish init file:
+ *
+ *     if test -n "$VIM_TERMINAL"
+ *         function _vim_sync_PWD --on-variable=PWD
+ *             printf '\033]7;file://%s\033\\' "$PWD"
+ *         end
+ *     end
+ *
+ * You can find an alternative method at `terminal-autoshelldir`.
+ * When the parsing of the OSC sequence fails you get *E1179* .
+ *
+ * (default off)
  */
 export const autoshelldir = {
   async get(denops: Denops): Promise<boolean> {
@@ -115,9 +124,11 @@ export const autoshelldir = {
 };
 
 /**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
- * Delay in milliseconds before a balloon may pop up.  See |balloon-eval|.
+ * Delay in milliseconds before a balloon may pop up.  See `balloon-eval`.
+ *
+ * (default: 600)
+ *
+ * *only available when compiled with the `+balloon_eval` feature*
  */
 export const balloondelay = {
   async get(denops: Denops): Promise<number> {
@@ -141,9 +152,11 @@ export const balloondelay = {
 };
 
 /**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
- * Switch on the |balloon-eval| functionality for the GUI.
+ * Switch on the `balloon-eval` functionality for the GUI.
+ *
+ * (default off)
+ *
+ * *only available when compiled with the `+balloon_eval` feature*
  */
 export const ballooneval = {
   async get(denops: Denops): Promise<boolean> {
@@ -167,9 +180,11 @@ export const ballooneval = {
 };
 
 /**
- * 		{only available when compiled with the
- * 		|+balloon_eval_term| feature}
- * Switch on the |balloon-eval| functionality for the terminal.
+ * Switch on the `balloon-eval` functionality for the terminal.
+ *
+ * (default off)
+ *
+ * *only available when compiled with the `+balloon_eval_term` feature*
  */
 export const balloonevalterm = {
   async get(denops: Denops): Promise<boolean> {
@@ -193,35 +208,34 @@ export const balloonevalterm = {
 };
 
 /**
- * 		{only available when compiled with the |+balloon_eval|
- * 		feature}
  * Expression for text to show in evaluation balloon.  It is only used
  * when 'ballooneval' or 'balloonevalterm' is on.  These variables can be
  * used:
  *
- * v:beval_bufnr	number of the buffer in which balloon is going to show
- * v:beval_winnr	number of the window
- * v:beval_winid	ID of the window
- * v:beval_lnum	line number
- * v:beval_col	column number (byte index)
- * v:beval_text	word under or after the mouse pointer
+ * v:beval_bufnr   number of the buffer in which balloon is going to show
+ * v:beval_winnr   number of the window
+ * v:beval_winid   ID of the window
+ * v:beval_lnum    line number
+ * v:beval_col     column number (byte index)
+ * v:beval_text    word under or after the mouse pointer
  *
  * Instead of showing a balloon, which is limited to plain text, consider
- * using a popup window, see |popup_beval_example|.  A popup window can
+ * using a popup window, see `popup_beval_example`.  A popup window can
  * use highlighting and show a border.
  *
  * The evaluation of the expression must not have side effects!
- * Example: >
+ * Example:
+ *
  *     function MyBalloonExpr()
- * return 'Cursor is at line ' .. v:beval_lnum ..
- * 	\ ', column ' .. v:beval_col ..
- * 	\ ' of file ' ..  bufname(v:beval_bufnr) ..
- * 	\ ' on word "' .. v:beval_text .. '"'
+ *         return 'Cursor is at line ' .. v:beval_lnum ..
+ *                 \ ', column ' .. v:beval_col ..
+ *                 \ ' of file ' ..  bufname(v:beval_bufnr) ..
+ *                 \ ' on word "' .. v:beval_text .. '"'
  *     endfunction
  *     set bexpr=MyBalloonExpr()
  *     set ballooneval
- * <
- * Also see |balloon_show()|, it can be used if the content of the balloon
+ *
+ * Also see `balloon_show()`, it can be used if the content of the balloon
  * is to be fetched asynchronously.  In that case evaluating
  * 'balloonexpr' should result in an empty string.  If you get a balloon
  * with only "0" you probably didn't return anything from your function.
@@ -231,26 +245,34 @@ export const balloonevalterm = {
  * Vim does not try to send a message to an external debugger (Netbeans
  * or Sun Workshop).
  *
- * If the expression starts with s: or |<SID>|, then it is replaced with
- * the script ID (|local-function|). Example: >
- * 	set bexpr=s:MyBalloonExpr()
- * 	set bexpr=<SID>SomeBalloonExpr()
- * <	Otherwise, the expression is evaluated in the context of the script
+ * If the expression starts with s: or `<SID>`, then it is replaced with
+ * the script ID (`local-function`). Example:
+ *
+ *     set bexpr=s:MyBalloonExpr()
+ *     set bexpr=<SID>SomeBalloonExpr()
+ *
+ * Otherwise, the expression is evaluated in the context of the script
  * where the option was set, thus script-local items are available.
  *
- * The expression will be evaluated in the |sandbox| when set from a
- * modeline, see |sandbox-option|.
+ * The expression will be evaluated in the `sandbox` when set from a
+ * modeline, see `sandbox-option`.
  * This option cannot be set in a modeline when 'modelineexpr' is off.
  *
  * It is not allowed to change text or jump to another window while
- * evaluating 'balloonexpr', see |textlock|.
+ * evaluating 'balloonexpr', see `textlock`.
  *
- * To check whether line breaks in the balloon text work use this check: >
- * 	if has("balloon_multiline")
- * <	When they are supported "\n" characters will start a new line.  If the
- * expression evaluates to a |List| this is equal to using each List item
+ * To check whether line breaks in the balloon text work use this check:
+ *
+ *     if has("balloon_multiline")
+ *
+ * When they are supported "\n" characters will start a new line.  If the
+ * expression evaluates to a `List` this is equal to using each List item
  * as a string and putting "\n" in between them.
  * NOTE: This option is set to "" when 'compatible' is set.
+ *
+ * (default "")
+ *
+ * *only available when compiled with the `+balloon_eval` feature*
  */
 export const balloonexpr = {
   async get(denops: Denops): Promise<string> {
@@ -283,8 +305,11 @@ export const balloonexpr = {
 };
 
 /**
- * 		{only for MS-DOS}
  * This was for MS-DOS and is no longer supported.
+ *
+ * (default on)
+ *
+ * *only for MS-DOS*
  */
 export const bioskey = {
   async get(denops: Denops): Promise<boolean> {
@@ -322,16 +347,16 @@ export const bioskey = {
  * options.  This default was chosen for those people who want to use Vim
  * just like Vi, and don't even (want to) know about the 'compatible'
  * option.
- * When a |vimrc| or |gvimrc| file is found while Vim is starting up,
+ * When a `vimrc` or `gvimrc` file is found while Vim is starting up,
  * this option is switched off, and all options that have not been
  * modified will be set to the Vim defaults.  Effectively, this means
- * that when a |vimrc| or |gvimrc| file exists, Vim will use the Vim
+ * that when a `vimrc` or `gvimrc` file exists, Vim will use the Vim
  * defaults, otherwise it will use the Vi defaults.  (Note: This doesn't
  * happen for the system-wide vimrc or gvimrc file, nor for a file given
- * with the |-u| argument).  Also see |compatible-default| and
- * |posix-compliance|.
+ * with the `-u` argument).  Also see `compatible-default` and
+ * `posix-compliance`.
  * You can also set this option with the "-C" argument, and reset it with
- * "-N".  See |-C| and |-N|.
+ * "-N".  See `-C` and `-N`.
  * See 'cpoptions' for more fine tuning of Vi compatibility.
  *
  * When this option is set, numerous other options are set to make Vim as
@@ -346,85 +371,88 @@ export const bioskey = {
  *    'compatible' is unset.
  * -  Means the option is NOT changed when setting 'compatible' but IS
  *    set to its Vim default when 'compatible' is unset.
- * The {effect} column summarises the change when 'compatible' is set.
+ * The **{effect}** column summarises the change when 'compatible' is set.
  *
- * option		? set value	effect ~
+ * option          ? set value     effect
  *
- * 'allowrevins'	+ off		no CTRL-_ command
- * 'antialias'	+ off		don't use antialiased fonts
- * 'arabic'	+ off	 	reset arabic-related options
- * 'arabicshape'	+ on		correct character shapes
- * 'backspace'	+ ""		normal backspace
- * 'backup'	+ off		no backup file
- * 'backupcopy'	& Unix: "yes"	backup file is a copy
- * 		  else: "auto"	copy or rename backup file
- * 'balloonexpr'	+ ""		text to show in evaluation balloon
- * 'breakindent'	+ off		don't indent when wrapping lines
- * 'cedit'		- {unchanged}	{set vim default only on resetting 'cp'}
- * 'cdhome'	+ off		":cd" don't chdir to home on non-Unix
- * 'cindent'	+ off		no C code indentation
- * 'compatible'	- {unchanged}	{set vim default only on resetting 'cp'}
- * 'copyindent'	+ off		don't copy indent structure
- * 'cpoptions'	& (all flags)	Vi-compatible flags
- * 'cscopepathcomp'+ 0		don't show directories in tags list
- * 'cscoperelative'+ off		don't use basename of path as prefix
- * 'cscopetag'	+ off		don't use cscope for ":tag"
- * 'cscopetagorder'+ 0		see |cscopetagorder|
- * 'cscopeverbose'	+ off		see |cscopeverbose|
- * 'delcombine'	+ off		unicode: delete whole char combination
- * 'digraph'	+ off		no digraphs
- * 'esckeys'	& off		no <Esc>-keys in Insert mode
- * 'expandtab'	+ off		tabs not expanded to spaces
- * 'fileformats'	& ""		no automatic file format detection,
- * 		  "dos,unix"	except for MS-Windows
- * 'formatexpr'	+ ""		use 'formatprg' for auto-formatting
- * 'formatoptions'	& "vt"		Vi compatible formatting
- * 'gdefault'	+ off		no default 'g' flag for ":s"
- * 'history'	& 0		no commandline history
- * 'hkmap'		+ off		no Hebrew keyboard mapping
- * 'hkmapp'	+ off		no phonetic Hebrew keyboard mapping
- * 'hlsearch'	+ off		no highlighting of search matches
- * 'incsearch'	+ off		no incremental searching
- * 'indentexpr'	+ ""		no indenting by expression
- * 'insertmode'	+ off		do not start in Insert mode
- * 'iskeyword'	& "@,48-57,_"	keywords contain alphanumeric
- * 					characters and '_'
- * 'joinspaces'	+ on		insert 2 spaces after period
- * 'modeline'	& off		no modelines
- * 'more'		& off		no pauses in listings
- * 'mzquantum'	- {unchanged}	{set vim default only on resetting 'cp'}
- * 'numberwidth'	& 8		min number of columns for line number
- * 'preserveindent'+ off		don't preserve current indent structure
- * 					when changing it
- * 'revins'	+ off		no reverse insert
- * 'ruler'		+ off		no ruler
- * 'scrolljump'	+ 1		no jump scroll
- * 'scrolloff'	+ 0		no scroll offset
- * 'shelltemp'	- {unchanged}	{set vim default only on resetting 'cp'}
- * 'shiftround'	+ off		indent not rounded to shiftwidth
- * 'shortmess'	& "S"		no shortening of messages
- * 'showcmd'	& off		command characters not shown
- * 'showmode'	& off		current mode not shown
- * 'sidescrolloff'	+ 0		cursor moves to edge of screen in scroll
- * 'smartcase'	+ off		no automatic ignore case switch
- * 'smartindent'	+ off		no smart indentation
- * 'smarttab'	+ off		no smart tab size
- * 'softtabstop'	+ 0		tabs are always 'tabstop' positions
- * 'startofline'	+ on		goto startofline with some commands
- * 'tagcase'	& "followic"	'ignorecase' when searching tags file
- * 'tagrelative'	& off		tag file names are not relative
- * 'termguicolors'	+ off		don't use highlight-(guifg|guibg)
- * 'textauto'	& off		no automatic textmode detection
- * 'textwidth'	+ 0		no automatic line wrap
- * 'tildeop'	+ off		tilde is not an operator
- * 'ttimeout'	+ off		no terminal timeout
- * 'undofile'	+ off		don't use an undo file
- * 'viminfo'       - {unchanged}	{set Vim default only on resetting 'cp'}
- * 'virtualedit'	+ ""		cursor can only be placed on characters
- * 'whichwrap'	& ""		left-right movements don't wrap
- * 'wildchar'	& CTRL-E	only when the current value is <Tab>
- * 				use CTRL-E for cmdline completion
- * 'writebackup'	+ on or off	depends on the |+writebackup| feature
+ * 'allowrevins'   + off           no CTRL-_ command
+ * 'antialias'     + off           don't use antialiased fonts
+ * 'arabic'        + off           reset arabic-related options
+ * 'arabicshape'   + on            correct character shapes
+ * 'backspace'     + ""            normal backspace
+ * 'backup'        + off           no backup file
+ * 'backupcopy'    & Unix: "yes"   backup file is a copy
+ *                   else: "auto"  copy or rename backup file
+ * 'balloonexpr'   + ""            text to show in evaluation balloon
+ * 'breakindent'   + off           don't indent when wrapping lines
+ * 'cedit'         - **{unchanged}**   {set vim default only on resetting 'cp'}
+ * 'cdhome'        + off           ":cd" don't chdir to home on non-Unix
+ * 'cindent'       + off           no C code indentation
+ * 'compatible'    - **{unchanged}**   {set vim default only on resetting 'cp'}
+ * 'copyindent'    + off           don't copy indent structure
+ * 'cpoptions'     & (all flags)   Vi-compatible flags
+ * 'cscopepathcomp'+ 0             don't show directories in tags list
+ * 'cscoperelative'+ off           don't use basename of path as prefix
+ * 'cscopetag'     + off           don't use cscope for ":tag"
+ * 'cscopetagorder'+ 0             see `cscopetagorder`
+ * 'cscopeverbose' + off           see `cscopeverbose`
+ * 'delcombine'    + off           unicode: delete whole char combination
+ * 'digraph'       + off           no digraphs
+ * 'esckeys'       & off           no <Esc>-keys in Insert mode
+ * 'expandtab'     + off           tabs not expanded to spaces
+ * 'fileformats'   & ""            no automatic file format detection,
+ *                   "dos,unix"    except for MS-Windows
+ * 'formatexpr'    + ""            use 'formatprg' for auto-formatting
+ * 'formatoptions' & "vt"          Vi compatible formatting
+ * 'gdefault'      + off           no default 'g' flag for ":s"
+ * 'history'       & 0             no commandline history
+ * 'hkmap'         + off           no Hebrew keyboard mapping
+ * 'hkmapp'        + off           no phonetic Hebrew keyboard mapping
+ * 'hlsearch'      + off           no highlighting of search matches
+ * 'incsearch'     + off           no incremental searching
+ * 'indentexpr'    + ""            no indenting by expression
+ * 'insertmode'    + off           do not start in Insert mode
+ * 'iskeyword'     & "@,48-57,_"   keywords contain alphanumeric
+ *                                         characters and '_'
+ * 'joinspaces'    + on            insert 2 spaces after period
+ * 'modeline'      & off           no modelines
+ * 'more'          & off           no pauses in listings
+ * 'mzquantum'     - **{unchanged}**   {set vim default only on resetting 'cp'}
+ * 'numberwidth'   & 8             min number of columns for line number
+ * 'preserveindent'+ off           don't preserve current indent structure
+ *                                         when changing it
+ * 'revins'        + off           no reverse insert
+ * 'ruler'         + off           no ruler
+ * 'scrolljump'    + 1             no jump scroll
+ * 'scrolloff'     + 0             no scroll offset
+ * 'shelltemp'     - **{unchanged}**   {set vim default only on resetting 'cp'}
+ * 'shiftround'    + off           indent not rounded to shiftwidth
+ * 'shortmess'     & "S"           no shortening of messages
+ * 'showcmd'       & off           command characters not shown
+ * 'showmode'      & off           current mode not shown
+ * 'sidescrolloff' + 0             cursor moves to edge of screen in scroll
+ * 'smartcase'     + off           no automatic ignore case switch
+ * 'smartindent'   + off           no smart indentation
+ * 'smarttab'      + off           no smart tab size
+ * 'softtabstop'   + 0             tabs are always 'tabstop' positions
+ * 'startofline'   + on            goto startofline with some commands
+ * 'tagcase'       & "followic"    'ignorecase' when searching tags file
+ * 'tagrelative'   & off           tag file names are not relative
+ * 'termguicolors' + off           don't use highlight-(guifg|guibg)
+ * 'textauto'      & off           no automatic textmode detection
+ * 'textwidth'     + 0             no automatic line wrap
+ * 'tildeop'       + off           tilde is not an operator
+ * 'ttimeout'      + off           no terminal timeout
+ * 'undofile'      + off           don't use an undo file
+ * 'viminfo'       - **{unchanged}**   {set Vim default only on resetting 'cp'}
+ * 'virtualedit'   + ""            cursor can only be placed on characters
+ * 'whichwrap'     & ""            left-right movements don't wrap
+ * 'wildchar'      & CTRL-E        only when the current value is `<Tab>`
+ *                                 use CTRL-E for cmdline completion
+ * 'writebackup'   + on or off     depends on the `+writebackup` feature
+ *
+ * (default on, off when a `vimrc` or `gvimrc`
+ *  file is found, reset in `defaults.vim`)
  */
 export const compatible = {
   async get(denops: Denops): Promise<boolean> {
@@ -448,14 +476,16 @@ export const compatible = {
 };
 
 /**
- * 		{not available when compiled without the |+textprop|
- * 		or |+quickfix| feature}
  * When 'completeopt' contains "popup" then this option is used for the
  * properties of the info popup when it is created.  If an info popup
  * window already exists it is closed, so that the option value is
  * applied when it is created again.
- * You can also use |popup_findinfo()| and then set properties for an
- * existing info popup with |popup_setoptions()|.  See |complete-popup|.
+ * You can also use `popup_findinfo()` and then set properties for an
+ * existing info popup with `popup_setoptions()`.  See `complete-popup`.
+ *
+ * (default empty)
+ *
+ * *not available when compiled without the `+textprop` or `+quickfix` feature*
  */
 export const completepopup = {
   async get(denops: Denops): Promise<string> {
@@ -480,6 +510,8 @@ export const completepopup = {
 
 /**
  * This was for MS-DOS and is no longer supported.
+ *
+ * (default off)
  */
 export const conskey = {
   async get(denops: Denops): Promise<boolean> {
@@ -505,37 +537,37 @@ export const conskey = {
 /**
  * Method used for encryption when the buffer is written to a file:
  *
- *    zip		PkZip compatible method.  A weak kind of encryption.
- * 		Backwards compatible with Vim 7.2 and older.
+ *    zip          PkZip compatible method.  A weak kind of encryption.
+ *                 Backwards compatible with Vim 7.2 and older.
  *
- *    blowfish	Blowfish method.  Medium strong encryption but it has
- * 		an implementation flaw.  Requires Vim 7.3 or later,
- * 		files can NOT be read by Vim 7.2 and older.  This adds
- * 		a "seed" to the file, every time you write the file
- * 		the encrypted bytes will be different.
+ *    blowfish     Blowfish method.  Medium strong encryption but it has
+ *                 an implementation flaw.  Requires Vim 7.3 or later,
+ *                 files can NOT be read by Vim 7.2 and older.  This adds
+ *                 a "seed" to the file, every time you write the file
+ *                 the encrypted bytes will be different.
  *
- *    blowfish2	Blowfish method.  Medium strong encryption.  Requires
- * 		Vim 7.4.401 or later, files can NOT be read by Vim 7.3
- * 		and older.  This adds a "seed" to the file, every time
- * 		you write the file the encrypted bytes will be
- * 		different.  The whole undo file is encrypted, not just
- * 		the pieces of text.
+ *    blowfish2    Blowfish method.  Medium strong encryption.  Requires
+ *                 Vim 7.4.401 or later, files can NOT be read by Vim 7.3
+ *                 and older.  This adds a "seed" to the file, every time
+ *                 you write the file the encrypted bytes will be
+ *                 different.  The whole undo file is encrypted, not just
+ *                 the pieces of text.
  *
- *    xchacha20	XChaCha20 Cipher with Poly1305 Message Authentication
- * 		Code.  Medium strong till strong encryption.
- * 		Encryption is provided by the libsodium library, it
- * 		requires Vim to be built with |+sodium|.
- * 		It adds a seed and a message authentication code (MAC)
- * 		to the file.  This needs at least a Vim 8.2.3022 to
- * 		read the encrypted file.
- * 		Encryption of swap files is not supported, therefore
- * 		no swap file will be used when xchacha20 encryption is
- * 		enabled.
- * 		Encryption of undo files is not yet supported,
- * 		therefore no undo file will currently be written.
- * 		CURRENTLY EXPERIMENTAL: Files written with this method
- * 		might have to be read back with the same version of
- * 		Vim if the binary format changes later.
+ *    xchacha20    XChaCha20 Cipher with Poly1305 Message Authentication
+ *                 Code.  Medium strong till strong encryption.
+ *                 Encryption is provided by the libsodium library, it
+ *                 requires Vim to be built with `+sodium`.
+ *                 It adds a seed and a message authentication code (MAC)
+ *                 to the file.  This needs at least a Vim 8.2.3022 to
+ *                 read the encrypted file.
+ *                 Encryption of swap files is not supported, therefore
+ *                 no swap file will be used when xchacha20 encryption is
+ *                 enabled.
+ *                 Encryption of undo files is not yet supported,
+ *                 therefore no undo file will currently be written.
+ *                 CURRENTLY EXPERIMENTAL: Files written with this method
+ *                 might have to be read back with the same version of
+ *                 Vim if the binary format changes later.
  *
  * You should use "blowfish2", also to re-encrypt older files.
  *
@@ -544,15 +576,17 @@ export const conskey = {
  * without changing 'cryptmethod' the same method will be used.
  * Changing 'cryptmethod' does not mark the file as modified, you have to
  * explicitly write it, you don't get a warning unless there are other
- * modifications.  Also see |:X|.
+ * modifications.  Also see `:X`.
  *
  * When setting the global value to an empty string, it will end up with
  * the value "blowfish2".  When setting the local value to an empty
  * string the buffer will use the global value.
  *
  * When a new encryption method is added in a later version of Vim, and
- * the current version does not recognize it, you will get	 .
+ * the current version does not recognize it, you will get *E821* .
  * You need to edit this file with the later version of Vim.
+ *
+ * (default "blowfish2")
  */
 export const cryptmethod = {
   async get(denops: Denops): Promise<string> {
@@ -585,10 +619,12 @@ export const cryptmethod = {
 };
 
 /**
- * 		{not available when compiled without the |+cscope|
- * 		feature}
- * Give messages when adding a cscope database.  See |cscopeverbose|.
+ * Give messages when adding a cscope database.  See `cscopeverbose`.
  * NOTE: This option is reset when 'compatible' is set.
+ *
+ * (default off)
+ *
+ * *not available when compiled without the `+cscope` feature*
  */
 export const cscopeverbose = {
   async get(denops: Denops): Promise<boolean> {
@@ -613,10 +649,12 @@ export const cscopeverbose = {
 
 /**
  * Makes the 'g' and 'c' flags of the ":substitute" command to be
- * toggled each time the flag is given.  See |complex-change|.  See
+ * toggled each time the flag is given.  See `complex-change`.  See
  * also 'gdefault' option.
  * Switching this option on may break plugins!
- * This option is not used in |Vim9| script.
+ * This option is not used in `Vim9` script.
+ *
+ * (default off)
  */
 export const edcompatible = {
   async get(denops: Denops): Promise<boolean> {
@@ -640,19 +678,21 @@ export const edcompatible = {
 };
 
 /**
- * Function keys that start with an <Esc> are recognized in Insert
+ * Function keys that start with an `<Esc>` are recognized in Insert
  * mode.  When this option is off, the cursor and function keys cannot be
- * used in Insert mode if they start with an <Esc>.  The advantage of
- * this is that the single <Esc> is recognized immediately, instead of
+ * used in Insert mode if they start with an `<Esc>`.  The advantage of
+ * this is that the single `<Esc>` is recognized immediately, instead of
  * after one second.  Instead of resetting this option, you might want to
  * try changing the values for 'timeoutlen' and 'ttimeoutlen'.  Note that
  * when 'esckeys' is off, you can still map anything, but the cursor keys
  * won't work by default.
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
- * NOTE: when this option is off then the |modifyOtherKeys| functionality
+ * NOTE: when this option is off then the `modifyOtherKeys` functionality
  * is disabled while in Insert mode to avoid ending Insert mode with any
  * key that has a modifier.
+ *
+ * (Vim default: on, Vi default: off)
  */
 export const esckeys = {
   async get(denops: Denops): Promise<boolean> {
@@ -686,10 +726,12 @@ export const esckeys = {
  * matching directory.
  *
  * If you do switch this option on you should also consider setting the
- * 'secure' option (see |initialization|).
- * Also see |.vimrc| and |gui-init|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * 'secure' option (see `initialization`).
+ * Also see `.vimrc` and `gui-init`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default off)
  */
 export const exrc = {
   async get(denops: Denops): Promise<boolean> {
@@ -713,10 +755,12 @@ export const exrc = {
 };
 
 /**
- * 		{only available when compiled with the |+rightleft|
- * 		feature}
  * This option was for using Farsi, which has been removed.  See
- * |farsi.txt|.
+ * `farsi.txt`.
+ *
+ * (default off)
+ *
+ * *only available when compiled with the `+rightleft` feature*
  */
 export const fkmap = {
   async get(denops: Denops): Promise<boolean> {
@@ -740,12 +784,14 @@ export const fkmap = {
 };
 
 /**
- * 		{only available when compiled with GUI enabled and
- * 		with the |+xfontset| feature}
- * 		{not available in the GTK+ GUI}
- * When not empty, specifies two (or more) fonts to be used.  The first
- * one for normal English, the second one for your special language.  See
- * |xfontset|.
+ * *not available in the GTK+ GUI*
+ *         When not empty, specifies two (or more) fonts to be used.  The first
+ *         one for normal English, the second one for your special language.  See
+ *         `xfontset`.
+ *
+ * (default "")
+ *
+ * *only available when compiled with GUI enabled and with the `+xfontset` feature*
  */
 export const guifontset = {
   async get(denops: Denops): Promise<string> {
@@ -769,14 +815,17 @@ export const guifontset = {
 };
 
 /**
- * 		{only for GTK and X11 GUI}
  * The number of pixels subtracted from the screen height when fitting
  * the GUI window on the screen.  Set this before the GUI is started,
- * e.g., in your |gvimrc| file.  When zero, the whole screen height will
+ * e.g., in your `gvimrc` file.  When zero, the whole screen height will
  * be used by the window.  When positive, the specified number of pixel
  * lines will be left for window decorations and other items on the
  * screen.  Set it to a negative value to allow windows taller than the
  * screen.
+ *
+ * (default 50)
+ *
+ * *only for GTK and X11 GUI*
  */
 export const guiheadroom = {
   async get(denops: Denops): Promise<number> {
@@ -800,14 +849,19 @@ export const guiheadroom = {
 };
 
 /**
- * 		{only for GTK GUI}
  * List of ASCII characters that, when combined together, can create more
  * complex shapes. Each character must be a printable ASCII character
  * with a value in the 32-127 range.
- * Example: >
- * 	:set guiligatures=!\"#$%&()*+-./:<=>?@[]^_{\|~
- * <	Changing this option updates screen output immediately. Set it to an
+ * Example:
+ *
+ *     :set guiligatures=!\"#$%&()*+-./:<=>?@[]^_{\|~
+ *
+ * Changing this option updates screen output immediately. Set it to an
  * empty string to disable ligatures.
+ *
+ * (default "")
+ *
+ * *only for GTK GUI*
  */
 export const guiligatures = {
   async get(denops: Denops): Promise<string> {
@@ -831,9 +885,12 @@ export const guiligatures = {
 };
 
 /**
- * 		{only available when compiled with GUI enabled}
  * Only in the GUI: If on, an attempt is made to open a pseudo-tty for
- * I/O to/from shell commands.  See |gui-pty|.
+ * I/O to/from shell commands.  See `gui-pty`.
+ *
+ * (default on)
+ *
+ * *only available when compiled with GUI enabled*
  */
 export const guipty = {
   async get(denops: Denops): Promise<boolean> {
@@ -861,78 +918,96 @@ export const guipty = {
  * occasions.  It is a comma-separated list of character pairs.  The
  * first character in a pair gives the occasion, the second the mode to
  * use for that occasion.  The occasions are:
- * |hl-SpecialKey|	 8  Meta and special keys listed with ":map"
- * |hl-EndOfBuffer|   ~  lines after the last line in the buffer
- * |hl-NonText|	 @  '@' at the end of the window and
- * 		    characters from 'showbreak'
- * |hl-Directory|	 d  directories in CTRL-D listing and other special
- * 		    things in listings
- * |hl-ErrorMsg|	 e  error messages
- * 		 h  (obsolete, ignored)
- * |hl-IncSearch|	 i  'incsearch' highlighting
- * |hl-CurSearch|	 y  current instance of last search pattern
- * |hl-Search|	 l  last search pattern highlighting (see 'hlsearch')
- * |hl-MoreMsg|	 m  |more-prompt|
- * |hl-ModeMsg|	 M  Mode (e.g., "-- INSERT --")
- * |hl-LineNr|	 n  line number for ":number" and ":#" commands, and
- * 		    when 'number' or 'relativenumber' option is set.
- * |hl-LineNrAbove|   a  line number above the cursor for when the
- * 		    'relativenumber' option is set.
- * |hl-LineNrBelow|   b  line number below the cursor for when the
- * 		    'relativenumber' option is set.
- * |hl-CursorLineNr|  N like n for when 'cursorline' or 'relativenumber' is
- * 		    set.
- * |hl-Question|	 r  |hit-enter| prompt and yes/no questions
- * |hl-StatusLine|	 s  status line of current window |status-line|
- * |hl-StatusLineNC|  S  status lines of not-current windows
- * |hl-Title|	 t  Titles for output from ":set all", ":autocmd" etc.
- * |hl-VertSplit|	 c  column used to separate vertically split windows
- * |hl-Visual|	 v  Visual mode
- * |hl-VisualNOS|	 V  Visual mode when Vim does is "Not Owning the
- * 		    Selection" Only X11 Gui's |gui-x11| and
- * 		    |xterm-clipboard|.
- * |hl-WarningMsg|	 w  warning messages
- * |hl-WildMenu|	 W  wildcard matches displayed for 'wildmenu'
- * |hl-Folded|	 f  line used for closed folds
- * |hl-FoldColumn|	 F  'foldcolumn'
- * |hl-DiffAdd|	 A  added line in diff mode
- * |hl-DiffChange|	 C  changed line in diff mode
- * |hl-DiffDelete|	 D  deleted line in diff mode
- * |hl-DiffText|	 T  inserted text in diff mode
- * |hl-SignColumn|	 >  column used for |signs|
- * |hl-Conceal|	 -  the placeholders used for concealed characters
- * 		    (see 'conceallevel')
- * |hl-SpellBad|	 B  misspelled word |spell|
- * |hl-SpellCap|	 P  word that should start with capital |spell|
- * |hl-SpellRare|	 R  rare word |spell|
- * |hl-SpellLocal|	 L  word from other region |spell|
- * |hl-Pmenu|	 +  popup menu normal line
- * |hl-PmenuSel|	 =  popup menu selected line
- * |hl-PmenuSbar|	 x  popup menu scrollbar
- * |hl-PmenuThumb|	 X  popup menu scrollbar thumb
+ * `hl-SpecialKey`  8  Meta and special keys listed with ":map"
+ * `hl-EndOfBuffer`   `~`  lines after the last line in the buffer
+ * `hl-NonText`     @  '@' at the end of the window and
+ *                     characters from 'showbreak'
+ * `hl-Directory`   d  directories in CTRL-D listing and other special
+ *                     things in listings
+ * `hl-ErrorMsg`    e  error messages
+ *                  h  (obsolete, ignored)
+ * `hl-IncSearch`   i  'incsearch' highlighting
+ * `hl-CurSearch`   y  current instance of last search pattern
+ * `hl-Search`      l  last search pattern highlighting (see 'hlsearch')
+ * `hl-MoreMsg`     m  `more-prompt`
+ * `hl-ModeMsg`     M  Mode (e.g., "-- INSERT --")
+ * `hl-LineNr`      n  line number for ":number" and ":#" commands, and
+ *                     when 'number' or 'relativenumber' option is set.
+ * `hl-LineNrAbove`   a  line number above the cursor for when the
+ *                     'relativenumber' option is set.
+ * `hl-LineNrBelow`   b  line number below the cursor for when the
+ *                     'relativenumber' option is set.
+ * `hl-CursorLineNr`  N like n for when 'cursorline' or 'relativenumber' is
+ *                     set.
+ * `hl-Question`    r  `hit-enter` prompt and yes/no questions
+ * `hl-StatusLine`  s  status line of current window `status-line`
+ * `hl-StatusLineNC`  S  status lines of not-current windows
+ * `hl-Title`       t  Titles for output from ":set all", ":autocmd" etc.
+ * `hl-VertSplit`   c  column used to separate vertically split windows
+ * `hl-Visual`      v  Visual mode
+ * `hl-VisualNOS`   V  Visual mode when Vim does is "Not Owning the
+ *                     Selection" Only X11 Gui's `gui-x11` and
+ *                     `xterm-clipboard`.
+ * `hl-WarningMsg`  w  warning messages
+ * `hl-WildMenu`    W  wildcard matches displayed for 'wildmenu'
+ * `hl-Folded`      f  line used for closed folds
+ * `hl-FoldColumn`  F  'foldcolumn'
+ * `hl-DiffAdd`     A  added line in diff mode
+ * `hl-DiffChange`  C  changed line in diff mode
+ * `hl-DiffDelete`  D  deleted line in diff mode
+ * `hl-DiffText`    T  inserted text in diff mode
+ * `hl-SignColumn`  >  column used for `signs`
+ * `hl-Conceal`     -  the placeholders used for concealed characters
+ *                     (see 'conceallevel')
+ * `hl-SpellBad`    B  misspelled word `spell`
+ * `hl-SpellCap`    P  word that should start with capital `spell`
+ * `hl-SpellRare`   R  rare word `spell`
+ * `hl-SpellLocal`  L  word from other region `spell`
+ * `hl-Pmenu`       +  popup menu normal line
+ * `hl-PmenuSel`    =  popup menu selected line
+ * `hl-PmenuSbar`   x  popup menu scrollbar
+ * `hl-PmenuThumb`  X  popup menu scrollbar thumb
  *
  * The display modes are:
- * 	r	reverse		(termcap entry "mr" and "me")
- * 	i	italic		(termcap entry "ZH" and "ZR")
- * 	b	bold		(termcap entry "md" and "me")
- * 	s	standout	(termcap entry "so" and "se")
- * 	u	underline	(termcap entry "us" and "ue")
- * 	c	undercurl	(termcap entry "Us" and "Ce")
- * 	2	double underline (termcap entry "Ds" and "Ce")
- * 	d	dotted underline (termcap entry "ds" and "Ce")
- * 	=	dashed underline (termcap entry "Ds" and "Ce")
- * 	t	strikethrough	(termcap entry "Ts" and "Te")
- * 	n	no highlighting
- * 	-	no highlighting
- * 	:	use a highlight group
+ *         r       reverse         (termcap entry "mr" and "me")
+ *         i       italic          (termcap entry "ZH" and "ZR")
+ *         b       bold            (termcap entry "md" and "me")
+ *         s       standout        (termcap entry "so" and "se")
+ *         u       underline       (termcap entry "us" and "ue")
+ *         c       undercurl       (termcap entry "Us" and "Ce")
+ *         2       double underline (termcap entry "Ds" and "Ce")
+ *         d       dotted underline (termcap entry "ds" and "Ce")
+ *         =       dashed underline (termcap entry "Ds" and "Ce")
+ *         t       strikethrough   (termcap entry "Ts" and "Te")
+ *         n       no highlighting
+ *         -       no highlighting
+ *         :       use a highlight group
  * The default is used for occasions that are not included.
- * If you want to change what the display modes do, see |dos-colors|
+ * If you want to change what the display modes do, see `dos-colors`
  * for an example.
  * When using the ':' display mode, this must be followed by the name of
  * a highlight group.  A highlight group can be used to define any type
- * of highlighting, including using color.  See |:highlight| on how to
+ * of highlighting, including using color.  See `:highlight` on how to
  * define one.  The default uses a different group for each occasion.
- * See |highlight-default| for the default highlight groups.
+ * See `highlight-default` for the default highlight groups.
+ *
+ * (default (as a single string):
+ *  `"8:SpecialKey,~:EndOfBuffer,@:NonText,
+ *  d:Directory,e:ErrorMsg,i:IncSearch,
+ *  l:Search,m:MoreMsg,M:ModeMsg,n:LineNr,
+ *  a:LineNrAbove,b:LineNrBelow,
+ *  N:CursorLineNr,r:Question,s:StatusLine,
+ *  S:StatusLineNC,c:VertSplit,t:Title,
+ *  v:Visual,V:VisualNOS,w:WarningMsg,
+ *  W:WildMenu,f:Folded,F:FoldColumn,
+ *  A:DiffAdd,C:DiffChange,D:DiffDelete,
+ *  T:DiffText,>:SignColumn,-:Conceal,
+ *  B:SpellBad,P:SpellCap,R:SpellRare,
+ *  L:SpellLocal,+:Pmenu,=:PmenuSel,
+ *  x:PmenuSbar,X:PmenuThumb,*:TabLine,
+ *  #:TabLineSel,_:TabLineFill,!:CursorColumn,
+ *  .:CursorLine,o:ColorColumn,q:QuickFixLine,
+ *  z:StatusLineTerm,Z:StatusLineTermNC"`)
  */
 export const highlight = {
   async get(denops: Denops): Promise<string> {
@@ -958,23 +1033,25 @@ export const highlight = {
 /**
  * This option specifies a function that will be called to
  * activate or deactivate the Input Method.  The value can be the name of
- * a function, a |lambda| or a |Funcref|. See |option-value-function| for
+ * a function, a `lambda` or a `Funcref`. See `option-value-function` for
  * more information.
  * It is not used in the MS-Windows GUI version.
- * The expression will be evaluated in the |sandbox| when set from a
- * modeline, see |sandbox-option|.
+ * The expression will be evaluated in the `sandbox` when set from a
+ * modeline, see `sandbox-option`.
  *
- * Example: >
- * 	function ImActivateFunc(active)
- * 	  if a:active
- * 	    ... do something
- * 	  else
- * 	    ... do something
- * 	  endif
- * 	  " return value is not used
- * 	endfunction
- * 	set imactivatefunc=ImActivateFunc
- * <
+ * Example:
+ *
+ *     function ImActivateFunc(active)
+ *       if a:active
+ *         ... do something
+ *       else
+ *         ... do something
+ *       endif
+ *       " return value is not used
+ *     endfunction
+ *     set imactivatefunc=ImActivateFunc
+ *
+ * (default "")
  */
 export const imactivatefunc = {
   async get(denops: Denops): Promise<string> {
@@ -998,33 +1075,37 @@ export const imactivatefunc = {
 };
 
 /**
- * 		{only available when compiled with |+xim| and
- * 		|+GUI_GTK|}
- * Specifies the key that your Input Method in X-Windows uses for
- * activation.  When this is specified correctly, vim can fully control
- * IM with 'imcmdline', 'iminsert' and 'imsearch'.
- * You can't use this option to change the activation key, the option
- * tells Vim what the key is.
- * Format:
- * 	[MODIFIER_FLAG-]KEY_STRING
+ * *only available when compiled with `+xim` and
+ * `+GUI_GTK`*
+ *         Specifies the key that your Input Method in X-Windows uses for
+ *         activation.  When this is specified correctly, vim can fully control
+ *         IM with 'imcmdline', 'iminsert' and 'imsearch'.
+ *         You can't use this option to change the activation key, the option
+ *         tells Vim what the key is.
+ *         Format:
+ *                 [MODIFIER_FLAG-]KEY_STRING
  *
- * These characters can be used for MODIFIER_FLAG (case is ignored):
- * 	S	    Shift key
- * 	L	    Lock key
- * 	C	    Control key
- * 	1	    Mod1 key
- * 	2	    Mod2 key
- * 	3	    Mod3 key
- * 	4	    Mod4 key
- * 	5	    Mod5 key
- * Combinations are allowed, for example "S-C-space" or "SC-space" are
- * both shift+ctrl+space.
- * See <X11/keysymdef.h> and XStringToKeysym for KEY_STRING.
+ *         These characters can be used for MODIFIER_FLAG (case is ignored):
+ *                 S           Shift key
+ *                 L           Lock key
+ *                 C           Control key
+ *                 1           Mod1 key
+ *                 2           Mod2 key
+ *                 3           Mod3 key
+ *                 4           Mod4 key
+ *                 5           Mod5 key
+ *         Combinations are allowed, for example "S-C-space" or "SC-space" are
+ *         both shift+ctrl+space.
+ *         See `<X11/keysymdef.h>` and XStringToKeysym for KEY_STRING.
  *
- * Example: >
- * 	:set imactivatekey=S-space
- * <	"S-space" means shift+space.  This is the activation key for kinput2 +
- * canna (Japanese), and ami (Korean).
+ *         Example:
+ *
+ *             :set imactivatekey=S-space
+ *
+ *         "S-space" means shift+space.  This is the activation key for kinput2 +
+ *         canna (Japanese), and ami (Korean).
+ *
+ * (default "")
  */
 export const imactivatekey = {
   async get(denops: Denops): Promise<string> {
@@ -1050,20 +1131,23 @@ export const imactivatekey = {
 /**
  * This option specifies a function that is called to obtain the status
  * of Input Method.  It must return a positive number when IME is active.
- * The value can be the name of a function, a |lambda| or a |Funcref|.
- * See |option-value-function| for more information.
+ * The value can be the name of a function, a `lambda` or a `Funcref`.
+ * See `option-value-function` for more information.
  * It is not used in the MS-Windows GUI version.
  *
- * Example: >
- * 	function ImStatusFunc()
- * 	  let is_active = ...do something
- * 	  return is_active ? 1 : 0
- * 	endfunction
- * 	set imstatusfunc=ImStatusFunc
- * <
+ * Example:
+ *
+ *     function ImStatusFunc()
+ *       let is_active = ...do something
+ *       return is_active ? 1 : 0
+ *     endfunction
+ *     set imstatusfunc=ImStatusFunc
+ *
  * NOTE: This function is invoked very often.  Keep it fast.
- * The expression will be evaluated in the |sandbox| when set from a
- * modeline, see |sandbox-option|.
+ * The expression will be evaluated in the `sandbox` when set from a
+ * modeline, see `sandbox-option`.
+ *
+ * (default "")
  */
 export const imstatusfunc = {
   async get(denops: Denops): Promise<string> {
@@ -1087,20 +1171,22 @@ export const imstatusfunc = {
 };
 
 /**
- * 		{only available when compiled with |+xim| and
- * 		|+GUI_GTK|}
  * This option specifies the input style of Input Method:
  * 0   use on-the-spot style
  * 1   over-the-spot style
- * See: |xim-input-style|
+ * See: `xim-input-style`
  *
  * For a long time on-the-spot style had been used in the GTK version of
  * vim, however, it is known that it causes troubles when using mappings,
- * |single-repeat|, etc.  Therefore over-the-spot style becomes the
+ * `single-repeat`, etc.  Therefore over-the-spot style becomes the
  * default now.  This should work fine for most people, however if you
  * have any problem with it, try using on-the-spot style.
- * The expression will be evaluated in the |sandbox| when set from a
- * modeline, see |sandbox-option|.
+ * The expression will be evaluated in the `sandbox` when set from a
+ * modeline, see `sandbox-option`.
+ *
+ * (default 1)
+ *
+ * *only available when compiled with `+xim` and `+GUI_GTK`*
  */
 export const imstyle = {
   async get(denops: Denops): Promise<number> {
@@ -1125,28 +1211,30 @@ export const imstyle = {
 
 /**
  * Makes Vim work in a way that Insert mode is the default mode.  Useful
- * if you want to use Vim as a modeless editor.  Used for |evim|.
+ * if you want to use Vim as a modeless editor.  Used for `evim`.
  * These Insert mode commands will be useful:
  * - Use the cursor keys to move around.
- * - Use CTRL-O to execute one Normal mode command |i_CTRL-O|.  When
+ * - Use CTRL-O to execute one Normal mode command `i_CTRL-O`.  When
  *   this is a mapping, it is executed as if 'insertmode' was off.
  *   Normal mode remains active until the mapping is finished.
  * - Use CTRL-L to execute a number of Normal mode commands, then use
- *   <Esc> to get back to Insert mode.  Note that CTRL-L moves the cursor
- *   left, like <Esc> does when 'insertmode' isn't set.  |i_CTRL-L|
+ *   `<Esc>` to get back to Insert mode.  Note that CTRL-L moves the cursor
+ *   left, like `<Esc>` does when 'insertmode' isn't set.  `i_CTRL-L`
  *
  * These items change when 'insertmode' is set:
  * - when starting to edit of a file, Vim goes to Insert mode.
- * - <Esc> in Insert mode is a no-op and beeps.
- * - <Esc> in Normal mode makes Vim go to Insert mode.
+ * - `<Esc>` in Insert mode is a no-op and beeps.
+ * - `<Esc>` in Normal mode makes Vim go to Insert mode.
  * - CTRL-L in Insert mode is a command, it is not inserted.
- * - CTRL-Z in Insert mode suspends Vim, see |CTRL-Z|.
- * However, when <Esc> is used inside a mapping, it behaves like
+ * - CTRL-Z in Insert mode suspends Vim, see `CTRL-Z`.
+ * However, when `<Esc>` is used inside a mapping, it behaves like
  * 'insertmode' was not set.  This was done to be able to use the same
  * mappings with 'insertmode' set or not set.
- * When executing commands with |:normal| 'insertmode' is not used.
+ * When executing commands with `:normal` 'insertmode' is not used.
  *
  * NOTE: This option is reset when 'compatible' is set.
+ *
+ * (default off)
  */
 export const insertmode = {
   async get(denops: Denops): Promise<boolean> {
@@ -1170,19 +1258,23 @@ export const insertmode = {
 };
 
 /**
- * 		{only available when compiled with the |+cryptv|
- * 		feature}
  * The key that is used for encrypting and decrypting the current buffer.
- * See |encryption| and 'cryptmethod'.
+ * See `encryption` and 'cryptmethod'.
  * Careful: Do not set the key value by hand, someone might see the typed
- * key.  Use the |:X| command.  But you can make 'key' empty: >
- * 	:set key=
- * <	It is not possible to get the value of this option with ":set key" or
+ * key.  Use the `:X` command.  But you can make 'key' empty:
+ *
+ *     :set key=
+ *
+ * It is not possible to get the value of this option with ":set key" or
  * "echo &key".  This is to avoid showing it to someone who shouldn't
  * know.  It also means you cannot see it yourself once you have set it,
  * be careful not to make a typing error!
  * You can use "&key" in an expression to detect whether encryption is
- * enabled.  When 'key' is set it returns "**" (five stars).
+ * enabled.  When 'key' is set it returns "*****" (five stars).
+ *
+ * (default "")
+ *
+ * *only available when compiled with the `+cryptv` feature*
  */
 export const key = {
   async get(denops: Denops): Promise<string> {
@@ -1206,11 +1298,13 @@ export const key = {
 };
 
 /**
- * 		{only available when compiled with the |+langmap|
- * 		feature}
  * This is just like 'langremap' but with the value inverted.  It only
  * exists for backwards compatibility.  When setting 'langremap' then
  * 'langnoremap' is set to the inverted value, and the other way around.
+ *
+ * (default off, set in `defaults.vim`)
+ *
+ * *only available when compiled with the `+langmap` feature*
  */
 export const langnoremap = {
   async get(denops: Denops): Promise<boolean> {
@@ -1234,13 +1328,15 @@ export const langnoremap = {
 };
 
 /**
- * 		{only available when compiled with the |+lua/dyn|
- * 		feature}
  * Specifies the name of the Lua shared library. The default is
  * DYNAMIC_LUA_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+lua/dyn` feature*
  */
 export const luadll = {
   async get(denops: Denops): Promise<string> {
@@ -1264,8 +1360,11 @@ export const luadll = {
 };
 
 /**
- * 		{not supported}
  * No longer supported, as the Mac OS X GUI code was removed.
+ *
+ * (default on)
+ *
+ * *not supported*
  */
 export const macatsui = {
   async get(denops: Denops): Promise<boolean> {
@@ -1294,8 +1393,10 @@ export const macatsui = {
  * The default is OK for most languages.  Hebrew may require 4.
  * Maximum value is 6.
  * Even when this option is set to 2 you can still edit text with more
- * combining characters, you just can't see them.  Use |g8| or |ga|.
- * See |mbyte-combining|.
+ * combining characters, you just can't see them.  Use `g8` or `ga`.
+ * See `mbyte-combining`.
+ *
+ * (default 2)
  */
 export const maxcombine = {
   async get(denops: Denops): Promise<number> {
@@ -1326,6 +1427,10 @@ export const maxcombine = {
  * limit.
  * The value is ignored when 'swapfile' is off.
  * Also see 'maxmemtot'.
+ *
+ * (default between 256 to 5120 (system
+ *  dependent) or half the amount of memory
+ *  available)
  */
 export const maxmem = {
   async get(denops: Denops): Promise<number> {
@@ -1359,6 +1464,10 @@ export const maxmem = {
  * Buffers with 'swapfile' off still count to the total amount of memory
  * used.
  * Also see 'maxmem'.
+ *
+ * (default between 2048 and 10240 (system
+ *  dependent) or half the amount of memory
+ *  available)
  */
 export const maxmemtot = {
   async get(denops: Denops): Promise<number> {
@@ -1382,15 +1491,17 @@ export const maxmemtot = {
 };
 
 /**
- * 		{only available when compiled with the |+mzscheme/dyn|
- * 		feature}
  * Specifies the name of the MzScheme shared library. The default is
  * DYNAMIC_MZSCH_DLL which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * The value must be set in the |vimrc| script or earlier.  In the
- * startup, before the |load-plugins| step.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * The value must be set in the `vimrc` script or earlier.  In the
+ * startup, before the `load-plugins` step.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+mzscheme/dyn` feature*
  */
 export const mzschemedll = {
   async get(denops: Denops): Promise<string> {
@@ -1414,14 +1525,16 @@ export const mzschemedll = {
 };
 
 /**
- * 		{only available when compiled with the |+mzscheme/dyn|
- * 		feature}
  * Specifies the name of the MzScheme GC shared library. The default is
  * DYNAMIC_MZGC_DLL which was specified at compile time.
  * The value can be equal to 'mzschemedll' if it includes the GC code.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+mzscheme/dyn` feature*
  */
 export const mzschemegcdll = {
   async get(denops: Denops): Promise<string> {
@@ -1445,12 +1558,14 @@ export const mzschemegcdll = {
 };
 
 /**
- * 		{not available when compiled without the |+mzscheme|
- * 		feature}
  * The number of milliseconds between polls for MzScheme threads.
  * Negative or zero value means no thread scheduling.
  * NOTE: This option is set to the Vim default value when 'compatible'
  * is reset.
+ *
+ * (default 100)
+ *
+ * *not available when compiled without the `+mzscheme` feature*
  */
 export const mzquantum = {
   async get(denops: Denops): Promise<number> {
@@ -1475,6 +1590,8 @@ export const mzquantum = {
 
 /**
  * This option was supported on RISC OS, which has been removed.
+ *
+ * (default: "")
  */
 export const osfiletype = {
   async get(denops: Denops): Promise<string> {
@@ -1498,13 +1615,15 @@ export const osfiletype = {
 };
 
 /**
- * 		{only available when compiled with the |+perl/dyn|
- * 		feature}
  * Specifies the name of the Perl shared library. The default is
  * DYNAMIC_PERL_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+perl/dyn` feature*
  */
 export const perldll = {
   async get(denops: Denops): Promise<string> {
@@ -1528,12 +1647,14 @@ export const perldll = {
 };
 
 /**
- * 		{not available when compiled without the |+textprop|
- * 		or |+quickfix| feature}
  * When not empty a popup window is used for commands that would open a
- * preview window.  See |preview-popup|.
+ * preview window.  See `preview-popup`.
  * Not used for the insert completion info, add "popup" to
  * 'completeopt' for that.
+ *
+ * (default empty)
+ *
+ * *not available when compiled without the `+textprop` or `+quickfix` feature*
  */
 export const previewpopup = {
   async get(denops: Denops): Promise<string> {
@@ -1558,6 +1679,8 @@ export const previewpopup = {
 
 /**
  * When on a ":" prompt is used in Ex mode.
+ *
+ * (default on)
  */
 export const prompt = {
   async get(denops: Denops): Promise<boolean> {
@@ -1581,13 +1704,15 @@ export const prompt = {
 };
 
 /**
- * 		{only available when compiled with the |+python/dyn|
- * 		feature}
  * Specifies the name of the Python 2.x shared library. The default is
  * DYNAMIC_PYTHON_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+python/dyn` feature*
  */
 export const pythondll = {
   async get(denops: Denops): Promise<string> {
@@ -1611,15 +1736,17 @@ export const pythondll = {
 };
 
 /**
- * 		{only available when compiled with the |+python/dyn|
- * 		feature}
  * Specifies the name of the Python 2.x home directory. When 'pythonhome'
  * and the PYTHONHOME environment variable are not set, PYTHON_HOME,
  * which was specified at compile time, will be used for the Python 2.x
  * home directory.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default "")
+ *
+ * *only available when compiled with the `+python/dyn` feature*
  */
 export const pythonhome = {
   async get(denops: Denops): Promise<string> {
@@ -1643,13 +1770,15 @@ export const pythonhome = {
 };
 
 /**
- * 		{only available when compiled with the |+python3/dyn|
- * 		feature}
  * Specifies the name of the Python 3 shared library. The default is
  * DYNAMIC_PYTHON3_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+python3/dyn` feature*
  */
 export const pythonthreedll = {
   async get(denops: Denops): Promise<string> {
@@ -1673,15 +1802,17 @@ export const pythonthreedll = {
 };
 
 /**
- * 		{only available when compiled with the |+python3/dyn|
- * 		feature}
  * Specifies the name of the Python 3 home directory. When
  * 'pythonthreehome' and the PYTHONHOME environment variable are not set,
  * PYTHON3_HOME, which was specified at compile time, will be used for
  * the Python 3 home directory.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default "")
+ *
+ * *only available when compiled with the `+python3/dyn` feature*
  */
 export const pythonthreehome = {
   async get(denops: Denops): Promise<string> {
@@ -1710,6 +1841,8 @@ export const pythonthreehome = {
  * NOTE: To avoid portability problems with Vim scripts, always keep
  * this option at the default "on".  Only switch it off when working with
  * old Vi scripts.
+ *
+ * (default on)
  */
 export const remap = {
   async get(denops: Denops): Promise<boolean> {
@@ -1733,99 +1866,103 @@ export const remap = {
 };
 
 /**
- * 		{only available when compiled with GUI and DIRECTX on
- * 		MS-Windows}
  * Select a text renderer and set its options.  The options depend on the
  * renderer.
  *
- * Syntax: >
- * 	set rop=type:{renderer}(,{name}:{value})*
- * <
+ * Syntax:
+ *
+ *     set rop=type:{renderer}(,{name}:{value})*
+ *
  * Currently, only one optional renderer is available.
  *
- * render	behavior    ~
- * directx	Vim will draw text using DirectX (DirectWrite).  It makes
- * 	drawn glyphs more beautiful than default GDI.
- * 	It requires 'encoding' is "utf-8", and only works on
- * 	MS-Windows Vista or newer version.
+ * render  behavior
+ * directx Vim will draw text using DirectX (DirectWrite).  It makes
+ *         drawn glyphs more beautiful than default GDI.
+ *         It requires 'encoding' is "utf-8", and only works on
+ *         MS-Windows Vista or newer version.
  *
- * 	Options:
- * 	  name	    meaning		type	value       ~
- * 	  gamma	    gamma		float	1.0 - 2.2 (maybe)
- * 	  contrast  enhancedContrast	float	(unknown)
- * 	  level	    clearTypeLevel	float	(unknown)
- * 	  geom	    pixelGeometry	int	0 - 2 (see below)
- * 	  renmode   renderingMode	int	0 - 6 (see below)
- * 	  taamode   textAntialiasMode	int	0 - 3 (see below)
- * 	  scrlines  Scroll Lines	int	(deprecated)
+ *         Options:
+ *           name      meaning             type    value
+ *           gamma     gamma               float   1.0 - 2.2 (maybe)
+ *           contrast  enhancedContrast    float   (unknown)
+ *           level     clearTypeLevel      float   (unknown)
+ *           geom      pixelGeometry       int     0 - 2 (see below)
+ *           renmode   renderingMode       int     0 - 6 (see below)
+ *           taamode   textAntialiasMode   int     0 - 3 (see below)
+ *           scrlines  Scroll Lines        int     (deprecated)
  *
- * 	See this URL for detail (except for scrlines):
- * 	  https://msdn.microsoft.com/en-us/library/dd368190.aspx
+ *         See this URL for detail (except for scrlines):
+ *           https://msdn.microsoft.com/en-us/library/dd368190.aspx
  *
- * 	For geom: structure of a device pixel.
- * 	  0 - DWRITE_PIXEL_GEOMETRY_FLAT
- * 	  1 - DWRITE_PIXEL_GEOMETRY_RGB
- * 	  2 - DWRITE_PIXEL_GEOMETRY_BGR
+ *         For geom: structure of a device pixel.
+ *           0 - DWRITE_PIXEL_GEOMETRY_FLAT
+ *           1 - DWRITE_PIXEL_GEOMETRY_RGB
+ *           2 - DWRITE_PIXEL_GEOMETRY_BGR
  *
- * 	See this URL for detail:
- * 	  https://msdn.microsoft.com/en-us/library/dd368114.aspx
+ *         See this URL for detail:
+ *           https://msdn.microsoft.com/en-us/library/dd368114.aspx
  *
- * 	For renmode: method of rendering glyphs.
- * 	  0 - DWRITE_RENDERING_MODE_DEFAULT
- * 	  1 - DWRITE_RENDERING_MODE_ALIASED
- * 	  2 - DWRITE_RENDERING_MODE_GDI_CLASSIC
- * 	  3 - DWRITE_RENDERING_MODE_GDI_NATURAL
- * 	  4 - DWRITE_RENDERING_MODE_NATURAL
- * 	  5 - DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC
- * 	  6 - DWRITE_RENDERING_MODE_OUTLINE
+ *         For renmode: method of rendering glyphs.
+ *           0 - DWRITE_RENDERING_MODE_DEFAULT
+ *           1 - DWRITE_RENDERING_MODE_ALIASED
+ *           2 - DWRITE_RENDERING_MODE_GDI_CLASSIC
+ *           3 - DWRITE_RENDERING_MODE_GDI_NATURAL
+ *           4 - DWRITE_RENDERING_MODE_NATURAL
+ *           5 - DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC
+ *           6 - DWRITE_RENDERING_MODE_OUTLINE
  *
- * 	See this URL for detail:
- * 	  https://msdn.microsoft.com/en-us/library/dd368118.aspx
+ *         See this URL for detail:
+ *           https://msdn.microsoft.com/en-us/library/dd368118.aspx
  *
- * 	For taamode: antialiasing mode used for drawing text.
- * 	  0 - D2D1_TEXT_ANTIALIAS_MODE_DEFAULT
- * 	  1 - D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE
- * 	  2 - D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE
- * 	  3 - D2D1_TEXT_ANTIALIAS_MODE_ALIASED
+ *         For taamode: antialiasing mode used for drawing text.
+ *           0 - D2D1_TEXT_ANTIALIAS_MODE_DEFAULT
+ *           1 - D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE
+ *           2 - D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE
+ *           3 - D2D1_TEXT_ANTIALIAS_MODE_ALIASED
  *
- * 	See this URL for detail:
- * 	  https://msdn.microsoft.com/en-us/library/dd368170.aspx
+ *         See this URL for detail:
+ *           https://msdn.microsoft.com/en-us/library/dd368170.aspx
  *
- * 	For scrlines:
- * 	This was used for optimizing scrolling behavior, however this
- * 	is now deprecated.  If specified, it is simply ignored.
+ *         For scrlines:
+ *         This was used for optimizing scrolling behavior, however this
+ *         is now deprecated.  If specified, it is simply ignored.
  *
- * 	Example: >
- * 	  set encoding=utf-8
- * 	  set gfn=Ricty_Diminished:h12
- * 	  set rop=type:directx
- * <
- * 	If select a raster font (Courier, Terminal or FixedSys which
- * 	have ".fon" extension in file name) to 'guifont', it will be
- * 	drawn by GDI as a fallback.
+ *         Example:
  *
- * 	NOTE: It is known that some fonts and options combination
- * 	causes trouble on drawing glyphs.
+ *             set encoding=utf-8
+ *             set gfn=Ricty_Diminished:h12
+ *             set rop=type:directx
  *
- * 	  - 'renmode:5' and 'renmode:6' will not work with some
- * 	    special made fonts (True-Type fonts which includes only
- * 	    bitmap glyphs).
- * 	  - 'taamode:3' will not work with some vector fonts.
+ *         If select a raster font (Courier, Terminal or FixedSys which
+ *         have ".fon" extension in file name) to 'guifont', it will be
+ *         drawn by GDI as a fallback.
  *
- * 	NOTE: With this option, you can display colored emoji
- * 	(emoticon) in Windows 8.1 or later.  To display colored emoji,
- * 	there are some conditions which you should notice.
+ *         NOTE: It is known that some fonts and options combination
+ *         causes trouble on drawing glyphs.
  *
- * 	  - If your font includes non-colored emoji already, it will
- * 	    be used.
- * 	  - If your font doesn't have emoji, the system chooses an
- * 	    alternative symbol font.  On Windows 10, "Segoe UI Emoji"
- * 	    will be used.
- * 	  - When this alternative font didn't have fixed width glyph,
- * 	    emoji might be rendered beyond the bounding box of drawing
- * 	    cell.
+ *           - 'renmode:5' and 'renmode:6' will not work with some
+ *             special made fonts (True-Type fonts which includes only
+ *             bitmap glyphs).
+ *           - 'taamode:3' will not work with some vector fonts.
+ *
+ *         NOTE: With this option, you can display colored emoji
+ *         (emoticon) in Windows 8.1 or later.  To display colored emoji,
+ *         there are some conditions which you should notice.
+ *
+ *           - If your font includes non-colored emoji already, it will
+ *             be used.
+ *           - If your font doesn't have emoji, the system chooses an
+ *             alternative symbol font.  On Windows 10, "Segoe UI Emoji"
+ *             will be used.
+ *           - When this alternative font didn't have fixed width glyph,
+ *             emoji might be rendered beyond the bounding box of drawing
+ *             cell.
  *
  * Other render types are currently not supported.
+ *
+ * (default: empty)
+ *
+ * *only available when compiled with GUI and DIRECTX on MS-Windows*
  */
 export const renderoptions = {
   async get(denops: Denops): Promise<string> {
@@ -1849,16 +1986,19 @@ export const renderoptions = {
 };
 
 /**
- * 		{only in MS-Windows console version}
  * When set, the screen contents is restored when exiting Vim.  This also
  * happens when executing external commands.
  *
  * For non-Windows Vim: You can set or reset the 't_ti' and 't_te'
  * options in your .vimrc.  To disable restoring:
- * 	set t_ti= t_te=
+ *         set t_ti= t_te=
  * To enable restoring (for an xterm):
- * 	set t_ti=^[7^[[r^[[?47h t_te=^[[?47l^[8
- * (Where ^[ is an <Esc>, type CTRL-V <Esc> to insert it)
+ *         set t_ti=^[7^[[r^[[?47h t_te=^[[?47l^[8
+ * (Where ^[ is an `<Esc>`, type CTRL-V `<Esc>` to insert it)
+ *
+ * (default on)
+ *
+ * *only in MS-Windows console version*
  */
 export const restorescreen = {
   async get(denops: Denops): Promise<boolean> {
@@ -1882,13 +2022,15 @@ export const restorescreen = {
 };
 
 /**
- * 		{only available when compiled with the |+ruby/dyn|
- * 		feature}
  * Specifies the name of the Ruby shared library. The default is
  * DYNAMIC_RUBY_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default: depends on the build)
+ *
+ * *only available when compiled with the `+ruby/dyn` feature*
  */
 export const rubydll = {
   async get(denops: Denops): Promise<string> {
@@ -1912,11 +2054,14 @@ export const rubydll = {
 };
 
 /**
- * 		{only for MS-Windows GUI}
  * When using the scroll wheel and this option is set, the window under
  * the mouse pointer is scrolled.  With this option off the current
  * window is scrolled.
  * Systems other than MS-Windows always behave like this option is on.
+ *
+ * (default off)
+ *
+ * *only for MS-Windows GUI*
  */
 export const scrollfocus = {
   async get(denops: Denops): Promise<boolean> {
@@ -1940,7 +2085,6 @@ export const scrollfocus = {
 };
 
 /**
- * 		{only for the Amiga}
  * On the Amiga this option influences the way how the commands work
  * which use a shell.
  * 0 and 1: always use the shell
@@ -1950,6 +2094,10 @@ export const scrollfocus = {
  *
  * 0 and 2: use "shell 'shellcmdflag' cmd" to start external commands
  * 1 and 3: use "shell cmd" to start external commands
+ *
+ * (default 0)
+ *
+ * *only for the Amiga*
  */
 export const shelltype = {
   async get(denops: Denops): Promise<number> {
@@ -1976,9 +2124,11 @@ export const shelltype = {
  * Filenames are assumed to be 8 characters plus one extension of 3
  * characters.  Multiple dots in file names are not allowed.  When this
  * option is on, dots in file names are replaced with underscores when
- * adding an extension (".~" or ".swp").  This option is useful
+ * adding an extension (`".~"` or ".swp").  This option is useful
  * when editing files on an MS-DOS compatible filesystem, e.g., messydos
  * or crossdos.
+ *
+ * (default off)
  */
 export const shortname = {
   async get(denops: Denops): Promise<boolean> {
@@ -2010,6 +2160,8 @@ export const shortname = {
  * position will be changed when necessary. In this case, the jumplist
  * will be populated with the previous cursor position. Scrolling cannot
  * be guaranteed to be avoided when 'wrap' is enabled.
+ *
+ * (default on)
  */
 export const splitscroll = {
   async get(denops: Denops): Promise<boolean> {
@@ -2043,6 +2195,8 @@ export const splitscroll = {
  * setting it to "sync" will use the sync() call instead of the default
  * fsync(), which may work better on some systems.
  * The 'fsync' option is used for the actual file.
+ *
+ * (default "fsync")
  */
 export const swapsync = {
   async get(denops: Denops): Promise<string> {
@@ -2066,13 +2220,15 @@ export const swapsync = {
 };
 
 /**
- * 		{only available when compiled with the |+tcl/dyn|
- * 		feature}
  * Specifies the name of the Tcl shared library. The default is
  * DYNAMIC_TCL_DLL, which was specified at compile time.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default depends on the build)
+ *
+ * *only available when compiled with the `+tcl/dyn` feature*
  */
 export const tcldll = {
   async get(denops: Denops): Promise<string> {
@@ -2097,10 +2253,21 @@ export const tcldll = {
 
 /**
  * Name of the terminal.  Used for choosing the terminal control
- * characters.  Environment variables are expanded |:set_env|.
- * For example: >
- * 	:set term=$TERM
- * <	See |termcap|.
+ * characters.  Environment variables are expanded `:set_env`.
+ * For example:
+ *
+ *     :set term=$TERM
+ *
+ * See `termcap`.
+ *
+ * (default is $TERM, if that fails:
+ *  in the GUI: "builtin_gui"
+ *  on Amiga: "amiga"
+ *  on Haiku: "xterm"
+ *  on Mac: "mac-ansi"
+ *  on Unix: "ansi"
+ *  on VMS: "ansi"
+ *  on Win 32: "win32")
  */
 export const term = {
   async get(denops: Denops): Promise<string> {
@@ -2138,15 +2305,19 @@ export const term = {
  * When empty, the same encoding is used as for the 'encoding' option.
  * This is the normal value.
  * Not all combinations for 'termencoding' and 'encoding' are valid.  See
- * |encoding-table|.
+ * `encoding-table`.
  * The value for this option must be supported by internal conversions or
  * iconv().  When this is not possible no conversion will be done and you
  * will probably experience problems with non-ASCII characters.
  * Example: You are working with the locale set to euc-jp (Japanese) and
- * want to edit a UTF-8 file: >
- * 	:let &termencoding = &encoding
- * 	:set encoding=utf-8
- * <	You need to do this when your system has no locale support for UTF-8.
+ * want to edit a UTF-8 file:
+ *
+ *     :let &termencoding = &encoding
+ *     :set encoding=utf-8
+ *
+ * You need to do this when your system has no locale support for UTF-8.
+ *
+ * (default ""; with GTK+ GUI: "utf-8")
  */
 export const termencoding = {
   async get(denops: Denops): Promise<string> {
@@ -2172,12 +2343,16 @@ export const termencoding = {
 /**
  * The key that starts a CTRL-W command in a terminal window.  Other keys
  * are sent to the job running in the window.
- * The <> notation can be used, e.g.: >
- * 	:set termwinkey=<C-L>
- * <	The string must be one key stroke but can be multiple bytes.
+ * The `<>` notation can be used, e.g.:
+ *
+ *     :set termwinkey=<C-L>
+ *
+ * The string must be one key stroke but can be multiple bytes.
  * When not set CTRL-W is used, so that CTRL-W : gets you to the command
  * line.  If 'termwinkey' is set to CTRL-L then CTRL-L : gets you to the
  * command line.
+ *
+ * (default "")
  */
 export const termwinkey = {
   async get(denops: Denops): Promise<string> {
@@ -2201,14 +2376,16 @@ export const termwinkey = {
 };
 
 /**
- * 		{not available when compiled without the
- * 		|+terminal| feature}
  * Number of scrollback lines to keep.  When going over this limit the
  * first 10% of the scrollback lines are deleted.  This is just to reduce
- * the memory usage.  See |Terminal-Normal|.
+ * the memory usage.  See `Terminal-Normal`.
  * Also used as a limit for text sent to the terminal in one write,
  * multiplied by the number of columns times 3 (average number of bytes
  * per cell).
+ *
+ * (default 10000)
+ *
+ * *not available when compiled without the `+terminal` feature*
  */
 export const termwinscroll = {
   async get(denops: Denops): Promise<number> {
@@ -2232,8 +2409,8 @@ export const termwinscroll = {
 };
 
 /**
- * Size used when opening the |terminal| window.  Format:
- * 	{rows}x{columns} or {rows}*{columns}.
+ * Size used when opening the `terminal` window.  Format:
+ *         **{rows}**x**{columns}** or **{rows}*****{columns}**.
  * - When empty the terminal gets the size from the window.
  * - When set with a "x" (e.g., "24x80") the terminal size is not
  *   adjusted to the window size.  If the window is smaller only the
@@ -2244,7 +2421,7 @@ export const termwinscroll = {
  * - When rows is zero then use the height of the window.
  * - When columns is zero then use the width of the window.
  * - Using "0x0" or "0*0" is the same as empty.
- * - Can be overruled in the |term_start()| options with "term_rows" and
+ * - Can be overruled in the `term_start()` options with "term_rows" and
  *   "term_cols".
  *
  * Examples:
@@ -2254,6 +2431,8 @@ export const termwinscroll = {
  * Note that the command running in the terminal window may still change
  * the size of the terminal.  In that case the Vim window will be
  * adjusted to that size, if possible.
+ *
+ * (default "")
  */
 export const termwinsize = {
   async get(denops: Denops): Promise<string> {
@@ -2277,21 +2456,23 @@ export const termwinsize = {
 };
 
 /**
- * 		{only available when compiled with the |terminal|
- * 		feature on MS-Windows}
  * Specify the virtual console (pty) used when opening the terminal
  * window.
  *
  * Possible values are:
- *     ""		use ConPTY if it is stable, winpty otherwise
- *     "winpty"	use winpty, fail if not supported
- *     "conpty"	use |ConPTY|, fail if not supported
+ *     ""          use ConPTY if it is stable, winpty otherwise
+ *     "winpty"    use winpty, fail if not supported
+ *     "conpty"    use `ConPTY`, fail if not supported
  *
- * |ConPTY| support depends on the platform.  Windows 10 October 2018
+ * `ConPTY` support depends on the platform.  Windows 10 October 2018
  * Update is the first version that supports ConPTY, however it is still
  * considered unstable.  ConPTY might become stable in the next release
  * of Windows 10.  winpty support needs to be installed.  If neither is
  * supported then you cannot open a terminal window.
+ *
+ * (default "")
+ *
+ * *only available when compiled with the `terminal` feature on MS-Windows*
  */
 export const termwintype = {
   async get(denops: Denops): Promise<string> {
@@ -2317,8 +2498,10 @@ export const termwintype = {
 /**
  * When set: Add 's' flag to 'shortmess' option (this makes the message
  * for a search that hits the start or end of the file not being
- * displayed).  When reset: Remove 's' flag from 'shortmess' option.  {Vi
- * shortens a lot of messages}
+ * displayed).  When reset: Remove 's' flag from 'shortmess' option.  *Vi
+ * shortens a lot of messages*
+ *
+ * (default off)
  */
 export const terse = {
   async get(denops: Denops): Promise<boolean> {
@@ -2348,6 +2531,8 @@ export const terse = {
  * reset, 'fileformats' is made empty.
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
+ *
+ * (Vim default: on, Vi default: off)
  */
 export const textauto = {
   async get(denops: Denops): Promise<boolean> {
@@ -2375,6 +2560,9 @@ export const textauto = {
  * For backwards compatibility, when 'textmode' is set, 'fileformat' is
  * set to "dos".  When 'textmode' is reset, 'fileformat' is set to
  * "unix".
+ *
+ * (Win32: default on,
+ *  others: default off)
  */
 export const textmode = {
   async get(denops: Denops): Promise<boolean> {
@@ -2398,28 +2586,35 @@ export const textmode = {
 };
 
 /**
- * 		{only for |+GUI_GTK|, |+GUI_Motif| and |+GUI_Photon|}
  * The contents of this option controls various toolbar settings.  The
  * possible values are:
- * 	icons		Toolbar buttons are shown with icons.
- * 	text		Toolbar buttons shown with text.
- * 	horiz		Icon and text of a toolbar button are
- * 			horizontally arranged.  {only in GTK+ 2 GUI}
- * 	tooltips	Tooltips are active for toolbar buttons.
+ *         icons           Toolbar buttons are shown with icons.
+ *         text            Toolbar buttons shown with text.
+ *         horiz           Icon and text of a toolbar button are
+ *                         horizontally arranged.  *only in GTK+ 2 GUI*
+ *         tooltips        Tooltips are active for toolbar buttons.
  * Tooltips refer to the popup help text which appears after the mouse
  * cursor is placed over a toolbar button for a brief moment.
  *
  * If you want the toolbar to be shown with icons as well as text, do the
- * following: >
- * 	:set tb=icons,text
- * <	Motif cannot display icons and text at the same time.  They
+ * following:
+ *
+ *     :set tb=icons,text
+ *
+ * Motif cannot display icons and text at the same time.  They
  * will show icons if both are requested.
  *
  * If none of the strings specified in 'toolbar' are valid or if
  * 'toolbar' is empty, this option is ignored.  If you want to disable
- * the toolbar, you need to set the 'guioptions' option.  For example: >
- * 	:set guioptions-=T
- * <	Also see |gui-toolbar|.
+ * the toolbar, you need to set the 'guioptions' option.  For example:
+ *
+ *     :set guioptions-=T
+ *
+ * Also see `gui-toolbar`.
+ *
+ * (default "icons,tooltips")
+ *
+ * *only for `+GUI_GTK`, `+GUI_Motif` and `+GUI_Photon`*
  */
 export const toolbar = {
   async get(denops: Denops): Promise<string> {
@@ -2443,20 +2638,23 @@ export const toolbar = {
 };
 
 /**
- * 			{only in the GTK+ GUI}
  * Controls the size of toolbar icons.  The possible values are:
- * 	tiny		Use tiny icons.
- * 	small		Use small icons (default).
- * 	medium		Use medium-sized icons.
- * 	large		Use large icons.
- * 	huge		Use even larger icons.
- * 	giant		Use very big icons.
+ *         tiny            Use tiny icons.
+ *         small           Use small icons (default).
+ *         medium          Use medium-sized icons.
+ *         large           Use large icons.
+ *         huge            Use even larger icons.
+ *         giant           Use very big icons.
  * The exact dimensions in pixels of the various icon sizes depend on
  * the current theme.  Common dimensions are giant=48x48, huge=32x32,
  * large=24x24, medium=24x24, small=20x20 and tiny=16x16.
  *
  * If 'toolbariconsize' is empty, the global default size as determined
  * by user preferences or the current theme is used.
+ *
+ * (default "small")
+ *
+ * *only in the GTK+ GUI*
  */
 export const toolbariconsize = {
   async get(denops: Denops): Promise<string> {
@@ -2483,12 +2681,16 @@ export const toolbariconsize = {
  * When on, the builtin termcaps are searched before the external ones.
  * When off the builtin termcaps are searched after the external ones.
  * When this option is changed, you should set the 'term' option next for
- * the change to take effect, for example: >
- * 	:set notbi term=$TERM
- * <	See also |termcap|.
+ * the change to take effect, for example:
+ *
+ *     :set notbi term=$TERM
+ *
+ * See also `termcap`.
  * Rationale: The default for this option is "on", because the builtin
  * termcap entries are generally better (many systems contain faulty
  * xterm entries...).
+ *
+ * (default on)
  */
 export const ttybuiltin = {
   async get(denops: Denops): Promise<boolean> {
@@ -2519,6 +2721,11 @@ export const ttybuiltin = {
  * Also enables the extra writing of characters at the end of each screen
  * line for lines that wrap.  This helps when using copy/paste with the
  * mouse in an xterm and other terminals.
+ *
+ * (default off, on when 'term' is xterm, hpterm,
+ *  sun-cmd, screen, rxvt, dtterm or
+ *  iris-ansi; also on when running Vim in
+ *  a DOS console)
  */
 export const ttyfast = {
   async get(denops: Denops): Promise<boolean> {
@@ -2542,53 +2749,51 @@ export const ttyfast = {
 };
 
 /**
- * 		{only in Unix and VMS, doesn't work in the GUI; not
- * 		available when compiled without |+mouse|}
  * Name of the terminal type for which mouse codes are to be recognized.
  * Currently these strings are valid:
  *
- *    xterm	xterm-like mouse handling.  The mouse generates
- * 		"<Esc>[Mscr", where "scr" is three bytes:
- * 			"s"  = button state
- * 			"c"  = column plus 33
- * 			"r"  = row plus 33
- * 		This only works up to 223 columns!  See "dec",
- * 		"urxvt", and "sgr" for solutions.
- *    xterm2	Works like "xterm", but with the xterm reporting the
- * 		mouse position while the mouse is dragged.  This works
- * 		much faster and more precise.  Your xterm must at
- * 		least at patchlevel 88 / XFree 3.3.3 for this to
- * 		work.  See below for how Vim detects this
- * 		automatically.
+ *    xterm        xterm-like mouse handling.  The mouse generates
+ *                 `"<Esc>[Mscr"`, where "scr" is three bytes:
+ *                         "s"  = button state
+ *                         "c"  = column plus 33
+ *                         "r"  = row plus 33
+ *                 This only works up to 223 columns!  See "dec",
+ *                 "urxvt", and "sgr" for solutions.
+ *    xterm2       Works like "xterm", but with the xterm reporting the
+ *                 mouse position while the mouse is dragged.  This works
+ *                 much faster and more precise.  Your xterm must at
+ *                 least at patchlevel 88 / XFree 3.3.3 for this to
+ *                 work.  See below for how Vim detects this
+ *                 automatically.
  *
- *    netterm	NetTerm mouse handling.  A left mouse click generates
- * 		"<Esc>}r,c<CR>", where "r,c" are two decimal numbers
- * 		for the row and column.  No other mouse events are
- * 		supported.
+ *    netterm      NetTerm mouse handling.  A left mouse click generates
+ *                 `"<Esc>}r,c<CR>"`, where "r,c" are two decimal numbers
+ *                 for the row and column.  No other mouse events are
+ *                 supported.
  *
- *    dec		DEC terminal mouse handling.  The mouse generates a
- * 		rather complex sequence, starting with "<Esc>[".
- * 		This is also available for an Xterm, if it was
- * 		configured with "--enable-dec-locator".
+ *    dec          DEC terminal mouse handling.  The mouse generates a
+ *                 rather complex sequence, starting with `"<Esc>["`.
+ *                 This is also available for an Xterm, if it was
+ *                 configured with "--enable-dec-locator".
  *
- *    jsbterm	JSB term mouse handling.
+ *    jsbterm      JSB term mouse handling.
  *
- *    pterm	QNX pterm mouse handling.
+ *    pterm        QNX pterm mouse handling.
  *
- *    urxvt	Mouse handling for the urxvt (rxvt-unicode) terminal.
- * 		The mouse works only if the terminal supports this
- * 		encoding style, but it does not have 223 columns limit
- * 		unlike "xterm" or "xterm2".
+ *    urxvt        Mouse handling for the urxvt (rxvt-unicode) terminal.
+ *                 The mouse works only if the terminal supports this
+ *                 encoding style, but it does not have 223 columns limit
+ *                 unlike "xterm" or "xterm2".
  *
- *    sgr		Mouse handling for the terminal that emits SGR-styled
- * 		mouse reporting.  The mouse works even in columns
- * 		beyond 223.  This option is backward compatible with
- * 		"xterm2" because it can also decode "xterm2" style
- * 		mouse codes.
+ *    sgr          Mouse handling for the terminal that emits SGR-styled
+ *                 mouse reporting.  The mouse works even in columns
+ *                 beyond 223.  This option is backward compatible with
+ *                 "xterm2" because it can also decode "xterm2" style
+ *                 mouse codes.
  *
- * The mouse handling must be enabled at compile time |+mouse_xterm|
- * |+mouse_dec| |+mouse_netterm| |+mouse_jsbterm| |+mouse_urxvt|
- * |+mouse_sgr|.
+ * The mouse handling must be enabled at compile time `+mouse_xterm`
+ * `+mouse_dec` `+mouse_netterm` `+mouse_jsbterm` `+mouse_urxvt`
+ * `+mouse_sgr`.
  * Only "xterm"(2) is really recognized.  NetTerm mouse codes are always
  * recognized, if enabled at compile time.  DEC terminal mouse codes
  * are recognized if enabled at compile time, and 'ttymouse' is not
@@ -2598,17 +2803,21 @@ export const ttyfast = {
  * set to a name that starts with "xterm", "mlterm", "screen", "tmux",
  * "st" (full match only), "st-" or "stterm", and 'ttymouse' is not set
  * already.
- * Additionally, if vim is compiled with the |+termresponse| feature and
- * |t_RV| is set to the escape sequence to request the xterm version
+ * Additionally, if vim is compiled with the `+termresponse` feature and
+ * `t_RV` is set to the escape sequence to request the xterm version
  * number, more intelligent detection is done.
  * The "xterm2" value will be set if the xterm version is reported to be
  * from 95 to 276.  The "sgr" value will be set if Vim detects Mac
  * Terminal.app, iTerm2 or mintty, and when the xterm version is 277 or
  * higher.
  * If you do not want 'ttymouse' to be set to "xterm2" or "sgr"
- * automatically, set t_RV to an empty string: >
- * 	:set t_RV=
- * <
+ * automatically, set t_RV to an empty string:
+ *
+ *     :set t_RV=
+ *
+ * (default depends on 'term')
+ *
+ * *only in Unix and VMS, doesn't work in the GUI; not available when compiled without `+mouse`*
  */
 export const ttymouse = {
   async get(denops: Denops): Promise<string> {
@@ -2636,6 +2845,8 @@ export const ttymouse = {
  * to scroll the window is redrawn.  For terminals where scrolling is
  * very slow and redrawing is not slow this can be set to a small number,
  * e.g., 3, to speed up displaying.
+ *
+ * (default 999)
  */
 export const ttyscroll = {
   async get(denops: Denops): Promise<number> {
@@ -2660,6 +2871,8 @@ export const ttyscroll = {
 
 /**
  * Alias for 'term', see above.
+ *
+ * (default from $TERM)
  */
 export const ttytype = {
   async get(denops: Denops): Promise<string> {
@@ -2683,10 +2896,8 @@ export const ttytype = {
 };
 
 /**
- * 		{not available when compiled without the |+viminfo|
- * 		feature}
  * When non-empty, the viminfo file is read upon startup and written
- * when exiting Vim (see |viminfo-file|). Except when 'viminfofile' is
+ * when exiting Vim (see `viminfo-file`). Except when 'viminfofile' is
  * "NONE".
  * The string should be a comma-separated list of parameters, each
  * consisting of a single character identifying the particular parameter,
@@ -2694,107 +2905,115 @@ export const ttytype = {
  * parameter.  If a particular character is left out, then the default
  * value is used for that parameter.  The following is a list of the
  * identifying characters and the effect of their value.
- * CHAR	VALUE	~
+ * CHAR    VALUE
  *
- * !	When included, save and restore global variables that start
- * 	with an uppercase letter, and don't contain a lowercase
- * 	letter.  Thus "KEEPTHIS and "K_L_M" are stored, but "KeepThis"
- * 	and "_K_L_M" are not.  Nested List and Dict items may not be
- * 	read back correctly, you end up with an empty item.
+ * !       When included, save and restore global variables that start
+ *         with an uppercase letter, and don't contain a lowercase
+ *         letter.  Thus "KEEPTHIS and "K_L_M" are stored, but "KeepThis"
+ *         and "_K_L_M" are not.  Nested List and Dict items may not be
+ *         read back correctly, you end up with an empty item.
  *
- * "	Maximum number of lines saved for each register.  Old name of
- * 	the '<' item, with the disadvantage that you need to put a
- * 	backslash before the ", otherwise it will be recognized as the
- * 	start of a comment!
+ * "       Maximum number of lines saved for each register.  Old name of
+ *         the `'<'` item, with the disadvantage that you need to put a
+ *         backslash before the ", otherwise it will be recognized as the
+ *         start of a comment!
  *
- * %	When included, save and restore the buffer list.  If Vim is
- * 	started with a file name argument, the buffer list is not
- * 	restored.  If Vim is started without a file name argument, the
- * 	buffer list is restored from the viminfo file.  Quickfix
- * 	('buftype'), unlisted ('buflisted'), unnamed and buffers on
- * 	removable media (|viminfo-r|) are not saved.
- * 	When followed by a number, the number specifies the maximum
- * 	number of buffers that are stored.  Without a number all
- * 	buffers are stored.
+ * %       When included, save and restore the buffer list.  If Vim is
+ *         started with a file name argument, the buffer list is not
+ *         restored.  If Vim is started without a file name argument, the
+ *         buffer list is restored from the viminfo file.  Quickfix
+ *         ('buftype'), unlisted ('buflisted'), unnamed and buffers on
+ *         removable media (`viminfo-r`) are not saved.
+ *         When followed by a number, the number specifies the maximum
+ *         number of buffers that are stored.  Without a number all
+ *         buffers are stored.
  *
- * '	Maximum number of previously edited files for which the marks
- * 	are remembered.  This parameter must always be included when
- * 	'viminfo' is non-empty.
- * 	Including this item also means that the |jumplist| and the
- * 	|changelist| are stored in the viminfo file.
+ * '       Maximum number of previously edited files for which the marks
+ *         are remembered.  This parameter must always be included when
+ *         'viminfo' is non-empty.
+ *         Including this item also means that the `jumplist` and the
+ *         `changelist` are stored in the viminfo file.
  *
- * /	Maximum number of items in the search pattern history to be
- * 	saved.  If non-zero, then the previous search and substitute
- * 	patterns are also saved.  When not included, the value of
- * 	'history' is used.
+ * /       Maximum number of items in the search pattern history to be
+ *         saved.  If non-zero, then the previous search and substitute
+ *         patterns are also saved.  When not included, the value of
+ *         'history' is used.
  *
- * :	Maximum number of items in the command-line history to be
- * 	saved.  When not included, the value of 'history' is used.
+ * :       Maximum number of items in the command-line history to be
+ *         saved.  When not included, the value of 'history' is used.
  *
- * <	Maximum number of lines saved for each register.  If zero then
- * 	registers are not saved.  When not included, all lines are
- * 	saved.  '"' is the old name for this item.
- * 	Also see the 's' item below: limit specified in Kbyte.
+ * <       Maximum number of lines saved for each register.  If zero then
+ *         registers are not saved.  When not included, all lines are
+ *         saved.  '"' is the old name for this item.
+ *         Also see the 's' item below: limit specified in Kbyte.
  *
- * @	Maximum number of items in the input-line history to be
- * 	saved.  When not included, the value of 'history' is used.
+ * @       Maximum number of items in the input-line history to be
+ *         saved.  When not included, the value of 'history' is used.
  *
- * c	When included, convert the text in the viminfo file from the
- * 	'encoding' used when writing the file to the current
- * 	'encoding'.  See |viminfo-encoding|.
+ * c       When included, convert the text in the viminfo file from the
+ *         'encoding' used when writing the file to the current
+ *         'encoding'.  See `viminfo-encoding`.
  *
- * f	Whether file marks need to be stored.  If zero, file marks ('0
- * 	to '9, 'A to 'Z) are not stored.  When not present or when
- * 	non-zero, they are all stored.  '0 is used for the current
- * 	cursor position (when exiting or when doing ":wviminfo").
+ * f       Whether file marks need to be stored.  If zero, file marks ('0
+ *         to '9, 'A to 'Z) are not stored.  When not present or when
+ *         non-zero, they are all stored.  '0 is used for the current
+ *         cursor position (when exiting or when doing ":wviminfo").
  *
- * h	Disable the effect of 'hlsearch' when loading the viminfo
- * 	file.  When not included, it depends on whether ":nohlsearch"
- * 	has been used since the last search command.
+ * h       Disable the effect of 'hlsearch' when loading the viminfo
+ *         file.  When not included, it depends on whether ":nohlsearch"
+ *         has been used since the last search command.
  *
- * n	Name of the viminfo file.  The name must immediately follow
- * 	the 'n'.  Must be at the end of the option!  If the
- * 	'viminfofile' option is set, that file name overrides the one
- * 	given here with 'viminfo'.  Environment variables are
- * 	expanded when opening the file, not when setting the option.
+ * n       Name of the viminfo file.  The name must immediately follow
+ *         the 'n'.  Must be at the end of the option!  If the
+ *         'viminfofile' option is set, that file name overrides the one
+ *         given here with 'viminfo'.  Environment variables are
+ *         expanded when opening the file, not when setting the option.
  *
- * r	Removable media.  The argument is a string (up to the next
- * 	',').  This parameter can be given several times.  Each
- * 	specifies the start of a path for which no marks will be
- * 	stored.  This is to avoid removable media.  For MS-Windows you
- * 	could use "ra:,rb:", for Amiga "rdf0:,rdf1:,rdf2:".  You can
- * 	also use it for temp files, e.g., for Unix: "r/tmp".  Case is
- * 	ignored.  Maximum length of each 'r' argument is 50
- * 	characters.
+ * r       Removable media.  The argument is a string (up to the next
+ *         ',').  This parameter can be given several times.  Each
+ *         specifies the start of a path for which no marks will be
+ *         stored.  This is to avoid removable media.  For MS-Windows you
+ *         could use "ra:,rb:", for Amiga "rdf0:,rdf1:,rdf2:".  You can
+ *         also use it for temp files, e.g., for Unix: "r/tmp".  Case is
+ *         ignored.  Maximum length of each 'r' argument is 50
+ *         characters.
  *
- * s	Maximum size of an item in Kbyte.  If zero then registers are
- * 	not saved.  Currently only applies to registers.  The default
- * 	"s10" will exclude registers with more than 10 Kbyte of text.
- * 	Also see the '<' item above: line count limit.
+ * s       Maximum size of an item in Kbyte.  If zero then registers are
+ *         not saved.  Currently only applies to registers.  The default
+ *         "s10" will exclude registers with more than 10 Kbyte of text.
+ *         Also see the `'<'` item above: line count limit.
  *
- * Example: >
+ * Example:
+ *
  *     :set viminfo='50,<1000,s100,:0,n~/vim/viminfo
- * <
- * '50		Marks will be remembered for the last 50 files you
- * 		edited.
- * <1000		Contents of registers (up to 1000 lines each) will be
- * 		remembered.
- * s100		Registers with more than 100 Kbyte text are skipped.
- * :0		Command-line history will not be saved.
- * n~/vim/viminfo	The name of the file to use is "~/vim/viminfo".
- * no /		Since '/' is not specified, the default will be used,
- * 		that is, save all of the search history, and also the
- * 		previous search and substitute patterns.
- * no %		The buffer list will not be saved nor read back.
- * no h		'hlsearch' highlighting will be restored.
  *
- * When setting 'viminfo' from an empty value you can use |:rviminfo| to
+ * '50             Marks will be remembered for the last 50 files you
+ *                 edited.
+ * <1000           Contents of registers (up to 1000 lines each) will be
+ *                 remembered.
+ * s100            Registers with more than 100 Kbyte text are skipped.
+ * :0              Command-line history will not be saved.
+ * `n~/vim/viminfo`  The name of the file to use is `"~/vim/viminfo"`.
+ * no /            Since '/' is not specified, the default will be used,
+ *                 that is, save all of the search history, and also the
+ *                 previous search and substitute patterns.
+ * no %            The buffer list will not be saved nor read back.
+ * no h            'hlsearch' highlighting will be restored.
+ *
+ * When setting 'viminfo' from an empty value you can use `:rviminfo` to
  * load the contents of the file, this is not done automatically.
  *
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
  * NOTE: This option is set to the Vim default value when 'compatible'
  * is reset.
+ *
+ * (Vi default: "", Vim default for
+ *  MS-Windows: '100,<50,s10,h,rA:,rB:,
+ *  for Amiga: '100,<50,s10,h,rdf0:,rdf1:,rdf2:
+ *  for others: '100,<50,s10,h)
+ *
+ * *not available when compiled without the `+viminfo` feature*
  */
 export const viminfo = {
   async get(denops: Denops): Promise<string> {
@@ -2818,14 +3037,16 @@ export const viminfo = {
 };
 
 /**
- * 		{not available when compiled without the |+viminfo|
- * 		feature}
  * When non-empty, overrides the file name used for viminfo.
  * When equal to "NONE" no viminfo file will be read or written.
- * This option can be set with the |-i| command line flag.  The |--clean|
+ * This option can be set with the `-i` command line flag.  The `--clean`
  * command line flag sets it to "NONE".
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default: "")
+ *
+ * *not available when compiled without the `+viminfo` feature*
  */
 export const viminfofile = {
   async get(denops: Denops): Promise<string> {
@@ -2853,6 +3074,8 @@ export const viminfofile = {
  * It is provided for backwards compatibility with version 4.x.
  * Setting 'weirdinvert' has the effect of making 't_xs' non-empty, and
  * vice versa.  Has no effect when the GUI is running.
+ *
+ * (default off)
  */
 export const weirdinvert = {
   async get(denops: Denops): Promise<boolean> {
@@ -2877,7 +3100,9 @@ export const weirdinvert = {
 
 /**
  * Highlight group name to use for this window instead of the Normal
- * color |hl-Normal|.
+ * color `hl-Normal`.
+ *
+ * (default empty)
  */
 export const wincolor = {
   async get(denops: Denops): Promise<string> {
@@ -2901,15 +3126,17 @@ export const wincolor = {
 };
 
 /**
- * 		{only available when compiled with the |terminal|
- * 		feature on MS-Windows}
  * Specifies the name of the winpty shared library, used for the
- * |:terminal| command. The default depends on whether Vim was built as a
+ * `:terminal` command. The default depends on whether Vim was built as a
  * 32-bit or 64-bit executable.  If not found, "winpty.dll" is tried as
  * a fallback.
- * Environment variables are expanded |:set_env|.
- * This option cannot be set from a |modeline| or in the |sandbox|, for
+ * Environment variables are expanded `:set_env`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
+ *
+ * (default "winpty32.dll" or "winpty64.dll")
+ *
+ * *only available when compiled with the `terminal` feature on MS-Windows*
  */
 export const winptydll = {
   async get(denops: Denops): Promise<string> {
@@ -2937,9 +3164,11 @@ export const winptydll = {
  * mechanism and this option is set, Vim will request the actual terminal
  * key codes and number of colors from the terminal.  This takes care of
  * various configuration options of the terminal that cannot be obtained
- * from the termlib/terminfo entry, see |xterm-codes|.
+ * from the termlib/terminfo entry, see `xterm-codes`.
  * A side effect may be that t_Co changes and Vim will redraw the
  * display.
+ *
+ * (default on)
  */
 export const xtermcodes = {
   async get(denops: Denops): Promise<boolean> {
