@@ -17,6 +17,7 @@ export async function downloadString(url: string): Promise<string> {
 /**
  * Find the position of the first pattern match.
  * Search from the specified position, or from the beginning if not specified.
+ * If `offset` is negative value, the starting position is counted from the end of the string.
  * Returns -1 if the pattern not match.
  */
 export function regexIndexOf(s: string, pattern: RegExp, offset = 0): number {
