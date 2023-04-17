@@ -5,5 +5,5 @@ in minimal supported Vim and Neovim versions.
 To add functions manually, create or modify corresponding module under
 `function`, `function/vim`, or `function/nvim` module then make sure that module
 is listed in `_manual.ts` uneder corresponding module. After that, execute
-`make gen` on the repository top so that `gen-function.ts` automatically remove
-duplicated functions from `_generated.ts`.
+`deno task gen` on the repository top so that `gen-function.ts` automatically
+remove duplicated functions from `_generated.ts`.

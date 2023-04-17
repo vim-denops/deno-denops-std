@@ -1,5 +1,6 @@
 import { Definition, Variant } from "./types.ts";
-import { Counter, regexIndexOf } from "./utils.ts";
+import { createMarkdownFromHelp } from "../markdown.ts";
+import { Counter, regexIndexOf } from "../utils.ts";
 
 /**
  * Parse Vim/Neovim help.
@@ -22,23 +23,40 @@ export function parse(content: string): Definition[] {
   let last = -1;
   for (const match of content.matchAll(/\*(\w+?)\(\)\*/g)) {
     const fn = match[1];
-    const i = match.index ?? 0;
-    if (i < last) {
+    const index = match.index!;
+    if (index < last) {
       // It is contained previous block
       continue;
     }
-    const s = content.lastIndexOf("\n", i);
-    const ms = regexIndexOf(content, /\n[<>\s]|$/, i);
-    const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
-    const e = content.lastIndexOf("\n", me);
-    const block = content
-      .substring(s, e)
-      .replace(/\n<?(?:\s+\*\S+?\*)+\s*$/, "") // Remove next block tag
-      .trimEnd();
-    last = s + block.length;
-    definitions.push(parseBlock(fn, block));
+    const { block, start, end } = extractBlock(content, index);
+    const definition = parseBlock(fn, block);
+    if (definition) {
+      definitions.push(definition);
+      last = end;
+    } else {
+      const line = content.substring(0, start + 1).split("\n").length;
+      console.error(
+        `Failed to parse function definition for ${fn} at line ${line}`,
+      );
+    }
   }
   return definitions;
+}
+
+function extractBlock(content: string, index: number): {
+  block: string;
+  start: number;
+  end: number;
+} {
+  const s = content.lastIndexOf("\n", index);
+  const ms = regexIndexOf(content, /\n[<>\s]|$/, index);
+  const me = regexIndexOf(content, /\n[^<>\s]|$/, ms);
+  const e = content.lastIndexOf("\n", me);
+  const block = content
+    .substring(s, e)
+    .replace(/\n<?(?:\s+\*\S+?\*)+\s*$/, "") // Remove next block tag
+    .trimEnd();
+  return { block, start: s, end: s + block.length };
 }
 
 /**
@@ -47,48 +65,62 @@ export function parse(content: string): Definition[] {
  * A function definition block is constrcuted with following parts
  *
  * ```text
- * cursor({lnum}, {col} [, {off}])                        <- variant
- * cursor({list})                                         <- variant
+ * cursor({lnum}, {col} [, {off}])                        <- variant[0]
+ * cursor({list})                                         <- variant[1]
  * 		Positions the cursor at the column ...    <- document
  * 		line {lnum}.  The first column is one...  <- document
  * ```
  *
+ * {variant} may be two lines.
+ *
+ * ```text
+ * searchpairpos({start}, {middle}, {end} [, {flags} [, {skip}
+ * 				[, {stopline} [, {timeout}]]]])
+ * 		Same as |searchpair()|, but returns a ...
+ * ```
+ *
+ * {document} may start on the same line as {variant}.
+ *
+ * ```text
+ * argidx()	The result is the current index in the ...
+ * 		the first file.  argc() - 1 is the last...
+ * ```
+ *
  * This function parse content like above and return `Definition`.
  */
-function parseBlock(fn: string, body: string): Definition {
-  // Remove tags
-  body = body.replaceAll(/\*\S+?\*/g, "");
-  // Remove trailing spaces
-  body = body.split("\n").map((v) => v.trimEnd()).join("\n");
+function parseBlock(fn: string, body: string): Definition | undefined {
+  // Separate vars/docs blocks
+  const reTags = /(?:[ \t]+\*[^*\s]+\*)+[ \t]*$/.source;
+  const reArgs = /\([^()]*(?:\n[ \t][^()]*)?\)/.source;
+  const reVariant = `^${fn}${reArgs}(?:${reTags})?`;
+  const reVariants = `^(?:${reVariant}\\n)*${reVariant}`;
+  const reVarsDocs = `(?<vars>${reVariants})(?<docs>.*)`;
+  const m1 = body.match(new RegExp(reVarsDocs, "ms"));
+  if (!m1) {
+    return;
+  }
 
-  // Remove '\n' in {variant} to make {variant} single line (ex. `searchpairpos`)
-  body = body.replaceAll(new RegExp(`^(${fn}\\([^)]*?)\\n\\t*`, "gm"), "$1");
-  // Append ')' for an invalid {variant}. (ex. `win_id2tabwin` in Neovim)
-  body = body.replaceAll(new RegExp(`^(${fn}\\([^)]*?)\\t+`, "gm"), "$1)\t");
-  // Insert '\n' between {variant} and {document} (ex. `argidx`)
-  body = body.replaceAll(new RegExp(`^(${fn}\\(.*?\\))\\t`, "gm"), "$1\n\t\t");
+  // Extract vars block
+  const varsBlock = m1.groups!.vars
+    // Remove tags after {variant} (ex. `cursor()`)
+    .replaceAll(new RegExp(reTags, "gm"), "")
+    // Make {variant} to single line (ex. `searchpairpos()`)
+    .replaceAll(/\n[ \t]+/g, "");
 
-  // Remove leading '>' or trailing '<' which is used to define code block in help
-  body = body.replaceAll(/\n<|>\n/g, "\n");
+  // Extract docs block
+  const docsBlock = m1.groups!.docs
+    // Restore indent that {document} continues on {variant} line (ex. `argidx`)
+    .replace(
+      /^(?=[ \t]+\S)/,
+      () => varsBlock.split("\n").at(-1)!.replaceAll(/[^\t]/g, " "),
+    );
 
-  // Split body into vars/docs
-  const vars: Variant[] = [];
-  const docs: string[] = [];
-  body.split("\n").forEach((line) => {
-    if (/^\s/.test(line)) {
-      docs.push(line.replace(/^\t\t/, ""));
-    } else {
-      const variant = parseVariant(line);
-      if (variant) {
-        vars.push(variant);
-      }
-    }
-  });
-  return {
-    fn,
-    docs: docs.join("\n"),
-    vars,
-  };
+  const vars = varsBlock.split("\n")
+    .map(parseVariant)
+    .filter(<T>(x: T): x is NonNullable<T> => !!x);
+  const docs = createMarkdownFromHelp(docsBlock);
+
+  return { fn, docs, vars };
 }
 
 /**
@@ -109,7 +141,7 @@ function parseBlock(fn: string, body: string): Definition {
  */
 function parseVariant(variant: string): Variant | undefined {
   // Extract {args} part from {variant}
-  const m = variant.match(new RegExp(`^\\w+\\(\(.+?\)\\)`));
+  const m = variant.match(/^\w+\((.+?)\)/);
   if (!m) {
     // The {variant} does not have {args}, probabliy it's not variant (ex. `strstr`)
     return undefined;
