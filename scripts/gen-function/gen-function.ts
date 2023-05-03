@@ -5,6 +5,7 @@ import {
 import * as path from "https://deno.land/std@0.183.0/path/mod.ts";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
+import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
@@ -62,12 +63,20 @@ const nvimFnSet = difference(
   manualFnSet,
 );
 
+const nvimDefMap = new Map(nvimDefs.map((def) => [def.fn, def]));
+const commonDefs = vimDefs
+  .map((vimDef) =>
+    DOCS_OVERRIDES[vimDef.fn] === "nvim"
+      ? { ...vimDef, docs: nvimDefMap.get(vimDef.fn)!.docs }
+      : vimDef
+  );
+
 const commonFnSet = intersection(vimFnSet, nvimFnSet);
 const vimOnlyFnSet = difference(vimFnSet, nvimFnSet);
 const nvimOnlyFnSet = difference(nvimFnSet, vimFnSet);
 
 const commonCode = format(
-  vimDefs.filter((def) => commonFnSet.has(def.fn)),
+  commonDefs.filter((def) => commonFnSet.has(def.fn)),
 );
 const vimOnlyCode = format(
   vimDefs.filter((def) => vimOnlyFnSet.has(def.fn)),
@@ -89,7 +98,7 @@ await Deno.writeTextFile(
   nvimOnlyCode.join("\n"),
 );
 
-await transform(resolvePath(commonManualModule), vimDefs);
+await transform(resolvePath(commonManualModule), commonDefs);
 await transform(resolvePath(vimManualModule), vimDefs);
 await transform(resolvePath(nvimManualModule), nvimDefs);
 

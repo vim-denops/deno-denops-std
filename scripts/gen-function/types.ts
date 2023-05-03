@@ -11,3 +11,5 @@ export type Definition = {
   docs: string;
   vars: Variant[];
 };
+
+export type DocsType = "vim" | "nvim";
