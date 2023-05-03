@@ -3,7 +3,7 @@ import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
 const cacheKey = Symbol("denops_std/helper/echo");
-const cacheKeySilent = Symbol("denops_std/helper/echo/silent");
+const cacheKeySilent = "denops_std/helper/echo/silent@1";
 const suffix = generateUniqueString();
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
