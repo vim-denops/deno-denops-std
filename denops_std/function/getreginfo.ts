@@ -3,14 +3,14 @@ import { lt } from "https://deno.land/std@0.171.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
 import { generateUniqueString } from "../util.ts";
 
-const cacheKey = Symbol("denops_std/function/getreginfo.ts");
-const suffix = generateUniqueString();
+const cacheKey = "denops_std/function/getreginfo.ts@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (cacheKey in denops.context) {
-    return suffix;
+  if (typeof denops.context[cacheKey] === "string") {
+    return denops.context[cacheKey];
   }
-  denops.context[cacheKey] = true;
+  const suffix = generateUniqueString();
+  denops.context[cacheKey] = suffix;
   const script = `
   function! DenopsStdFunctionGetreginfo_${suffix}(...) abort
     let l:result = call('getreginfo', a:000)

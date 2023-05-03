@@ -2,15 +2,15 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
-const cacheKey = Symbol("denops_std/helper/echo");
+const cacheKey = "denops_std/helper/echo@1";
 const cacheKeySilent = "denops_std/helper/echo/silent@1";
-const suffix = generateUniqueString();
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (cacheKey in denops.context) {
-    return suffix;
+  if (typeof denops.context[cacheKey] === "string") {
+    return denops.context[cacheKey];
   }
-  denops.context[cacheKey] = true;
+  const suffix = generateUniqueString();
+  denops.context[cacheKey] = suffix;
   const script = `
   let g:loaded_denops_std_helper_echo_${suffix} = 1
   let s:denops_std_helper_echo_timer = 0

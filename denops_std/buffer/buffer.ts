@@ -15,14 +15,14 @@ import {
 import { tryDecode } from "./fileencoding.ts";
 import { generateUniqueString } from "../util.ts";
 
-const cacheKey = Symbol("denops_std/buffer/buffer.ts");
-const suffix = generateUniqueString();
+const cacheKey = "denops_std/buffer/buffer.ts@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (cacheKey in denops.context) {
-    return suffix;
+  if (typeof denops.context[cacheKey] === "string") {
+    return denops.context[cacheKey];
   }
-  denops.context[cacheKey] = true;
+  const suffix = generateUniqueString();
+  denops.context[cacheKey] = suffix;
   const script = `
   function! DenopsStdBufferOpen_${suffix}(bang, mods, opener, cmdarg, bufname) abort
     execute printf('%s %s%s %s \`=a:bufname\`', a:mods, a:opener, a:bang ? '!' : '', a:cmdarg)

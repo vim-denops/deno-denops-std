@@ -8,14 +8,14 @@ import * as anonymous from "../anonymous/mod.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
-const cacheKey = Symbol("denops_std/helper/input");
-const suffix = generateUniqueString();
+const cacheKey = "denops_std/helper/input@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (cacheKey in denops.context) {
-    return suffix;
+  if (typeof denops.context[cacheKey] === "string") {
+    return denops.context[cacheKey];
   }
-  denops.context[cacheKey] = true;
+  const suffix = generateUniqueString();
+  denops.context[cacheKey] = suffix;
   const script = `
   let s:loaded_denops_std_helper_input_${suffix} = 1
 
