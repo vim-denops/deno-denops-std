@@ -24,7 +24,7 @@ function defaultValue(type: OptionType): string {
   }
 }
 
-function formatDocs(docs: string): string[] {
+export function formatDocs(docs: string): string[] {
   const lines = docs.replaceAll(/\*\//g, "* /").split("\n");
   const normalizedLines = lines.map((v) => ` * ${v}`.trimEnd());
   return ["/**", ...normalizedLines, " */"];

@@ -20,3 +20,5 @@ export type OptionScope = typeof OPTION_SCOPES[number];
 export function isOptionScope(x: unknown): x is OptionScope {
   return OPTION_SCOPES.includes(x as OptionScope);
 }
+
+export type DocsType = "vim" | "nvim";
