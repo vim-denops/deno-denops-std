@@ -2,6 +2,26 @@ import { Definition, Variant } from "./types.ts";
 import { createMarkdownFromHelp } from "../markdown.ts";
 import { Counter, regexIndexOf } from "../utils.ts";
 
+type FnDef = {
+  restype: string;
+};
+
+export const RESTYPE_MAP: Readonly<Record<string, string>> = {
+  any: "unknown",
+  blob: "unknown",
+  bool: "boolean",
+  boolean: "boolean",
+  channel: "unknown",
+  dict: "Record<string, unknown>",
+  float: "number",
+  funcref: "unknown",
+  job: "unknown",
+  list: "unknown[]",
+  none: "void",
+  number: "number",
+  string: "string",
+};
+
 /**
  * Parse Vim/Neovim help.
  *
@@ -17,7 +37,9 @@ import { Counter, regexIndexOf } from "../utils.ts";
  */
 export function parse(content: string): Definition[] {
   // Remove modeline
-  content = content.replace(/\n vim:[^\n]*\s*$/, "");
+  content = content.replace(/\n\s*vim:[^\n]*:\s*\n/g, "\n---\n");
+
+  const fnDefs = parseFunctionList(content);
 
   const definitions: Definition[] = [];
   let last = -1;
@@ -29,7 +51,7 @@ export function parse(content: string): Definition[] {
       continue;
     }
     const { block, start, end } = extractBlock(content, index);
-    const definition = parseBlock(fn, block);
+    const definition = parseBlock(fn, block, fnDefs.get(fn));
     if (definition) {
       definitions.push(definition);
       last = end;
@@ -88,7 +110,11 @@ function extractBlock(content: string, index: number): {
  *
  * This function parse content like above and return `Definition`.
  */
-function parseBlock(fn: string, body: string): Definition | undefined {
+function parseBlock(
+  fn: string,
+  body: string,
+  def?: FnDef,
+): Definition | undefined {
   // Separate vars/docs blocks
   const reTags = /(?:[ \t]+\*[^*\s]+\*)+[ \t]*$/.source;
   const reArgs = /\([^()]*(?:\n[ \t][^()]*)?\)/.source;
@@ -115,9 +141,7 @@ function parseBlock(fn: string, body: string): Definition | undefined {
       () => varsBlock.split("\n").at(-1)!.replaceAll(/[^\t]/g, " "),
     );
 
-  const vars = varsBlock.split("\n")
-    .map(parseVariant)
-    .filter(<T>(x: T): x is NonNullable<T> => !!x);
+  const vars = varsBlock.split("\n").map((s) => parseVariant(s, def));
   const docs = createMarkdownFromHelp(docsBlock);
 
   return { fn, docs, vars };
@@ -139,16 +163,27 @@ function parseBlock(fn: string, body: string): Definition | undefined {
  *
  * This function parse content like above and return `Variant`.
  */
-function parseVariant(variant: string): Variant | undefined {
+function parseVariant(variant: string, def?: FnDef): Variant {
   // Extract {args} part from {variant}
-  const m = variant.match(/^\w+\((.+?)\)/);
-  if (!m) {
-    // The {variant} does not have {args}, probabliy it's not variant (ex. `strstr`)
-    return undefined;
+  const m = variant.match(/^\w+\((?<args>.*?)\)/)?.groups ?? {};
+  const args = parseVariantArgs(m.args);
+
+  return {
+    args,
+    restype: "unknown",
+    ...def,
+  };
+}
+
+function parseVariantArgs(argsBody: string): Variant["args"] {
+  if (argsBody.length === 0) {
+    // The {variant} does not have {args}
+    return [];
   }
-  let optional = m[1].startsWith("[");
+
+  let optional = argsBody.startsWith("[");
   const counter = new Counter();
-  const args = m[1].split(",").map((t) => {
+  const args = argsBody.split(",").map((t) => {
     const name = t.replaceAll(/[{}\[\]\s]/g, "");
     const spread = name.endsWith("...");
     const arg = {
@@ -171,4 +206,44 @@ function parseVariant(variant: string): Variant | undefined {
     return { name, spread, optional };
   });
   return uniqueArgs;
+}
+
+/**
+ * Extract function definitions from `builtin-function-list`.
+ *
+ * `builtin-function-list` block is constructed with following parts
+ *
+ * ```text
+ *      fn                      restype
+ * ~~~~~~~~~~~~                 ~~~~~~
+ * filewritable({file})		Number	|TRUE| if {file} is a writable file
+ *
+ *   fn                                restype
+ * ~~~~~~                       ~~~~~~~~~~~~~~~~~~~~~
+ * filter({expr1}, {expr2})	List/Dict/Blob/String
+ * 					remove items from {expr1} where
+ * 					{expr2} is 0
+ * ```
+ *
+ * - `restype` may be preceded by TAB, space or newline.
+ * - `restype` may be splited by "/", ", " or " or ".
+ * - `restype` may not exist.
+ */
+function parseFunctionList(content: string): Map<string, FnDef> {
+  const s = content.match(/\*builtin-function-list\*\s.*?\n===/s)?.[0] ?? "";
+  return new Map([
+    ...s.matchAll(
+      /^(?<fn>\w+)\(.*?\)\s+(?<restype>\w+(?:(?:\/|, | or )\w+)*)/gms,
+    ) as Iterable<{ groups: { fn: string; restype: string } }>,
+  ].map(({ groups: { fn, restype } }) => {
+    const restypes = restype.split(/\/|, | or /g).map((t) =>
+      RESTYPE_MAP[t.toLowerCase()] ?? "unknown"
+    );
+    return [
+      fn,
+      {
+        restype: [...new Set(restypes)].join(" | "),
+      },
+    ];
+  }));
 }

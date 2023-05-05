@@ -27,7 +27,7 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *
  * *only available when compiled with the `+float` feature*
  */
-export function abs(denops: Denops, expr: unknown): Promise<unknown>;
+export function abs(denops: Denops, expr: unknown): Promise<number>;
 export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("abs", ...args);
 }
@@ -53,7 +53,7 @@ export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function acos(denops: Denops, expr: unknown): Promise<unknown>;
+export function acos(denops: Denops, expr: unknown): Promise<number>;
 export function acos(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("acos", ...args);
 }
@@ -79,7 +79,7 @@ export function add(
   denops: Denops,
   object: unknown,
   expr: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | unknown>;
 export function add(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("add", ...args);
 }
@@ -100,7 +100,7 @@ export function and(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function and(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("and", ...args);
 }
@@ -129,7 +129,7 @@ export function append(
   denops: Denops,
   lnum: unknown,
   text: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function append(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("append", ...args);
 }
@@ -165,7 +165,7 @@ export function appendbufline(
   buf: unknown,
   lnum: unknown,
   text: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function appendbufline(
   denops: Denops,
   ...args: unknown[]
@@ -183,7 +183,7 @@ export function appendbufline(
  * list is used: either the window number or the window ID.
  * Returns -1 if the **{winid}** argument is invalid.
  */
-export function argc(denops: Denops, winid?: unknown): Promise<unknown>;
+export function argc(denops: Denops, winid?: unknown): Promise<number>;
 export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("argc", ...args);
 }
@@ -192,7 +192,7 @@ export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The result is the current index in the argument list.  0 is
  * the first file.  argc() - 1 is the last one.  See `arglist`.
  */
-export function argidx(denops: Denops): Promise<unknown>;
+export function argidx(denops: Denops): Promise<number>;
 export function argidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("argidx", ...args);
 }
@@ -213,7 +213,7 @@ export function arglistid(
   denops: Denops,
   winnr?: unknown,
   tabnr?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function arglistid(
   denops: Denops,
   ...args: unknown[]
@@ -246,7 +246,7 @@ export function argv(
   denops: Denops,
   nr?: unknown,
   winid?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function argv(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("argv", ...args);
 }
@@ -274,7 +274,7 @@ export function argv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function asin(denops: Denops, expr: unknown): Promise<unknown>;
+export function asin(denops: Denops, expr: unknown): Promise<number>;
 export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("asin", ...args);
 }
@@ -300,7 +300,7 @@ export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function atan(denops: Denops, expr: unknown): Promise<unknown>;
+export function atan(denops: Denops, expr: unknown): Promise<number>;
 export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("atan", ...args);
 }
@@ -331,7 +331,7 @@ export function atan2(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function atan2(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("atan2", ...args);
 }
@@ -353,7 +353,7 @@ export function browse(
   title: unknown,
   initdir: unknown,
   defaultValue: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function browse(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("browse", ...args);
 }
@@ -374,7 +374,7 @@ export function browsedir(
   denops: Denops,
   title: unknown,
   initdir: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function browsedir(
   denops: Denops,
   ...args: unknown[]
@@ -416,7 +416,7 @@ export function byteidx(
   denops: Denops,
   expr: unknown,
   nr: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function byteidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("byteidx", ...args);
 }
@@ -444,7 +444,7 @@ export function byteidxcomp(
   denops: Denops,
   expr: unknown,
   nr: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function byteidxcomp(
   denops: Denops,
   ...args: unknown[]
@@ -501,7 +501,7 @@ export function call(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function ceil(denops: Denops, expr: unknown): Promise<unknown>;
+export function ceil(denops: Denops, expr: unknown): Promise<number>;
 export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ceil", ...args);
 }
@@ -515,7 +515,7 @@ export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * one less than the number of the undone change.
  * Returns 0 if the undo list is empty.
  */
-export function changenr(denops: Denops): Promise<unknown>;
+export function changenr(denops: Denops): Promise<number>;
 export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("changenr", ...args);
 }
@@ -553,7 +553,7 @@ export function char2nr(
   denops: Denops,
   string: unknown,
   utf8?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function char2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("char2nr", ...args);
 }
@@ -569,7 +569,7 @@ export function char2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The class is used in patterns and word motions.
  * Returns 0 if **{string}** is not a `String`.
  */
-export function charclass(denops: Denops, string: unknown): Promise<unknown>;
+export function charclass(denops: Denops, string: unknown): Promise<number>;
 export function charclass(
   denops: Denops,
   ...args: unknown[]
@@ -591,7 +591,7 @@ export function charclass(
  *
  *     GetPos()->col()
  */
-export function charcol(denops: Denops, expr: unknown): Promise<unknown>;
+export function charcol(denops: Denops, expr: unknown): Promise<number>;
 export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("charcol", ...args);
 }
@@ -628,7 +628,7 @@ export function charidx(
   string: unknown,
   idx: unknown,
   countcc?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("charidx", ...args);
 }
@@ -660,7 +660,7 @@ export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetDir()->chdir()
  */
-export function chdir(denops: Denops, dir: unknown): Promise<unknown>;
+export function chdir(denops: Denops, dir: unknown): Promise<string>;
 export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("chdir", ...args);
 }
@@ -677,7 +677,7 @@ export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetLnum()->cindent()
  */
-export function cindent(denops: Denops, lnum: unknown): Promise<unknown>;
+export function cindent(denops: Denops, lnum: unknown): Promise<number>;
 export function cindent(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("cindent", ...args);
 }
@@ -692,7 +692,7 @@ export function cindent(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetWin()->clearmatches()
  */
-export function clearmatches(denops: Denops, win?: unknown): Promise<unknown>;
+export function clearmatches(denops: Denops, win?: unknown): Promise<void>;
 export function clearmatches(
   denops: Denops,
   ...args: unknown[]
@@ -741,7 +741,7 @@ export function complete(
   denops: Denops,
   startcol: unknown,
   matches: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function complete(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("complete", ...args);
 }
@@ -759,7 +759,7 @@ export function complete(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetMoreMatches()->complete_add()
  */
-export function complete_add(denops: Denops, expr: unknown): Promise<unknown>;
+export function complete_add(denops: Denops, expr: unknown): Promise<number>;
 export function complete_add(
   denops: Denops,
   ...args: unknown[]
@@ -775,7 +775,7 @@ export function complete_add(
  * Only to be used by the function specified with the
  * 'completefunc' option.
  */
-export function complete_check(denops: Denops): Promise<unknown>;
+export function complete_check(denops: Denops): Promise<number>;
 export function complete_check(
   denops: Denops,
   ...args: unknown[]
@@ -845,7 +845,10 @@ export function complete_check(
  *
  *     GetItems()->complete_info()
  */
-export function complete_info(denops: Denops, what?: unknown): Promise<unknown>;
+export function complete_info(
+  denops: Denops,
+  what?: unknown,
+): Promise<Record<string, unknown>>;
 export function complete_info(
   denops: Denops,
   ...args: unknown[]
@@ -924,7 +927,7 @@ export function confirm(
   choices?: unknown,
   defaultValue?: unknown,
   type?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function confirm(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("confirm", ...args);
 }
@@ -967,7 +970,7 @@ export function copy(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function cos(denops: Denops, expr: unknown): Promise<unknown>;
+export function cos(denops: Denops, expr: unknown): Promise<number>;
 export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("cos", ...args);
 }
@@ -993,7 +996,7 @@ export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function cosh(denops: Denops, expr: unknown): Promise<unknown>;
+export function cosh(denops: Denops, expr: unknown): Promise<number>;
 export function cosh(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("cosh", ...args);
 }
@@ -1021,7 +1024,7 @@ export function count(
   expr: unknown,
   ic?: unknown,
   start?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function count(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("count", ...args);
 }
@@ -1072,7 +1075,7 @@ export function cscope_connection(
   num?: unknown,
   dbpath?: unknown,
   prepend?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function cscope_connection(
   denops: Denops,
   ...args: unknown[]
@@ -1093,7 +1096,7 @@ export function cscope_connection(
  *
  *     GetPid()->debugbreak()
  */
-export function debugbreak(denops: Denops, pid: unknown): Promise<unknown>;
+export function debugbreak(denops: Denops, pid: unknown): Promise<number>;
 export function debugbreak(
   denops: Denops,
   ...args: unknown[]
@@ -1167,7 +1170,7 @@ export function delete_(
   denops: Denops,
   fname: unknown,
   flags?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function delete_(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("delete_", ...args);
 }
@@ -1195,7 +1198,7 @@ export function deletebufline(
   buf: unknown,
   first: unknown,
   last?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function deletebufline(
   denops: Denops,
   ...args: unknown[]
@@ -1215,7 +1218,7 @@ export function deletebufline(
  * editing another buffer to set 'filetype' and load a syntax
  * file.
  */
-export function did_filetype(denops: Denops): Promise<unknown>;
+export function did_filetype(denops: Denops): Promise<number>;
 export function did_filetype(
   denops: Denops,
   ...args: unknown[]
@@ -1242,7 +1245,7 @@ export function diff_hlID(
   denops: Denops,
   lnum: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function diff_hlID(
   denops: Denops,
   ...args: unknown[]
@@ -1279,7 +1282,7 @@ export function diff_hlID(
  * feature.  If this feature is disabled, this function will
  * display an error message.
  */
-export function digraph_get(denops: Denops, chars: unknown): Promise<unknown>;
+export function digraph_get(denops: Denops, chars: unknown): Promise<string>;
 export function digraph_get(
   denops: Denops,
   ...args: unknown[]
@@ -1317,7 +1320,7 @@ export function digraph_get(
 export function digraph_getlist(
   denops: Denops,
   listall?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function digraph_getlist(
   denops: Denops,
   ...args: unknown[]
@@ -1355,7 +1358,7 @@ export function digraph_set(
   denops: Denops,
   chars: unknown,
   digraph: unknown,
-): Promise<unknown>;
+): Promise<boolean>;
 export function digraph_set(
   denops: Denops,
   ...args: unknown[]
@@ -1392,7 +1395,7 @@ export function digraph_set(
 export function digraph_setlist(
   denops: Denops,
   digraphlist: unknown,
-): Promise<unknown>;
+): Promise<boolean>;
 export function digraph_setlist(
   denops: Denops,
   ...args: unknown[]
@@ -1418,7 +1421,7 @@ export function digraph_setlist(
  *
  *     mylist->empty()
  */
-export function empty(denops: Denops, expr: unknown): Promise<unknown>;
+export function empty(denops: Denops, expr: unknown): Promise<number>;
 export function empty(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("empty", ...args);
 }
@@ -1434,7 +1437,7 @@ export function empty(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     :echo index(keys(environ()), 'HOME', 0, 1) != -1
  */
-export function environ(denops: Denops): Promise<unknown>;
+export function environ(denops: Denops): Promise<Record<string, unknown>>;
 export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("environ", ...args);
 }
@@ -1459,7 +1462,7 @@ export function escape(
   denops: Denops,
   string: unknown,
   chars: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function escape(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("escape", ...args);
 }
@@ -1486,7 +1489,7 @@ export function eval_(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * e.g., when dropping a file on Vim.  This means interactive
  * commands cannot be used.  Otherwise zero is returned.
  */
-export function eventhandler(denops: Denops): Promise<unknown>;
+export function eventhandler(denops: Denops): Promise<number>;
 export function eventhandler(
   denops: Denops,
   ...args: unknown[]
@@ -1524,7 +1527,7 @@ export function eventhandler(
  *
  *     GetCommand()->executable()
  */
-export function executable(denops: Denops, expr: unknown): Promise<unknown>;
+export function executable(denops: Denops, expr: unknown): Promise<number>;
 export function executable(
   denops: Denops,
   ...args: unknown[]
@@ -1571,7 +1574,7 @@ export function execute(
   denops: Denops,
   command: unknown,
   silent?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function execute(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("execute", ...args);
 }
@@ -1591,7 +1594,7 @@ export function execute(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetCommand()->exepath()
  */
-export function exepath(denops: Denops, expr: unknown): Promise<unknown>;
+export function exepath(denops: Denops, expr: unknown): Promise<string>;
 export function exepath(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("exepath", ...args);
 }
@@ -1617,7 +1620,7 @@ export function exepath(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function exp(denops: Denops, expr: unknown): Promise<unknown>;
+export function exp(denops: Denops, expr: unknown): Promise<number>;
 export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("exp", ...args);
 }
@@ -1767,7 +1770,7 @@ export function expandcmd(
   denops: Denops,
   string: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function expandcmd(
   denops: Denops,
   ...args: unknown[]
@@ -1823,7 +1826,7 @@ export function extend(
   expr1: unknown,
   expr2: unknown,
   expr3?: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | Record<string, unknown>>;
 export function extend(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("extend", ...args);
 }
@@ -1890,7 +1893,7 @@ export function feedkeys(
   denops: Denops,
   string: unknown,
   mode?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function feedkeys(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("feedkeys", ...args);
 }
@@ -1915,7 +1918,7 @@ export function feedkeys(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * Obsolete name: file_readable().
  */
-export function filereadable(denops: Denops, file: unknown): Promise<unknown>;
+export function filereadable(denops: Denops, file: unknown): Promise<number>;
 export function filereadable(
   denops: Denops,
   ...args: unknown[]
@@ -1933,7 +1936,7 @@ export function filereadable(
  *
  *     GetName()->filewritable()
  */
-export function filewritable(denops: Denops, file: unknown): Promise<unknown>;
+export function filewritable(denops: Denops, file: unknown): Promise<number>;
 export function filewritable(
   denops: Denops,
   ...args: unknown[]
@@ -2021,7 +2024,7 @@ export function filter(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
 export function filter(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("filter", ...args);
 }
@@ -2053,7 +2056,7 @@ export function finddir(
   name: unknown,
   path?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function finddir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("finddir", ...args);
 }
@@ -2077,7 +2080,7 @@ export function findfile(
   name: unknown,
   path?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function findfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("findfile", ...args);
 }
@@ -2115,7 +2118,7 @@ export function flatten(
   denops: Denops,
   list: unknown,
   maxdepth?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("flatten", ...args);
 }
@@ -2158,7 +2161,7 @@ export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function float2nr(denops: Denops, expr: unknown): Promise<unknown>;
+export function float2nr(denops: Denops, expr: unknown): Promise<number>;
 export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("float2nr", ...args);
 }
@@ -2188,7 +2191,7 @@ export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function floor(denops: Denops, expr: unknown): Promise<unknown>;
+export function floor(denops: Denops, expr: unknown): Promise<number>;
 export function floor(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("floor", ...args);
 }
@@ -2223,7 +2226,7 @@ export function fmod(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function fmod(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("fmod", ...args);
 }
@@ -2251,7 +2254,7 @@ export function fmod(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->fnameescape()
  */
-export function fnameescape(denops: Denops, string: unknown): Promise<unknown>;
+export function fnameescape(denops: Denops, string: unknown): Promise<string>;
 export function fnameescape(
   denops: Denops,
   ...args: unknown[]
@@ -2288,7 +2291,7 @@ export function fnamemodify(
   denops: Denops,
   fname: unknown,
   mods: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function fnamemodify(
   denops: Denops,
   ...args: unknown[]
@@ -2307,7 +2310,7 @@ export function fnamemodify(
  *
  *     GetLnum()->foldclosed()
  */
-export function foldclosed(denops: Denops, lnum: unknown): Promise<unknown>;
+export function foldclosed(denops: Denops, lnum: unknown): Promise<number>;
 export function foldclosed(
   denops: Denops,
   ...args: unknown[]
@@ -2326,7 +2329,7 @@ export function foldclosed(
  *
  *     GetLnum()->foldclosedend()
  */
-export function foldclosedend(denops: Denops, lnum: unknown): Promise<unknown>;
+export function foldclosedend(denops: Denops, lnum: unknown): Promise<number>;
 export function foldclosedend(
   denops: Denops,
   ...args: unknown[]
@@ -2350,7 +2353,7 @@ export function foldclosedend(
  *
  *     GetLnum()->foldlevel()
  */
-export function foldlevel(denops: Denops, lnum: unknown): Promise<unknown>;
+export function foldlevel(denops: Denops, lnum: unknown): Promise<number>;
 export function foldlevel(
   denops: Denops,
   ...args: unknown[]
@@ -2378,7 +2381,7 @@ export function foldlevel(
  * Returns an empty string when there is no fold.
  * *not available when compiled without the `+folding` feature*
  */
-export function foldtext(denops: Denops): Promise<unknown>;
+export function foldtext(denops: Denops): Promise<string>;
 export function foldtext(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("foldtext", ...args);
 }
@@ -2397,7 +2400,7 @@ export function foldtext(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetLnum()->foldtextresult()
  */
-export function foldtextresult(denops: Denops, lnum: unknown): Promise<unknown>;
+export function foldtextresult(denops: Denops, lnum: unknown): Promise<string>;
 export function foldtextresult(
   denops: Denops,
   ...args: unknown[]
@@ -2421,7 +2424,7 @@ export function foldtextresult(
  *
  *     GetName()->fullcommand()
  */
-export function fullcommand(denops: Denops, name: unknown): Promise<unknown>;
+export function fullcommand(denops: Denops, name: unknown): Promise<string>;
 export function fullcommand(
   denops: Denops,
   ...args: unknown[]
@@ -2587,10 +2590,7 @@ export function function_(
  * type a character.  To force garbage collection immediately use
  * `test_garbagecollect_now()`.
  */
-export function garbagecollect(
-  denops: Denops,
-  atexit?: unknown,
-): Promise<unknown>;
+export function garbagecollect(denops: Denops, atexit?: unknown): Promise<void>;
 export function garbagecollect(
   denops: Denops,
   ...args: unknown[]
@@ -2691,8 +2691,8 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetBufnr()->getbufinfo()
  */
-export function getbufinfo(denops: Denops, buf?: unknown): Promise<unknown>;
-export function getbufinfo(denops: Denops, dict?: unknown): Promise<unknown>;
+export function getbufinfo(denops: Denops, buf?: unknown): Promise<unknown[]>;
+export function getbufinfo(denops: Denops, dict?: unknown): Promise<unknown[]>;
 export function getbufinfo(
   denops: Denops,
   ...args: unknown[]
@@ -2759,7 +2759,10 @@ export function getbufvar(
  *
  *     GetBufnr()->getchangelist()
  */
-export function getchangelist(denops: Denops, buf?: unknown): Promise<unknown>;
+export function getchangelist(
+  denops: Denops,
+  buf?: unknown,
+): Promise<unknown[]>;
 export function getchangelist(
   denops: Denops,
   ...args: unknown[]
@@ -2852,7 +2855,10 @@ export function getchangelist(
  *     :  return c
  *     :endfunction
  */
-export function getchar(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getchar(
+  denops: Denops,
+  expr?: unknown,
+): Promise<number | string>;
 export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getchar", ...args);
 }
@@ -2873,7 +2879,7 @@ export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * character itself are obtained.  Thus Shift-a results in "A"
  * without a modifier.  Returns 0 if no modifiers are used.
  */
-export function getcharmod(denops: Denops): Promise<unknown>;
+export function getcharmod(denops: Denops): Promise<number>;
 export function getcharmod(
   denops: Denops,
   ...args: unknown[]
@@ -2899,7 +2905,7 @@ export function getcharmod(
  *
  *     GetMark()->getcharpos()
  */
-export function getcharpos(denops: Denops, expr: unknown): Promise<unknown>;
+export function getcharpos(denops: Denops, expr: unknown): Promise<unknown[]>;
 export function getcharpos(
   denops: Denops,
   ...args: unknown[]
@@ -2929,7 +2935,7 @@ export function getcharpos(
  *
  * Also see `setcharsearch()`.
  */
-export function getcharsearch(denops: Denops): Promise<unknown>;
+export function getcharsearch(denops: Denops): Promise<Record<string, unknown>>;
 export function getcharsearch(
   denops: Denops,
   ...args: unknown[]
@@ -2949,7 +2955,7 @@ export function getcharsearch(
  * Otherwise this works like `getchar()`, except that a number
  * result is converted to a string.
  */
-export function getcharstr(denops: Denops, expr?: unknown): Promise<unknown>;
+export function getcharstr(denops: Denops, expr?: unknown): Promise<string>;
 export function getcharstr(
   denops: Denops,
   ...args: unknown[]
@@ -2966,7 +2972,7 @@ export function getcharstr(
  * `setcmdline()`.
  * Returns an empty string when completion is not defined.
  */
-export function getcmdcompltype(denops: Denops): Promise<unknown>;
+export function getcmdcompltype(denops: Denops): Promise<string>;
 export function getcmdcompltype(
   denops: Denops,
   ...args: unknown[]
@@ -2987,7 +2993,7 @@ export function getcmdcompltype(
  * Returns an empty string when entering a password or using
  * `inputsecret()`.
  */
-export function getcmdline(denops: Denops): Promise<unknown>;
+export function getcmdline(denops: Denops): Promise<string>;
 export function getcmdline(
   denops: Denops,
   ...args: unknown[]
@@ -3004,7 +3010,7 @@ export function getcmdline(
  * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()` and
  * `setcmdline()`.
  */
-export function getcmdpos(denops: Denops): Promise<unknown>;
+export function getcmdpos(denops: Denops): Promise<number>;
 export function getcmdpos(
   denops: Denops,
   ...args: unknown[]
@@ -3022,7 +3028,7 @@ export function getcmdpos(
  * Also see `getcmdpos()`, `setcmdpos()`, `getcmdline()` and
  * `setcmdline()`.
  */
-export function getcmdscreenpos(denops: Denops): Promise<unknown>;
+export function getcmdscreenpos(denops: Denops): Promise<number>;
 export function getcmdscreenpos(
   denops: Denops,
   ...args: unknown[]
@@ -3045,7 +3051,7 @@ export function getcmdscreenpos(
  * Returns an empty string otherwise.
  * Also see `getcmdpos()`, `setcmdpos()` and `getcmdline()`.
  */
-export function getcmdtype(denops: Denops): Promise<unknown>;
+export function getcmdtype(denops: Denops): Promise<string>;
 export function getcmdtype(
   denops: Denops,
   ...args: unknown[]
@@ -3058,7 +3064,7 @@ export function getcmdtype(
  * values are the same as `getcmdtype()`. Returns an empty string
  * when not in the command-line window.
  */
-export function getcmdwintype(denops: Denops): Promise<unknown>;
+export function getcmdwintype(denops: Denops): Promise<string>;
 export function getcmdwintype(
   denops: Denops,
   ...args: unknown[]
@@ -3143,7 +3149,7 @@ export function getcompletion(
   pat: unknown,
   type: unknown,
   filtered?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function getcompletion(
   denops: Denops,
   ...args: unknown[]
@@ -3168,7 +3174,7 @@ export function getcompletion(
 export function getcursorcharpos(
   denops: Denops,
   winid?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function getcursorcharpos(
   denops: Denops,
   ...args: unknown[]
@@ -3218,7 +3224,7 @@ export function getcwd(
   denops: Denops,
   winnr?: unknown,
   tabnr?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function getcwd(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getcwd", ...args);
 }
@@ -3238,7 +3244,7 @@ export function getcwd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetVarname()->getenv()
  */
-export function getenv(denops: Denops, name: unknown): Promise<unknown>;
+export function getenv(denops: Denops, name: unknown): Promise<string>;
 export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getenv", ...args);
 }
@@ -3257,7 +3263,7 @@ export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Note that the GTK GUI accepts any font name, thus checking for
  * a valid name does not work.
  */
-export function getfontname(denops: Denops, name?: unknown): Promise<unknown>;
+export function getfontname(denops: Denops, name?: unknown): Promise<string>;
 export function getfontname(
   denops: Denops,
   ...args: unknown[]
@@ -3288,7 +3294,7 @@ export function getfontname(
  *
  * For setting permissions use `setfperm()`.
  */
-export function getfperm(denops: Denops, fname: unknown): Promise<unknown>;
+export function getfperm(denops: Denops, fname: unknown): Promise<string>;
 export function getfperm(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getfperm", ...args);
 }
@@ -3305,7 +3311,7 @@ export function getfperm(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetFilename()->getfsize()
  */
-export function getfsize(denops: Denops, fname: unknown): Promise<unknown>;
+export function getfsize(denops: Denops, fname: unknown): Promise<number>;
 export function getfsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getfsize", ...args);
 }
@@ -3321,7 +3327,7 @@ export function getfsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetFilename()->getftime()
  */
-export function getftime(denops: Denops, fname: unknown): Promise<unknown>;
+export function getftime(denops: Denops, fname: unknown): Promise<number>;
 export function getftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getftime", ...args);
 }
@@ -3353,7 +3359,7 @@ export function getftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetFilename()->getftype()
  */
-export function getftype(denops: Denops, fname: unknown): Promise<unknown>;
+export function getftype(denops: Denops, fname: unknown): Promise<string>;
 export function getftype(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getftype", ...args);
 }
@@ -3386,7 +3392,7 @@ export function getjumplist(
   denops: Denops,
   winnr?: unknown,
   tabnr?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function getjumplist(
   denops: Denops,
   ...args: unknown[]
@@ -3430,7 +3436,7 @@ export function getloclist(
   denops: Denops,
   nr: unknown,
   what?: unknown,
-): Promise<unknown>;
+): Promise<Record<string, unknown>>;
 export function getloclist(
   denops: Denops,
   ...args: unknown[]
@@ -3461,7 +3467,7 @@ export function getloclist(
  *
  *     GetBufnr()->getmarklist()
  */
-export function getmarklist(denops: Denops, buf?: unknown): Promise<unknown>;
+export function getmarklist(denops: Denops, buf?: unknown): Promise<unknown[]>;
 export function getmarklist(
   denops: Denops,
   ...args: unknown[]
@@ -3501,7 +3507,7 @@ export function getmarklist(
  *
  *             :unlet m
  */
-export function getmatches(denops: Denops, win?: unknown): Promise<unknown>;
+export function getmatches(denops: Denops, win?: unknown): Promise<unknown[]>;
 export function getmatches(
   denops: Denops,
   ...args: unknown[]
@@ -3537,7 +3543,7 @@ export function getmatches(
  * When using `getchar()` the Vim variables `v:mouse_lnum`,
  * `v:mouse_col` and `v:mouse_winid` also provide these values.
  */
-export function getmousepos(denops: Denops): Promise<unknown>;
+export function getmousepos(denops: Denops): Promise<Record<string, unknown>>;
 export function getmousepos(
   denops: Denops,
   ...args: unknown[]
@@ -3550,7 +3556,7 @@ export function getmousepos(
  * On Unix and MS-Windows this is a unique number, until Vim
  * exits.
  */
-export function getpid(denops: Denops): Promise<unknown>;
+export function getpid(denops: Denops): Promise<number>;
 export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getpid", ...args);
 }
@@ -3657,7 +3663,10 @@ export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :echo getqflist({'nr': 2, 'title': 1})
  *     :echo getqflist({'lines' : ["F1:10:L10"]})
  */
-export function getqflist(denops: Denops, what?: unknown): Promise<unknown>;
+export function getqflist(
+  denops: Denops,
+  what?: unknown,
+): Promise<Record<string, unknown>>;
 export function getqflist(
   denops: Denops,
   ...args: unknown[]
@@ -3701,7 +3710,7 @@ export function getreg(
   regname?: unknown,
   v1?: unknown,
   list?: unknown,
-): Promise<unknown>;
+): Promise<string | unknown[]>;
 export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getreg", ...args);
 }
@@ -3723,7 +3732,7 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetRegname()->getregtype()
  */
-export function getregtype(denops: Denops, regname?: unknown): Promise<unknown>;
+export function getregtype(denops: Denops, regname?: unknown): Promise<string>;
 export function getregtype(
   denops: Denops,
   ...args: unknown[]
@@ -3748,7 +3757,7 @@ export function getregtype(
  *
  *     GetTabnr()->gettabinfo()
  */
-export function gettabinfo(denops: Denops, tabnr?: unknown): Promise<unknown>;
+export function gettabinfo(denops: Denops, tabnr?: unknown): Promise<unknown[]>;
 export function gettabinfo(
   denops: Denops,
   ...args: unknown[]
@@ -3861,7 +3870,10 @@ export function gettabwinvar(
  *
  *     GetWinnr()->gettagstack()
  */
-export function gettagstack(denops: Denops, winnr?: unknown): Promise<unknown>;
+export function gettagstack(
+  denops: Denops,
+  winnr?: unknown,
+): Promise<Record<string, unknown>>;
 export function gettagstack(
   denops: Denops,
   ...args: unknown[]
@@ -3910,7 +3922,7 @@ export function gettagstack(
  *
  *     GetWinnr()->getwininfo()
  */
-export function getwininfo(denops: Denops, winid?: unknown): Promise<unknown>;
+export function getwininfo(denops: Denops, winid?: unknown): Promise<unknown[]>;
 export function getwininfo(
   denops: Denops,
   ...args: unknown[]
@@ -3942,7 +3954,10 @@ export function getwininfo(
  *
  *     GetTimeout()->getwinpos()
  */
-export function getwinpos(denops: Denops, timeout?: unknown): Promise<unknown>;
+export function getwinpos(
+  denops: Denops,
+  timeout?: unknown,
+): Promise<unknown[]>;
 export function getwinpos(
   denops: Denops,
   ...args: unknown[]
@@ -3957,7 +3972,7 @@ export function getwinpos(
  * The result will be -1 if the information is not available.
  * The value can be used with `:winpos`.
  */
-export function getwinposx(denops: Denops): Promise<unknown>;
+export function getwinposx(denops: Denops): Promise<number>;
 export function getwinposx(
   denops: Denops,
   ...args: unknown[]
@@ -3972,7 +3987,7 @@ export function getwinposx(
  * The result will be -1 if the information is not available.
  * The value can be used with `:winpos`.
  */
-export function getwinposy(denops: Denops): Promise<unknown>;
+export function getwinposy(denops: Denops): Promise<number>;
 export function getwinposy(
   denops: Denops,
   ...args: unknown[]
@@ -4077,7 +4092,7 @@ export function glob(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetExpr()->glob2regpat()
  */
-export function glob2regpat(denops: Denops, string: unknown): Promise<unknown>;
+export function glob2regpat(denops: Denops, string: unknown): Promise<string>;
 export function glob2regpat(
   denops: Denops,
   ...args: unknown[]
@@ -4136,7 +4151,7 @@ export function globpath(
   nosuf?: unknown,
   list?: unknown,
   alllinks?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function globpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("globpath", ...args);
 }
@@ -4157,7 +4172,7 @@ export function has_key(
   denops: Denops,
   dict: unknown,
   key: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function has_key(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("has_key", ...args);
 }
@@ -4205,7 +4220,7 @@ export function haslocaldir(
   denops: Denops,
   winnr?: unknown,
   tabnr?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function haslocaldir(
   denops: Denops,
   ...args: unknown[]
@@ -4255,7 +4270,7 @@ export function hasmapto(
   what: unknown,
   mode?: unknown,
   abbr?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function hasmapto(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hasmapto", ...args);
 }
@@ -4292,7 +4307,7 @@ export function histadd(
   denops: Denops,
   history: unknown,
   item: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function histadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("histadd", ...args);
 }
@@ -4341,7 +4356,7 @@ export function histdel(
   denops: Denops,
   history: unknown,
   item?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function histdel(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("histdel", ...args);
 }
@@ -4371,7 +4386,7 @@ export function histget(
   denops: Denops,
   history: unknown,
   index?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function histget(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("histget", ...args);
 }
@@ -4389,7 +4404,7 @@ export function histget(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetHistory()->histnr()
  */
-export function histnr(denops: Denops, history: unknown): Promise<unknown>;
+export function histnr(denops: Denops, history: unknown): Promise<number>;
 export function histnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("histnr", ...args);
 }
@@ -4407,7 +4422,7 @@ export function histnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->hlexists()
  */
-export function hlexists(denops: Denops, name: unknown): Promise<unknown>;
+export function hlexists(denops: Denops, name: unknown): Promise<number>;
 export function hlexists(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hlexists", ...args);
 }
@@ -4428,7 +4443,7 @@ export function hlexists(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->hlID()
  */
-export function hlID(denops: Denops, name: unknown): Promise<unknown>;
+export function hlID(denops: Denops, name: unknown): Promise<number>;
 export function hlID(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hlID", ...args);
 }
@@ -4438,7 +4453,7 @@ export function hlID(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * which Vim is currently running.  Machine names greater than
  * 256 characters long are truncated.
  */
-export function hostname(denops: Denops): Promise<unknown>;
+export function hostname(denops: Denops): Promise<string>;
 export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hostname", ...args);
 }
@@ -4473,7 +4488,7 @@ export function iconv(
   string: unknown,
   from: unknown,
   to: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function iconv(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("iconv", ...args);
 }
@@ -4490,7 +4505,7 @@ export function iconv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetLnum()->indent()
  */
-export function indent(denops: Denops, lnum: unknown): Promise<unknown>;
+export function indent(denops: Denops, lnum: unknown): Promise<number>;
 export function indent(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("indent", ...args);
 }
@@ -4531,7 +4546,7 @@ export function index(
   expr: unknown,
   start?: unknown,
   ic?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function index(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("index", ...args);
 }
@@ -4564,7 +4579,7 @@ export function insert(
   object: unknown,
   item: unknown,
   idx?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function insert(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("insert", ...args);
 }
@@ -4583,7 +4598,7 @@ export function insert(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :endfunction
  *     :au BufWritePre * call s:check_typoname(expand('<amatch>'))
  */
-export function interrupt(denops: Denops): Promise<unknown>;
+export function interrupt(denops: Denops): Promise<void>;
 export function interrupt(
   denops: Denops,
   ...args: unknown[]
@@ -4601,7 +4616,7 @@ export function interrupt(
  *
  *     :let bits = bits->invert()
  */
-export function invert(denops: Denops, expr: unknown): Promise<unknown>;
+export function invert(denops: Denops, expr: unknown): Promise<number>;
 export function invert(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("invert", ...args);
 }
@@ -4619,7 +4634,7 @@ export function invert(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function isdirectory(
   denops: Denops,
   directory: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function isdirectory(
   denops: Denops,
   ...args: unknown[]
@@ -4645,7 +4660,7 @@ export function isdirectory(
  *
  * *only available when compiled with the `+float` feature*
  */
-export function isinf(denops: Denops, expr: unknown): Promise<unknown>;
+export function isinf(denops: Denops, expr: unknown): Promise<number>;
 export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("isinf", ...args);
 }
@@ -4672,7 +4687,7 @@ export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->islocked()
  */
-export function islocked(denops: Denops, expr: unknown): Promise<unknown>;
+export function islocked(denops: Denops, expr: unknown): Promise<number>;
 export function islocked(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("islocked", ...args);
 }
@@ -4690,7 +4705,7 @@ export function islocked(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function isnan(denops: Denops, expr: unknown): Promise<unknown>;
+export function isnan(denops: Denops, expr: unknown): Promise<number>;
 export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("isnan", ...args);
 }
@@ -4710,7 +4725,7 @@ export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mydict->items()
  */
-export function items(denops: Denops, dict: unknown): Promise<unknown>;
+export function items(denops: Denops, dict: unknown): Promise<unknown[]>;
 export function items(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("items", ...args);
 }
@@ -4736,7 +4751,7 @@ export function join(
   denops: Denops,
   list: unknown,
   sep?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function join(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("join", ...args);
 }
@@ -4817,7 +4832,7 @@ export function json_decode(
  *
  *     GetObject()->json_encode()
  */
-export function json_encode(denops: Denops, expr: unknown): Promise<unknown>;
+export function json_encode(denops: Denops, expr: unknown): Promise<string>;
 export function json_encode(
   denops: Denops,
   ...args: unknown[]
@@ -4833,7 +4848,7 @@ export function json_encode(
  *
  *     mydict->keys()
  */
-export function keys(denops: Denops, dict: unknown): Promise<unknown>;
+export function keys(denops: Denops, dict: unknown): Promise<unknown[]>;
 export function keys(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("keys", ...args);
 }
@@ -4851,7 +4866,7 @@ export function keys(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     "\<C-Home>"->keytrans()
  */
-export function keytrans(denops: Denops, string: unknown): Promise<unknown>;
+export function keytrans(denops: Denops, string: unknown): Promise<string>;
 export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("keytrans", ...args);
 }
@@ -4871,7 +4886,7 @@ export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mylist->len()
  */
-export function len(denops: Denops, expr: unknown): Promise<unknown>;
+export function len(denops: Denops, expr: unknown): Promise<number>;
 export function len(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("len", ...args);
 }
@@ -4932,7 +4947,7 @@ export function libcall(
   libname: unknown,
   funcname: unknown,
   argument: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function libcall(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("libcall", ...args);
 }
@@ -4958,7 +4973,7 @@ export function libcallnr(
   libname: unknown,
   funcname: unknown,
   argument: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function libcallnr(
   denops: Denops,
   ...args: unknown[]
@@ -4978,7 +4993,7 @@ export function libcallnr(
  *
  *     GetLnum()->lispindent()
  */
-export function lispindent(denops: Denops, lnum: unknown): Promise<unknown>;
+export function lispindent(denops: Denops, lnum: unknown): Promise<number>;
 export function lispindent(
   denops: Denops,
   ...args: unknown[]
@@ -5015,7 +5030,7 @@ export function list2str(
   denops: Denops,
   list: unknown,
   utf8?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function list2str(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("list2str", ...args);
 }
@@ -5024,7 +5039,7 @@ export function list2str(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Return the current time, measured as seconds since 1st Jan
  * 1970.  See also `strftime()`, `strptime()` and `getftime()`.
  */
-export function localtime(denops: Denops): Promise<unknown>;
+export function localtime(denops: Denops): Promise<number>;
 export function localtime(
   denops: Denops,
   ...args: unknown[]
@@ -5053,7 +5068,7 @@ export function localtime(
  *
  * *only available when compiled with the `+float` feature*
  */
-export function log(denops: Denops, expr: unknown): Promise<unknown>;
+export function log(denops: Denops, expr: unknown): Promise<number>;
 export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("log", ...args);
 }
@@ -5078,7 +5093,7 @@ export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function log10(denops: Denops, expr: unknown): Promise<unknown>;
+export function log10(denops: Denops, expr: unknown): Promise<number>;
 export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("log10", ...args);
 }
@@ -5156,7 +5171,7 @@ export function map(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
 export function map(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("map", ...args);
 }
@@ -5244,7 +5259,7 @@ export function maparg(
   mode?: unknown,
   abbr?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<string | Record<string, unknown>>;
 export function maparg(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("maparg", ...args);
 }
@@ -5293,7 +5308,7 @@ export function mapcheck(
   name: unknown,
   mode?: unknown,
   abbr?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function mapcheck(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mapcheck", ...args);
 }
@@ -5343,8 +5358,8 @@ export function mapset(
   mode: unknown,
   abbr: unknown,
   dict: unknown,
-): Promise<unknown>;
-export function mapset(denops: Denops, dict: unknown): Promise<unknown>;
+): Promise<void>;
+export function mapset(denops: Denops, dict: unknown): Promise<void>;
 export function mapset(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mapset", ...args);
 }
@@ -5434,7 +5449,7 @@ export function match(
   pat: unknown,
   start?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("match", ...args);
 }
@@ -5511,7 +5526,7 @@ export function matchadd(
   priority?: unknown,
   id?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function matchadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("matchadd", ...args);
 }
@@ -5565,7 +5580,7 @@ export function matchaddpos(
   priority?: unknown,
   id?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function matchaddpos(
   denops: Denops,
   ...args: unknown[]
@@ -5589,7 +5604,7 @@ export function matchaddpos(
  *
  *     GetMatch()->matcharg()
  */
-export function matcharg(denops: Denops, nr: unknown): Promise<unknown>;
+export function matcharg(denops: Denops, nr: unknown): Promise<unknown[]>;
 export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("matcharg", ...args);
 }
@@ -5610,7 +5625,7 @@ export function matchdelete(
   denops: Denops,
   id: unknown,
   win?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function matchdelete(
   denops: Denops,
   ...args: unknown[]
@@ -5655,7 +5670,7 @@ export function matchend(
   pat: unknown,
   start?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function matchend(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("matchend", ...args);
 }
@@ -5744,7 +5759,7 @@ export function matchfuzzy(
   list: unknown,
   str: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function matchfuzzy(
   denops: Denops,
   ...args: unknown[]
@@ -5784,7 +5799,7 @@ export function matchfuzzypos(
   list: unknown,
   str: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function matchfuzzypos(
   denops: Denops,
   ...args: unknown[]
@@ -5816,7 +5831,7 @@ export function matchlist(
   pat: unknown,
   start?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function matchlist(
   denops: Denops,
   ...args: unknown[]
@@ -5853,7 +5868,7 @@ export function matchstr(
   pat: unknown,
   start?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function matchstr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("matchstr", ...args);
 }
@@ -5894,7 +5909,7 @@ export function matchstrpos(
   pat: unknown,
   start?: unknown,
   count?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function matchstrpos(
   denops: Denops,
   ...args: unknown[]
@@ -5917,7 +5932,7 @@ export function matchstrpos(
  *
  *     mylist->max()
  */
-export function max(denops: Denops, expr: unknown): Promise<unknown>;
+export function max(denops: Denops, expr: unknown): Promise<number>;
 export function max(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("max", ...args);
 }
@@ -6001,7 +6016,7 @@ export function menu_info(
   denops: Denops,
   name: unknown,
   mode?: unknown,
-): Promise<unknown>;
+): Promise<Record<string, unknown>>;
 export function menu_info(
   denops: Denops,
   ...args: unknown[]
@@ -6024,7 +6039,7 @@ export function menu_info(
  *
  *     mylist->min()
  */
-export function min(denops: Denops, expr: unknown): Promise<unknown>;
+export function min(denops: Denops, expr: unknown): Promise<number>;
 export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("min", ...args);
 }
@@ -6093,7 +6108,7 @@ export function mkdir(
   name: unknown,
   path?: unknown,
   prot?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mkdir", ...args);
 }
@@ -6113,7 +6128,7 @@ export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetLnum()->nextnonblank()
  */
-export function nextnonblank(denops: Denops, lnum: unknown): Promise<unknown>;
+export function nextnonblank(denops: Denops, lnum: unknown): Promise<number>;
 export function nextnonblank(
   denops: Denops,
   ...args: unknown[]
@@ -6153,7 +6168,7 @@ export function nr2char(
   denops: Denops,
   expr: unknown,
   utf8?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function nr2char(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("nr2char", ...args);
 }
@@ -6179,7 +6194,7 @@ export function or(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function or(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("or", ...args);
 }
@@ -6209,7 +6224,7 @@ export function pathshorten(
   denops: Denops,
   path: unknown,
   len?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function pathshorten(
   denops: Denops,
   ...args: unknown[]
@@ -6267,7 +6282,7 @@ export function perleval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function pow(denops: Denops, x: unknown, y: unknown): Promise<unknown>;
+export function pow(denops: Denops, x: unknown, y: unknown): Promise<number>;
 export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("pow", ...args);
 }
@@ -6287,7 +6302,7 @@ export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetLnum()->prevnonblank()
  */
-export function prevnonblank(denops: Denops, lnum: unknown): Promise<unknown>;
+export function prevnonblank(denops: Denops, lnum: unknown): Promise<number>;
 export function prevnonblank(
   denops: Denops,
   ...args: unknown[]
@@ -6499,7 +6514,7 @@ export function printf(
   denops: Denops,
   fmt: unknown,
   expr1: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function printf(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("printf", ...args);
 }
@@ -6517,10 +6532,7 @@ export function printf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+channel` feature*
  */
-export function prompt_getprompt(
-  denops: Denops,
-  buf: unknown,
-): Promise<unknown>;
+export function prompt_getprompt(denops: Denops, buf: unknown): Promise<string>;
 export function prompt_getprompt(
   denops: Denops,
   ...args: unknown[]
@@ -6568,7 +6580,7 @@ export function prompt_setcallback(
   denops: Denops,
   buf: unknown,
   expr: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prompt_setcallback(
   denops: Denops,
   ...args: unknown[]
@@ -6595,7 +6607,7 @@ export function prompt_setinterrupt(
   denops: Denops,
   buf: unknown,
   expr: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prompt_setinterrupt(
   denops: Denops,
   ...args: unknown[]
@@ -6621,7 +6633,7 @@ export function prompt_setprompt(
   denops: Denops,
   buf: unknown,
   text: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prompt_setprompt(
   denops: Denops,
   ...args: unknown[]
@@ -6643,7 +6655,7 @@ export function prompt_setprompt(
  * The values are the same as in `v:event` during
  * `CompleteChanged`.
  */
-export function pum_getpos(denops: Denops): Promise<unknown>;
+export function pum_getpos(denops: Denops): Promise<Record<string, unknown>>;
 export function pum_getpos(
   denops: Denops,
   ...args: unknown[]
@@ -6657,7 +6669,7 @@ export function pum_getpos(
  * This can be used to avoid some things that would remove the
  * popup menu.
  */
-export function pumvisible(denops: Denops): Promise<unknown>;
+export function pumvisible(denops: Denops): Promise<number>;
 export function pumvisible(
   denops: Denops,
   ...args: unknown[]
@@ -6744,7 +6756,7 @@ export function pyxeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :echo rand(seed)
  *     :echo rand(seed) % 16  " random number 0 - 15
  */
-export function rand(denops: Denops, expr?: unknown): Promise<unknown>;
+export function rand(denops: Denops, expr?: unknown): Promise<number>;
 export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("rand", ...args);
 }
@@ -6777,7 +6789,7 @@ export function range(
   expr: unknown,
   max?: unknown,
   stride?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function range(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("range", ...args);
 }
@@ -6850,7 +6862,7 @@ export function readdir(
   directory: unknown,
   expr?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function readdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("readdir", ...args);
 }
@@ -6900,7 +6912,7 @@ export function readfile(
   fname: unknown,
   type?: unknown,
   max?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function readfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("readfile", ...args);
 }
@@ -6942,7 +6954,7 @@ export function reduce(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Returns an empty string when no register is being executed.
  * See `@`.
  */
-export function reg_executing(denops: Denops): Promise<unknown>;
+export function reg_executing(denops: Denops): Promise<string>;
 export function reg_executing(
   denops: Denops,
   ...args: unknown[]
@@ -6954,7 +6966,7 @@ export function reg_executing(
  * Returns the single letter name of the register being recorded.
  * Returns an empty string when not recording.  See `q`.
  */
-export function reg_recording(denops: Denops): Promise<unknown>;
+export function reg_recording(denops: Denops): Promise<string>;
 export function reg_recording(
   denops: Denops,
   ...args: unknown[]
@@ -6991,7 +7003,7 @@ export function reltime(
   denops: Denops,
   start?: unknown,
   end?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("reltime", ...args);
 }
@@ -7015,7 +7027,7 @@ export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+reltime` feature*
  */
-export function reltimefloat(denops: Denops, time: unknown): Promise<unknown>;
+export function reltimefloat(denops: Denops, time: unknown): Promise<number>;
 export function reltimefloat(
   denops: Denops,
   ...args: unknown[]
@@ -7049,7 +7061,7 @@ export function reltimefloat(
  *
  * *only available when compiled with the `+reltime` feature*
  */
-export function reltimestr(denops: Denops, time: unknown): Promise<unknown>;
+export function reltimestr(denops: Denops, time: unknown): Promise<string>;
 export function reltimestr(
   denops: Denops,
   ...args: unknown[]
@@ -7103,7 +7115,7 @@ export function rename(
   denops: Denops,
   from: unknown,
   to: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function rename(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("rename", ...args);
 }
@@ -7130,7 +7142,7 @@ export function repeat(
   denops: Denops,
   expr: unknown,
   count: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | unknown | string>;
 export function repeat(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("repeat", ...args);
 }
@@ -7155,7 +7167,7 @@ export function repeat(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->resolve()
  */
-export function resolve(denops: Denops, filename: unknown): Promise<unknown>;
+export function resolve(denops: Denops, filename: unknown): Promise<string>;
 export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("resolve", ...args);
 }
@@ -7173,7 +7185,7 @@ export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mylist->reverse()
  */
-export function reverse(denops: Denops, object: unknown): Promise<unknown>;
+export function reverse(denops: Denops, object: unknown): Promise<unknown[]>;
 export function reverse(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("reverse", ...args);
 }
@@ -7204,7 +7216,7 @@ export function reverse(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function round(denops: Denops, expr: unknown): Promise<unknown>;
+export function round(denops: Denops, expr: unknown): Promise<number>;
 export function round(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("round", ...args);
 }
@@ -7246,7 +7258,7 @@ export function screenattr(
   denops: Denops,
   row: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function screenattr(
   denops: Denops,
   ...args: unknown[]
@@ -7272,7 +7284,7 @@ export function screenchar(
   denops: Denops,
   row: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function screenchar(
   denops: Denops,
   ...args: unknown[]
@@ -7295,7 +7307,7 @@ export function screenchars(
   denops: Denops,
   row: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function screenchars(
   denops: Denops,
   ...args: unknown[]
@@ -7318,7 +7330,7 @@ export function screenchars(
  *     nnoremap <silent> GG :echom screencol()<CR>
  *     nnoremap GG <Cmd>echom screencol()<CR>
  */
-export function screencol(denops: Denops): Promise<unknown>;
+export function screencol(denops: Denops): Promise<number>;
 export function screencol(
   denops: Denops,
   ...args: unknown[]
@@ -7334,7 +7346,7 @@ export function screencol(
  *
  * Note: Same restrictions as with `screencol()`.
  */
-export function screenrow(denops: Denops): Promise<unknown>;
+export function screenrow(denops: Denops): Promise<number>;
 export function screenrow(
   denops: Denops,
   ...args: unknown[]
@@ -7358,7 +7370,7 @@ export function screenstring(
   denops: Denops,
   row: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function screenstring(
   denops: Denops,
   ...args: unknown[]
@@ -7484,7 +7496,7 @@ export function search(
   stopline?: unknown,
   timeout?: unknown,
   skip?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function search(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("search", ...args);
 }
@@ -7621,7 +7633,7 @@ export function search(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function searchcount(
   denops: Denops,
   options?: unknown,
-): Promise<unknown>;
+): Promise<Record<string, unknown>>;
 export function searchcount(
   denops: Denops,
   ...args: unknown[]
@@ -7657,7 +7669,7 @@ export function searchdecl(
   name: unknown,
   global?: unknown,
   thisblock?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function searchdecl(
   denops: Denops,
   ...args: unknown[]
@@ -7764,7 +7776,7 @@ export function searchpair(
   skip?: unknown,
   stopline?: unknown,
   timeout?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function searchpair(
   denops: Denops,
   ...args: unknown[]
@@ -7792,7 +7804,7 @@ export function searchpairpos(
   skip?: unknown,
   stopline?: unknown,
   timeout?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function searchpairpos(
   denops: Denops,
   ...args: unknown[]
@@ -7829,7 +7841,7 @@ export function searchpos(
   stopline?: unknown,
   timeout?: unknown,
   skip?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function searchpos(
   denops: Denops,
   ...args: unknown[]
@@ -7846,7 +7858,7 @@ export function searchpos(
  *
  *     :echo serverlist()
  */
-export function serverlist(denops: Denops): Promise<unknown>;
+export function serverlist(denops: Denops): Promise<string>;
 export function serverlist(
   denops: Denops,
   ...args: unknown[]
@@ -7880,7 +7892,7 @@ export function setbufvar(
   buf: unknown,
   varname: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function setbufvar(
   denops: Denops,
   ...args: unknown[]
@@ -7916,7 +7928,7 @@ export function setbufvar(
  * You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
  * the effect for known emoji characters.
  */
-export function setcellwidths(denops: Denops, list: unknown): Promise<unknown>;
+export function setcellwidths(denops: Denops, list: unknown): Promise<void>;
 export function setcellwidths(
   denops: Denops,
   ...args: unknown[]
@@ -7947,7 +7959,7 @@ export function setcharpos(
   denops: Denops,
   expr: unknown,
   list: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setcharpos(
   denops: Denops,
   ...args: unknown[]
@@ -7981,7 +7993,10 @@ export function setcharpos(
  *
  *     SavedSearch()->setcharsearch()
  */
-export function setcharsearch(denops: Denops, dict: unknown): Promise<unknown>;
+export function setcharsearch(
+  denops: Denops,
+  dict: unknown,
+): Promise<Record<string, unknown>>;
 export function setcharsearch(
   denops: Denops,
   ...args: unknown[]
@@ -8004,7 +8019,7 @@ export function setcmdline(
   denops: Denops,
   str: unknown,
   pos?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setcmdline(
   denops: Denops,
   ...args: unknown[]
@@ -8031,7 +8046,7 @@ export function setcmdline(
  *
  *     GetPos()->setcmdpos()
  */
-export function setcmdpos(denops: Denops, pos: unknown): Promise<unknown>;
+export function setcmdpos(denops: Denops, pos: unknown): Promise<number>;
 export function setcmdpos(
   denops: Denops,
   ...args: unknown[]
@@ -8063,11 +8078,11 @@ export function setcursorcharpos(
   lnum: unknown,
   col: unknown,
   off?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setcursorcharpos(
   denops: Denops,
   list: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setcursorcharpos(
   denops: Denops,
   ...args: unknown[]
@@ -8092,7 +8107,7 @@ export function setenv(
   denops: Denops,
   name: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function setenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("setenv", ...args);
 }
@@ -8122,7 +8137,7 @@ export function setfperm(
   denops: Denops,
   fname: unknown,
   mode: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setfperm(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("setfperm", ...args);
 }
@@ -8154,7 +8169,7 @@ export function setloclist(
   list: unknown,
   action?: unknown,
   what?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setloclist(
   denops: Denops,
   ...args: unknown[]
@@ -8178,7 +8193,7 @@ export function setmatches(
   denops: Denops,
   list: unknown,
   win?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setmatches(
   denops: Denops,
   ...args: unknown[]
@@ -8309,7 +8324,7 @@ export function setqflist(
   list: unknown,
   action?: unknown,
   what?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setqflist(
   denops: Denops,
   ...args: unknown[]
@@ -8387,7 +8402,7 @@ export function setreg(
   regname: unknown,
   value: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function setreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("setreg", ...args);
 }
@@ -8412,7 +8427,7 @@ export function settabvar(
   tabnr: unknown,
   varname: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function settabvar(
   denops: Denops,
   ...args: unknown[]
@@ -8451,7 +8466,7 @@ export function settabwinvar(
   winnr: unknown,
   varname: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function settabwinvar(
   denops: Denops,
   ...args: unknown[]
@@ -8504,7 +8519,7 @@ export function settagstack(
   nr: unknown,
   dict: unknown,
   action?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function settagstack(
   denops: Denops,
   ...args: unknown[]
@@ -8529,7 +8544,7 @@ export function setwinvar(
   winnr: unknown,
   varname: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function setwinvar(
   denops: Denops,
   ...args: unknown[]
@@ -8547,7 +8562,7 @@ export function setwinvar(
  *
  * *only available when compiled with the `+cryptv` feature*
  */
-export function sha256(denops: Denops, string: unknown): Promise<unknown>;
+export function sha256(denops: Denops, string: unknown): Promise<string>;
 export function sha256(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sha256", ...args);
 }
@@ -8602,7 +8617,7 @@ export function shellescape(
   denops: Denops,
   string: unknown,
   special?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function shellescape(
   denops: Denops,
   ...args: unknown[]
@@ -8626,7 +8641,7 @@ export function shellescape(
  *
  *     GetColumn()->shiftwidth()
  */
-export function shiftwidth(denops: Denops, col?: unknown): Promise<unknown>;
+export function shiftwidth(denops: Denops, col?: unknown): Promise<number>;
 export function shiftwidth(
   denops: Denops,
   ...args: unknown[]
@@ -8657,7 +8672,7 @@ export function shiftwidth(
  *
  *     GetName()->simplify()
  */
-export function simplify(denops: Denops, filename: unknown): Promise<unknown>;
+export function simplify(denops: Denops, filename: unknown): Promise<string>;
 export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("simplify", ...args);
 }
@@ -8682,7 +8697,7 @@ export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function sin(denops: Denops, expr: unknown): Promise<unknown>;
+export function sin(denops: Denops, expr: unknown): Promise<number>;
 export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sin", ...args);
 }
@@ -8708,7 +8723,7 @@ export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function sinh(denops: Denops, expr: unknown): Promise<unknown>;
+export function sinh(denops: Denops, expr: unknown): Promise<number>;
 export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sinh", ...args);
 }
@@ -8804,7 +8819,7 @@ export function sort(
   list: unknown,
   how?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function sort(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sort", ...args);
 }
@@ -8821,7 +8836,7 @@ export function sort(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetWord()->soundfold()
  */
-export function soundfold(denops: Denops, word: unknown): Promise<unknown>;
+export function soundfold(denops: Denops, word: unknown): Promise<string>;
 export function soundfold(
   denops: Denops,
   ...args: unknown[]
@@ -8862,7 +8877,7 @@ export function soundfold(
 export function spellbadword(
   denops: Denops,
   sentence?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function spellbadword(
   denops: Denops,
   ...args: unknown[]
@@ -8900,7 +8915,7 @@ export function spellsuggest(
   word: unknown,
   max?: unknown,
   capital?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function spellsuggest(
   denops: Denops,
   ...args: unknown[]
@@ -8948,7 +8963,7 @@ export function split(
   string: unknown,
   pattern?: unknown,
   keepempty?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function split(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("split", ...args);
 }
@@ -8976,7 +8991,7 @@ export function split(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function sqrt(denops: Denops, expr: unknown): Promise<unknown>;
+export function sqrt(denops: Denops, expr: unknown): Promise<number>;
 export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sqrt", ...args);
 }
@@ -8996,7 +9011,7 @@ export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let seed = srand(userinput)
  *     :echo rand(seed)
  */
-export function srand(denops: Denops, expr?: unknown): Promise<unknown>;
+export function srand(denops: Denops, expr?: unknown): Promise<unknown[]>;
 export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("srand", ...args);
 }
@@ -9031,7 +9046,7 @@ export function str2float(
   denops: Denops,
   string: unknown,
   quoted?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function str2float(
   denops: Denops,
   ...args: unknown[]
@@ -9063,7 +9078,7 @@ export function str2list(
   denops: Denops,
   string: unknown,
   utf8?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("str2list", ...args);
 }
@@ -9097,7 +9112,7 @@ export function str2nr(
   string: unknown,
   base?: unknown,
   quoted?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function str2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("str2nr", ...args);
 }
@@ -9129,7 +9144,7 @@ export function strcharpart(
   start: unknown,
   len?: unknown,
   skipcc?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function strcharpart(
   denops: Denops,
   ...args: unknown[]
@@ -9174,7 +9189,7 @@ export function strchars(
   denops: Denops,
   string: unknown,
   skipcc?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function strchars(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strchars", ...args);
 }
@@ -9201,7 +9216,7 @@ export function strdisplaywidth(
   denops: Denops,
   string: unknown,
   col?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function strdisplaywidth(
   denops: Denops,
   ...args: unknown[]
@@ -9239,7 +9254,7 @@ export function strftime(
   denops: Denops,
   format: unknown,
   time?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function strftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strftime", ...args);
 }
@@ -9261,7 +9276,7 @@ export function strgetchar(
   denops: Denops,
   str: unknown,
   index: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function strgetchar(
   denops: Denops,
   ...args: unknown[]
@@ -9300,7 +9315,7 @@ export function stridx(
   haystack: unknown,
   needle: unknown,
   start?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("stridx", ...args);
 }
@@ -9328,7 +9343,7 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * Also see `strtrans()`.
  */
-export function string(denops: Denops, expr: unknown): Promise<unknown>;
+export function string(denops: Denops, expr: unknown): Promise<string>;
 export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("string", ...args);
 }
@@ -9346,7 +9361,7 @@ export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetString()->strlen()
  */
-export function strlen(denops: Denops, string: unknown): Promise<unknown>;
+export function strlen(denops: Denops, string: unknown): Promise<number>;
 export function strlen(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strlen", ...args);
 }
@@ -9388,7 +9403,7 @@ export function strpart(
   start: unknown,
   len?: unknown,
   chars?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function strpart(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strpart", ...args);
 }
@@ -9435,7 +9450,7 @@ export function strptime(
   denops: Denops,
   format: unknown,
   timestring: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function strptime(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strptime", ...args);
 }
@@ -9470,7 +9485,7 @@ export function strridx(
   haystack: unknown,
   needle: unknown,
   start?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strridx", ...args);
 }
@@ -9491,7 +9506,7 @@ export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetString()->strtrans()
  */
-export function strtrans(denops: Denops, string: unknown): Promise<unknown>;
+export function strtrans(denops: Denops, string: unknown): Promise<string>;
 export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strtrans", ...args);
 }
@@ -9509,7 +9524,7 @@ export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetString()->strwidth()
  */
-export function strwidth(denops: Denops, string: unknown): Promise<unknown>;
+export function strwidth(denops: Denops, string: unknown): Promise<number>;
 export function strwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("strwidth", ...args);
 }
@@ -9552,7 +9567,7 @@ export function submatch(
   denops: Denops,
   nr: unknown,
   list?: unknown,
-): Promise<unknown>;
+): Promise<string | unknown[]>;
 export function submatch(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("submatch", ...args);
 }
@@ -9618,7 +9633,7 @@ export function substitute(
   pat: unknown,
   sub: unknown,
   flags: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function substitute(
   denops: Denops,
   ...args: unknown[]
@@ -9649,7 +9664,10 @@ export function substitute(
  *
  *     GetFilename()->swapinfo()
  */
-export function swapinfo(denops: Denops, fname: unknown): Promise<unknown>;
+export function swapinfo(
+  denops: Denops,
+  fname: unknown,
+): Promise<Record<string, unknown>>;
 export function swapinfo(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("swapinfo", ...args);
 }
@@ -9665,7 +9683,7 @@ export function swapinfo(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetBufname()->swapname()
  */
-export function swapname(denops: Denops, buf: unknown): Promise<unknown>;
+export function swapname(denops: Denops, buf: unknown): Promise<string>;
 export function swapname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("swapname", ...args);
 }
@@ -9701,7 +9719,7 @@ export function synID(
   lnum: unknown,
   col: unknown,
   trans: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function synID(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("synID", ...args);
 }
@@ -9756,7 +9774,7 @@ export function synIDattr(
   synID: unknown,
   what: unknown,
   mode?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function synIDattr(
   denops: Denops,
   ...args: unknown[]
@@ -9776,7 +9794,7 @@ export function synIDattr(
  *
  *     :echo synID(line("."), col("."), 1)->synIDtrans()->synIDattr("fg")
  */
-export function synIDtrans(denops: Denops, synID: unknown): Promise<unknown>;
+export function synIDtrans(denops: Denops, synID: unknown): Promise<number>;
 export function synIDtrans(
   denops: Denops,
   ...args: unknown[]
@@ -9813,7 +9831,7 @@ export function synconcealed(
   denops: Denops,
   lnum: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function synconcealed(
   denops: Denops,
   ...args: unknown[]
@@ -9846,7 +9864,7 @@ export function synstack(
   denops: Denops,
   lnum: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function synstack(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("synstack", ...args);
 }
@@ -9921,7 +9939,7 @@ export function system(
   denops: Denops,
   expr: unknown,
   input?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function system(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("system", ...args);
 }
@@ -9949,7 +9967,7 @@ export function systemlist(
   denops: Denops,
   expr: unknown,
   input?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function systemlist(
   denops: Denops,
   ...args: unknown[]
@@ -9976,7 +9994,10 @@ export function systemlist(
  *
  *     GetTabpage()->tabpagebuflist()
  */
-export function tabpagebuflist(denops: Denops, arg?: unknown): Promise<unknown>;
+export function tabpagebuflist(
+  denops: Denops,
+  arg?: unknown,
+): Promise<unknown[]>;
 export function tabpagebuflist(
   denops: Denops,
   ...args: unknown[]
@@ -9998,7 +10019,7 @@ export function tabpagebuflist(
  *
  * Returns zero on error.
  */
-export function tabpagenr(denops: Denops, arg?: unknown): Promise<unknown>;
+export function tabpagenr(denops: Denops, arg?: unknown): Promise<number>;
 export function tabpagenr(
   denops: Denops,
   ...args: unknown[]
@@ -10029,7 +10050,7 @@ export function tabpagewinnr(
   denops: Denops,
   tabarg: unknown,
   arg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function tabpagewinnr(
   denops: Denops,
   ...args: unknown[]
@@ -10041,7 +10062,7 @@ export function tabpagewinnr(
  * Returns a `List` with the file names used to search for tags
  * for the current buffer.  This is the 'tags' option expanded.
  */
-export function tagfiles(denops: Denops): Promise<unknown>;
+export function tagfiles(denops: Denops): Promise<unknown[]>;
 export function tagfiles(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tagfiles", ...args);
 }
@@ -10097,7 +10118,7 @@ export function taglist(
   denops: Denops,
   expr: unknown,
   filename?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function taglist(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("taglist", ...args);
 }
@@ -10123,7 +10144,7 @@ export function taglist(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function tan(denops: Denops, expr: unknown): Promise<unknown>;
+export function tan(denops: Denops, expr: unknown): Promise<number>;
 export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tan", ...args);
 }
@@ -10149,7 +10170,7 @@ export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function tanh(denops: Denops, expr: unknown): Promise<unknown>;
+export function tanh(denops: Denops, expr: unknown): Promise<number>;
 export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tanh", ...args);
 }
@@ -10167,7 +10188,7 @@ export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * option is set, or when 'shellcmdflag' starts with '-' and
  * 'shell' does not contain powershell or pwsh.
  */
-export function tempname(denops: Denops): Promise<unknown>;
+export function tempname(denops: Denops): Promise<string>;
 export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tempname", ...args);
 }
@@ -10195,7 +10216,7 @@ export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+timers` feature*
  */
-export function timer_info(denops: Denops, id?: unknown): Promise<unknown>;
+export function timer_info(denops: Denops, id?: unknown): Promise<unknown[]>;
 export function timer_info(
   denops: Denops,
   ...args: unknown[]
@@ -10226,7 +10247,7 @@ export function timer_pause(
   denops: Denops,
   timer: unknown,
   paused: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function timer_pause(
   denops: Denops,
   ...args: unknown[]
@@ -10282,7 +10303,7 @@ export function timer_start(
   time: unknown,
   callback: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function timer_start(
   denops: Denops,
   ...args: unknown[]
@@ -10301,7 +10322,7 @@ export function timer_start(
  *
  * *only available when compiled with the `+timers` feature*
  */
-export function timer_stop(denops: Denops, timer: unknown): Promise<unknown>;
+export function timer_stop(denops: Denops, timer: unknown): Promise<void>;
 export function timer_stop(
   denops: Denops,
   ...args: unknown[]
@@ -10316,7 +10337,7 @@ export function timer_stop(
  *
  * *only available when compiled with the `+timers` feature*
  */
-export function timer_stopall(denops: Denops): Promise<unknown>;
+export function timer_stopall(denops: Denops): Promise<void>;
 export function timer_stopall(
   denops: Denops,
   ...args: unknown[]
@@ -10333,7 +10354,7 @@ export function timer_stopall(
  *
  *     GetText()->tolower()
  */
-export function tolower(denops: Denops, expr: unknown): Promise<unknown>;
+export function tolower(denops: Denops, expr: unknown): Promise<string>;
 export function tolower(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tolower", ...args);
 }
@@ -10347,7 +10368,7 @@ export function tolower(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetText()->toupper()
  */
-export function toupper(denops: Denops, expr: unknown): Promise<unknown>;
+export function toupper(denops: Denops, expr: unknown): Promise<string>;
 export function toupper(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("toupper", ...args);
 }
@@ -10381,7 +10402,7 @@ export function tr(
   src: unknown,
   fromstr: unknown,
   tostr: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function tr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("tr", ...args);
 }
@@ -10431,7 +10452,7 @@ export function trim(
   text: unknown,
   mask?: unknown,
   dir?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function trim(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("trim", ...args);
 }
@@ -10461,7 +10482,7 @@ export function trim(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+float` feature*
  */
-export function trunc(denops: Denops, expr: unknown): Promise<unknown>;
+export function trunc(denops: Denops, expr: unknown): Promise<number>;
 export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("trunc", ...args);
 }
@@ -10500,7 +10521,7 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mylist->type()
  */
-export function type(denops: Denops, expr: unknown): Promise<unknown>;
+export function type(denops: Denops, expr: unknown): Promise<number>;
 export function type(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("type", ...args);
 }
@@ -10522,7 +10543,7 @@ export function type(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetFilename()->undofile()
  */
-export function undofile(denops: Denops, name: unknown): Promise<unknown>;
+export function undofile(denops: Denops, name: unknown): Promise<string>;
 export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("undofile", ...args);
 }
@@ -10570,7 +10591,7 @@ export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *                 blocks.  Each item may again have an "alt"
  *                 item.
  */
-export function undotree(denops: Denops): Promise<unknown>;
+export function undotree(denops: Denops): Promise<unknown[]>;
 export function undotree(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("undotree", ...args);
 }
@@ -10596,7 +10617,7 @@ export function uniq(
   list: unknown,
   func?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function uniq(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("uniq", ...args);
 }
@@ -10610,7 +10631,7 @@ export function uniq(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mydict->values()
  */
-export function values(denops: Denops, dict: unknown): Promise<unknown>;
+export function values(denops: Denops, dict: unknown): Promise<unknown[]>;
 export function values(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("values", ...args);
 }
@@ -10641,7 +10662,7 @@ export function virtcol2col(
   winid: unknown,
   lnum: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function virtcol2col(
   denops: Denops,
   ...args: unknown[]
@@ -10669,7 +10690,7 @@ export function virtcol2col(
  * a non-empty String, then the Visual mode will be cleared and
  * the old value is returned.  See `non-zero-arg`.
  */
-export function visualmode(denops: Denops, expr?: unknown): Promise<unknown>;
+export function visualmode(denops: Denops, expr?: unknown): Promise<string>;
 export function visualmode(
   denops: Denops,
   ...args: unknown[]
@@ -10689,7 +10710,7 @@ export function visualmode(
  *
  * (Note, this needs the 'wildcharm' option set appropriately).
  */
-export function wildmenumode(denops: Denops): Promise<unknown>;
+export function wildmenumode(denops: Denops): Promise<number>;
 export function wildmenumode(
   denops: Denops,
   ...args: unknown[]
@@ -10724,7 +10745,7 @@ export function win_execute(
   id: unknown,
   command: unknown,
   silent?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function win_execute(
   denops: Denops,
   ...args: unknown[]
@@ -10740,7 +10761,7 @@ export function win_execute(
  *
  *     GetBufnr()->win_findbuf()
  */
-export function win_findbuf(denops: Denops, bufnr: unknown): Promise<unknown>;
+export function win_findbuf(denops: Denops, bufnr: unknown): Promise<unknown[]>;
 export function win_findbuf(
   denops: Denops,
   ...args: unknown[]
@@ -10765,7 +10786,7 @@ export function win_getid(
   denops: Denops,
   win?: unknown,
   tab?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function win_getid(
   denops: Denops,
   ...args: unknown[]
@@ -10797,7 +10818,7 @@ export function win_getid(
  *
  *     GetWinid()->win_gettype()
  */
-export function win_gettype(denops: Denops, nr?: unknown): Promise<unknown>;
+export function win_gettype(denops: Denops, nr?: unknown): Promise<string>;
 export function win_gettype(
   denops: Denops,
   ...args: unknown[]
@@ -10814,7 +10835,7 @@ export function win_gettype(
  *
  *     GetWinid()->win_gotoid()
  */
-export function win_gotoid(denops: Denops, expr: unknown): Promise<unknown>;
+export function win_gotoid(denops: Denops, expr: unknown): Promise<number>;
 export function win_gotoid(
   denops: Denops,
   ...args: unknown[]
@@ -10831,7 +10852,10 @@ export function win_gotoid(
  *
  *     GetWinid()->win_id2tabwin()
  */
-export function win_id2tabwin(denops: Denops, expr: unknown): Promise<unknown>;
+export function win_id2tabwin(
+  denops: Denops,
+  expr: unknown,
+): Promise<unknown[]>;
 export function win_id2tabwin(
   denops: Denops,
   ...args: unknown[]
@@ -10847,7 +10871,7 @@ export function win_id2tabwin(
  *
  *     GetWinid()->win_id2win()
  */
-export function win_id2win(denops: Denops, expr: unknown): Promise<unknown>;
+export function win_id2win(denops: Denops, expr: unknown): Promise<number>;
 export function win_id2win(
   denops: Denops,
   ...args: unknown[]
@@ -10877,7 +10901,7 @@ export function win_move_separator(
   denops: Denops,
   nr: unknown,
   offset: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function win_move_separator(
   denops: Denops,
   ...args: unknown[]
@@ -10904,7 +10928,7 @@ export function win_move_statusline(
   denops: Denops,
   nr: unknown,
   offset: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function win_move_statusline(
   denops: Denops,
   ...args: unknown[]
@@ -10925,7 +10949,7 @@ export function win_move_statusline(
  *
  *     GetWinid()->win_screenpos()
  */
-export function win_screenpos(denops: Denops, nr: unknown): Promise<unknown>;
+export function win_screenpos(denops: Denops, nr: unknown): Promise<unknown[]>;
 export function win_screenpos(
   denops: Denops,
   ...args: unknown[]
@@ -10962,7 +10986,7 @@ export function win_splitmove(
   nr: unknown,
   target: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function win_splitmove(
   denops: Denops,
   ...args: unknown[]
@@ -10985,7 +11009,7 @@ export function win_splitmove(
  *
  *     FindWindow()->winbufnr()->bufname()
  */
-export function winbufnr(denops: Denops, nr: unknown): Promise<unknown>;
+export function winbufnr(denops: Denops, nr: unknown): Promise<number>;
 export function winbufnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("winbufnr", ...args);
 }
@@ -10996,7 +11020,7 @@ export function winbufnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Windows XP is "5.1".  For non-MS-Windows systems the result is
  * an empty string.
  */
-export function windowsversion(denops: Denops): Promise<unknown>;
+export function windowsversion(denops: Denops): Promise<string>;
 export function windowsversion(
   denops: Denops,
   ...args: unknown[]
@@ -11019,7 +11043,7 @@ export function windowsversion(
  *
  *     GetWinid()->winheight()
  */
-export function winheight(denops: Denops, nr: unknown): Promise<unknown>;
+export function winheight(denops: Denops, nr: unknown): Promise<number>;
 export function winheight(
   denops: Denops,
   ...args: unknown[]
@@ -11062,7 +11086,7 @@ export function winheight(
  *
  *     GetTabnr()->winlayout()
  */
-export function winlayout(denops: Denops, tabnr?: unknown): Promise<unknown>;
+export function winlayout(denops: Denops, tabnr?: unknown): Promise<unknown[]>;
 export function winlayout(
   denops: Denops,
   ...args: unknown[]
@@ -11104,7 +11128,7 @@ export function winlayout(
  *
  *     GetWinval()->winnr()
  */
-export function winnr(denops: Denops, arg?: unknown): Promise<unknown>;
+export function winnr(denops: Denops, arg?: unknown): Promise<number>;
 export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("winnr", ...args);
 }
@@ -11120,7 +11144,7 @@ export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :call MessWithWindowSizes()
  *     :exe cmd
  */
-export function winrestcmd(denops: Denops): Promise<unknown>;
+export function winrestcmd(denops: Denops): Promise<string>;
 export function winrestcmd(
   denops: Denops,
   ...args: unknown[]
@@ -11149,7 +11173,7 @@ export function winrestcmd(
  *
  *     GetView()->winrestview()
  */
-export function winrestview(denops: Denops, dict: unknown): Promise<unknown>;
+export function winrestview(denops: Denops, dict: unknown): Promise<void>;
 export function winrestview(
   denops: Denops,
   ...args: unknown[]
@@ -11184,7 +11208,7 @@ export function winrestview(
  *         skipcol         columns skipped
  * Note that no option values are saved.
  */
-export function winsaveview(denops: Denops): Promise<unknown>;
+export function winsaveview(denops: Denops): Promise<Record<string, unknown>>;
 export function winsaveview(
   denops: Denops,
   ...args: unknown[]
@@ -11212,7 +11236,7 @@ export function winsaveview(
  *
  *     GetWinid()->winwidth()
  */
-export function winwidth(denops: Denops, nr: unknown): Promise<unknown>;
+export function winwidth(denops: Denops, nr: unknown): Promise<number>;
 export function winwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("winwidth", ...args);
 }
@@ -11238,7 +11262,7 @@ export function winwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         visual_words    Number of words visually selected
  *                         (only in Visual mode)
  */
-export function wordcount(denops: Denops): Promise<unknown>;
+export function wordcount(denops: Denops): Promise<Record<string, unknown>>;
 export function wordcount(
   denops: Denops,
   ...args: unknown[]
@@ -11305,7 +11329,7 @@ export function writefile(
   object: unknown,
   fname: unknown,
   flags?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function writefile(
   denops: Denops,
   ...args: unknown[]
@@ -11329,7 +11353,7 @@ export function xor(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function xor(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("xor", ...args);
 }

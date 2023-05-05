@@ -26,16 +26,16 @@ export function formatDocs(docs: string): string[] {
 
 function formatVariants(fn: string, vars: Variant[]): string[] {
   if (vars.length === 0) {
-    return formatVariants(fn, [[]]);
+    return formatVariants(fn, [{ args: [], restype: "unknown" }]);
   }
-  const lines = vars.map((variant) => {
-    const args = variant.map(({ name, optional }) => {
+  const lines = vars.map(({ args, restype }) => {
+    const argTypes = args.map(({ name, optional }) => {
       name = translate[name] ?? name;
       return `${name}${optional ? "?" : ""}: unknown`;
     });
     return `export function ${fn}(denops: Denops, ${
-      args.join(", ")
-    }): Promise<unknown>;`;
+      argTypes.join(", ")
+    }): Promise<${restype}>;`;
   });
   return lines;
 }
