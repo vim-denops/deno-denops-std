@@ -4,7 +4,10 @@ export type Arg = {
   optional: boolean;
 };
 
-export type Variant = Arg[];
+export type Variant = {
+  args: Arg[];
+  restype: string;
+};
 
 export type Definition = {
   fn: string;
