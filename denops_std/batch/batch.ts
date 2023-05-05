@@ -160,11 +160,11 @@ class BatchHelper implements Denops {
  * ```typescript
  * import { Denops } from "../mod.ts";
  * import { batch } from "./batch.ts";
- * import * as anonymous from "../anonymous/mod.ts";
+ * import * as lambda from "../lambda/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await batch(denops, async (denops) => {
- *     const [id] = anonymous.add(denops, async () => {
+ *     const id = lambda.register(denops, async () => {
  *       // This code is called outside of 'batch' block
  *       // thus the 'denops' instance works like a real one.
  *       // That's why you can write code like below
