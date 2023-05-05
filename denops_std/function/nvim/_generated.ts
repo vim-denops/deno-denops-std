@@ -9,7 +9,7 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *
  *     :lua print(vim.inspect(vim.fn.api_info()))
  */
-export function api_info(denops: Denops): Promise<unknown>;
+export function api_info(denops: Denops): Promise<Record<string, unknown>>;
 export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("api_info", ...args);
 }
@@ -28,7 +28,7 @@ export function chanclose(
   denops: Denops,
   id: unknown,
   stream?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function chanclose(
   denops: Denops,
   ...args: unknown[]
@@ -60,7 +60,7 @@ export function chansend(
   denops: Denops,
   id: unknown,
   data: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("chansend", ...args);
 }
@@ -70,7 +70,10 @@ export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * from the top of the `context-stack` (see `context-dict`).
  * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
  */
-export function ctxget(denops: Denops, index?: unknown): Promise<unknown>;
+export function ctxget(
+  denops: Denops,
+  index?: unknown,
+): Promise<Record<string, unknown>>;
 export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxget", ...args);
 }
@@ -79,7 +82,7 @@ export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Pops and restores the `context` at the top of the
  * `context-stack`.
  */
-export function ctxpop(denops: Denops): Promise<unknown>;
+export function ctxpop(denops: Denops): Promise<void>;
 export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxpop", ...args);
 }
@@ -91,7 +94,7 @@ export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * which `context-types` to include in the pushed context.
  * Otherwise, all context types are included.
  */
-export function ctxpush(denops: Denops, types?: unknown): Promise<unknown>;
+export function ctxpush(denops: Denops, types?: unknown): Promise<void>;
 export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxpush", ...args);
 }
@@ -106,7 +109,7 @@ export function ctxset(
   denops: Denops,
   context: unknown,
   index?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxset", ...args);
 }
@@ -114,7 +117,7 @@ export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Returns the size of the `context-stack`.
  */
-export function ctxsize(denops: Denops): Promise<unknown>;
+export function ctxsize(denops: Denops): Promise<number>;
 export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ctxsize", ...args);
 }
@@ -208,7 +211,7 @@ export function dictwatcherdel(
  * will not be equal to some other `id()`: new containers may
  * reuse identifiers of the garbage-collected ones.
  */
-export function id(denops: Denops, expr: unknown): Promise<unknown>;
+export function id(denops: Denops, expr: unknown): Promise<string>;
 export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("id", ...args);
 }
@@ -216,7 +219,7 @@ export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Return the PID (process id) of `job-id` **{job}**.
  */
-export function jobpid(denops: Denops, job: unknown): Promise<unknown>;
+export function jobpid(denops: Denops, job: unknown): Promise<number>;
 export function jobpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("jobpid", ...args);
 }
@@ -231,7 +234,7 @@ export function jobresize(
   job: unknown,
   width: unknown,
   height: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function jobresize(
   denops: Denops,
   ...args: unknown[]
@@ -334,7 +337,7 @@ export function jobstart(
   denops: Denops,
   cmd: unknown,
   opts?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function jobstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("jobstart", ...args);
 }
@@ -349,7 +352,7 @@ export function jobstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Returns 1 for valid job id, 0 for invalid id, including jobs have
  * exited or stopped.
  */
-export function jobstop(denops: Denops, id: unknown): Promise<unknown>;
+export function jobstop(denops: Denops, id: unknown): Promise<number>;
 export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("jobstop", ...args);
 }
@@ -380,7 +383,7 @@ export function jobwait(
   denops: Denops,
   jobs: unknown,
   timeout?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function jobwait(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("jobwait", ...args);
 }
@@ -436,7 +439,7 @@ export function menu_get(
   denops: Denops,
   path: unknown,
   modes?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function menu_get(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("menu_get", ...args);
 }
@@ -467,7 +470,7 @@ export function msgpackdump(
   denops: Denops,
   list: unknown,
   type?: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | unknown>;
 export function msgpackdump(
   denops: Denops,
   ...args: unknown[]
@@ -553,7 +556,7 @@ export function msgpackdump(
  *         representing extension type. Second is
  *         `readfile()`-style list of strings.
  */
-export function msgpackparse(denops: Denops, data: unknown): Promise<unknown>;
+export function msgpackparse(denops: Denops, data: unknown): Promise<unknown[]>;
 export function msgpackparse(
   denops: Denops,
   ...args: unknown[]
@@ -566,7 +569,7 @@ export function msgpackparse(
  * Returns an empty string when nothing was recorded yet.
  * See `q` and `Q`.
  */
-export function reg_recorded(denops: Denops): Promise<unknown>;
+export function reg_recorded(denops: Denops): Promise<string>;
 export function reg_recorded(
   denops: Denops,
   ...args: unknown[]
@@ -711,7 +714,7 @@ export function sockconnect(
   mode: unknown,
   address: unknown,
   opts?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function sockconnect(
   denops: Denops,
   ...args: unknown[]
@@ -740,7 +743,7 @@ export function sockconnect(
  *   - `channel-id` on success (value is always 1)
  *   - 0 on invalid arguments
  */
-export function stdioopen(denops: Denops, opts: unknown): Promise<unknown>;
+export function stdioopen(denops: Denops, opts: unknown): Promise<number>;
 export function stdioopen(
   denops: Denops,
   ...args: unknown[]
@@ -770,7 +773,10 @@ export function stdioopen(
  *
  *     :echo stdpath("config")
  */
-export function stdpath(denops: Denops, what: unknown): Promise<unknown>;
+export function stdpath(
+  denops: Denops,
+  what: unknown,
+): Promise<string | unknown[]>;
 export function stdpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("stdpath", ...args);
 }
@@ -817,7 +823,7 @@ export function wait(
   timeout: unknown,
   condition: unknown,
   interval?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function wait(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("wait", ...args);
 }

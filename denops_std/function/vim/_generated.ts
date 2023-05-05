@@ -48,7 +48,7 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  *     Can also be used as a |method|: >
  *             GetAutocmdList()->autocmd_add()
  */
-export function autocmd_add(denops: Denops, acmds: unknown): Promise<unknown>;
+export function autocmd_add(denops: Denops, acmds: unknown): Promise<boolean>;
 export function autocmd_add(
   denops: Denops,
   ...args: unknown[]
@@ -110,7 +110,7 @@ export function autocmd_add(
 export function autocmd_delete(
   denops: Denops,
   acmds: unknown,
-): Promise<unknown>;
+): Promise<boolean>;
 export function autocmd_delete(
   denops: Denops,
   ...args: unknown[]
@@ -177,7 +177,7 @@ export function autocmd_delete(
  *
  *     Getopts()->autocmd_get()
  */
-export function autocmd_get(denops: Denops, opts?: unknown): Promise<unknown>;
+export function autocmd_get(denops: Denops, opts?: unknown): Promise<unknown[]>;
 export function autocmd_get(
   denops: Denops,
   ...args: unknown[]
@@ -190,7 +190,7 @@ export function autocmd_get(
  * not used for the List.  Returns an empty string if balloon
  * is not present.
  */
-export function balloon_gettext(denops: Denops): Promise<unknown>;
+export function balloon_gettext(denops: Denops): Promise<string>;
 export function balloon_gettext(
   denops: Denops,
   ...args: unknown[]
@@ -232,7 +232,7 @@ export function balloon_gettext(
  * *only available when compiled with the `+balloon_eval` or
  * `+balloon_eval_term` feature*
  */
-export function balloon_show(denops: Denops, expr: unknown): Promise<unknown>;
+export function balloon_show(denops: Denops, expr: unknown): Promise<void>;
 export function balloon_show(
   denops: Denops,
   ...args: unknown[]
@@ -253,7 +253,7 @@ export function balloon_show(
  * *only available when compiled with the `+balloon_eval_term`
  * feature*
  */
-export function balloon_split(denops: Denops, msg: unknown): Promise<unknown>;
+export function balloon_split(denops: Denops, msg: unknown): Promise<unknown[]>;
 export function balloon_split(
   denops: Denops,
   ...args: unknown[]
@@ -275,7 +275,7 @@ export function balloon_split(
  *
  *     GetBlob()->blob2list()
  */
-export function blob2list(denops: Denops, blob: unknown): Promise<unknown>;
+export function blob2list(denops: Denops, blob: unknown): Promise<unknown[]>;
 export function blob2list(
   denops: Denops,
   ...args: unknown[]
@@ -296,7 +296,7 @@ export function blob2list(
  *
  * Use with care, you can mess up the terminal this way.
  */
-export function echoraw(denops: Denops, string: unknown): Promise<unknown>;
+export function echoraw(denops: Denops, string: unknown): Promise<void>;
 export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("echoraw", ...args);
 }
@@ -317,10 +317,7 @@ export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can only be used in a `:def` function.
  * This does not work to check for arguments or local variables.
  */
-export function exists_compiled(
-  denops: Denops,
-  expr: unknown,
-): Promise<unknown>;
+export function exists_compiled(denops: Denops, expr: unknown): Promise<number>;
 export function exists_compiled(
   denops: Denops,
   ...args: unknown[]
@@ -339,7 +336,7 @@ export function extendnew(
   expr1: unknown,
   expr2: unknown,
   expr3?: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | Record<string, unknown>>;
 export function extendnew(
   denops: Denops,
   ...args: unknown[]
@@ -354,7 +351,7 @@ export function flattennew(
   denops: Denops,
   list: unknown,
   maxdepth?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function flattennew(
   denops: Denops,
   ...args: unknown[]
@@ -371,7 +368,7 @@ export function flattennew(
  * *only in the Win32, Motif and GTK GUI versions and the
  * Win32 console version*
  */
-export function foreground(denops: Denops): Promise<unknown>;
+export function foreground(denops: Denops): Promise<number>;
 export function foreground(
   denops: Denops,
   ...args: unknown[]
@@ -384,7 +381,7 @@ export function foreground(
  * active and `FALSE` otherwise.
  * See 'imstatusfunc'.
  */
-export function getimstatus(denops: Denops): Promise<unknown>;
+export function getimstatus(denops: Denops): Promise<number>;
 export function getimstatus(
   denops: Denops,
   ...args: unknown[]
@@ -434,7 +431,10 @@ export function getimstatus(
  *     :echo getscriptinfo({'name': 'myscript'})
  *     :echo getscriptinfo({'sid': 15}).variables
  */
-export function getscriptinfo(denops: Denops, opts?: unknown): Promise<unknown>;
+export function getscriptinfo(
+  denops: Denops,
+  opts?: unknown,
+): Promise<unknown[]>;
 export function getscriptinfo(
   denops: Denops,
   ...args: unknown[]
@@ -453,7 +453,7 @@ export function getscriptinfo(
  * xgettext does not understand escaping in single quoted
  * strings.
  */
-export function gettext(denops: Denops, text: unknown): Promise<unknown>;
+export function gettext(denops: Denops, text: unknown): Promise<string>;
 export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("gettext", ...args);
 }
@@ -515,7 +515,7 @@ export function hlget(
   denops: Denops,
   name?: unknown,
   resolve?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function hlget(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hlget", ...args);
 }
@@ -573,7 +573,7 @@ export function hlget(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetAttrList()->hlset()
  */
-export function hlset(denops: Denops, list: unknown): Promise<unknown>;
+export function hlset(denops: Denops, list: unknown): Promise<number>;
 export function hlset(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("hlset", ...args);
 }
@@ -626,7 +626,7 @@ export function indexof(
   object: unknown,
   expr: unknown,
   opts?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function indexof(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("indexof", ...args);
 }
@@ -656,7 +656,7 @@ export function inputdialog(
   prompt: unknown,
   text?: unknown,
   cancelreturn?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function inputdialog(
   denops: Denops,
   ...args: unknown[]
@@ -683,7 +683,7 @@ export function inputdialog(
  *
  *     GetName()->isabsolutepath()
  */
-export function isabsolutepath(denops: Denops, path: unknown): Promise<unknown>;
+export function isabsolutepath(denops: Denops, path: unknown): Promise<number>;
 export function isabsolutepath(
   denops: Denops,
   ...args: unknown[]
@@ -728,7 +728,7 @@ export function js_decode(
  *
  *     GetObject()->js_encode()
  */
-export function js_encode(denops: Denops, expr: unknown): Promise<unknown>;
+export function js_encode(denops: Denops, expr: unknown): Promise<string>;
 export function js_encode(
   denops: Denops,
   ...args: unknown[]
@@ -841,7 +841,7 @@ export function listener_add(
   denops: Denops,
   callback: unknown,
   buf?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function listener_add(
   denops: Denops,
   ...args: unknown[]
@@ -861,7 +861,7 @@ export function listener_add(
  *
  *     GetBuffer()->listener_flush()
  */
-export function listener_flush(denops: Denops, buf?: unknown): Promise<unknown>;
+export function listener_flush(denops: Denops, buf?: unknown): Promise<void>;
 export function listener_flush(
   denops: Denops,
   ...args: unknown[]
@@ -878,7 +878,7 @@ export function listener_flush(
  *
  *     GetListenerId()->listener_remove()
  */
-export function listener_remove(denops: Denops, id: unknown): Promise<unknown>;
+export function listener_remove(denops: Denops, id: unknown): Promise<void>;
 export function listener_remove(
   denops: Denops,
   ...args: unknown[]
@@ -954,7 +954,7 @@ export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     ounmap xyzzy
  *     echo printf("Operator-pending mode bit: 0x%x", op_bit)
  */
-export function maplist(denops: Denops, abbr?: unknown): Promise<unknown>;
+export function maplist(denops: Denops, abbr?: unknown): Promise<unknown[]>;
 export function maplist(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("maplist", ...args);
 }
@@ -969,7 +969,7 @@ export function mapnew(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown>;
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
 export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mapnew", ...args);
 }
@@ -1082,7 +1082,7 @@ export function readdirex(
   directory: unknown,
   expr?: unknown,
   dict?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function readdirex(
   denops: Denops,
   ...args: unknown[]
@@ -1133,7 +1133,7 @@ export function remote_expr(
   string: unknown,
   idvar?: unknown,
   timeout?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function remote_expr(
   denops: Denops,
   ...args: unknown[]
@@ -1165,7 +1165,7 @@ export function remote_expr(
 export function remote_foreground(
   denops: Denops,
   server: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function remote_foreground(
   denops: Denops,
   ...args: unknown[]
@@ -1196,7 +1196,7 @@ export function remote_peek(
   denops: Denops,
   serverid: unknown,
   retvar?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function remote_peek(
   denops: Denops,
   ...args: unknown[]
@@ -1224,7 +1224,7 @@ export function remote_read(
   denops: Denops,
   serverid: unknown,
   timeout: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function remote_read(
   denops: Denops,
   ...args: unknown[]
@@ -1269,7 +1269,7 @@ export function remote_send(
   server: unknown,
   string: unknown,
   idvar?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function remote_send(
   denops: Denops,
   ...args: unknown[]
@@ -1290,7 +1290,7 @@ export function remote_send(
 export function remote_startserver(
   denops: Denops,
   name: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function remote_startserver(
   denops: Denops,
   ...args: unknown[]
@@ -1320,7 +1320,7 @@ export function server2client(
   denops: Denops,
   clientid: unknown,
   string: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function server2client(
   denops: Denops,
   ...args: unknown[]
@@ -1346,7 +1346,7 @@ export function slice(
   expr: unknown,
   start: unknown,
   end?: unknown,
-): Promise<unknown>;
+): Promise<string | unknown[] | unknown>;
 export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("slice", ...args);
 }
@@ -1359,7 +1359,7 @@ export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * *only available when compiled with the `+sound` feature*
  */
-export function sound_clear(denops: Denops): Promise<unknown>;
+export function sound_clear(denops: Denops): Promise<void>;
 export function sound_clear(
   denops: Denops,
   ...args: unknown[]
@@ -1407,7 +1407,7 @@ export function sound_playevent(
   denops: Denops,
   name: unknown,
   callback?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function sound_playevent(
   denops: Denops,
   ...args: unknown[]
@@ -1432,7 +1432,7 @@ export function sound_playfile(
   denops: Denops,
   path: unknown,
   callback?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function sound_playfile(
   denops: Denops,
   ...args: unknown[]
@@ -1456,7 +1456,7 @@ export function sound_playfile(
  *
  * *only available when compiled with the `+sound` feature*
  */
-export function sound_stop(denops: Denops, id: unknown): Promise<unknown>;
+export function sound_stop(denops: Denops, id: unknown): Promise<void>;
 export function sound_stop(
   denops: Denops,
   ...args: unknown[]
@@ -1501,7 +1501,7 @@ export function sound_stop(
  *         recursiveness up to "ccc")
  *     s   screen has scrolled for messages
  */
-export function state(denops: Denops, what?: unknown): Promise<unknown>;
+export function state(denops: Denops, what?: unknown): Promise<string>;
 export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("state", ...args);
 }
@@ -1520,7 +1520,7 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetText()->strcharlen()
  */
-export function strcharlen(denops: Denops, string: unknown): Promise<unknown>;
+export function strcharlen(denops: Denops, string: unknown): Promise<number>;
 export function strcharlen(
   denops: Denops,
   ...args: unknown[]
@@ -1561,7 +1561,7 @@ export function strcharlen(
  * - `v:termstyleresp` and `v:termblinkresp` for the response to
  *   `t_RS` and `t_RC`.
  */
-export function terminalprops(denops: Denops): Promise<unknown>;
+export function terminalprops(denops: Denops): Promise<Record<string, unknown>>;
 export function terminalprops(
   denops: Denops,
   ...args: unknown[]
@@ -1576,7 +1576,7 @@ export function terminalprops(
  *     echo typename([1, 2, 3])
  *     list<number>
  */
-export function typename(denops: Denops, expr: unknown): Promise<unknown>;
+export function typename(denops: Denops, expr: unknown): Promise<string>;
 export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("typename", ...args);
 }
@@ -1595,7 +1595,7 @@ export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetChannel()->ch_canread()
  */
-export function ch_canread(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_canread(denops: Denops, handle: unknown): Promise<number>;
 export function ch_canread(
   denops: Denops,
   ...args: unknown[]
@@ -1612,7 +1612,7 @@ export function ch_canread(
  *
  *     GetChannel()->ch_close()
  */
-export function ch_close(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close(denops: Denops, handle: unknown): Promise<void>;
 export function ch_close(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ch_close", ...args);
 }
@@ -1626,7 +1626,7 @@ export function ch_close(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetChannel()->ch_close_in()
  */
-export function ch_close_in(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_close_in(denops: Denops, handle: unknown): Promise<void>;
 export function ch_close_in(
   denops: Denops,
   ...args: unknown[]
@@ -1716,7 +1716,7 @@ export function ch_getbufnr(
   denops: Denops,
   handle: unknown,
   what: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function ch_getbufnr(
   denops: Denops,
   ...args: unknown[]
@@ -1777,7 +1777,7 @@ export function ch_getjob(
  *
  *     GetChannel()->ch_info()
  */
-export function ch_info(denops: Denops, handle: unknown): Promise<unknown>;
+export function ch_info(denops: Denops, handle: unknown): Promise<string>;
 export function ch_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ch_info", ...args);
 }
@@ -1798,7 +1798,7 @@ export function ch_log(
   denops: Denops,
   msg: unknown,
   handle?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function ch_log(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ch_log", ...args);
 }
@@ -1835,7 +1835,7 @@ export function ch_logfile(
   denops: Denops,
   fname: unknown,
   mode?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function ch_logfile(
   denops: Denops,
   ...args: unknown[]
@@ -1881,7 +1881,7 @@ export function ch_read(
   denops: Denops,
   handle: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function ch_read(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("ch_read", ...args);
 }
@@ -1920,7 +1920,7 @@ export function ch_readraw(
   denops: Denops,
   handle: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function ch_readraw(
   denops: Denops,
   ...args: unknown[]
@@ -2011,7 +2011,7 @@ export function ch_setoptions(
   denops: Denops,
   handle: unknown,
   options: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function ch_setoptions(
   denops: Denops,
   ...args: unknown[]
@@ -2043,7 +2043,7 @@ export function ch_status(
   denops: Denops,
   handle: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function ch_status(
   denops: Denops,
   ...args: unknown[]
@@ -2097,7 +2097,10 @@ export function job_getchannel(
  *
  *     GetJob()->job_info()
  */
-export function job_info(denops: Denops, job?: unknown): Promise<unknown>;
+export function job_info(
+  denops: Denops,
+  job?: unknown,
+): Promise<Record<string, unknown>>;
 export function job_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("job_info", ...args);
 }
@@ -2115,7 +2118,7 @@ export function job_setoptions(
   denops: Denops,
   job: unknown,
   options: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function job_setoptions(
   denops: Denops,
   ...args: unknown[]
@@ -2229,7 +2232,7 @@ export function job_start(
  *
  *     GetJob()->job_status()
  */
-export function job_status(denops: Denops, job: unknown): Promise<unknown>;
+export function job_status(denops: Denops, job: unknown): Promise<string>;
 export function job_status(
   denops: Denops,
   ...args: unknown[]
@@ -2287,7 +2290,7 @@ export function job_stop(
   denops: Denops,
   job: unknown,
   how?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("job_stop", ...args);
 }
@@ -2352,7 +2355,7 @@ export function term_dumpdiff(
   filename1: unknown,
   filename2: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_dumpdiff(
   denops: Denops,
   ...args: unknown[]
@@ -2376,7 +2379,7 @@ export function term_dumpload(
   denops: Denops,
   filename: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_dumpload(
   denops: Denops,
   ...args: unknown[]
@@ -2407,7 +2410,7 @@ export function term_dumpwrite(
   buf: unknown,
   filename: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_dumpwrite(
   denops: Denops,
   ...args: unknown[]
@@ -2427,7 +2430,7 @@ export function term_dumpwrite(
 export function term_getaltscreen(
   denops: Denops,
   buf: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_getaltscreen(
   denops: Denops,
   ...args: unknown[]
@@ -2455,7 +2458,7 @@ export function term_getaltscreen(
 export function term_getansicolors(
   denops: Denops,
   buf: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function term_getansicolors(
   denops: Denops,
   ...args: unknown[]
@@ -2480,7 +2483,7 @@ export function term_getattr(
   denops: Denops,
   attr: unknown,
   what: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_getattr(
   denops: Denops,
   ...args: unknown[]
@@ -2513,7 +2516,10 @@ export function term_getattr(
  *
  *     GetBufnr()->term_getcursor()
  */
-export function term_getcursor(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getcursor(
+  denops: Denops,
+  buf: unknown,
+): Promise<unknown[]>;
 export function term_getcursor(
   denops: Denops,
   ...args: unknown[]
@@ -2556,7 +2562,7 @@ export function term_getline(
   denops: Denops,
   buf: unknown,
   row: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function term_getline(
   denops: Denops,
   ...args: unknown[]
@@ -2583,10 +2589,7 @@ export function term_getline(
  *
  *     GetBufnr()->term_getscrolled()
  */
-export function term_getscrolled(
-  denops: Denops,
-  buf: unknown,
-): Promise<unknown>;
+export function term_getscrolled(denops: Denops, buf: unknown): Promise<number>;
 export function term_getscrolled(
   denops: Denops,
   ...args: unknown[]
@@ -2607,7 +2610,7 @@ export function term_getscrolled(
  *
  *     GetBufnr()->term_getsize()
  */
-export function term_getsize(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getsize(denops: Denops, buf: unknown): Promise<unknown[]>;
 export function term_getsize(
   denops: Denops,
   ...args: unknown[]
@@ -2631,7 +2634,7 @@ export function term_getsize(
  *
  *     GetBufnr()->term_getstatus()
  */
-export function term_getstatus(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_getstatus(denops: Denops, buf: unknown): Promise<string>;
 export function term_getstatus(
   denops: Denops,
   ...args: unknown[]
@@ -2651,7 +2654,7 @@ export function term_getstatus(
  *
  *     GetBufnr()->term_gettitle()
  */
-export function term_gettitle(denops: Denops, buf: unknown): Promise<unknown>;
+export function term_gettitle(denops: Denops, buf: unknown): Promise<string>;
 export function term_gettitle(
   denops: Denops,
   ...args: unknown[]
@@ -2675,7 +2678,7 @@ export function term_gettty(
   denops: Denops,
   buf: unknown,
   input?: unknown,
-): Promise<unknown>;
+): Promise<string>;
 export function term_gettty(
   denops: Denops,
   ...args: unknown[]
@@ -2687,7 +2690,7 @@ export function term_gettty(
  * Return a list with the buffer numbers of all buffers for
  * terminal windows.
  */
-export function term_list(denops: Denops): Promise<unknown>;
+export function term_list(denops: Denops): Promise<unknown[]>;
 export function term_list(
   denops: Denops,
   ...args: unknown[]
@@ -2721,7 +2724,7 @@ export function term_scrape(
   denops: Denops,
   buf: unknown,
   row: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function term_scrape(
   denops: Denops,
   ...args: unknown[]
@@ -2744,7 +2747,7 @@ export function term_sendkeys(
   denops: Denops,
   buf: unknown,
   keys: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_sendkeys(
   denops: Denops,
   ...args: unknown[]
@@ -2792,7 +2795,7 @@ export function term_setansicolors(
   denops: Denops,
   buf: unknown,
   colors: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_setansicolors(
   denops: Denops,
   ...args: unknown[]
@@ -2818,7 +2821,7 @@ export function term_setapi(
   denops: Denops,
   buf: unknown,
   expr: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_setapi(
   denops: Denops,
   ...args: unknown[]
@@ -2846,7 +2849,7 @@ export function term_setkill(
   denops: Denops,
   buf: unknown,
   how: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_setkill(
   denops: Denops,
   ...args: unknown[]
@@ -2873,7 +2876,7 @@ export function term_setrestore(
   denops: Denops,
   buf: unknown,
   command: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_setrestore(
   denops: Denops,
   ...args: unknown[]
@@ -2900,7 +2903,7 @@ export function term_setsize(
   buf: unknown,
   rows: unknown,
   cols: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function term_setsize(
   denops: Denops,
   ...args: unknown[]
@@ -2987,7 +2990,7 @@ export function term_start(
   denops: Denops,
   cmd: unknown,
   options?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_start(
   denops: Denops,
   ...args: unknown[]
@@ -3009,7 +3012,7 @@ export function term_wait(
   denops: Denops,
   buf: unknown,
   time?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function term_wait(
   denops: Denops,
   ...args: unknown[]
@@ -3032,7 +3035,7 @@ export function test_alloc_fail(
   id: unknown,
   countdown: unknown,
   repeat: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function test_alloc_fail(
   denops: Denops,
   ...args: unknown[]
@@ -3044,7 +3047,7 @@ export function test_alloc_fail(
  * Set a flag to enable the effect of 'autochdir' before Vim
  * startup has finished.
  */
-export function test_autochdir(denops: Denops): Promise<unknown>;
+export function test_autochdir(denops: Denops): Promise<void>;
 export function test_autochdir(
   denops: Denops,
   ...args: unknown[]
@@ -3061,10 +3064,7 @@ export function test_autochdir(
  *
  *     GetText()->test_feedinput()
  */
-export function test_feedinput(
-  denops: Denops,
-  string: unknown,
-): Promise<unknown>;
+export function test_feedinput(denops: Denops, string: unknown): Promise<void>;
 export function test_feedinput(
   denops: Denops,
   ...args: unknown[]
@@ -3080,7 +3080,7 @@ export function test_feedinput(
  * This will not work when called from a :def function, because
  * variables on the stack will be freed.
  */
-export function test_garbagecollect_now(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_now(denops: Denops): Promise<void>;
 export function test_garbagecollect_now(
   denops: Denops,
   ...args: unknown[]
@@ -3092,7 +3092,7 @@ export function test_garbagecollect_now(
  * Set the flag to call the garbagecollector as if in the main
  * loop.  Only to be used in tests.
  */
-export function test_garbagecollect_soon(denops: Denops): Promise<unknown>;
+export function test_garbagecollect_soon(denops: Denops): Promise<void>;
 export function test_garbagecollect_soon(
   denops: Denops,
   ...args: unknown[]
@@ -3248,7 +3248,7 @@ export function test_gui_event(
   denops: Denops,
   event: unknown,
   args: unknown,
-): Promise<unknown>;
+): Promise<boolean>;
 export function test_gui_event(
   denops: Denops,
   ...args: unknown[]
@@ -3270,10 +3270,7 @@ export function test_gui_event(
  *
  *     GetErrorText()->test_ignore_error()
  */
-export function test_ignore_error(
-  denops: Denops,
-  expr: unknown,
-): Promise<unknown>;
+export function test_ignore_error(denops: Denops, expr: unknown): Promise<void>;
 export function test_ignore_error(
   denops: Denops,
   ...args: unknown[]
@@ -3307,7 +3304,9 @@ export function test_null_channel(
 /**
  * Return a `Dict` that is null. Only useful for testing.
  */
-export function test_null_dict(denops: Denops): Promise<unknown>;
+export function test_null_dict(
+  denops: Denops,
+): Promise<Record<string, unknown>>;
 export function test_null_dict(
   denops: Denops,
   ...args: unknown[]
@@ -3341,7 +3340,7 @@ export function test_null_job(
 /**
  * Return a `List` that is null. Only useful for testing.
  */
-export function test_null_list(denops: Denops): Promise<unknown>;
+export function test_null_list(denops: Denops): Promise<unknown[]>;
 export function test_null_list(
   denops: Denops,
   ...args: unknown[]
@@ -3363,7 +3362,7 @@ export function test_null_partial(
 /**
  * Return a `String` that is null. Only useful for testing.
  */
-export function test_null_string(denops: Denops): Promise<unknown>;
+export function test_null_string(denops: Denops): Promise<string>;
 export function test_null_string(
   denops: Denops,
   ...args: unknown[]
@@ -3389,7 +3388,7 @@ export function test_null_string(
 export function test_option_not_set(
   denops: Denops,
   name: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function test_option_not_set(
   denops: Denops,
   ...args: unknown[]
@@ -3451,7 +3450,7 @@ export function test_override(
   denops: Denops,
   name: unknown,
   val: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function test_override(
   denops: Denops,
   ...args: unknown[]
@@ -3468,7 +3467,7 @@ export function test_override(
  *
  *     GetVarname()->test_refcount()
  */
-export function test_refcount(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_refcount(denops: Denops, expr: unknown): Promise<number>;
 export function test_refcount(
   denops: Denops,
   ...args: unknown[]
@@ -3488,7 +3487,7 @@ export function test_setmouse(
   denops: Denops,
   row: unknown,
   col: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function test_setmouse(
   denops: Denops,
   ...args: unknown[]
@@ -3509,7 +3508,7 @@ export function test_setmouse(
  *
  *     GetTime()->test_settime()
  */
-export function test_settime(denops: Denops, expr: unknown): Promise<unknown>;
+export function test_settime(denops: Denops, expr: unknown): Promise<void>;
 export function test_settime(
   denops: Denops,
   ...args: unknown[]
@@ -3521,10 +3520,7 @@ export function test_settime(
  * When [seed] is given this sets the seed value used by
  * `srand()`.  When omitted the test seed is removed.
  */
-export function test_srand_seed(
-  denops: Denops,
-  seed?: unknown,
-): Promise<unknown>;
+export function test_srand_seed(denops: Denops, seed?: unknown): Promise<void>;
 export function test_srand_seed(
   denops: Denops,
   ...args: unknown[]
@@ -3564,7 +3560,7 @@ export function test_void(
  *
  *     GetCmd()->assert_beeps()
  */
-export function assert_beeps(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_beeps(denops: Denops, cmd: unknown): Promise<number>;
 export function assert_beeps(
   denops: Denops,
   ...args: unknown[]
@@ -3599,7 +3595,7 @@ export function assert_equal(
   expected: unknown,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_equal(
   denops: Denops,
   ...args: unknown[]
@@ -3624,7 +3620,7 @@ export function assert_equalfile(
   fname_one: unknown,
   fname_two: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_equalfile(
   denops: Denops,
   ...args: unknown[]
@@ -3650,7 +3646,7 @@ export function assert_exception(
   denops: Denops,
   error: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_exception(
   denops: Denops,
   ...args: unknown[]
@@ -3710,7 +3706,7 @@ export function assert_fails(
   msg?: unknown,
   lnum?: unknown,
   context?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_fails(
   denops: Denops,
   ...args: unknown[]
@@ -3735,7 +3731,7 @@ export function assert_false(
   denops: Denops,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_false(
   denops: Denops,
   ...args: unknown[]
@@ -3757,7 +3753,7 @@ export function assert_inrange(
   upper: unknown,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_inrange(
   denops: Denops,
   ...args: unknown[]
@@ -3795,7 +3791,7 @@ export function assert_match(
   pattern: unknown,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_match(
   denops: Denops,
   ...args: unknown[]
@@ -3812,7 +3808,7 @@ export function assert_match(
  *
  *     GetCmd()->assert_nobeep()
  */
-export function assert_nobeep(denops: Denops, cmd: unknown): Promise<unknown>;
+export function assert_nobeep(denops: Denops, cmd: unknown): Promise<number>;
 export function assert_nobeep(
   denops: Denops,
   ...args: unknown[]
@@ -3834,7 +3830,7 @@ export function assert_notequal(
   expected: unknown,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_notequal(
   denops: Denops,
   ...args: unknown[]
@@ -3856,7 +3852,7 @@ export function assert_notmatch(
   pattern: unknown,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_notmatch(
   denops: Denops,
   ...args: unknown[]
@@ -3872,7 +3868,7 @@ export function assert_notmatch(
  *
  *     GetMessage()->assert_report()
  */
-export function assert_report(denops: Denops, msg: unknown): Promise<unknown>;
+export function assert_report(denops: Denops, msg: unknown): Promise<number>;
 export function assert_report(
   denops: Denops,
   ...args: unknown[]
@@ -3897,7 +3893,7 @@ export function assert_true(
   denops: Denops,
   actual: unknown,
   msg?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function assert_true(
   denops: Denops,
   ...args: unknown[]
@@ -4007,7 +4003,7 @@ export function prop_add(
   lnum: unknown,
   col: unknown,
   props: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prop_add(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("prop_add", ...args);
 }
@@ -4029,7 +4025,7 @@ export function prop_clear(
   lnum: unknown,
   lnum_end?: unknown,
   props?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prop_clear(
   denops: Denops,
   ...args: unknown[]
@@ -4066,7 +4062,7 @@ export function prop_find(
   denops: Denops,
   props: unknown,
   direction?: unknown,
-): Promise<unknown>;
+): Promise<Record<string, unknown>>;
 export function prop_find(
   denops: Denops,
   ...args: unknown[]
@@ -4142,7 +4138,7 @@ export function prop_list(
   denops: Denops,
   lnum: unknown,
   props?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function prop_list(
   denops: Denops,
   ...args: unknown[]
@@ -4185,7 +4181,7 @@ export function prop_remove(
   props: unknown,
   lnum?: unknown,
   lnum_end?: unknown,
-): Promise<unknown>;
+): Promise<number>;
 export function prop_remove(
   denops: Denops,
   ...args: unknown[]
@@ -4224,7 +4220,7 @@ export function prop_type_add(
   denops: Denops,
   name: unknown,
   props: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prop_type_add(
   denops: Denops,
   ...args: unknown[]
@@ -4245,7 +4241,7 @@ export function prop_type_change(
   denops: Denops,
   name: unknown,
   props: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prop_type_change(
   denops: Denops,
   ...args: unknown[]
@@ -4272,7 +4268,7 @@ export function prop_type_delete(
   denops: Denops,
   name: unknown,
   props?: unknown,
-): Promise<unknown>;
+): Promise<void>;
 export function prop_type_delete(
   denops: Denops,
   ...args: unknown[]
@@ -4298,7 +4294,7 @@ export function prop_type_get(
   denops: Denops,
   name: unknown,
   props?: unknown,
-): Promise<unknown>;
+): Promise<Record<string, unknown>>;
 export function prop_type_get(
   denops: Denops,
   ...args: unknown[]
@@ -4315,7 +4311,7 @@ export function prop_type_get(
 export function prop_type_list(
   denops: Denops,
   props?: unknown,
-): Promise<unknown>;
+): Promise<unknown[]>;
 export function prop_type_list(
   denops: Denops,
   ...args: unknown[]
