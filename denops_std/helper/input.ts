@@ -4,7 +4,7 @@ import {
   assertString,
 } from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import * as fn from "../function/mod.ts";
-import * as anonymous from "../anonymous/mod.ts";
+import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
@@ -213,7 +213,7 @@ export async function input(
   const suffix = await ensurePrerequisites(denops);
   const completion = options.completion ?? null;
   if (completion && typeof completion !== "string") {
-    const [id] = anonymous.add(denops, async (arglead, cmdline, cursorpos) => {
+    const id = lambda.register(denops, async (arglead, cmdline, cursorpos) => {
       assertString(arglead);
       assertString(cmdline);
       assertNumber(cursorpos);
@@ -228,7 +228,7 @@ export async function input(
         options.inputsave ?? false,
       ) as Promise<string | null>;
     } finally {
-      anonymous.remove(denops, id);
+      lambda.unregister(denops, id);
     }
   }
   if (completion && !fn.isValidBuiltinCompletion(completion)) {
