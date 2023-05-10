@@ -1,6 +1,42 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
 /**
+ * If the **{buf}** argument is a number, buffer numbers are used.
+ * Number zero is the alternate buffer for the current window.
+ *
+ * If the **{buf}** argument is a string it must match a buffer name
+ * exactly.  The name can be:
+ * - Relative to the current directory.
+ * - A full path.
+ * - The name of a buffer with 'buftype' set to "nofile".
+ * - A URL name.
+ */
+export type BufExistsArg = string | number;
+
+/**
+ * If **{buf}** is omitted the current buffer is used.
+ * If **{buf}** is a Number, that buffer number's name is given.
+ * Number zero is the alternate buffer for the current window.
+ * If **{buf}** is a String, it is used as a `file-pattern` to match
+ * with the buffer names.  This is always done like 'magic' is
+ * set and 'cpoptions' is empty.  When there is more than one
+ * match an empty string is returned.
+ * "" or "%" can be used for the current buffer, "#" for the
+ * alternate buffer.
+ * A full match is preferred, otherwise a match at the start, end
+ * or middle of the buffer name is accepted.  If you only want a
+ * full match then put "^" at the start and "$" at the end of the
+ * pattern.
+ */
+export type BufNameArg = string | number;
+
+/**
+ * For **{lnum}** and **{end}** "$" can be used for the last line of the
+ * buffer.  Otherwise a number must be used.
+ */
+export type BufLnumArg = "$" | number;
+
+/**
  * Add a buffer to the buffer list with name **{name}** (must be a
  * String).
  * If a buffer for file **{name}** already exists, return that buffer
@@ -57,7 +93,7 @@ export async function bufadd(
  */
 export async function bufexists(
   denops: Denops,
-  buf: string | number,
+  buf: BufExistsArg,
 ): Promise<boolean> {
   const result = await denops.call("bufexists", buf) as number;
   return !!result;
@@ -74,7 +110,7 @@ export async function bufexists(
  */
 export async function buflisted(
   denops: Denops,
-  buf: string | number,
+  buf: BufExistsArg,
 ): Promise<boolean> {
   const result = await denops.call("buflisted", buf) as number;
   return !!result;
@@ -96,7 +132,7 @@ export async function buflisted(
  */
 export async function bufload(
   denops: Denops,
-  buf: string | number,
+  buf: BufExistsArg,
 ): Promise<void> {
   await denops.call("bufload", buf);
 }
@@ -112,7 +148,7 @@ export async function bufload(
  */
 export async function bufloaded(
   denops: Denops,
-  buf: string | number,
+  buf: BufExistsArg,
 ): Promise<boolean> {
   const result = await denops.call("bufloaded", buf) as number;
   return !!result;
@@ -159,7 +195,7 @@ export async function bufloaded(
  */
 export async function bufname(
   denops: Denops,
-  buf?: string | number,
+  buf?: BufNameArg,
 ): Promise<string> {
   return await denops.call("bufname", buf) as string;
 }
@@ -197,7 +233,7 @@ export async function bufname(
  */
 export async function bufnr(
   denops: Denops,
-  buf?: string | number,
+  buf?: BufNameArg,
   create?: boolean,
 ): Promise<number> {
   return await denops.call("bufnr", buf, create) as number;
@@ -219,7 +255,7 @@ export async function bufnr(
  */
 export async function bufwinid(
   denops: Denops,
-  buf: string | number,
+  buf: BufNameArg,
 ): Promise<number> {
   return await denops.call("bufwinid", buf) as number;
 }
@@ -241,7 +277,7 @@ export async function bufwinid(
  */
 export async function bufwinnr(
   denops: Denops,
-  buf: string | number,
+  buf: BufNameArg,
 ): Promise<number> {
   return await denops.call("bufwinnr", buf) as number;
 }
@@ -277,9 +313,9 @@ export async function bufwinnr(
  */
 export async function getbufline(
   denops: Denops,
-  buf: string | number,
-  lnum: string | number,
-  end?: string | number,
+  buf: BufNameArg,
+  lnum: BufLnumArg,
+  end?: BufLnumArg,
 ): Promise<string[]> {
   return await denops.call("getbufline", buf, lnum, end) as string[];
 }
@@ -317,8 +353,8 @@ export async function getbufline(
  */
 export async function setbufline(
   denops: Denops,
-  buf: string | number,
-  lnum: string | number,
+  buf: BufNameArg,
+  lnum: BufLnumArg,
   text: string | string[],
 ): Promise<boolean> {
   const result = await denops.call("setbufline", buf, lnum, text) as number;
