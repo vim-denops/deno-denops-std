@@ -2617,45 +2617,6 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is the value of option or local buffer variable
- * **{varname}** in buffer **{buf}**.  Note that the name without "b:"
- * must be used.
- * The **{varname}** argument is a string.
- * When **{varname}** is empty returns a `Dictionary` with all the
- * buffer-local variables.
- * When **{varname}** is equal to "&" returns a `Dictionary` with all
- * the buffer-local options.
- * Otherwise, when **{varname}** starts with "&" returns the value of
- * a buffer-local option.
- * This also works for a global or buffer-local option, but it
- * doesn't work for a global variable, window-local variable or
- * window-local option.
- * For the use of **{buf}**, see `bufname()` above.
- * When the buffer or variable doesn't exist **{def}** or an empty
- * string is returned, there is no error message.
- * Examples:
- *
- *     :let bufmodified = getbufvar(1, "&mod")
- *     :echo "todo myvar = " .. getbufvar("todo", "myvar")
- *
- * Can also be used as a `method`:
- *
- *     GetBufnr()->getbufvar(varname)
- */
-export function getbufvar(
-  denops: Denops,
-  buf: unknown,
-  varname: unknown,
-  def?: unknown,
-): Promise<unknown>;
-export function getbufvar(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getbufvar", ...args);
-}
-
-/**
  * Returns the `changelist` for the buffer **{buf}**. For the use
  * of **{buf}**, see `bufname()` above. If buffer **{buf}** doesn't
  * exist, an empty list is returned.

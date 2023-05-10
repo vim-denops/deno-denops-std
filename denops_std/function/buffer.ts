@@ -434,6 +434,51 @@ export async function getbufline(
 }
 
 /**
+ * The result is the value of option or local buffer variable
+ * **{varname}** in buffer **{buf}**.  Note that the name without "b:"
+ * must be used.
+ * The **{varname}** argument is a string.
+ * When **{varname}** is empty returns a `Dictionary` with all the
+ * buffer-local variables.
+ * When **{varname}** is equal to "&" returns a `Dictionary` with all
+ * the buffer-local options.
+ * Otherwise, when **{varname}** starts with "&" returns the value of
+ * a buffer-local option.
+ * This also works for a global or buffer-local option, but it
+ * doesn't work for a global variable, window-local variable or
+ * window-local option.
+ * For the use of **{buf}**, see `bufname()` above.
+ * When the buffer or variable doesn't exist **{def}** or an empty
+ * string is returned, there is no error message.
+ * Examples:
+ *
+ *     :let bufmodified = getbufvar(1, "&mod")
+ *     :echo "todo myvar = " .. getbufvar("todo", "myvar")
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getbufvar(varname)
+ */
+export function getbufvar(
+  denops: Denops,
+  buf: BufNameArg,
+  varname: "" | "&",
+  def?: unknown,
+): Promise<Record<string, unknown>>;
+export function getbufvar(
+  denops: Denops,
+  buf: BufNameArg,
+  varname: string,
+  def?: unknown,
+): Promise<unknown>;
+export function getbufvar(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getbufvar", ...args);
+}
+
+/**
  * Set line **{lnum}** to **{text}** in buffer **{buf}**.  This works like
  * `setline()` for the specified buffer.
  *
