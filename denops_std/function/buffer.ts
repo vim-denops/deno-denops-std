@@ -1,4 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { BufInfo } from "./types.ts";
 
 /**
  * If the **{buf}** argument is a number, buffer numbers are used.
@@ -35,6 +36,18 @@ export type BufNameArg = string | number;
  * buffer.  Otherwise a number must be used.
  */
 export type BufLnumArg = "$" | number;
+
+/**
+ * Only the buffers matching the specified criteria are returned.
+ */
+export interface GetBufInfoDictArg {
+  /** Include only listed buffers. */
+  buflisted?: boolean;
+  /** Include only loaded buffers. */
+  bufloaded?: boolean;
+  /** Include only modified buffers. */
+  bufmodified?: boolean;
+}
 
 /**
  * Add a buffer to the buffer list with name **{name}** (must be a
@@ -280,6 +293,106 @@ export async function bufwinnr(
   buf: BufNameArg,
 ): Promise<number> {
   return await denops.call("bufwinnr", buf) as number;
+}
+
+/**
+ * Get information about buffers as a List of Dictionaries.
+ *
+ * Without an argument information about all the buffers is
+ * returned.
+ *
+ * When the argument is a `Dictionary` only the buffers matching
+ * the specified criteria are returned.  The following keys can
+ * be specified in **{dict}**:
+ *         buflisted       include only listed buffers.
+ *         bufloaded       include only loaded buffers.
+ *         bufmodified     include only modified buffers.
+ *
+ * Otherwise, **{buf}** specifies a particular buffer to return
+ * information for.  For the use of **{buf}**, see `bufname()`
+ * above.  If the buffer is found the returned List has one item.
+ * Otherwise the result is an empty list.
+ *
+ * Each returned List item is a dictionary with the following
+ * entries:
+ *         bufnr           Buffer number.
+ *         changed         TRUE if the buffer is modified.
+ *         changedtick     Number of changes made to the buffer.
+ *         hidden          TRUE if the buffer is hidden.
+ *         lastused        Timestamp in seconds, like
+ *                         `localtime()`, when the buffer was
+ *                         last used.
+ *                         *only with the `+viminfo` feature*
+ *         listed          TRUE if the buffer is listed.
+ *         lnum            Line number used for the buffer when
+ *                         opened in the current window.
+ *                         Only valid if the buffer has been
+ *                         displayed in the window in the past.
+ *                         If you want the line number of the
+ *                         last known cursor position in a given
+ *                         window, use `line()`:
+ *
+ *                             :echo line('.', {winid})
+ *
+ *         linecount       Number of lines in the buffer (only
+ *                         valid when loaded)
+ *         loaded          TRUE if the buffer is loaded.
+ *         name            Full path to the file in the buffer.
+ *         signs           List of signs placed in the buffer.
+ *                         Each list item is a dictionary with
+ *                         the following fields:
+ *                             id    sign identifier
+ *                             lnum  line number
+ *                             name  sign name
+ *         variables       A reference to the dictionary with
+ *                         buffer-local variables.
+ *         windows         List of `window-ID`s that display this
+ *                         buffer
+ *         popups          List of popup `window-ID`s that
+ *                         display this buffer
+ *
+ * Examples:
+ *
+ *     for buf in getbufinfo()
+ *         echo buf.name
+ *     endfor
+ *     for buf in getbufinfo({'buflisted':1})
+ *         if buf.changed
+ *             ....
+ *         endif
+ *     endfor
+ *
+ * To get buffer-local options use:
+ *
+ *     getbufvar({bufnr}, '&option_name')
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getbufinfo()
+ */
+export function getbufinfo(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<BufInfo[]>;
+export function getbufinfo(
+  denops: Denops,
+  dict?: GetBufInfoDictArg,
+): Promise<BufInfo[]>;
+export async function getbufinfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<BufInfo[]> {
+  const bufinfos = await denops.call("getbufinfo", ...args) as Record<
+    keyof BufInfo,
+    unknown
+  >[];
+  return bufinfos.map((bufinfo) => ({
+    ...bufinfo,
+    changed: !!bufinfo.changed,
+    hidden: !!bufinfo.hidden,
+    listed: !!bufinfo.listed,
+    loaded: !!bufinfo.loaded,
+  } as unknown as BufInfo));
 }
 
 /**
