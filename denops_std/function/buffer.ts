@@ -50,6 +50,41 @@ export interface GetBufInfoDictArg {
 }
 
 /**
+ * Like `append()` but append the text in buffer **{buf}**.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * For the use of **{buf}**, see `bufname()`.
+ *
+ * **{lnum}** is the line number to append below.  Note that using
+ * `line()` would use the current buffer, not the one appending
+ * to.  Use "$" to append at the end of the buffer.  Other string
+ * values are not supported.
+ *
+ * On success 0 is returned, on failure 1 is returned.
+ * In `Vim9` script an error is given for an invalid **{lnum}**.
+ *
+ * If **{buf}** is not a valid buffer or **{lnum}** is not valid, an
+ * error message is given. Example:
+ *
+ *     :let failed = appendbufline(13, 0, "# THE START")
+ *
+ * Can also be used as a `method` after a List, the base is
+ * passed as the second argument:
+ *
+ *     mylist->appendbufline(buf, lnum)
+ */
+export async function appendbufline(
+  denops: Denops,
+  buf: BufNameArg,
+  lnum: BufLnumArg,
+  text: string | string[],
+): Promise<number> {
+  return await denops.call("appendbufline", buf, lnum, text) as number;
+}
+
+/**
  * Add a buffer to the buffer list with name **{name}** (must be a
  * String).
  * If a buffer for file **{name}** already exists, return that buffer
@@ -293,6 +328,33 @@ export async function bufwinnr(
   buf: BufNameArg,
 ): Promise<number> {
   return await denops.call("bufwinnr", buf) as number;
+}
+
+/**
+ * Delete lines **{first}** to **{last}** (inclusive) from buffer **{buf}**.
+ * If **{last}** is omitted then delete line **{first}** only.
+ * On success 0 is returned, on failure 1 is returned.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * For the use of **{buf}**, see `bufname()` above.
+ *
+ * **{first}** and **{last}** are used like with `getline()`. Note that
+ * when using `line()` this refers to the current buffer. Use "$"
+ * to refer to the last line in buffer **{buf}**.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBuffer()->deletebufline(1)
+ */
+export async function deletebufline(
+  denops: Denops,
+  buf: BufNameArg,
+  first: BufLnumArg,
+  last?: BufLnumArg,
+): Promise<number> {
+  return await denops.call("deletebufline", buf, first, last) as number;
 }
 
 /**
