@@ -214,3 +214,28 @@ export interface ChangeListLocation {
   /** Line number. */
   lnum: number;
 }
+
+/**
+ * Type of `getmarklist()` result.
+ */
+export interface MarkInformation {
+  /** Name of the mark prefixed by "'". */
+  mark: string;
+  /**
+   * The position of the mark.
+   * Refer to `getpos()` for more information.
+   */
+  pos: MarkPosition;
+  /** File name. */
+  file: string;
+}
+
+/**
+ * Type of `getmarklist()` result.
+ */
+export type MarkPosition = [
+  bufnum: number,
+  lnum: number,
+  col: number,
+  off: number,
+];

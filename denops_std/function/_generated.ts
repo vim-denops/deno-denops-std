@@ -3291,37 +3291,6 @@ export function getloclist(
 }
 
 /**
- * Without the **{buf}** argument returns a `List` with information
- * about all the global marks. `mark`
- *
- * If the optional **{buf}** argument is specified, returns the
- * local marks defined in buffer **{buf}**.  For the use of **{buf}**,
- * see `bufname()`.  If **{buf}** is invalid, an empty list is
- * returned.
- *
- * Each item in the returned List is a `Dict` with the following:
- *     mark   name of the mark prefixed by "'"
- *     pos    a `List` with the position of the mark:
- *                 [bufnum, lnum, col, off]
- *            Refer to `getpos()` for more information.
- *     file   file name
- *
- * Refer to `getpos()` for getting information about a specific
- * mark.
- *
- * Can also be used as a `method`:
- *
- *     GetBufnr()->getmarklist()
- */
-export function getmarklist(denops: Denops, buf?: unknown): Promise<unknown[]>;
-export function getmarklist(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getmarklist", ...args);
-}
-
-/**
  * Returns a `List` with all matches previously defined for the
  * current window by `matchadd()` and the `:match` commands.
  * `getmatches()` is useful in combination with `setmatches()`,

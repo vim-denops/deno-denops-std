@@ -1,5 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
-import type { BufInfo, ChangeList } from "./types.ts";
+import type { BufInfo, ChangeList, MarkInformation } from "./types.ts";
 
 /**
  * If the **{buf}** argument is a number, buffer numbers are used.
@@ -503,6 +503,36 @@ export async function getchangelist(
   buf?: BufNameArg,
 ): Promise<ChangeList | []> {
   return await denops.call("getchangelist", buf) as ChangeList;
+}
+
+/**
+ * Without the **{buf}** argument returns a `List` with information
+ * about all the global marks. `mark`
+ *
+ * If the optional **{buf}** argument is specified, returns the
+ * local marks defined in buffer **{buf}**.  For the use of **{buf}**,
+ * see `bufname()`.  If **{buf}** is invalid, an empty list is
+ * returned.
+ *
+ * Each item in the returned List is a `Dict` with the following:
+ *     mark   name of the mark prefixed by "'"
+ *     pos    a `List` with the position of the mark:
+ *                 [bufnum, lnum, col, off]
+ *            Refer to `getpos()` for more information.
+ *     file   file name
+ *
+ * Refer to `getpos()` for getting information about a specific
+ * mark.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getmarklist()
+ */
+export async function getmarklist(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<MarkInformation[]> {
+  return await denops.call("getmarklist", buf) as MarkInformation[];
 }
 
 /**
