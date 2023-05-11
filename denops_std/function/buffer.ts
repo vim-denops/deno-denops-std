@@ -667,3 +667,21 @@ export async function setbufvar(
 ): Promise<void> {
   await denops.call("setbufvar", buf, varname, val);
 }
+
+/**
+ * The result is the swap file path of the buffer **{expr}**.
+ * For the use of **{buf}**, see `bufname()` above.
+ * If buffer **{buf}** is the current buffer, the result is equal to
+ * `:swapname` (unless there is no swap file).
+ * If buffer **{buf}** has no swap file, returns an empty string.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufname()->swapname()
+ */
+export async function swapname(
+  denops: Denops,
+  buf: BufNameArg,
+): Promise<string> {
+  return await denops.call("swapname", buf) as string;
+}

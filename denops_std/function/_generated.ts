@@ -9384,22 +9384,6 @@ export function swapinfo(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is the swap file path of the buffer **{expr}**.
- * For the use of **{buf}**, see `bufname()` above.
- * If buffer **{buf}** is the current buffer, the result is equal to
- * `:swapname` (unless there is no swap file).
- * If buffer **{buf}** has no swap file, returns an empty string.
- *
- * Can also be used as a `method`:
- *
- *     GetBufname()->swapname()
- */
-export function swapname(denops: Denops, buf: unknown): Promise<string>;
-export function swapname(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("swapname", ...args);
-}
-
-/**
  * The result is a Number, which is the syntax ID at the position
  * **{lnum}** and **{col}** in the current window.
  * The syntax ID can be used with `synIDattr()` and
