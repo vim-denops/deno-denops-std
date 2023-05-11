@@ -1,5 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
-import type { BufInfo } from "./types.ts";
+import type { BufInfo, ChangeList } from "./types.ts";
 
 /**
  * If the **{buf}** argument is a number, buffer numbers are used.
@@ -476,6 +476,33 @@ export function getbufvar(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getbufvar", ...args);
+}
+
+/**
+ * Returns the `changelist` for the buffer **{buf}**. For the use
+ * of **{buf}**, see `bufname()` above. If buffer **{buf}** doesn't
+ * exist, an empty list is returned.
+ *
+ * The returned list contains two entries: a list with the change
+ * locations and the current position in the list.  Each
+ * entry in the change list is a dictionary with the following
+ * entries:
+ *         col             column number
+ *         coladd          column offset for 'virtualedit'
+ *         lnum            line number
+ * If buffer **{buf}** is the current buffer, then the current
+ * position refers to the position in the list. For other
+ * buffers, it is set to the length of the list.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getchangelist()
+ */
+export async function getchangelist(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<ChangeList | []> {
+  return await denops.call("getchangelist", buf) as ChangeList;
 }
 
 /**

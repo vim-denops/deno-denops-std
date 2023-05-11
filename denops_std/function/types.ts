@@ -197,3 +197,20 @@ export interface PlacedSign {
   /** Sign name. */
   name: string;
 }
+
+/**
+ * Type of `getchangelist()` result.
+ */
+export type ChangeList = [locations: ChangeListLocation[], pos: number];
+
+/**
+ * Type of `getchangelist()` result.
+ */
+export interface ChangeListLocation {
+  /** Column number. */
+  col: number;
+  /** Column offset for 'virtualedit'. */
+  coladd: number;
+  /** Line number. */
+  lnum: number;
+}

@@ -2617,37 +2617,6 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Returns the `changelist` for the buffer **{buf}**. For the use
- * of **{buf}**, see `bufname()` above. If buffer **{buf}** doesn't
- * exist, an empty list is returned.
- *
- * The returned list contains two entries: a list with the change
- * locations and the current position in the list.  Each
- * entry in the change list is a dictionary with the following
- * entries:
- *         col             column number
- *         coladd          column offset for 'virtualedit'
- *         lnum            line number
- * If buffer **{buf}** is the current buffer, then the current
- * position refers to the position in the list. For other
- * buffers, it is set to the length of the list.
- *
- * Can also be used as a `method`:
- *
- *     GetBufnr()->getchangelist()
- */
-export function getchangelist(
-  denops: Denops,
-  buf?: unknown,
-): Promise<unknown[]>;
-export function getchangelist(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getchangelist", ...args);
-}
-
-/**
  * Get a single character from the user or input stream.
  * If [expr] is omitted, wait until a character is available.
  * If [expr] is 0, only get a character when one is available.
