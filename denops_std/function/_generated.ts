@@ -7682,40 +7682,6 @@ export function serverlist(
 }
 
 /**
- * Set option or local variable **{varname}** in buffer **{buf}** to
- * **{val}**.
- * This also works for a global or local window option, but it
- * doesn't work for a global or local window variable.
- * For a local window option the global value is unchanged.
- * For the use of **{buf}**, see `bufname()` above.
- * The **{varname}** argument is a string.
- * Note that the variable name without "b:" must be used.
- * Examples:
- *
- *     :call setbufvar(1, "&mod", 1)
- *     :call setbufvar("todo", "myvar", "foobar")
- *
- * This function is not available in the `sandbox`.
- *
- * Can also be used as a `method`, the base is passed as the
- * third argument:
- *
- *     GetValue()->setbufvar(buf, varname)
- */
-export function setbufvar(
-  denops: Denops,
-  buf: unknown,
-  varname: unknown,
-  val: unknown,
-): Promise<void>;
-export function setbufvar(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("setbufvar", ...args);
-}
-
-/**
  * Specify overrides for cell widths of character ranges.  This
  * tells Vim how wide characters are, counted in screen cells.
  * This overrides 'ambiwidth'.  Example:
