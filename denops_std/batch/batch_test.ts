@@ -1,10 +1,10 @@
-import { assertEquals } from "https://deno.land/std@0.171.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.186.0/testing/asserts.ts";
 import {
   assertSpyCall,
   assertSpyCalls,
   spy,
-} from "https://deno.land/std@0.171.0/testing/mock.ts";
-import { test } from "https://deno.land/x/denops_test@v1.0.1/mod.ts";
+} from "https://deno.land/std@0.186.0/testing/mock.ts";
+import { test } from "https://deno.land/x/denops_test@v1.1.0/mod.ts";
 import { batch, BatchHelper } from "./batch.ts";
 
 test({

@@ -2,7 +2,7 @@ import {
   difference,
   intersection,
 } from "https://deno.land/x/set_operations@v1.1.0/mod.ts";
-import * as path from "https://deno.land/std@0.183.0/path/mod.ts";
+import * as path from "https://deno.land/std@0.186.0/path/mod.ts";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { DOCS_OVERRIDES } from "./override.ts";
