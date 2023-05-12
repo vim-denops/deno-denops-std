@@ -33,6 +33,12 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
+      - uses: actions/cache@v3
+        with:
+          key: deno-${{ hashFiles('**/*') }}
+          restore-keys: deno-
+          path: |
+            /home/runner/.cache/deno/deps/https/deno.land
       - name: Lint check
         run: deno lint
       - name: Format check
@@ -68,6 +74,12 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "${{ matrix.version }}"
+      - uses: actions/cache@v3
+        with:
+          key: deno-${{ hashFiles('**/*') }}
+          restore-keys: deno-
+          path: |
+            /home/runner/.cache/deno/deps/https/deno.land
       - uses: thinca/action-setup-vim@v1
         id: vim
         with:
