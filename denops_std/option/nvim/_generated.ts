@@ -1,5 +1,11 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import {
+  getbufvar,
+  getwinvar,
+  setbufvar,
+  setwinvar,
+} from "../../function/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 
 /**
@@ -27,6 +33,20 @@ export const channel = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "channel");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
+    const result = await getbufvar(denops, bufnr, "&channel");
+    return (result as number) ?? 0;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
+    return setbufvar(denops, bufnr, "channel", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<number> {
+    const result = await getwinvar(denops, winnr, "&channel");
+    return (result as number) ?? 0;
+  },
+  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
+    return setwinvar(denops, winnr, "channel", value);
   },
 };
 
@@ -260,6 +280,20 @@ export const scrollback = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "scrollback");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
+    const result = await getbufvar(denops, bufnr, "&scrollback");
+    return (result as number) ?? 0;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
+    return setbufvar(denops, bufnr, "scrollback", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<number> {
+    const result = await getwinvar(denops, winnr, "&scrollback");
+    return (result as number) ?? 0;
+  },
+  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
+    return setwinvar(denops, winnr, "scrollback", value);
   },
 };
 
@@ -520,6 +554,20 @@ export const winbar = {
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "winbar");
   },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&winbar");
+    return (result as string) ?? "";
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "winbar", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&winbar");
+    return (result as string) ?? "";
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "winbar", value);
+  },
 };
 
 /**
@@ -549,6 +597,20 @@ export const winblend = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "winblend");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
+    const result = await getbufvar(denops, bufnr, "&winblend");
+    return (result as number) ?? 0;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
+    return setbufvar(denops, bufnr, "winblend", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<number> {
+    const result = await getwinvar(denops, winnr, "&winblend");
+    return (result as number) ?? 0;
+  },
+  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
+    return setwinvar(denops, winnr, "winblend", value);
   },
 };
 
@@ -591,5 +653,19 @@ export const winhighlight = {
   },
   resetLocal(denops: Denops): Promise<void> {
     return localOptions.remove(denops, "winhighlight");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&winhighlight");
+    return (result as string) ?? "";
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "winhighlight", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&winhighlight");
+    return (result as string) ?? "";
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "winhighlight", value);
   },
 };

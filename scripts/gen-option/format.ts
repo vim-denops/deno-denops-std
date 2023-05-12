@@ -38,6 +38,8 @@ function formatOption({ name, type, scope, docs }: Option): string[] {
     ...formatOptionBody(name, type),
     ...(scope.includes("global") ? formatGlobalOptionBody(name, type) : []),
     ...(scope.includes("local") ? formatLocalOptionBody(name, type) : []),
+    ...(scope.includes("local") ? formatBufferOptionBody(name, type) : []),
+    ...(scope.includes("local") ? formatWindowOptionBody(name, type) : []),
     `};`,
     "",
   ];
@@ -93,11 +95,39 @@ function formatLocalOptionBody(name: string, type: OptionType): string[] {
   return lines;
 }
 
+function formatBufferOptionBody(name: string, type: OptionType): string[] {
+  const lines = [
+    `  async getBuffer(denops: Denops, bufnr: number): Promise<${type}> {`,
+    `    const result = await getbufvar(denops, bufnr, "&${name}");`,
+    `    return (result as ${type}) ?? ${defaultValue(type)};`,
+    `  },`,
+    `  setBuffer(denops: Denops, bufnr: number, value: ${type}): Promise<void> {`,
+    `    return setbufvar(denops, bufnr, "${name}", value);`,
+    `  },`,
+  ];
+  return lines;
+}
+
+function formatWindowOptionBody(name: string, type: OptionType): string[] {
+  const lines = [
+    `  async getWindow(denops: Denops, winnr: number): Promise<${type}> {`,
+    `    const result = await getwinvar(denops, winnr, "&${name}");`,
+    `    return (result as ${type}) ?? ${defaultValue(type)};`,
+    `  },`,
+    `  setWindow(denops: Denops, winnr: number, value: ${type}): Promise<void> {`,
+    `    return setwinvar(denops, winnr, "${name}", value);`,
+    `  },`,
+  ];
+  return lines;
+}
+
 export function format(options: Option[], root: string): string[] {
+  const fn = `${root}/../function/mod.ts`;
   const variable = `${root}/../variable/mod.ts`;
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
     `import type { Denops } from "${denops}";`,
+    `import { getbufvar, setbufvar, getwinvar, setwinvar } from "${fn}";`,
     `import { globalOptions, localOptions, options } from "${variable}";`,
     "",
     ...options.map(formatOption),
