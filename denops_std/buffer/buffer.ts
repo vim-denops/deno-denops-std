@@ -2,13 +2,11 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
+import * as op from "../option/mod.ts";
 import { execute } from "../helper/mod.ts";
-import * as unknownutil from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import {
-  assertFileFormat,
   FileFormat,
   findFileFormat,
-  isFileFormat,
   maybeFileFormat,
   splitText,
 } from "./fileformat.ts";
@@ -268,21 +266,16 @@ export async function decode(
   data: Uint8Array,
   options: DecodeOptions = {},
 ): Promise<DecodeResult> {
-  const [fileformat, fileformatsStr, fileencodingsStr] = await batch.gather(
+  const [fileformat, fileformatsStr, fileencodingsStr] = await batch.collect(
     denops,
-    async (denops) => {
-      await fn.getbufvar(denops, bufnr, "&fileformat");
-      await fn.getbufvar(denops, bufnr, "&fileformats");
-      await fn.getbufvar(denops, bufnr, "&fileencodings");
-    },
+    (denops) => [
+      op.fileformat.getBuffer(denops, bufnr) as Promise<FileFormat>,
+      op.fileformats.get(denops),
+      op.fileencodings.get(denops),
+    ],
   );
-  assertFileFormat(fileformat);
-  unknownutil.assertString(fileformatsStr);
-  unknownutil.assertString(fileencodingsStr);
-  const fileformats = fileformatsStr.split(",");
+  const fileformats = fileformatsStr.split(",") as FileFormat[];
   const fileencodings = fileencodingsStr.split(",");
-  unknownutil.assertArray(fileformats, isFileFormat);
-  unknownutil.assertArray(fileencodings, unknownutil.isString);
   let enc: string;
   let text: string;
   if (options.fileencoding) {
@@ -478,17 +471,14 @@ export async function ensure<T>(
   bufnr: number,
   executor: () => T,
 ): Promise<T> {
-  const [bufnrCur, winidCur, winidNext] = await batch.gather(
+  const [bufnrCur, winidCur, winidNext] = await batch.collect(
     denops,
-    async (denops) => {
-      await fn.bufnr(denops);
-      await fn.win_getid(denops);
-      await fn.bufwinid(denops, bufnr);
-    },
+    (denops) => [
+      fn.bufnr(denops),
+      fn.win_getid(denops),
+      fn.bufwinid(denops, bufnr),
+    ],
   );
-  unknownutil.assertNumber(bufnrCur);
-  unknownutil.assertNumber(winidCur);
-  unknownutil.assertNumber(winidNext);
   if (winidCur === winidNext) {
     return executor();
   }
@@ -532,17 +522,14 @@ export async function modifiable<T>(
   bufnr: number,
   executor: () => T,
 ): Promise<T> {
-  const [modified, modifiable, foldmethod] = await batch.gather(
+  const [modified, modifiable, foldmethod] = await batch.collect(
     denops,
-    async (denops) => {
-      await fn.getbufvar(denops, bufnr, "&modified");
-      await fn.getbufvar(denops, bufnr, "&modifiable");
-      await fn.getbufvar(denops, bufnr, "&foldmethod");
-    },
+    (denops) => [
+      op.modified.getBuffer(denops, bufnr),
+      op.modifiable.getBuffer(denops, bufnr),
+      op.foldmethod.getBuffer(denops, bufnr),
+    ],
   );
-  unknownutil.assertNumber(modified);
-  unknownutil.assertNumber(modifiable);
-  unknownutil.assertString(foldmethod);
   await batch.batch(denops, async (denops) => {
     await fn.setbufvar(denops, bufnr, "&modifiable", 1);
     await fn.setbufvar(denops, bufnr, "&foldmethod", "manual");
