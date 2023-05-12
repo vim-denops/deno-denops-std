@@ -1,4 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { BufInfo, ChangeList, MarkInformation } from "./types.ts";
 
 /**
  * If the **{buf}** argument is a number, buffer numbers are used.
@@ -35,6 +36,53 @@ export type BufNameArg = string | number;
  * buffer.  Otherwise a number must be used.
  */
 export type BufLnumArg = "$" | number;
+
+/**
+ * Only the buffers matching the specified criteria are returned.
+ */
+export interface GetBufInfoDictArg {
+  /** Include only listed buffers. */
+  buflisted?: boolean;
+  /** Include only loaded buffers. */
+  bufloaded?: boolean;
+  /** Include only modified buffers. */
+  bufmodified?: boolean;
+}
+
+/**
+ * Like `append()` but append the text in buffer **{buf}**.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * For the use of **{buf}**, see `bufname()`.
+ *
+ * **{lnum}** is the line number to append below.  Note that using
+ * `line()` would use the current buffer, not the one appending
+ * to.  Use "$" to append at the end of the buffer.  Other string
+ * values are not supported.
+ *
+ * On success 0 is returned, on failure 1 is returned.
+ * In `Vim9` script an error is given for an invalid **{lnum}**.
+ *
+ * If **{buf}** is not a valid buffer or **{lnum}** is not valid, an
+ * error message is given. Example:
+ *
+ *     :let failed = appendbufline(13, 0, "# THE START")
+ *
+ * Can also be used as a `method` after a List, the base is
+ * passed as the second argument:
+ *
+ *     mylist->appendbufline(buf, lnum)
+ */
+export async function appendbufline(
+  denops: Denops,
+  buf: BufNameArg,
+  lnum: BufLnumArg,
+  text: string | string[],
+): Promise<number> {
+  return await denops.call("appendbufline", buf, lnum, text) as number;
+}
 
 /**
  * Add a buffer to the buffer list with name **{name}** (must be a
@@ -283,6 +331,133 @@ export async function bufwinnr(
 }
 
 /**
+ * Delete lines **{first}** to **{last}** (inclusive) from buffer **{buf}**.
+ * If **{last}** is omitted then delete line **{first}** only.
+ * On success 0 is returned, on failure 1 is returned.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * For the use of **{buf}**, see `bufname()` above.
+ *
+ * **{first}** and **{last}** are used like with `getline()`. Note that
+ * when using `line()` this refers to the current buffer. Use "$"
+ * to refer to the last line in buffer **{buf}**.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBuffer()->deletebufline(1)
+ */
+export async function deletebufline(
+  denops: Denops,
+  buf: BufNameArg,
+  first: BufLnumArg,
+  last?: BufLnumArg,
+): Promise<number> {
+  return await denops.call("deletebufline", buf, first, last) as number;
+}
+
+/**
+ * Get information about buffers as a List of Dictionaries.
+ *
+ * Without an argument information about all the buffers is
+ * returned.
+ *
+ * When the argument is a `Dictionary` only the buffers matching
+ * the specified criteria are returned.  The following keys can
+ * be specified in **{dict}**:
+ *         buflisted       include only listed buffers.
+ *         bufloaded       include only loaded buffers.
+ *         bufmodified     include only modified buffers.
+ *
+ * Otherwise, **{buf}** specifies a particular buffer to return
+ * information for.  For the use of **{buf}**, see `bufname()`
+ * above.  If the buffer is found the returned List has one item.
+ * Otherwise the result is an empty list.
+ *
+ * Each returned List item is a dictionary with the following
+ * entries:
+ *         bufnr           Buffer number.
+ *         changed         TRUE if the buffer is modified.
+ *         changedtick     Number of changes made to the buffer.
+ *         hidden          TRUE if the buffer is hidden.
+ *         lastused        Timestamp in seconds, like
+ *                         `localtime()`, when the buffer was
+ *                         last used.
+ *                         *only with the `+viminfo` feature*
+ *         listed          TRUE if the buffer is listed.
+ *         lnum            Line number used for the buffer when
+ *                         opened in the current window.
+ *                         Only valid if the buffer has been
+ *                         displayed in the window in the past.
+ *                         If you want the line number of the
+ *                         last known cursor position in a given
+ *                         window, use `line()`:
+ *
+ *                             :echo line('.', {winid})
+ *
+ *         linecount       Number of lines in the buffer (only
+ *                         valid when loaded)
+ *         loaded          TRUE if the buffer is loaded.
+ *         name            Full path to the file in the buffer.
+ *         signs           List of signs placed in the buffer.
+ *                         Each list item is a dictionary with
+ *                         the following fields:
+ *                             id    sign identifier
+ *                             lnum  line number
+ *                             name  sign name
+ *         variables       A reference to the dictionary with
+ *                         buffer-local variables.
+ *         windows         List of `window-ID`s that display this
+ *                         buffer
+ *         popups          List of popup `window-ID`s that
+ *                         display this buffer
+ *
+ * Examples:
+ *
+ *     for buf in getbufinfo()
+ *         echo buf.name
+ *     endfor
+ *     for buf in getbufinfo({'buflisted':1})
+ *         if buf.changed
+ *             ....
+ *         endif
+ *     endfor
+ *
+ * To get buffer-local options use:
+ *
+ *     getbufvar({bufnr}, '&option_name')
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getbufinfo()
+ */
+export function getbufinfo(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<BufInfo[]>;
+export function getbufinfo(
+  denops: Denops,
+  dict?: GetBufInfoDictArg,
+): Promise<BufInfo[]>;
+export async function getbufinfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<BufInfo[]> {
+  const bufinfos = await denops.call("getbufinfo", ...args) as Record<
+    keyof BufInfo,
+    unknown
+  >[];
+  return bufinfos.map((bufinfo) => ({
+    ...bufinfo,
+    changed: !!bufinfo.changed,
+    hidden: !!bufinfo.hidden,
+    listed: !!bufinfo.listed,
+    loaded: !!bufinfo.loaded,
+  } as unknown as BufInfo));
+}
+
+/**
  * Return a `List` with the lines starting from **{lnum}** to **{end}**
  * (inclusive) in the buffer **{buf}**.  If **{end}** is omitted, a
  * `List` with only the line **{lnum}** is returned.
@@ -318,6 +493,108 @@ export async function getbufline(
   end?: BufLnumArg,
 ): Promise<string[]> {
   return await denops.call("getbufline", buf, lnum, end) as string[];
+}
+
+/**
+ * The result is the value of option or local buffer variable
+ * **{varname}** in buffer **{buf}**.  Note that the name without "b:"
+ * must be used.
+ * The **{varname}** argument is a string.
+ * When **{varname}** is empty returns a `Dictionary` with all the
+ * buffer-local variables.
+ * When **{varname}** is equal to "&" returns a `Dictionary` with all
+ * the buffer-local options.
+ * Otherwise, when **{varname}** starts with "&" returns the value of
+ * a buffer-local option.
+ * This also works for a global or buffer-local option, but it
+ * doesn't work for a global variable, window-local variable or
+ * window-local option.
+ * For the use of **{buf}**, see `bufname()` above.
+ * When the buffer or variable doesn't exist **{def}** or an empty
+ * string is returned, there is no error message.
+ * Examples:
+ *
+ *     :let bufmodified = getbufvar(1, "&mod")
+ *     :echo "todo myvar = " .. getbufvar("todo", "myvar")
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getbufvar(varname)
+ */
+export function getbufvar(
+  denops: Denops,
+  buf: BufNameArg,
+  varname: "" | "&",
+  def?: unknown,
+): Promise<Record<string, unknown>>;
+export function getbufvar(
+  denops: Denops,
+  buf: BufNameArg,
+  varname: string,
+  def?: unknown,
+): Promise<unknown>;
+export function getbufvar(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getbufvar", ...args);
+}
+
+/**
+ * Returns the `changelist` for the buffer **{buf}**. For the use
+ * of **{buf}**, see `bufname()` above. If buffer **{buf}** doesn't
+ * exist, an empty list is returned.
+ *
+ * The returned list contains two entries: a list with the change
+ * locations and the current position in the list.  Each
+ * entry in the change list is a dictionary with the following
+ * entries:
+ *         col             column number
+ *         coladd          column offset for 'virtualedit'
+ *         lnum            line number
+ * If buffer **{buf}** is the current buffer, then the current
+ * position refers to the position in the list. For other
+ * buffers, it is set to the length of the list.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getchangelist()
+ */
+export async function getchangelist(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<ChangeList | []> {
+  return await denops.call("getchangelist", buf) as ChangeList;
+}
+
+/**
+ * Without the **{buf}** argument returns a `List` with information
+ * about all the global marks. `mark`
+ *
+ * If the optional **{buf}** argument is specified, returns the
+ * local marks defined in buffer **{buf}**.  For the use of **{buf}**,
+ * see `bufname()`.  If **{buf}** is invalid, an empty list is
+ * returned.
+ *
+ * Each item in the returned List is a `Dict` with the following:
+ *     mark   name of the mark prefixed by "'"
+ *     pos    a `List` with the position of the mark:
+ *                 [bufnum, lnum, col, off]
+ *            Refer to `getpos()` for more information.
+ *     file   file name
+ *
+ * Refer to `getpos()` for getting information about a specific
+ * mark.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufnr()->getmarklist()
+ */
+export async function getmarklist(
+  denops: Denops,
+  buf?: BufNameArg,
+): Promise<MarkInformation[]> {
+  return await denops.call("getmarklist", buf) as MarkInformation[];
 }
 
 /**
@@ -359,4 +636,52 @@ export async function setbufline(
 ): Promise<boolean> {
   const result = await denops.call("setbufline", buf, lnum, text) as number;
   return !!result;
+}
+
+/**
+ * Set option or local variable **{varname}** in buffer **{buf}** to
+ * **{val}**.
+ * This also works for a global or local window option, but it
+ * doesn't work for a global or local window variable.
+ * For a local window option the global value is unchanged.
+ * For the use of **{buf}**, see `bufname()` above.
+ * The **{varname}** argument is a string.
+ * Note that the variable name without "b:" must be used.
+ * Examples:
+ *
+ *     :call setbufvar(1, "&mod", 1)
+ *     :call setbufvar("todo", "myvar", "foobar")
+ *
+ * This function is not available in the `sandbox`.
+ *
+ * Can also be used as a `method`, the base is passed as the
+ * third argument:
+ *
+ *     GetValue()->setbufvar(buf, varname)
+ */
+export async function setbufvar(
+  denops: Denops,
+  buf: BufNameArg,
+  varname: string,
+  val: unknown,
+): Promise<void> {
+  await denops.call("setbufvar", buf, varname, val);
+}
+
+/**
+ * The result is the swap file path of the buffer **{expr}**.
+ * For the use of **{buf}**, see `bufname()` above.
+ * If buffer **{buf}** is the current buffer, the result is equal to
+ * `:swapname` (unless there is no swap file).
+ * If buffer **{buf}** has no swap file, returns an empty string.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBufname()->swapname()
+ */
+export async function swapname(
+  denops: Denops,
+  buf: BufNameArg,
+): Promise<string> {
+  return await denops.call("swapname", buf) as string;
 }
