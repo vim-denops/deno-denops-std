@@ -98,3 +98,4 @@ jobs:
           DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim.outputs.executable_path }}
           DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable_path }}
         working-directory: ./repo
+        timeout-minutes: 3
