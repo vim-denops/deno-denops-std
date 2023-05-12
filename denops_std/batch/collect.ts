@@ -5,7 +5,13 @@ import type {
   Meta,
 } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
-class GatherHelper implements Denops {
+type VimVoid<T> = T extends void ? 0 : T;
+
+type Collect<T extends readonly unknown[] | []> = {
+  -readonly [P in keyof T]: VimVoid<Awaited<T[P]>>;
+};
+
+class CollectHelper implements Denops {
   #denops: Denops;
   #calls: [string, ...unknown[]][];
   #closed: boolean;
@@ -16,11 +22,11 @@ class GatherHelper implements Denops {
     this.#closed = false;
   }
 
-  static getCalls(helper: GatherHelper): [string, ...unknown[]][] {
+  static getCalls(helper: CollectHelper): [string, ...unknown[]][] {
     return helper.#calls;
   }
 
-  static close(helper: GatherHelper): void {
+  static close(helper: CollectHelper): void {
     helper.#closed = true;
   }
 
@@ -45,13 +51,13 @@ class GatherHelper implements Denops {
   }
 
   redraw(_force?: boolean): Promise<void> {
-    throw new Error("The 'redraw' method is not available on GatherHelper.");
+    throw new Error("The 'redraw' method is not available on CollectHelper.");
   }
 
   call(fn: string, ...args: unknown[]): Promise<unknown> {
     if (this.#closed) {
       throw new Error(
-        "GatherHelper instance is not available outside of 'gather' block",
+        "CollectHelper instance is not available outside of 'collect' block",
       );
     }
     this.#calls.push([fn, ...args]);
@@ -59,23 +65,17 @@ class GatherHelper implements Denops {
   }
 
   batch(..._calls: [string, ...unknown[]][]): Promise<unknown[]> {
-    throw new Error("The 'batch' method is not available on GatherHelper.");
+    throw new Error("The 'batch' method is not available on CollectHelper.");
   }
 
-  cmd(cmd: string, ctx: Context = {}): Promise<void> {
-    if (this.#closed) {
-      throw new Error(
-        "GatherHelper instance is not available outside of 'gather' block",
-      );
-    }
-    this.call("denops#api#cmd", cmd, ctx);
-    return Promise.resolve();
+  cmd(_cmd: string, _ctx: Context = {}): Promise<void> {
+    throw new Error("The 'cmd' method is not available on CollectHelper.");
   }
 
   eval(expr: string, ctx: Context = {}): Promise<unknown> {
     if (this.#closed) {
       throw new Error(
-        "GatherHelper instance is not available outside of 'gather' block",
+        "CollectHelper instance is not available outside of 'collect' block",
       );
     }
     this.call("denops#api#eval", expr, ctx);
@@ -92,14 +92,14 @@ class GatherHelper implements Denops {
  *
  * ```typescript
  * import { Denops } from "../mod.ts";
- * import { gather } from "./gather.ts";
+ * import { collect } from "./collect.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
- *   const results = await gather(denops, async (denops) => {
- *     await denops.eval("&modifiable");
- *     await denops.eval("&modified");
- *     await denops.eval("&filetype");
- *   });
+ *   const results = await collect(denops, (denops) => [
+ *     denops.eval("&modifiable"),
+ *     denops.eval("&modified"),
+ *     denops.eval("&filetype"),
+ *   ]);
  *   // results contains the value of modifiable, modified, and filetype
  * }
  * ```
@@ -107,46 +107,46 @@ class GatherHelper implements Denops {
  * Not like `batch`, the function can NOT be nested.
  *
  * Note that `denops.call()` or `denops.eval()` always return falsy value in
- * `gather()`, indicating that you **cannot** write code like below:
+ * `collect()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
  * import { Denops } from "../mod.ts";
- * import { gather } from "./gather.ts";
+ * import { collect } from "./collect.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
- *   const results = await gather(denops, async (denops) => {
+ *   const results = await collect(denops, (denops) => {
  *     // !!! DON'T DO THIS !!!
- *     if (await denops.call("has", "nvim")) {
- *       // deno-lint-ignore no-explicit-any
- *       await (denops.call("api_info") as any).version;
- *     } else {
- *       await denops.eval("v:version");
- *     }
+ *     (async () => {
+ *       if (await denops.call("has", "nvim")) {
+ *         // deno-lint-ignore no-explicit-any
+ *         await (denops.call("api_info") as any).version;
+ *       } else {
+ *         await denops.eval("v:version");
+ *       }
+ *     })();
+ *     return [];
  *   });
  * }
  * ```
  *
- * The `denops` instance passed to the `gather` block is NOT available outside of
+ * The `denops` instance passed to the `collect` block is NOT available outside of
  * the block. An error is thrown when `denops.call()`, `denops.cmd()`, or
  * `denops.eval()` is called.
  *
- * Note that `denops.redraw()` cannot be called within `gather()`. If it is called,
- * an error is raised.
- *
- * @deprecated Use `collect()` instead.
+ * Note that `denops.redraw()` and `denops.cmd()` cannot be called within `collect()`.
+ * If it is called, an error is raised.
  */
-export async function gather(
+export async function collect<T extends readonly unknown[] | []>(
   denops: Denops,
-  executor: (helper: GatherHelper) => Promise<void>,
-): Promise<unknown[]> {
-  const helper = new GatherHelper(denops);
+  executor: (helper: CollectHelper) => T,
+): Promise<Collect<T>> {
+  const helper = new CollectHelper(denops);
   try {
-    await executor(helper);
+    await Promise.all(executor(helper));
   } finally {
-    GatherHelper.close(helper);
+    CollectHelper.close(helper);
   }
-  const calls = GatherHelper.getCalls(helper);
-  return await denops.batch(...calls);
+  const calls = CollectHelper.getCalls(helper);
+  const results = await denops.batch(...calls);
+  return results as Collect<T>;
 }
-
-export type { GatherHelper };
