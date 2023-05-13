@@ -22,7 +22,8 @@ import { globalOptions, localOptions, options } from "./../variable/mod.ts";
  */
 export const aleph = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "aleph") ?? 0;
+    const result = await options.get(denops, "aleph");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "aleph", value);
@@ -31,7 +32,8 @@ export const aleph = {
     return options.remove(denops, "aleph");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "aleph") ?? 0;
+    const result = await globalOptions.get(denops, "aleph");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "aleph", value);
@@ -54,7 +56,8 @@ export const aleph = {
  */
 export const allowrevins = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "allowrevins") ?? false;
+    const result = await options.get(denops, "allowrevins");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "allowrevins", value);
@@ -63,7 +66,8 @@ export const allowrevins = {
     return options.remove(denops, "allowrevins");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "allowrevins") ?? false;
+    const result = await globalOptions.get(denops, "allowrevins");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "allowrevins", value);
@@ -115,7 +119,8 @@ export const allowrevins = {
  */
 export const ambiwidth = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "ambiwidth") ?? "";
+    const result = await options.get(denops, "ambiwidth");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "ambiwidth", value);
@@ -124,7 +129,8 @@ export const ambiwidth = {
     return options.remove(denops, "ambiwidth");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "ambiwidth") ?? "";
+    const result = await globalOptions.get(denops, "ambiwidth");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "ambiwidth", value);
@@ -148,7 +154,8 @@ export const ambiwidth = {
  */
 export const autochdir = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "autochdir") ?? false;
+    const result = await options.get(denops, "autochdir");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "autochdir", value);
@@ -157,7 +164,8 @@ export const autochdir = {
     return options.remove(denops, "autochdir");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "autochdir") ?? false;
+    const result = await globalOptions.get(denops, "autochdir");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "autochdir", value);
@@ -191,7 +199,8 @@ export const autochdir = {
  */
 export const arabic = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "arabic") ?? false;
+    const result = await options.get(denops, "arabic");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "arabic", value);
@@ -200,7 +209,8 @@ export const arabic = {
     return options.remove(denops, "arabic");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "arabic") ?? false;
+    const result = await localOptions.get(denops, "arabic");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "arabic", value);
@@ -210,14 +220,14 @@ export const arabic = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&arabic");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&arabic", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&arabic");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&arabic", value);
@@ -245,7 +255,8 @@ export const arabic = {
  */
 export const arabicshape = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "arabicshape") ?? false;
+    const result = await options.get(denops, "arabicshape");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "arabicshape", value);
@@ -254,7 +265,8 @@ export const arabicshape = {
     return options.remove(denops, "arabicshape");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "arabicshape") ?? false;
+    const result = await globalOptions.get(denops, "arabicshape");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "arabicshape", value);
@@ -283,7 +295,8 @@ export const arabicshape = {
  */
 export const autoindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "autoindent") ?? false;
+    const result = await options.get(denops, "autoindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "autoindent", value);
@@ -292,7 +305,8 @@ export const autoindent = {
     return options.remove(denops, "autoindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "autoindent") ?? false;
+    const result = await localOptions.get(denops, "autoindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "autoindent", value);
@@ -302,14 +316,14 @@ export const autoindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&autoindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&autoindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&autoindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&autoindent", value);
@@ -331,7 +345,8 @@ export const autoindent = {
  */
 export const autoread = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "autoread") ?? false;
+    const result = await options.get(denops, "autoread");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "autoread", value);
@@ -340,7 +355,8 @@ export const autoread = {
     return options.remove(denops, "autoread");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "autoread") ?? false;
+    const result = await globalOptions.get(denops, "autoread");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "autoread", value);
@@ -349,7 +365,8 @@ export const autoread = {
     return globalOptions.remove(denops, "autoread");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "autoread") ?? false;
+    const result = await localOptions.get(denops, "autoread");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "autoread", value);
@@ -359,14 +376,14 @@ export const autoread = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&autoread");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&autoread", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&autoread");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&autoread", value);
@@ -390,7 +407,8 @@ export const autoread = {
  */
 export const autowrite = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "autowrite") ?? false;
+    const result = await options.get(denops, "autowrite");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "autowrite", value);
@@ -399,7 +417,8 @@ export const autowrite = {
     return options.remove(denops, "autowrite");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "autowrite") ?? false;
+    const result = await globalOptions.get(denops, "autowrite");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "autowrite", value);
@@ -419,7 +438,8 @@ export const autowrite = {
  */
 export const autowriteall = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "autowriteall") ?? false;
+    const result = await options.get(denops, "autowriteall");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "autowriteall", value);
@@ -428,7 +448,8 @@ export const autowriteall = {
     return options.remove(denops, "autowriteall");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "autowriteall") ?? false;
+    const result = await globalOptions.get(denops, "autowriteall");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "autowriteall", value);
@@ -510,7 +531,8 @@ export const autowriteall = {
  */
 export const background = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "background") ?? "";
+    const result = await options.get(denops, "background");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "background", value);
@@ -519,7 +541,8 @@ export const background = {
     return options.remove(denops, "background");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "background") ?? "";
+    const result = await globalOptions.get(denops, "background");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "background", value);
@@ -559,7 +582,8 @@ export const background = {
  */
 export const backspace = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "backspace") ?? "";
+    const result = await options.get(denops, "backspace");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "backspace", value);
@@ -568,7 +592,8 @@ export const backspace = {
     return options.remove(denops, "backspace");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "backspace") ?? "";
+    const result = await globalOptions.get(denops, "backspace");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "backspace", value);
@@ -595,7 +620,8 @@ export const backspace = {
  */
 export const backup = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "backup") ?? false;
+    const result = await options.get(denops, "backup");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "backup", value);
@@ -604,7 +630,8 @@ export const backup = {
     return options.remove(denops, "backup");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "backup") ?? false;
+    const result = await globalOptions.get(denops, "backup");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "backup", value);
@@ -684,7 +711,8 @@ export const backup = {
  */
 export const backupcopy = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "backupcopy") ?? "";
+    const result = await options.get(denops, "backupcopy");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "backupcopy", value);
@@ -693,7 +721,8 @@ export const backupcopy = {
     return options.remove(denops, "backupcopy");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "backupcopy") ?? "";
+    const result = await globalOptions.get(denops, "backupcopy");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "backupcopy", value);
@@ -702,7 +731,8 @@ export const backupcopy = {
     return globalOptions.remove(denops, "backupcopy");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "backupcopy") ?? "";
+    const result = await localOptions.get(denops, "backupcopy");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "backupcopy", value);
@@ -712,14 +742,14 @@ export const backupcopy = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&backupcopy");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&backupcopy", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&backupcopy");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&backupcopy", value);
@@ -779,7 +809,8 @@ export const backupcopy = {
  */
 export const backupdir = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "backupdir") ?? "";
+    const result = await options.get(denops, "backupdir");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "backupdir", value);
@@ -788,7 +819,8 @@ export const backupdir = {
     return options.remove(denops, "backupdir");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "backupdir") ?? "";
+    const result = await globalOptions.get(denops, "backupdir");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "backupdir", value);
@@ -818,7 +850,8 @@ export const backupdir = {
  */
 export const backupext = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "backupext") ?? "";
+    const result = await options.get(denops, "backupext");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "backupext", value);
@@ -827,7 +860,8 @@ export const backupext = {
     return options.remove(denops, "backupext");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "backupext") ?? "";
+    const result = await globalOptions.get(denops, "backupext");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "backupext", value);
@@ -866,7 +900,8 @@ export const backupext = {
  */
 export const backupskip = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "backupskip") ?? "";
+    const result = await options.get(denops, "backupskip");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "backupskip", value);
@@ -875,7 +910,8 @@ export const backupskip = {
     return options.remove(denops, "backupskip");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "backupskip") ?? "";
+    const result = await globalOptions.get(denops, "backupskip");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "backupskip", value);
@@ -929,7 +965,8 @@ export const backupskip = {
  */
 export const belloff = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "belloff") ?? "";
+    const result = await options.get(denops, "belloff");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "belloff", value);
@@ -938,7 +975,8 @@ export const belloff = {
     return options.remove(denops, "belloff");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "belloff") ?? "";
+    const result = await globalOptions.get(denops, "belloff");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "belloff", value);
@@ -980,7 +1018,8 @@ export const belloff = {
  */
 export const binary = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "binary") ?? false;
+    const result = await options.get(denops, "binary");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "binary", value);
@@ -989,7 +1028,8 @@ export const binary = {
     return options.remove(denops, "binary");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "binary") ?? false;
+    const result = await localOptions.get(denops, "binary");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "binary", value);
@@ -999,14 +1039,14 @@ export const binary = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&binary");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&binary", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&binary");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&binary", value);
@@ -1034,7 +1074,8 @@ export const binary = {
  */
 export const bomb = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "bomb") ?? false;
+    const result = await options.get(denops, "bomb");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "bomb", value);
@@ -1043,7 +1084,8 @@ export const bomb = {
     return options.remove(denops, "bomb");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "bomb") ?? false;
+    const result = await localOptions.get(denops, "bomb");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "bomb", value);
@@ -1053,14 +1095,14 @@ export const bomb = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&bomb");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&bomb", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&bomb");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&bomb", value);
@@ -1078,7 +1120,8 @@ export const bomb = {
  */
 export const breakat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "breakat") ?? "";
+    const result = await options.get(denops, "breakat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "breakat", value);
@@ -1087,7 +1130,8 @@ export const breakat = {
     return options.remove(denops, "breakat");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "breakat") ?? "";
+    const result = await globalOptions.get(denops, "breakat");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "breakat", value);
@@ -1109,7 +1153,8 @@ export const breakat = {
  */
 export const breakindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "breakindent") ?? false;
+    const result = await options.get(denops, "breakindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "breakindent", value);
@@ -1118,7 +1163,8 @@ export const breakindent = {
     return options.remove(denops, "breakindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "breakindent") ?? false;
+    const result = await localOptions.get(denops, "breakindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "breakindent", value);
@@ -1128,14 +1174,14 @@ export const breakindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&breakindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&breakindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&breakindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&breakindent", value);
@@ -1177,7 +1223,8 @@ export const breakindent = {
  */
 export const breakindentopt = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "breakindentopt") ?? "";
+    const result = await options.get(denops, "breakindentopt");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "breakindentopt", value);
@@ -1186,7 +1233,8 @@ export const breakindentopt = {
     return options.remove(denops, "breakindentopt");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "breakindentopt") ?? "";
+    const result = await localOptions.get(denops, "breakindentopt");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "breakindentopt", value);
@@ -1196,14 +1244,14 @@ export const breakindentopt = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&breakindentopt");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&breakindentopt", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&breakindentopt");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&breakindentopt", value);
@@ -1224,7 +1272,8 @@ export const breakindentopt = {
  */
 export const browsedir = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "browsedir") ?? "";
+    const result = await options.get(denops, "browsedir");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "browsedir", value);
@@ -1233,7 +1282,8 @@ export const browsedir = {
     return options.remove(denops, "browsedir");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "browsedir") ?? "";
+    const result = await globalOptions.get(denops, "browsedir");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "browsedir", value);
@@ -1268,7 +1318,8 @@ export const browsedir = {
  */
 export const bufhidden = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "bufhidden") ?? "";
+    const result = await options.get(denops, "bufhidden");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "bufhidden", value);
@@ -1277,7 +1328,8 @@ export const bufhidden = {
     return options.remove(denops, "bufhidden");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "bufhidden") ?? "";
+    const result = await localOptions.get(denops, "bufhidden");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "bufhidden", value);
@@ -1287,14 +1339,14 @@ export const bufhidden = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&bufhidden");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&bufhidden", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&bufhidden");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&bufhidden", value);
@@ -1312,7 +1364,8 @@ export const bufhidden = {
  */
 export const buflisted = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "buflisted") ?? false;
+    const result = await options.get(denops, "buflisted");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "buflisted", value);
@@ -1321,7 +1374,8 @@ export const buflisted = {
     return options.remove(denops, "buflisted");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "buflisted") ?? false;
+    const result = await localOptions.get(denops, "buflisted");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "buflisted", value);
@@ -1331,14 +1385,14 @@ export const buflisted = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&buflisted");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&buflisted", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&buflisted");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&buflisted", value);
@@ -1403,7 +1457,8 @@ export const buflisted = {
  */
 export const buftype = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "buftype") ?? "";
+    const result = await options.get(denops, "buftype");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "buftype", value);
@@ -1412,7 +1467,8 @@ export const buftype = {
     return options.remove(denops, "buftype");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "buftype") ?? "";
+    const result = await localOptions.get(denops, "buftype");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "buftype", value);
@@ -1422,14 +1478,14 @@ export const buftype = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&buftype");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&buftype", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&buftype");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&buftype", value);
@@ -1453,7 +1509,8 @@ export const buftype = {
  */
 export const casemap = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "casemap") ?? "";
+    const result = await options.get(denops, "casemap");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "casemap", value);
@@ -1462,7 +1519,8 @@ export const casemap = {
     return options.remove(denops, "casemap");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "casemap") ?? "";
+    const result = await globalOptions.get(denops, "casemap");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "casemap", value);
@@ -1483,7 +1541,8 @@ export const casemap = {
  */
 export const cdhome = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cdhome") ?? false;
+    const result = await options.get(denops, "cdhome");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cdhome", value);
@@ -1492,7 +1551,8 @@ export const cdhome = {
     return options.remove(denops, "cdhome");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "cdhome") ?? false;
+    const result = await globalOptions.get(denops, "cdhome");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "cdhome", value);
@@ -1525,7 +1585,8 @@ export const cdhome = {
  */
 export const cdpath = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cdpath") ?? "";
+    const result = await options.get(denops, "cdpath");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cdpath", value);
@@ -1534,7 +1595,8 @@ export const cdpath = {
     return options.remove(denops, "cdpath");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "cdpath") ?? "";
+    const result = await globalOptions.get(denops, "cdpath");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "cdpath", value);
@@ -1563,7 +1625,8 @@ export const cdpath = {
  */
 export const cedit = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cedit") ?? "";
+    const result = await options.get(denops, "cedit");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cedit", value);
@@ -1572,7 +1635,8 @@ export const cedit = {
     return options.remove(denops, "cedit");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "cedit") ?? "";
+    const result = await globalOptions.get(denops, "cedit");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "cedit", value);
@@ -1641,7 +1705,8 @@ export const cedit = {
  */
 export const charconvert = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "charconvert") ?? "";
+    const result = await options.get(denops, "charconvert");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "charconvert", value);
@@ -1650,7 +1715,8 @@ export const charconvert = {
     return options.remove(denops, "charconvert");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "charconvert") ?? "";
+    const result = await globalOptions.get(denops, "charconvert");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "charconvert", value);
@@ -1678,7 +1744,8 @@ export const charconvert = {
  */
 export const cindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cindent") ?? false;
+    const result = await options.get(denops, "cindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cindent", value);
@@ -1687,7 +1754,8 @@ export const cindent = {
     return options.remove(denops, "cindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "cindent") ?? false;
+    const result = await localOptions.get(denops, "cindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "cindent", value);
@@ -1697,14 +1765,14 @@ export const cindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&cindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&cindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&cindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&cindent", value);
@@ -1722,7 +1790,8 @@ export const cindent = {
  */
 export const cinkeys = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cinkeys") ?? "";
+    const result = await options.get(denops, "cinkeys");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cinkeys", value);
@@ -1731,7 +1800,8 @@ export const cinkeys = {
     return options.remove(denops, "cinkeys");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cinkeys") ?? "";
+    const result = await localOptions.get(denops, "cinkeys");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "cinkeys", value);
@@ -1741,14 +1811,14 @@ export const cinkeys = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&cinkeys");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&cinkeys", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cinkeys");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cinkeys", value);
@@ -1764,7 +1834,8 @@ export const cinkeys = {
  */
 export const cinoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cinoptions") ?? "";
+    const result = await options.get(denops, "cinoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cinoptions", value);
@@ -1773,7 +1844,8 @@ export const cinoptions = {
     return options.remove(denops, "cinoptions");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cinoptions") ?? "";
+    const result = await localOptions.get(denops, "cinoptions");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "cinoptions", value);
@@ -1783,14 +1855,14 @@ export const cinoptions = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&cinoptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&cinoptions", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cinoptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cinoptions", value);
@@ -1809,7 +1881,8 @@ export const cinoptions = {
  */
 export const cinwords = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cinwords") ?? "";
+    const result = await options.get(denops, "cinwords");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cinwords", value);
@@ -1818,7 +1891,8 @@ export const cinwords = {
     return options.remove(denops, "cinwords");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cinwords") ?? "";
+    const result = await localOptions.get(denops, "cinwords");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "cinwords", value);
@@ -1828,14 +1902,14 @@ export const cinwords = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&cinwords");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&cinwords", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cinwords");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cinwords", value);
@@ -1853,7 +1927,8 @@ export const cinwords = {
  */
 export const cinscopedecls = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cinscopedecls") ?? "";
+    const result = await options.get(denops, "cinscopedecls");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cinscopedecls", value);
@@ -1862,7 +1937,8 @@ export const cinscopedecls = {
     return options.remove(denops, "cinscopedecls");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cinscopedecls") ?? "";
+    const result = await localOptions.get(denops, "cinscopedecls");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "cinscopedecls", value);
@@ -1872,14 +1948,14 @@ export const cinscopedecls = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&cinscopedecls");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&cinscopedecls", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cinscopedecls");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cinscopedecls", value);
@@ -1975,7 +2051,8 @@ export const cinscopedecls = {
  */
 export const clipboard = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "clipboard") ?? "";
+    const result = await options.get(denops, "clipboard");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "clipboard", value);
@@ -1984,7 +2061,8 @@ export const clipboard = {
     return options.remove(denops, "clipboard");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "clipboard") ?? "";
+    const result = await globalOptions.get(denops, "clipboard");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "clipboard", value);
@@ -2004,7 +2082,8 @@ export const clipboard = {
  */
 export const cmdheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "cmdheight") ?? 0;
+    const result = await options.get(denops, "cmdheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "cmdheight", value);
@@ -2013,7 +2092,8 @@ export const cmdheight = {
     return options.remove(denops, "cmdheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "cmdheight") ?? 0;
+    const result = await globalOptions.get(denops, "cmdheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "cmdheight", value);
@@ -2022,7 +2102,8 @@ export const cmdheight = {
     return globalOptions.remove(denops, "cmdheight");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "cmdheight") ?? 0;
+    const result = await localOptions.get(denops, "cmdheight");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "cmdheight", value);
@@ -2032,14 +2113,14 @@ export const cmdheight = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&cmdheight");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&cmdheight", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&cmdheight");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&cmdheight", value);
@@ -2053,7 +2134,8 @@ export const cmdheight = {
  */
 export const cmdwinheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "cmdwinheight") ?? 0;
+    const result = await options.get(denops, "cmdwinheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "cmdwinheight", value);
@@ -2062,7 +2144,8 @@ export const cmdwinheight = {
     return options.remove(denops, "cmdwinheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "cmdwinheight") ?? 0;
+    const result = await globalOptions.get(denops, "cmdwinheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "cmdwinheight", value);
@@ -2092,7 +2175,8 @@ export const cmdwinheight = {
  */
 export const colorcolumn = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "colorcolumn") ?? "";
+    const result = await options.get(denops, "colorcolumn");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "colorcolumn", value);
@@ -2101,7 +2185,8 @@ export const colorcolumn = {
     return options.remove(denops, "colorcolumn");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "colorcolumn") ?? "";
+    const result = await localOptions.get(denops, "colorcolumn");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "colorcolumn", value);
@@ -2111,14 +2196,14 @@ export const colorcolumn = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&colorcolumn");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&colorcolumn", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&colorcolumn");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&colorcolumn", value);
@@ -2146,7 +2231,8 @@ export const colorcolumn = {
  */
 export const columns = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "columns") ?? 0;
+    const result = await options.get(denops, "columns");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "columns", value);
@@ -2155,7 +2241,8 @@ export const columns = {
     return options.remove(denops, "columns");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "columns") ?? 0;
+    const result = await globalOptions.get(denops, "columns");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "columns", value);
@@ -2175,7 +2262,8 @@ export const columns = {
  */
 export const comments = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "comments") ?? "";
+    const result = await options.get(denops, "comments");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "comments", value);
@@ -2184,7 +2272,8 @@ export const comments = {
     return options.remove(denops, "comments");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "comments") ?? "";
+    const result = await localOptions.get(denops, "comments");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "comments", value);
@@ -2194,14 +2283,14 @@ export const comments = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&comments");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&comments", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&comments");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&comments", value);
@@ -2219,7 +2308,8 @@ export const comments = {
  */
 export const commentstring = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "commentstring") ?? "";
+    const result = await options.get(denops, "commentstring");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "commentstring", value);
@@ -2228,7 +2318,8 @@ export const commentstring = {
     return options.remove(denops, "commentstring");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "commentstring") ?? "";
+    const result = await localOptions.get(denops, "commentstring");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "commentstring", value);
@@ -2238,14 +2329,14 @@ export const commentstring = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&commentstring");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&commentstring", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&commentstring");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&commentstring", value);
@@ -2299,7 +2390,8 @@ export const commentstring = {
  */
 export const complete = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "complete") ?? "";
+    const result = await options.get(denops, "complete");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "complete", value);
@@ -2308,7 +2400,8 @@ export const complete = {
     return options.remove(denops, "complete");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "complete") ?? "";
+    const result = await localOptions.get(denops, "complete");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "complete", value);
@@ -2318,14 +2411,14 @@ export const complete = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&complete");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&complete", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&complete");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&complete", value);
@@ -2348,7 +2441,8 @@ export const complete = {
  */
 export const completefunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "completefunc") ?? "";
+    const result = await options.get(denops, "completefunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "completefunc", value);
@@ -2357,7 +2451,8 @@ export const completefunc = {
     return options.remove(denops, "completefunc");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "completefunc") ?? "";
+    const result = await localOptions.get(denops, "completefunc");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "completefunc", value);
@@ -2367,14 +2462,14 @@ export const completefunc = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&completefunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&completefunc", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&completefunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&completefunc", value);
@@ -2399,7 +2494,8 @@ export const completefunc = {
  */
 export const completeslash = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "completeslash") ?? "";
+    const result = await options.get(denops, "completeslash");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "completeslash", value);
@@ -2408,7 +2504,8 @@ export const completeslash = {
     return options.remove(denops, "completeslash");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "completeslash") ?? "";
+    const result = await localOptions.get(denops, "completeslash");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "completeslash", value);
@@ -2418,14 +2515,14 @@ export const completeslash = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&completeslash");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&completeslash", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&completeslash");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&completeslash", value);
@@ -2479,7 +2576,8 @@ export const completeslash = {
  */
 export const completeopt = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "completeopt") ?? "";
+    const result = await options.get(denops, "completeopt");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "completeopt", value);
@@ -2488,7 +2586,8 @@ export const completeopt = {
     return options.remove(denops, "completeopt");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "completeopt") ?? "";
+    const result = await globalOptions.get(denops, "completeopt");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "completeopt", value);
@@ -2521,7 +2620,8 @@ export const completeopt = {
  */
 export const concealcursor = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "concealcursor") ?? "";
+    const result = await options.get(denops, "concealcursor");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "concealcursor", value);
@@ -2530,7 +2630,8 @@ export const concealcursor = {
     return options.remove(denops, "concealcursor");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "concealcursor") ?? "";
+    const result = await localOptions.get(denops, "concealcursor");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "concealcursor", value);
@@ -2540,14 +2641,14 @@ export const concealcursor = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&concealcursor");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&concealcursor", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&concealcursor");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&concealcursor", value);
@@ -2581,7 +2682,8 @@ export const concealcursor = {
  */
 export const conceallevel = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "conceallevel") ?? 0;
+    const result = await options.get(denops, "conceallevel");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "conceallevel", value);
@@ -2590,7 +2692,8 @@ export const conceallevel = {
     return options.remove(denops, "conceallevel");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "conceallevel") ?? 0;
+    const result = await localOptions.get(denops, "conceallevel");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "conceallevel", value);
@@ -2600,14 +2703,14 @@ export const conceallevel = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&conceallevel");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&conceallevel", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&conceallevel");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&conceallevel", value);
@@ -2628,7 +2731,8 @@ export const conceallevel = {
  */
 export const confirm = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "confirm") ?? false;
+    const result = await options.get(denops, "confirm");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "confirm", value);
@@ -2637,7 +2741,8 @@ export const confirm = {
     return options.remove(denops, "confirm");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "confirm") ?? false;
+    const result = await globalOptions.get(denops, "confirm");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "confirm", value);
@@ -2663,7 +2768,8 @@ export const confirm = {
  */
 export const copyindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "copyindent") ?? false;
+    const result = await options.get(denops, "copyindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "copyindent", value);
@@ -2672,7 +2778,8 @@ export const copyindent = {
     return options.remove(denops, "copyindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "copyindent") ?? false;
+    const result = await localOptions.get(denops, "copyindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "copyindent", value);
@@ -2682,14 +2789,14 @@ export const copyindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&copyindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&copyindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&copyindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&copyindent", value);
@@ -3019,7 +3126,8 @@ export const copyindent = {
  */
 export const cpoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cpoptions") ?? "";
+    const result = await options.get(denops, "cpoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cpoptions", value);
@@ -3028,7 +3136,8 @@ export const cpoptions = {
     return options.remove(denops, "cpoptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "cpoptions") ?? "";
+    const result = await globalOptions.get(denops, "cpoptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "cpoptions", value);
@@ -3049,7 +3158,8 @@ export const cpoptions = {
  */
 export const cscopepathcomp = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "cscopepathcomp") ?? 0;
+    const result = await options.get(denops, "cscopepathcomp");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "cscopepathcomp", value);
@@ -3058,7 +3168,8 @@ export const cscopepathcomp = {
     return options.remove(denops, "cscopepathcomp");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "cscopepathcomp") ?? 0;
+    const result = await globalOptions.get(denops, "cscopepathcomp");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "cscopepathcomp", value);
@@ -3079,7 +3190,8 @@ export const cscopepathcomp = {
  */
 export const cscopeprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cscopeprg") ?? "";
+    const result = await options.get(denops, "cscopeprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cscopeprg", value);
@@ -3088,7 +3200,8 @@ export const cscopeprg = {
     return options.remove(denops, "cscopeprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "cscopeprg") ?? "";
+    const result = await globalOptions.get(denops, "cscopeprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "cscopeprg", value);
@@ -3108,7 +3221,8 @@ export const cscopeprg = {
  */
 export const cscopequickfix = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cscopequickfix") ?? "";
+    const result = await options.get(denops, "cscopequickfix");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cscopequickfix", value);
@@ -3117,7 +3231,8 @@ export const cscopequickfix = {
     return options.remove(denops, "cscopequickfix");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "cscopequickfix") ?? "";
+    const result = await globalOptions.get(denops, "cscopequickfix");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "cscopequickfix", value);
@@ -3139,7 +3254,8 @@ export const cscopequickfix = {
  */
 export const cscoperelative = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cscoperelative") ?? false;
+    const result = await options.get(denops, "cscoperelative");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cscoperelative", value);
@@ -3148,7 +3264,8 @@ export const cscoperelative = {
     return options.remove(denops, "cscoperelative");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "cscoperelative") ?? false;
+    const result = await globalOptions.get(denops, "cscoperelative");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "cscoperelative", value);
@@ -3168,7 +3285,8 @@ export const cscoperelative = {
  */
 export const cscopetag = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cscopetag") ?? false;
+    const result = await options.get(denops, "cscopetag");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cscopetag", value);
@@ -3177,7 +3295,8 @@ export const cscopetag = {
     return options.remove(denops, "cscopetag");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "cscopetag") ?? false;
+    const result = await globalOptions.get(denops, "cscopetag");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "cscopetag", value);
@@ -3198,7 +3317,8 @@ export const cscopetag = {
  */
 export const cscopetagorder = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "cscopetagorder") ?? 0;
+    const result = await options.get(denops, "cscopetagorder");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "cscopetagorder", value);
@@ -3207,7 +3327,8 @@ export const cscopetagorder = {
     return options.remove(denops, "cscopetagorder");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "cscopetagorder") ?? 0;
+    const result = await globalOptions.get(denops, "cscopetagorder");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "cscopetagorder", value);
@@ -3230,7 +3351,8 @@ export const cscopetagorder = {
  */
 export const cursorbind = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cursorbind") ?? false;
+    const result = await options.get(denops, "cursorbind");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cursorbind", value);
@@ -3239,7 +3361,8 @@ export const cursorbind = {
     return options.remove(denops, "cursorbind");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "cursorbind") ?? false;
+    const result = await localOptions.get(denops, "cursorbind");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "cursorbind", value);
@@ -3249,14 +3372,14 @@ export const cursorbind = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&cursorbind");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&cursorbind", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&cursorbind");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&cursorbind", value);
@@ -3279,7 +3402,8 @@ export const cursorbind = {
  */
 export const cursorcolumn = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cursorcolumn") ?? false;
+    const result = await options.get(denops, "cursorcolumn");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cursorcolumn", value);
@@ -3288,7 +3412,8 @@ export const cursorcolumn = {
     return options.remove(denops, "cursorcolumn");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "cursorcolumn") ?? false;
+    const result = await localOptions.get(denops, "cursorcolumn");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "cursorcolumn", value);
@@ -3298,14 +3423,14 @@ export const cursorcolumn = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&cursorcolumn");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&cursorcolumn", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&cursorcolumn");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&cursorcolumn", value);
@@ -3324,7 +3449,8 @@ export const cursorcolumn = {
  */
 export const cursorline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "cursorline") ?? false;
+    const result = await options.get(denops, "cursorline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "cursorline", value);
@@ -3333,7 +3459,8 @@ export const cursorline = {
     return options.remove(denops, "cursorline");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "cursorline") ?? false;
+    const result = await localOptions.get(denops, "cursorline");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "cursorline", value);
@@ -3343,14 +3470,14 @@ export const cursorline = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&cursorline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&cursorline", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&cursorline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&cursorline", value);
@@ -3378,7 +3505,8 @@ export const cursorline = {
  */
 export const cursorlineopt = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "cursorlineopt") ?? "";
+    const result = await options.get(denops, "cursorlineopt");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "cursorlineopt", value);
@@ -3387,7 +3515,8 @@ export const cursorlineopt = {
     return options.remove(denops, "cursorlineopt");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "cursorlineopt") ?? "";
+    const result = await localOptions.get(denops, "cursorlineopt");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "cursorlineopt", value);
@@ -3397,14 +3526,14 @@ export const cursorlineopt = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&cursorlineopt");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&cursorlineopt", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cursorlineopt");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cursorlineopt", value);
@@ -3427,7 +3556,8 @@ export const cursorlineopt = {
  */
 export const debug = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "debug") ?? "";
+    const result = await options.get(denops, "debug");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "debug", value);
@@ -3436,7 +3566,8 @@ export const debug = {
     return options.remove(denops, "debug");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "debug") ?? "";
+    const result = await globalOptions.get(denops, "debug");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "debug", value);
@@ -3478,7 +3609,8 @@ export const debug = {
  */
 export const define = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "define") ?? "";
+    const result = await options.get(denops, "define");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "define", value);
@@ -3487,7 +3619,8 @@ export const define = {
     return options.remove(denops, "define");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "define") ?? "";
+    const result = await globalOptions.get(denops, "define");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "define", value);
@@ -3496,7 +3629,8 @@ export const define = {
     return globalOptions.remove(denops, "define");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "define") ?? "";
+    const result = await localOptions.get(denops, "define");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "define", value);
@@ -3506,14 +3640,14 @@ export const define = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&define");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&define", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&define");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&define", value);
@@ -3536,7 +3670,8 @@ export const define = {
  */
 export const delcombine = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "delcombine") ?? false;
+    const result = await options.get(denops, "delcombine");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "delcombine", value);
@@ -3545,7 +3680,8 @@ export const delcombine = {
     return options.remove(denops, "delcombine");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "delcombine") ?? false;
+    const result = await globalOptions.get(denops, "delcombine");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "delcombine", value);
@@ -3583,7 +3719,8 @@ export const delcombine = {
  */
 export const dictionary = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "dictionary") ?? "";
+    const result = await options.get(denops, "dictionary");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "dictionary", value);
@@ -3592,7 +3729,8 @@ export const dictionary = {
     return options.remove(denops, "dictionary");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "dictionary") ?? "";
+    const result = await globalOptions.get(denops, "dictionary");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "dictionary", value);
@@ -3601,7 +3739,8 @@ export const dictionary = {
     return globalOptions.remove(denops, "dictionary");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "dictionary") ?? "";
+    const result = await localOptions.get(denops, "dictionary");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "dictionary", value);
@@ -3611,14 +3750,14 @@ export const dictionary = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&dictionary");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&dictionary", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&dictionary");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&dictionary", value);
@@ -3635,7 +3774,8 @@ export const dictionary = {
  */
 export const diff = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "diff") ?? false;
+    const result = await options.get(denops, "diff");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "diff", value);
@@ -3644,7 +3784,8 @@ export const diff = {
     return options.remove(denops, "diff");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "diff") ?? false;
+    const result = await localOptions.get(denops, "diff");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "diff", value);
@@ -3654,14 +3795,14 @@ export const diff = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&diff");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&diff", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&diff");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&diff", value);
@@ -3680,7 +3821,8 @@ export const diff = {
  */
 export const diffexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "diffexpr") ?? "";
+    const result = await options.get(denops, "diffexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "diffexpr", value);
@@ -3689,7 +3831,8 @@ export const diffexpr = {
     return options.remove(denops, "diffexpr");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "diffexpr") ?? "";
+    const result = await globalOptions.get(denops, "diffexpr");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "diffexpr", value);
@@ -3802,7 +3945,8 @@ export const diffexpr = {
  */
 export const diffopt = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "diffopt") ?? "";
+    const result = await options.get(denops, "diffopt");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "diffopt", value);
@@ -3811,7 +3955,8 @@ export const diffopt = {
     return options.remove(denops, "diffopt");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "diffopt") ?? "";
+    const result = await globalOptions.get(denops, "diffopt");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "diffopt", value);
@@ -3832,7 +3977,8 @@ export const diffopt = {
  */
 export const digraph = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "digraph") ?? false;
+    const result = await options.get(denops, "digraph");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "digraph", value);
@@ -3841,7 +3987,8 @@ export const digraph = {
     return options.remove(denops, "digraph");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "digraph") ?? false;
+    const result = await globalOptions.get(denops, "digraph");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "digraph", value);
@@ -3911,7 +4058,8 @@ export const digraph = {
  */
 export const directory = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "directory") ?? "";
+    const result = await options.get(denops, "directory");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "directory", value);
@@ -3920,7 +4068,8 @@ export const directory = {
     return options.remove(denops, "directory");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "directory") ?? "";
+    const result = await globalOptions.get(denops, "directory");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "directory", value);
@@ -3950,7 +4099,8 @@ export const directory = {
  */
 export const display = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "display") ?? "";
+    const result = await options.get(denops, "display");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "display", value);
@@ -3959,7 +4109,8 @@ export const display = {
     return options.remove(denops, "display");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "display") ?? "";
+    const result = await globalOptions.get(denops, "display");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "display", value);
@@ -3979,7 +4130,8 @@ export const display = {
  */
 export const eadirection = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "eadirection") ?? "";
+    const result = await options.get(denops, "eadirection");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "eadirection", value);
@@ -3988,7 +4140,8 @@ export const eadirection = {
     return options.remove(denops, "eadirection");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "eadirection") ?? "";
+    const result = await globalOptions.get(denops, "eadirection");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "eadirection", value);
@@ -4009,7 +4162,8 @@ export const eadirection = {
  */
 export const emoji = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "emoji") ?? false;
+    const result = await options.get(denops, "emoji");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "emoji", value);
@@ -4018,7 +4172,8 @@ export const emoji = {
     return options.remove(denops, "emoji");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "emoji") ?? false;
+    const result = await globalOptions.get(denops, "emoji");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "emoji", value);
@@ -4094,7 +4249,8 @@ export const emoji = {
  */
 export const encoding = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "encoding") ?? "";
+    const result = await options.get(denops, "encoding");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "encoding", value);
@@ -4103,7 +4259,8 @@ export const encoding = {
     return options.remove(denops, "encoding");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "encoding") ?? "";
+    const result = await globalOptions.get(denops, "encoding");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "encoding", value);
@@ -4130,7 +4287,8 @@ export const encoding = {
  */
 export const endofline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "endofline") ?? false;
+    const result = await options.get(denops, "endofline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "endofline", value);
@@ -4139,7 +4297,8 @@ export const endofline = {
     return options.remove(denops, "endofline");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "endofline") ?? false;
+    const result = await localOptions.get(denops, "endofline");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "endofline", value);
@@ -4149,14 +4308,14 @@ export const endofline = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&endofline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&endofline", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&endofline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&endofline", value);
@@ -4183,7 +4342,8 @@ export const endofline = {
  */
 export const equalalways = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "equalalways") ?? false;
+    const result = await options.get(denops, "equalalways");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "equalalways", value);
@@ -4192,7 +4352,8 @@ export const equalalways = {
     return options.remove(denops, "equalalways");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "equalalways") ?? false;
+    const result = await globalOptions.get(denops, "equalalways");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "equalalways", value);
@@ -4216,7 +4377,8 @@ export const equalalways = {
  */
 export const equalprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "equalprg") ?? "";
+    const result = await options.get(denops, "equalprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "equalprg", value);
@@ -4225,7 +4387,8 @@ export const equalprg = {
     return options.remove(denops, "equalprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "equalprg") ?? "";
+    const result = await globalOptions.get(denops, "equalprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "equalprg", value);
@@ -4234,7 +4397,8 @@ export const equalprg = {
     return globalOptions.remove(denops, "equalprg");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "equalprg") ?? "";
+    const result = await localOptions.get(denops, "equalprg");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "equalprg", value);
@@ -4244,14 +4408,14 @@ export const equalprg = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&equalprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&equalprg", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&equalprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&equalprg", value);
@@ -4270,7 +4434,8 @@ export const equalprg = {
  */
 export const errorbells = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "errorbells") ?? false;
+    const result = await options.get(denops, "errorbells");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "errorbells", value);
@@ -4279,7 +4444,8 @@ export const errorbells = {
     return options.remove(denops, "errorbells");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "errorbells") ?? false;
+    const result = await globalOptions.get(denops, "errorbells");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "errorbells", value);
@@ -4306,7 +4472,8 @@ export const errorbells = {
  */
 export const errorfile = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "errorfile") ?? "";
+    const result = await options.get(denops, "errorfile");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "errorfile", value);
@@ -4315,7 +4482,8 @@ export const errorfile = {
     return options.remove(denops, "errorfile");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "errorfile") ?? "";
+    const result = await globalOptions.get(denops, "errorfile");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "errorfile", value);
@@ -4335,7 +4503,8 @@ export const errorfile = {
  */
 export const errorformat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "errorformat") ?? "";
+    const result = await options.get(denops, "errorformat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "errorformat", value);
@@ -4344,7 +4513,8 @@ export const errorformat = {
     return options.remove(denops, "errorformat");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "errorformat") ?? "";
+    const result = await globalOptions.get(denops, "errorformat");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "errorformat", value);
@@ -4353,7 +4523,8 @@ export const errorformat = {
     return globalOptions.remove(denops, "errorformat");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "errorformat") ?? "";
+    const result = await localOptions.get(denops, "errorformat");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "errorformat", value);
@@ -4363,14 +4534,14 @@ export const errorformat = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&errorformat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&errorformat", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&errorformat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&errorformat", value);
@@ -4389,7 +4560,8 @@ export const errorformat = {
  */
 export const eventignore = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "eventignore") ?? "";
+    const result = await options.get(denops, "eventignore");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "eventignore", value);
@@ -4398,7 +4570,8 @@ export const eventignore = {
     return options.remove(denops, "eventignore");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "eventignore") ?? "";
+    const result = await globalOptions.get(denops, "eventignore");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "eventignore", value);
@@ -4421,7 +4594,8 @@ export const eventignore = {
  */
 export const expandtab = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "expandtab") ?? false;
+    const result = await options.get(denops, "expandtab");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "expandtab", value);
@@ -4430,7 +4604,8 @@ export const expandtab = {
     return options.remove(denops, "expandtab");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "expandtab") ?? false;
+    const result = await localOptions.get(denops, "expandtab");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "expandtab", value);
@@ -4440,14 +4615,14 @@ export const expandtab = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&expandtab");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&expandtab", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&expandtab");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&expandtab", value);
@@ -4507,7 +4682,8 @@ export const expandtab = {
  */
 export const fileencoding = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "fileencoding") ?? "";
+    const result = await options.get(denops, "fileencoding");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "fileencoding", value);
@@ -4516,7 +4692,8 @@ export const fileencoding = {
     return options.remove(denops, "fileencoding");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "fileencoding") ?? "";
+    const result = await localOptions.get(denops, "fileencoding");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "fileencoding", value);
@@ -4526,14 +4703,14 @@ export const fileencoding = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&fileencoding");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&fileencoding", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&fileencoding");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&fileencoding", value);
@@ -4604,7 +4781,8 @@ export const fileencoding = {
  */
 export const fileencodings = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "fileencodings") ?? "";
+    const result = await options.get(denops, "fileencodings");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "fileencodings", value);
@@ -4613,7 +4791,8 @@ export const fileencodings = {
     return options.remove(denops, "fileencodings");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "fileencodings") ?? "";
+    const result = await globalOptions.get(denops, "fileencodings");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "fileencodings", value);
@@ -4647,7 +4826,8 @@ export const fileencodings = {
  */
 export const fileformat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "fileformat") ?? "";
+    const result = await options.get(denops, "fileformat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "fileformat", value);
@@ -4656,7 +4836,8 @@ export const fileformat = {
     return options.remove(denops, "fileformat");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "fileformat") ?? "";
+    const result = await localOptions.get(denops, "fileformat");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "fileformat", value);
@@ -4666,14 +4847,14 @@ export const fileformat = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&fileformat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&fileformat", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&fileformat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&fileformat", value);
@@ -4740,7 +4921,8 @@ export const fileformat = {
  */
 export const fileformats = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "fileformats") ?? "";
+    const result = await options.get(denops, "fileformats");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "fileformats", value);
@@ -4749,7 +4931,8 @@ export const fileformats = {
     return options.remove(denops, "fileformats");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "fileformats") ?? "";
+    const result = await globalOptions.get(denops, "fileformats");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "fileformats", value);
@@ -4768,7 +4951,8 @@ export const fileformats = {
  */
 export const fileignorecase = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "fileignorecase") ?? false;
+    const result = await options.get(denops, "fileignorecase");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "fileignorecase", value);
@@ -4777,7 +4961,8 @@ export const fileignorecase = {
     return options.remove(denops, "fileignorecase");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "fileignorecase") ?? false;
+    const result = await globalOptions.get(denops, "fileignorecase");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "fileignorecase", value);
@@ -4814,7 +4999,8 @@ export const fileignorecase = {
  */
 export const filetype = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "filetype") ?? "";
+    const result = await options.get(denops, "filetype");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "filetype", value);
@@ -4823,7 +5009,8 @@ export const filetype = {
     return options.remove(denops, "filetype");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "filetype") ?? "";
+    const result = await localOptions.get(denops, "filetype");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "filetype", value);
@@ -4833,14 +5020,14 @@ export const filetype = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&filetype");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&filetype", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&filetype");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&filetype", value);
@@ -4894,7 +5081,8 @@ export const filetype = {
  */
 export const fillchars = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "fillchars") ?? "";
+    const result = await options.get(denops, "fillchars");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "fillchars", value);
@@ -4903,7 +5091,8 @@ export const fillchars = {
     return options.remove(denops, "fillchars");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "fillchars") ?? "";
+    const result = await globalOptions.get(denops, "fillchars");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "fillchars", value);
@@ -4912,7 +5101,8 @@ export const fillchars = {
     return globalOptions.remove(denops, "fillchars");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "fillchars") ?? "";
+    const result = await localOptions.get(denops, "fillchars");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "fillchars", value);
@@ -4922,14 +5112,14 @@ export const fillchars = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&fillchars");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&fillchars", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&fillchars");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&fillchars", value);
@@ -4948,7 +5138,8 @@ export const fillchars = {
  */
 export const fixendofline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "fixendofline") ?? false;
+    const result = await options.get(denops, "fixendofline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "fixendofline", value);
@@ -4957,7 +5148,8 @@ export const fixendofline = {
     return options.remove(denops, "fixendofline");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "fixendofline") ?? false;
+    const result = await localOptions.get(denops, "fixendofline");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "fixendofline", value);
@@ -4967,14 +5159,14 @@ export const fixendofline = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&fixendofline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&fixendofline", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&fixendofline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&fixendofline", value);
@@ -4992,7 +5184,8 @@ export const fixendofline = {
  */
 export const foldclose = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldclose") ?? "";
+    const result = await options.get(denops, "foldclose");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldclose", value);
@@ -5001,7 +5194,8 @@ export const foldclose = {
     return options.remove(denops, "foldclose");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "foldclose") ?? "";
+    const result = await globalOptions.get(denops, "foldclose");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "foldclose", value);
@@ -5023,7 +5217,8 @@ export const foldclose = {
  */
 export const foldcolumn = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "foldcolumn") ?? 0;
+    const result = await options.get(denops, "foldcolumn");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "foldcolumn", value);
@@ -5032,7 +5227,8 @@ export const foldcolumn = {
     return options.remove(denops, "foldcolumn");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "foldcolumn") ?? 0;
+    const result = await localOptions.get(denops, "foldcolumn");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "foldcolumn", value);
@@ -5042,14 +5238,14 @@ export const foldcolumn = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&foldcolumn");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&foldcolumn", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&foldcolumn");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&foldcolumn", value);
@@ -5071,7 +5267,8 @@ export const foldcolumn = {
  */
 export const foldenable = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "foldenable") ?? false;
+    const result = await options.get(denops, "foldenable");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "foldenable", value);
@@ -5080,7 +5277,8 @@ export const foldenable = {
     return options.remove(denops, "foldenable");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "foldenable") ?? false;
+    const result = await localOptions.get(denops, "foldenable");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "foldenable", value);
@@ -5090,14 +5288,14 @@ export const foldenable = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&foldenable");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&foldenable", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&foldenable");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&foldenable", value);
@@ -5124,7 +5322,8 @@ export const foldenable = {
  */
 export const foldexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldexpr") ?? "";
+    const result = await options.get(denops, "foldexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldexpr", value);
@@ -5133,7 +5332,8 @@ export const foldexpr = {
     return options.remove(denops, "foldexpr");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "foldexpr") ?? "";
+    const result = await localOptions.get(denops, "foldexpr");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "foldexpr", value);
@@ -5143,14 +5343,14 @@ export const foldexpr = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&foldexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&foldexpr", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&foldexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&foldexpr", value);
@@ -5169,7 +5369,8 @@ export const foldexpr = {
  */
 export const foldignore = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldignore") ?? "";
+    const result = await options.get(denops, "foldignore");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldignore", value);
@@ -5178,7 +5379,8 @@ export const foldignore = {
     return options.remove(denops, "foldignore");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "foldignore") ?? "";
+    const result = await localOptions.get(denops, "foldignore");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "foldignore", value);
@@ -5188,14 +5390,14 @@ export const foldignore = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&foldignore");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&foldignore", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&foldignore");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&foldignore", value);
@@ -5215,7 +5417,8 @@ export const foldignore = {
  */
 export const foldlevel = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "foldlevel") ?? 0;
+    const result = await options.get(denops, "foldlevel");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "foldlevel", value);
@@ -5224,7 +5427,8 @@ export const foldlevel = {
     return options.remove(denops, "foldlevel");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "foldlevel") ?? 0;
+    const result = await localOptions.get(denops, "foldlevel");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "foldlevel", value);
@@ -5234,14 +5438,14 @@ export const foldlevel = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&foldlevel");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&foldlevel", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&foldlevel");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&foldlevel", value);
@@ -5265,7 +5469,8 @@ export const foldlevel = {
  */
 export const foldlevelstart = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "foldlevelstart") ?? 0;
+    const result = await options.get(denops, "foldlevelstart");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "foldlevelstart", value);
@@ -5274,7 +5479,8 @@ export const foldlevelstart = {
     return options.remove(denops, "foldlevelstart");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "foldlevelstart") ?? 0;
+    const result = await globalOptions.get(denops, "foldlevelstart");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "foldlevelstart", value);
@@ -5296,7 +5502,8 @@ export const foldlevelstart = {
  */
 export const foldmarker = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldmarker") ?? "";
+    const result = await options.get(denops, "foldmarker");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldmarker", value);
@@ -5305,7 +5512,8 @@ export const foldmarker = {
     return options.remove(denops, "foldmarker");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "foldmarker") ?? "";
+    const result = await localOptions.get(denops, "foldmarker");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "foldmarker", value);
@@ -5315,14 +5523,14 @@ export const foldmarker = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&foldmarker");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&foldmarker", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&foldmarker");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&foldmarker", value);
@@ -5344,7 +5552,8 @@ export const foldmarker = {
  */
 export const foldmethod = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldmethod") ?? "";
+    const result = await options.get(denops, "foldmethod");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldmethod", value);
@@ -5353,7 +5562,8 @@ export const foldmethod = {
     return options.remove(denops, "foldmethod");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "foldmethod") ?? "";
+    const result = await localOptions.get(denops, "foldmethod");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "foldmethod", value);
@@ -5363,14 +5573,14 @@ export const foldmethod = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&foldmethod");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&foldmethod", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&foldmethod");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&foldmethod", value);
@@ -5392,7 +5602,8 @@ export const foldmethod = {
  */
 export const foldminlines = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "foldminlines") ?? 0;
+    const result = await options.get(denops, "foldminlines");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "foldminlines", value);
@@ -5401,7 +5612,8 @@ export const foldminlines = {
     return options.remove(denops, "foldminlines");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "foldminlines") ?? 0;
+    const result = await localOptions.get(denops, "foldminlines");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "foldminlines", value);
@@ -5411,14 +5623,14 @@ export const foldminlines = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&foldminlines");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&foldminlines", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&foldminlines");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&foldminlines", value);
@@ -5436,7 +5648,8 @@ export const foldminlines = {
  */
 export const foldnestmax = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "foldnestmax") ?? 0;
+    const result = await options.get(denops, "foldnestmax");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "foldnestmax", value);
@@ -5445,7 +5658,8 @@ export const foldnestmax = {
     return options.remove(denops, "foldnestmax");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "foldnestmax") ?? 0;
+    const result = await localOptions.get(denops, "foldnestmax");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "foldnestmax", value);
@@ -5455,14 +5669,14 @@ export const foldnestmax = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&foldnestmax");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&foldnestmax", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&foldnestmax");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&foldnestmax", value);
@@ -5508,7 +5722,8 @@ export const foldnestmax = {
  */
 export const foldopen = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldopen") ?? "";
+    const result = await options.get(denops, "foldopen");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldopen", value);
@@ -5517,7 +5732,8 @@ export const foldopen = {
     return options.remove(denops, "foldopen");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "foldopen") ?? "";
+    const result = await globalOptions.get(denops, "foldopen");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "foldopen", value);
@@ -5546,7 +5762,8 @@ export const foldopen = {
  */
 export const foldtext = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "foldtext") ?? "";
+    const result = await options.get(denops, "foldtext");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "foldtext", value);
@@ -5555,7 +5772,8 @@ export const foldtext = {
     return options.remove(denops, "foldtext");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "foldtext") ?? "";
+    const result = await localOptions.get(denops, "foldtext");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "foldtext", value);
@@ -5565,14 +5783,14 @@ export const foldtext = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&foldtext");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&foldtext", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&foldtext");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&foldtext", value);
@@ -5628,7 +5846,8 @@ export const foldtext = {
  */
 export const formatexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "formatexpr") ?? "";
+    const result = await options.get(denops, "formatexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "formatexpr", value);
@@ -5637,7 +5856,8 @@ export const formatexpr = {
     return options.remove(denops, "formatexpr");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "formatexpr") ?? "";
+    const result = await localOptions.get(denops, "formatexpr");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "formatexpr", value);
@@ -5647,14 +5867,14 @@ export const formatexpr = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&formatexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&formatexpr", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&formatexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&formatexpr", value);
@@ -5676,7 +5896,8 @@ export const formatexpr = {
  */
 export const formatlistpat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "formatlistpat") ?? "";
+    const result = await options.get(denops, "formatlistpat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "formatlistpat", value);
@@ -5685,7 +5906,8 @@ export const formatlistpat = {
     return options.remove(denops, "formatlistpat");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "formatlistpat") ?? "";
+    const result = await localOptions.get(denops, "formatlistpat");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "formatlistpat", value);
@@ -5695,14 +5917,14 @@ export const formatlistpat = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&formatlistpat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&formatlistpat", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&formatlistpat");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&formatlistpat", value);
@@ -5723,7 +5945,8 @@ export const formatlistpat = {
  */
 export const formatoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "formatoptions") ?? "";
+    const result = await options.get(denops, "formatoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "formatoptions", value);
@@ -5732,7 +5955,8 @@ export const formatoptions = {
     return options.remove(denops, "formatoptions");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "formatoptions") ?? "";
+    const result = await localOptions.get(denops, "formatoptions");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "formatoptions", value);
@@ -5742,14 +5966,14 @@ export const formatoptions = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&formatoptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&formatoptions", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&formatoptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&formatoptions", value);
@@ -5773,7 +5997,8 @@ export const formatoptions = {
  */
 export const formatprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "formatprg") ?? "";
+    const result = await options.get(denops, "formatprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "formatprg", value);
@@ -5782,7 +6007,8 @@ export const formatprg = {
     return options.remove(denops, "formatprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "formatprg") ?? "";
+    const result = await globalOptions.get(denops, "formatprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "formatprg", value);
@@ -5791,7 +6017,8 @@ export const formatprg = {
     return globalOptions.remove(denops, "formatprg");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "formatprg") ?? "";
+    const result = await localOptions.get(denops, "formatprg");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "formatprg", value);
@@ -5801,14 +6028,14 @@ export const formatprg = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&formatprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&formatprg", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&formatprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&formatprg", value);
@@ -5834,7 +6061,8 @@ export const formatprg = {
  */
 export const fsync = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "fsync") ?? false;
+    const result = await options.get(denops, "fsync");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "fsync", value);
@@ -5843,7 +6071,8 @@ export const fsync = {
     return options.remove(denops, "fsync");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "fsync") ?? false;
+    const result = await globalOptions.get(denops, "fsync");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "fsync", value);
@@ -5874,7 +6103,8 @@ export const fsync = {
  */
 export const gdefault = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "gdefault") ?? false;
+    const result = await options.get(denops, "gdefault");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "gdefault", value);
@@ -5883,7 +6113,8 @@ export const gdefault = {
     return options.remove(denops, "gdefault");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "gdefault") ?? false;
+    const result = await globalOptions.get(denops, "gdefault");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "gdefault", value);
@@ -5902,7 +6133,8 @@ export const gdefault = {
  */
 export const grepformat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "grepformat") ?? "";
+    const result = await options.get(denops, "grepformat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "grepformat", value);
@@ -5911,7 +6143,8 @@ export const grepformat = {
     return options.remove(denops, "grepformat");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "grepformat") ?? "";
+    const result = await globalOptions.get(denops, "grepformat");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "grepformat", value);
@@ -5949,7 +6182,8 @@ export const grepformat = {
  */
 export const grepprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "grepprg") ?? "";
+    const result = await options.get(denops, "grepprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "grepprg", value);
@@ -5958,7 +6192,8 @@ export const grepprg = {
     return options.remove(denops, "grepprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "grepprg") ?? "";
+    const result = await globalOptions.get(denops, "grepprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "grepprg", value);
@@ -5967,7 +6202,8 @@ export const grepprg = {
     return globalOptions.remove(denops, "grepprg");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "grepprg") ?? "";
+    const result = await localOptions.get(denops, "grepprg");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "grepprg", value);
@@ -5977,14 +6213,14 @@ export const grepprg = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&grepprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&grepprg", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&grepprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&grepprg", value);
@@ -6079,7 +6315,8 @@ export const grepprg = {
  */
 export const guicursor = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guicursor") ?? "";
+    const result = await options.get(denops, "guicursor");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guicursor", value);
@@ -6088,7 +6325,8 @@ export const guicursor = {
     return options.remove(denops, "guicursor");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guicursor") ?? "";
+    const result = await globalOptions.get(denops, "guicursor");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guicursor", value);
@@ -6109,7 +6347,8 @@ export const guicursor = {
  */
 export const guifont = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guifont") ?? "";
+    const result = await options.get(denops, "guifont");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guifont", value);
@@ -6118,7 +6357,8 @@ export const guifont = {
     return options.remove(denops, "guifont");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guifont") ?? "";
+    const result = await globalOptions.get(denops, "guifont");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guifont", value);
@@ -6139,7 +6379,8 @@ export const guifont = {
  */
 export const guifontwide = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guifontwide") ?? "";
+    const result = await options.get(denops, "guifontwide");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guifontwide", value);
@@ -6148,7 +6389,8 @@ export const guifontwide = {
     return options.remove(denops, "guifontwide");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guifontwide") ?? "";
+    const result = await globalOptions.get(denops, "guifontwide");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guifontwide", value);
@@ -6290,7 +6532,8 @@ export const guifontwide = {
  */
 export const guioptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guioptions") ?? "";
+    const result = await options.get(denops, "guioptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guioptions", value);
@@ -6299,7 +6542,8 @@ export const guioptions = {
     return options.remove(denops, "guioptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guioptions") ?? "";
+    const result = await globalOptions.get(denops, "guioptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guioptions", value);
@@ -6330,7 +6574,8 @@ export const guioptions = {
  */
 export const guitablabel = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guitablabel") ?? "";
+    const result = await options.get(denops, "guitablabel");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guitablabel", value);
@@ -6339,7 +6584,8 @@ export const guitablabel = {
     return options.remove(denops, "guitablabel");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guitablabel") ?? "";
+    const result = await globalOptions.get(denops, "guitablabel");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guitablabel", value);
@@ -6363,7 +6609,8 @@ export const guitablabel = {
  */
 export const guitabtooltip = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "guitabtooltip") ?? "";
+    const result = await options.get(denops, "guitabtooltip");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "guitabtooltip", value);
@@ -6372,7 +6619,8 @@ export const guitabtooltip = {
     return options.remove(denops, "guitabtooltip");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "guitabtooltip") ?? "";
+    const result = await globalOptions.get(denops, "guitabtooltip");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "guitabtooltip", value);
@@ -6398,7 +6646,8 @@ export const guitabtooltip = {
  */
 export const helpfile = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "helpfile") ?? "";
+    const result = await options.get(denops, "helpfile");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "helpfile", value);
@@ -6407,7 +6656,8 @@ export const helpfile = {
     return options.remove(denops, "helpfile");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "helpfile") ?? "";
+    const result = await globalOptions.get(denops, "helpfile");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "helpfile", value);
@@ -6428,7 +6678,8 @@ export const helpfile = {
  */
 export const helpheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "helpheight") ?? 0;
+    const result = await options.get(denops, "helpheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "helpheight", value);
@@ -6437,7 +6688,8 @@ export const helpheight = {
     return options.remove(denops, "helpheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "helpheight") ?? 0;
+    const result = await globalOptions.get(denops, "helpheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "helpheight", value);
@@ -6469,7 +6721,8 @@ export const helpheight = {
  */
 export const helplang = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "helplang") ?? "";
+    const result = await options.get(denops, "helplang");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "helplang", value);
@@ -6478,7 +6731,8 @@ export const helplang = {
     return options.remove(denops, "helplang");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "helplang") ?? "";
+    const result = await globalOptions.get(denops, "helplang");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "helplang", value);
@@ -6509,7 +6763,8 @@ export const helplang = {
  */
 export const hidden = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "hidden") ?? false;
+    const result = await options.get(denops, "hidden");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "hidden", value);
@@ -6518,7 +6773,8 @@ export const hidden = {
     return options.remove(denops, "hidden");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "hidden") ?? false;
+    const result = await globalOptions.get(denops, "hidden");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "hidden", value);
@@ -6541,7 +6797,8 @@ export const hidden = {
  */
 export const history = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "history") ?? 0;
+    const result = await options.get(denops, "history");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "history", value);
@@ -6550,7 +6807,8 @@ export const history = {
     return options.remove(denops, "history");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "history") ?? 0;
+    const result = await globalOptions.get(denops, "history");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "history", value);
@@ -6572,7 +6830,8 @@ export const history = {
  */
 export const hkmap = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "hkmap") ?? false;
+    const result = await options.get(denops, "hkmap");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "hkmap", value);
@@ -6581,7 +6840,8 @@ export const hkmap = {
     return options.remove(denops, "hkmap");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "hkmap") ?? false;
+    const result = await globalOptions.get(denops, "hkmap");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "hkmap", value);
@@ -6603,7 +6863,8 @@ export const hkmap = {
  */
 export const hkmapp = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "hkmapp") ?? false;
+    const result = await options.get(denops, "hkmapp");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "hkmapp", value);
@@ -6612,7 +6873,8 @@ export const hkmapp = {
     return options.remove(denops, "hkmapp");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "hkmapp") ?? false;
+    const result = await globalOptions.get(denops, "hkmapp");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "hkmapp", value);
@@ -6649,7 +6911,8 @@ export const hkmapp = {
  */
 export const hlsearch = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "hlsearch") ?? false;
+    const result = await options.get(denops, "hlsearch");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "hlsearch", value);
@@ -6658,7 +6921,8 @@ export const hlsearch = {
     return options.remove(denops, "hlsearch");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "hlsearch") ?? false;
+    const result = await globalOptions.get(denops, "hlsearch");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "hlsearch", value);
@@ -6686,7 +6950,8 @@ export const hlsearch = {
  */
 export const icon = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "icon") ?? false;
+    const result = await options.get(denops, "icon");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "icon", value);
@@ -6695,7 +6960,8 @@ export const icon = {
     return options.remove(denops, "icon");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "icon") ?? false;
+    const result = await globalOptions.get(denops, "icon");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "icon", value);
@@ -6723,7 +6989,8 @@ export const icon = {
  */
 export const iconstring = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "iconstring") ?? "";
+    const result = await options.get(denops, "iconstring");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "iconstring", value);
@@ -6732,7 +6999,8 @@ export const iconstring = {
     return options.remove(denops, "iconstring");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "iconstring") ?? "";
+    const result = await globalOptions.get(denops, "iconstring");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "iconstring", value);
@@ -6753,7 +7021,8 @@ export const iconstring = {
  */
 export const ignorecase = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "ignorecase") ?? false;
+    const result = await options.get(denops, "ignorecase");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "ignorecase", value);
@@ -6762,7 +7031,8 @@ export const ignorecase = {
     return options.remove(denops, "ignorecase");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "ignorecase") ?? false;
+    const result = await globalOptions.get(denops, "ignorecase");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "ignorecase", value);
@@ -6783,7 +7053,8 @@ export const ignorecase = {
  */
 export const imcmdline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "imcmdline") ?? false;
+    const result = await options.get(denops, "imcmdline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "imcmdline", value);
@@ -6792,7 +7063,8 @@ export const imcmdline = {
     return options.remove(denops, "imcmdline");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "imcmdline") ?? false;
+    const result = await globalOptions.get(denops, "imcmdline");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "imcmdline", value);
@@ -6812,7 +7084,8 @@ export const imcmdline = {
  */
 export const imdisable = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "imdisable") ?? false;
+    const result = await options.get(denops, "imdisable");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "imdisable", value);
@@ -6821,7 +7094,8 @@ export const imdisable = {
     return options.remove(denops, "imdisable");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "imdisable") ?? false;
+    const result = await globalOptions.get(denops, "imdisable");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "imdisable", value);
@@ -6859,7 +7133,8 @@ export const imdisable = {
  */
 export const iminsert = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "iminsert") ?? 0;
+    const result = await options.get(denops, "iminsert");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "iminsert", value);
@@ -6868,7 +7143,8 @@ export const iminsert = {
     return options.remove(denops, "iminsert");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "iminsert") ?? 0;
+    const result = await localOptions.get(denops, "iminsert");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "iminsert", value);
@@ -6878,14 +7154,14 @@ export const iminsert = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&iminsert");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&iminsert", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&iminsert");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&iminsert", value);
@@ -6911,7 +7187,8 @@ export const iminsert = {
  */
 export const imsearch = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "imsearch") ?? 0;
+    const result = await options.get(denops, "imsearch");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "imsearch", value);
@@ -6920,7 +7197,8 @@ export const imsearch = {
     return options.remove(denops, "imsearch");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "imsearch") ?? 0;
+    const result = await localOptions.get(denops, "imsearch");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "imsearch", value);
@@ -6930,14 +7208,14 @@ export const imsearch = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&imsearch");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&imsearch", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&imsearch");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&imsearch", value);
@@ -6963,7 +7241,8 @@ export const imsearch = {
  */
 export const include = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "include") ?? "";
+    const result = await options.get(denops, "include");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "include", value);
@@ -6972,7 +7251,8 @@ export const include = {
     return options.remove(denops, "include");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "include") ?? "";
+    const result = await globalOptions.get(denops, "include");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "include", value);
@@ -6981,7 +7261,8 @@ export const include = {
     return globalOptions.remove(denops, "include");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "include") ?? "";
+    const result = await localOptions.get(denops, "include");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "include", value);
@@ -6991,14 +7272,14 @@ export const include = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&include");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&include", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&include");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&include", value);
@@ -7039,7 +7320,8 @@ export const include = {
  */
 export const includeexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "includeexpr") ?? "";
+    const result = await options.get(denops, "includeexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "includeexpr", value);
@@ -7048,7 +7330,8 @@ export const includeexpr = {
     return options.remove(denops, "includeexpr");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "includeexpr") ?? "";
+    const result = await localOptions.get(denops, "includeexpr");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "includeexpr", value);
@@ -7058,14 +7341,14 @@ export const includeexpr = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&includeexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&includeexpr", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&includeexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&includeexpr", value);
@@ -7128,7 +7411,8 @@ export const includeexpr = {
  */
 export const incsearch = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "incsearch") ?? false;
+    const result = await options.get(denops, "incsearch");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "incsearch", value);
@@ -7137,7 +7421,8 @@ export const incsearch = {
     return options.remove(denops, "incsearch");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "incsearch") ?? false;
+    const result = await globalOptions.get(denops, "incsearch");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "incsearch", value);
@@ -7198,7 +7483,8 @@ export const incsearch = {
  */
 export const indentexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "indentexpr") ?? "";
+    const result = await options.get(denops, "indentexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "indentexpr", value);
@@ -7207,7 +7493,8 @@ export const indentexpr = {
     return options.remove(denops, "indentexpr");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "indentexpr") ?? "";
+    const result = await localOptions.get(denops, "indentexpr");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "indentexpr", value);
@@ -7217,14 +7504,14 @@ export const indentexpr = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&indentexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&indentexpr", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&indentexpr");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&indentexpr", value);
@@ -7241,7 +7528,8 @@ export const indentexpr = {
  */
 export const indentkeys = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "indentkeys") ?? "";
+    const result = await options.get(denops, "indentkeys");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "indentkeys", value);
@@ -7250,7 +7538,8 @@ export const indentkeys = {
     return options.remove(denops, "indentkeys");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "indentkeys") ?? "";
+    const result = await localOptions.get(denops, "indentkeys");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "indentkeys", value);
@@ -7260,14 +7549,14 @@ export const indentkeys = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&indentkeys");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&indentkeys", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&indentkeys");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&indentkeys", value);
@@ -7288,7 +7577,8 @@ export const indentkeys = {
  */
 export const infercase = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "infercase") ?? false;
+    const result = await options.get(denops, "infercase");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "infercase", value);
@@ -7297,7 +7587,8 @@ export const infercase = {
     return options.remove(denops, "infercase");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "infercase") ?? false;
+    const result = await localOptions.get(denops, "infercase");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "infercase", value);
@@ -7307,14 +7598,14 @@ export const infercase = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&infercase");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&infercase", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&infercase");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&infercase", value);
@@ -7377,7 +7668,8 @@ export const infercase = {
  */
 export const isfname = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "isfname") ?? "";
+    const result = await options.get(denops, "isfname");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "isfname", value);
@@ -7386,7 +7678,8 @@ export const isfname = {
     return options.remove(denops, "isfname");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "isfname") ?? "";
+    const result = await globalOptions.get(denops, "isfname");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "isfname", value);
@@ -7412,7 +7705,8 @@ export const isfname = {
  */
 export const isident = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "isident") ?? "";
+    const result = await options.get(denops, "isident");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "isident", value);
@@ -7421,7 +7715,8 @@ export const isident = {
     return options.remove(denops, "isident");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "isident") ?? "";
+    const result = await globalOptions.get(denops, "isident");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "isident", value);
@@ -7454,7 +7749,8 @@ export const isident = {
  */
 export const iskeyword = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "iskeyword") ?? "";
+    const result = await options.get(denops, "iskeyword");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "iskeyword", value);
@@ -7463,7 +7759,8 @@ export const iskeyword = {
     return options.remove(denops, "iskeyword");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "iskeyword") ?? "";
+    const result = await localOptions.get(denops, "iskeyword");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "iskeyword", value);
@@ -7473,14 +7770,14 @@ export const iskeyword = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&iskeyword");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&iskeyword", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&iskeyword");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&iskeyword", value);
@@ -7520,7 +7817,8 @@ export const iskeyword = {
  */
 export const isprint = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "isprint") ?? "";
+    const result = await options.get(denops, "isprint");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "isprint", value);
@@ -7529,7 +7827,8 @@ export const isprint = {
     return options.remove(denops, "isprint");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "isprint") ?? "";
+    const result = await globalOptions.get(denops, "isprint");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "isprint", value);
@@ -7549,7 +7848,8 @@ export const isprint = {
  */
 export const joinspaces = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "joinspaces") ?? false;
+    const result = await options.get(denops, "joinspaces");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "joinspaces", value);
@@ -7558,7 +7858,8 @@ export const joinspaces = {
     return options.remove(denops, "joinspaces");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "joinspaces") ?? false;
+    const result = await globalOptions.get(denops, "joinspaces");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "joinspaces", value);
@@ -7581,7 +7882,8 @@ export const joinspaces = {
  */
 export const keymap = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "keymap") ?? "";
+    const result = await options.get(denops, "keymap");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "keymap", value);
@@ -7590,7 +7892,8 @@ export const keymap = {
     return options.remove(denops, "keymap");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "keymap") ?? "";
+    const result = await localOptions.get(denops, "keymap");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "keymap", value);
@@ -7600,14 +7903,14 @@ export const keymap = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&keymap");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&keymap", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&keymap");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&keymap", value);
@@ -7629,7 +7932,8 @@ export const keymap = {
  */
 export const keymodel = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "keymodel") ?? "";
+    const result = await options.get(denops, "keymodel");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "keymodel", value);
@@ -7638,7 +7942,8 @@ export const keymodel = {
     return options.remove(denops, "keymodel");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "keymodel") ?? "";
+    const result = await globalOptions.get(denops, "keymodel");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "keymodel", value);
@@ -7671,7 +7976,8 @@ export const keymodel = {
  */
 export const keywordprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "keywordprg") ?? "";
+    const result = await options.get(denops, "keywordprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "keywordprg", value);
@@ -7680,7 +7986,8 @@ export const keywordprg = {
     return options.remove(denops, "keywordprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "keywordprg") ?? "";
+    const result = await globalOptions.get(denops, "keywordprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "keywordprg", value);
@@ -7689,7 +7996,8 @@ export const keywordprg = {
     return globalOptions.remove(denops, "keywordprg");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "keywordprg") ?? "";
+    const result = await localOptions.get(denops, "keywordprg");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "keywordprg", value);
@@ -7699,14 +8007,14 @@ export const keywordprg = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&keywordprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&keywordprg", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&keywordprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&keywordprg", value);
@@ -7763,7 +8071,8 @@ export const keywordprg = {
  */
 export const langmap = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "langmap") ?? "";
+    const result = await options.get(denops, "langmap");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "langmap", value);
@@ -7772,7 +8081,8 @@ export const langmap = {
     return options.remove(denops, "langmap");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "langmap") ?? "";
+    const result = await globalOptions.get(denops, "langmap");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "langmap", value);
@@ -7816,7 +8126,8 @@ export const langmap = {
  */
 export const langmenu = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "langmenu") ?? "";
+    const result = await options.get(denops, "langmenu");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "langmenu", value);
@@ -7825,7 +8136,8 @@ export const langmenu = {
     return options.remove(denops, "langmenu");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "langmenu") ?? "";
+    const result = await globalOptions.get(denops, "langmenu");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "langmenu", value);
@@ -7848,7 +8160,8 @@ export const langmenu = {
  */
 export const langremap = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "langremap") ?? false;
+    const result = await options.get(denops, "langremap");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "langremap", value);
@@ -7857,7 +8170,8 @@ export const langremap = {
     return options.remove(denops, "langremap");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "langremap") ?? false;
+    const result = await globalOptions.get(denops, "langremap");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "langremap", value);
@@ -7880,7 +8194,8 @@ export const langremap = {
  */
 export const laststatus = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "laststatus") ?? 0;
+    const result = await options.get(denops, "laststatus");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "laststatus", value);
@@ -7889,7 +8204,8 @@ export const laststatus = {
     return options.remove(denops, "laststatus");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "laststatus") ?? 0;
+    const result = await globalOptions.get(denops, "laststatus");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "laststatus", value);
@@ -7912,7 +8228,8 @@ export const laststatus = {
  */
 export const lazyredraw = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "lazyredraw") ?? false;
+    const result = await options.get(denops, "lazyredraw");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "lazyredraw", value);
@@ -7921,7 +8238,8 @@ export const lazyredraw = {
     return options.remove(denops, "lazyredraw");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "lazyredraw") ?? false;
+    const result = await globalOptions.get(denops, "lazyredraw");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "lazyredraw", value);
@@ -7948,7 +8266,8 @@ export const lazyredraw = {
  */
 export const linebreak = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "linebreak") ?? false;
+    const result = await options.get(denops, "linebreak");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "linebreak", value);
@@ -7957,7 +8276,8 @@ export const linebreak = {
     return options.remove(denops, "linebreak");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "linebreak") ?? false;
+    const result = await localOptions.get(denops, "linebreak");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "linebreak", value);
@@ -7967,14 +8287,14 @@ export const linebreak = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&linebreak");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&linebreak", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&linebreak");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&linebreak", value);
@@ -8002,7 +8322,8 @@ export const linebreak = {
  */
 export const lines = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "lines") ?? 0;
+    const result = await options.get(denops, "lines");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "lines", value);
@@ -8011,7 +8332,8 @@ export const lines = {
     return options.remove(denops, "lines");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "lines") ?? 0;
+    const result = await globalOptions.get(denops, "lines");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "lines", value);
@@ -8036,7 +8358,8 @@ export const lines = {
  */
 export const linespace = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "linespace") ?? 0;
+    const result = await options.get(denops, "linespace");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "linespace", value);
@@ -8045,7 +8368,8 @@ export const linespace = {
     return options.remove(denops, "linespace");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "linespace") ?? 0;
+    const result = await globalOptions.get(denops, "linespace");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "linespace", value);
@@ -8070,7 +8394,8 @@ export const linespace = {
  */
 export const lisp = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "lisp") ?? false;
+    const result = await options.get(denops, "lisp");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "lisp", value);
@@ -8079,7 +8404,8 @@ export const lisp = {
     return options.remove(denops, "lisp");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "lisp") ?? false;
+    const result = await localOptions.get(denops, "lisp");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "lisp", value);
@@ -8089,14 +8415,14 @@ export const lisp = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&lisp");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&lisp", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&lisp");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&lisp", value);
@@ -8111,7 +8437,8 @@ export const lisp = {
  */
 export const lispwords = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "lispwords") ?? "";
+    const result = await options.get(denops, "lispwords");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "lispwords", value);
@@ -8120,7 +8447,8 @@ export const lispwords = {
     return options.remove(denops, "lispwords");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "lispwords") ?? "";
+    const result = await globalOptions.get(denops, "lispwords");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "lispwords", value);
@@ -8129,7 +8457,8 @@ export const lispwords = {
     return globalOptions.remove(denops, "lispwords");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "lispwords") ?? "";
+    const result = await localOptions.get(denops, "lispwords");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "lispwords", value);
@@ -8139,14 +8468,14 @@ export const lispwords = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&lispwords");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&lispwords", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&lispwords");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&lispwords", value);
@@ -8173,7 +8502,8 @@ export const lispwords = {
  */
 export const list = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "list") ?? false;
+    const result = await options.get(denops, "list");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "list", value);
@@ -8182,7 +8512,8 @@ export const list = {
     return options.remove(denops, "list");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "list") ?? false;
+    const result = await localOptions.get(denops, "list");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "list", value);
@@ -8192,14 +8523,14 @@ export const list = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&list");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&list", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&list");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&list", value);
@@ -8310,7 +8641,8 @@ export const list = {
  */
 export const listchars = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "listchars") ?? "";
+    const result = await options.get(denops, "listchars");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "listchars", value);
@@ -8319,7 +8651,8 @@ export const listchars = {
     return options.remove(denops, "listchars");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "listchars") ?? "";
+    const result = await globalOptions.get(denops, "listchars");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "listchars", value);
@@ -8328,7 +8661,8 @@ export const listchars = {
     return globalOptions.remove(denops, "listchars");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "listchars") ?? "";
+    const result = await localOptions.get(denops, "listchars");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "listchars", value);
@@ -8338,14 +8672,14 @@ export const listchars = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&listchars");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&listchars", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&listchars");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&listchars", value);
@@ -8363,7 +8697,8 @@ export const listchars = {
  */
 export const loadplugins = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "loadplugins") ?? false;
+    const result = await options.get(denops, "loadplugins");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "loadplugins", value);
@@ -8372,7 +8707,8 @@ export const loadplugins = {
     return options.remove(denops, "loadplugins");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "loadplugins") ?? false;
+    const result = await globalOptions.get(denops, "loadplugins");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "loadplugins", value);
@@ -8397,7 +8733,8 @@ export const loadplugins = {
  */
 export const magic = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "magic") ?? false;
+    const result = await options.get(denops, "magic");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "magic", value);
@@ -8406,7 +8743,8 @@ export const magic = {
     return options.remove(denops, "magic");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "magic") ?? false;
+    const result = await globalOptions.get(denops, "magic");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "magic", value);
@@ -8435,7 +8773,8 @@ export const magic = {
  */
 export const makeef = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "makeef") ?? "";
+    const result = await options.get(denops, "makeef");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "makeef", value);
@@ -8444,7 +8783,8 @@ export const makeef = {
     return options.remove(denops, "makeef");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "makeef") ?? "";
+    const result = await globalOptions.get(denops, "makeef");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "makeef", value);
@@ -8473,7 +8813,8 @@ export const makeef = {
  */
 export const makeencoding = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "makeencoding") ?? "";
+    const result = await options.get(denops, "makeencoding");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "makeencoding", value);
@@ -8482,7 +8823,8 @@ export const makeencoding = {
     return options.remove(denops, "makeencoding");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "makeencoding") ?? "";
+    const result = await globalOptions.get(denops, "makeencoding");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "makeencoding", value);
@@ -8491,7 +8833,8 @@ export const makeencoding = {
     return globalOptions.remove(denops, "makeencoding");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "makeencoding") ?? "";
+    const result = await localOptions.get(denops, "makeencoding");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "makeencoding", value);
@@ -8501,14 +8844,14 @@ export const makeencoding = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&makeencoding");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&makeencoding", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&makeencoding");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&makeencoding", value);
@@ -8540,7 +8883,8 @@ export const makeencoding = {
  */
 export const makeprg = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "makeprg") ?? "";
+    const result = await options.get(denops, "makeprg");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "makeprg", value);
@@ -8549,7 +8893,8 @@ export const makeprg = {
     return options.remove(denops, "makeprg");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "makeprg") ?? "";
+    const result = await globalOptions.get(denops, "makeprg");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "makeprg", value);
@@ -8558,7 +8903,8 @@ export const makeprg = {
     return globalOptions.remove(denops, "makeprg");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "makeprg") ?? "";
+    const result = await localOptions.get(denops, "makeprg");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "makeprg", value);
@@ -8568,14 +8914,14 @@ export const makeprg = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&makeprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&makeprg", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&makeprg");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&makeprg", value);
@@ -8605,7 +8951,8 @@ export const makeprg = {
  */
 export const matchpairs = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "matchpairs") ?? "";
+    const result = await options.get(denops, "matchpairs");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "matchpairs", value);
@@ -8614,7 +8961,8 @@ export const matchpairs = {
     return options.remove(denops, "matchpairs");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "matchpairs") ?? "";
+    const result = await localOptions.get(denops, "matchpairs");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "matchpairs", value);
@@ -8624,14 +8972,14 @@ export const matchpairs = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&matchpairs");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&matchpairs", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&matchpairs");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&matchpairs", value);
@@ -8647,7 +8995,8 @@ export const matchpairs = {
  */
 export const matchtime = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "matchtime") ?? 0;
+    const result = await options.get(denops, "matchtime");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "matchtime", value);
@@ -8656,7 +9005,8 @@ export const matchtime = {
     return options.remove(denops, "matchtime");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "matchtime") ?? 0;
+    const result = await globalOptions.get(denops, "matchtime");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "matchtime", value);
@@ -8681,7 +9031,8 @@ export const matchtime = {
  */
 export const maxfuncdepth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "maxfuncdepth") ?? 0;
+    const result = await options.get(denops, "maxfuncdepth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "maxfuncdepth", value);
@@ -8690,7 +9041,8 @@ export const maxfuncdepth = {
     return options.remove(denops, "maxfuncdepth");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "maxfuncdepth") ?? 0;
+    const result = await globalOptions.get(denops, "maxfuncdepth");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "maxfuncdepth", value);
@@ -8711,7 +9063,8 @@ export const maxfuncdepth = {
  */
 export const maxmapdepth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "maxmapdepth") ?? 0;
+    const result = await options.get(denops, "maxmapdepth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "maxmapdepth", value);
@@ -8720,7 +9073,8 @@ export const maxmapdepth = {
     return options.remove(denops, "maxmapdepth");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "maxmapdepth") ?? 0;
+    const result = await globalOptions.get(denops, "maxmapdepth");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "maxmapdepth", value);
@@ -8748,7 +9102,8 @@ export const maxmapdepth = {
  */
 export const maxmempattern = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "maxmempattern") ?? 0;
+    const result = await options.get(denops, "maxmempattern");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "maxmempattern", value);
@@ -8757,7 +9112,8 @@ export const maxmempattern = {
     return options.remove(denops, "maxmempattern");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "maxmempattern") ?? 0;
+    const result = await globalOptions.get(denops, "maxmempattern");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "maxmempattern", value);
@@ -8778,7 +9134,8 @@ export const maxmempattern = {
  */
 export const menuitems = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "menuitems") ?? 0;
+    const result = await options.get(denops, "menuitems");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "menuitems", value);
@@ -8787,7 +9144,8 @@ export const menuitems = {
     return options.remove(denops, "menuitems");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "menuitems") ?? 0;
+    const result = await globalOptions.get(denops, "menuitems");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "menuitems", value);
@@ -8841,7 +9199,8 @@ export const menuitems = {
  */
 export const mkspellmem = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "mkspellmem") ?? "";
+    const result = await options.get(denops, "mkspellmem");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "mkspellmem", value);
@@ -8850,7 +9209,8 @@ export const mkspellmem = {
     return options.remove(denops, "mkspellmem");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "mkspellmem") ?? "";
+    const result = await globalOptions.get(denops, "mkspellmem");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "mkspellmem", value);
@@ -8870,7 +9230,8 @@ export const mkspellmem = {
  */
 export const modeline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "modeline") ?? false;
+    const result = await options.get(denops, "modeline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "modeline", value);
@@ -8879,7 +9240,8 @@ export const modeline = {
     return options.remove(denops, "modeline");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "modeline") ?? false;
+    const result = await localOptions.get(denops, "modeline");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "modeline", value);
@@ -8889,14 +9251,14 @@ export const modeline = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&modeline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&modeline", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&modeline");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&modeline", value);
@@ -8914,7 +9276,8 @@ export const modeline = {
  */
 export const modelineexpr = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "modelineexpr") ?? false;
+    const result = await options.get(denops, "modelineexpr");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "modelineexpr", value);
@@ -8923,7 +9286,8 @@ export const modelineexpr = {
     return options.remove(denops, "modelineexpr");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "modelineexpr") ?? false;
+    const result = await globalOptions.get(denops, "modelineexpr");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "modelineexpr", value);
@@ -8944,7 +9308,8 @@ export const modelineexpr = {
  */
 export const modelines = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "modelines") ?? 0;
+    const result = await options.get(denops, "modelines");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "modelines", value);
@@ -8953,7 +9318,8 @@ export const modelines = {
     return options.remove(denops, "modelines");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "modelines") ?? 0;
+    const result = await globalOptions.get(denops, "modelines");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "modelines", value);
@@ -8972,7 +9338,8 @@ export const modelines = {
  */
 export const modifiable = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "modifiable") ?? false;
+    const result = await options.get(denops, "modifiable");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "modifiable", value);
@@ -8981,7 +9348,8 @@ export const modifiable = {
     return options.remove(denops, "modifiable");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "modifiable") ?? false;
+    const result = await localOptions.get(denops, "modifiable");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "modifiable", value);
@@ -8991,14 +9359,14 @@ export const modifiable = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&modifiable");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&modifiable", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&modifiable");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&modifiable", value);
@@ -9032,7 +9400,8 @@ export const modifiable = {
  */
 export const modified = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "modified") ?? false;
+    const result = await options.get(denops, "modified");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "modified", value);
@@ -9041,7 +9410,8 @@ export const modified = {
     return options.remove(denops, "modified");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "modified") ?? false;
+    const result = await localOptions.get(denops, "modified");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "modified", value);
@@ -9051,14 +9421,14 @@ export const modified = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&modified");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&modified", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&modified");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&modified", value);
@@ -9076,7 +9446,8 @@ export const modified = {
  */
 export const more = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "more") ?? false;
+    const result = await options.get(denops, "more");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "more", value);
@@ -9085,7 +9456,8 @@ export const more = {
     return options.remove(denops, "more");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "more") ?? false;
+    const result = await globalOptions.get(denops, "more");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "more", value);
@@ -9136,7 +9508,8 @@ export const more = {
  */
 export const mouse = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "mouse") ?? "";
+    const result = await options.get(denops, "mouse");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "mouse", value);
@@ -9145,7 +9518,8 @@ export const mouse = {
     return options.remove(denops, "mouse");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "mouse") ?? "";
+    const result = await globalOptions.get(denops, "mouse");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "mouse", value);
@@ -9170,7 +9544,8 @@ export const mouse = {
  */
 export const mousefocus = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "mousefocus") ?? false;
+    const result = await options.get(denops, "mousefocus");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "mousefocus", value);
@@ -9179,7 +9554,8 @@ export const mousefocus = {
     return options.remove(denops, "mousefocus");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "mousefocus") ?? false;
+    const result = await globalOptions.get(denops, "mousefocus");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "mousefocus", value);
@@ -9199,7 +9575,8 @@ export const mousefocus = {
  */
 export const mousehide = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "mousehide") ?? false;
+    const result = await options.get(denops, "mousehide");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "mousehide", value);
@@ -9208,7 +9585,8 @@ export const mousehide = {
     return options.remove(denops, "mousehide");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "mousehide") ?? false;
+    const result = await globalOptions.get(denops, "mousehide");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "mousehide", value);
@@ -9255,7 +9633,8 @@ export const mousehide = {
  */
 export const mousemodel = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "mousemodel") ?? "";
+    const result = await options.get(denops, "mousemodel");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "mousemodel", value);
@@ -9264,7 +9643,8 @@ export const mousemodel = {
     return options.remove(denops, "mousemodel");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "mousemodel") ?? "";
+    const result = await globalOptions.get(denops, "mousemodel");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "mousemodel", value);
@@ -9289,7 +9669,8 @@ export const mousemodel = {
  */
 export const mousemoveevent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "mousemoveevent") ?? false;
+    const result = await options.get(denops, "mousemoveevent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "mousemoveevent", value);
@@ -9298,7 +9679,8 @@ export const mousemoveevent = {
     return options.remove(denops, "mousemoveevent");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "mousemoveevent") ?? false;
+    const result = await globalOptions.get(denops, "mousemoveevent");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "mousemoveevent", value);
@@ -9378,7 +9760,8 @@ export const mousemoveevent = {
  */
 export const mouseshape = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "mouseshape") ?? "";
+    const result = await options.get(denops, "mouseshape");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "mouseshape", value);
@@ -9387,7 +9770,8 @@ export const mouseshape = {
     return options.remove(denops, "mouseshape");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "mouseshape") ?? "";
+    const result = await globalOptions.get(denops, "mouseshape");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "mouseshape", value);
@@ -9406,7 +9790,8 @@ export const mouseshape = {
  */
 export const mousetime = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "mousetime") ?? 0;
+    const result = await options.get(denops, "mousetime");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "mousetime", value);
@@ -9415,7 +9800,8 @@ export const mousetime = {
     return options.remove(denops, "mousetime");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "mousetime") ?? 0;
+    const result = await globalOptions.get(denops, "mousetime");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "mousetime", value);
@@ -9458,7 +9844,8 @@ export const mousetime = {
  */
 export const nrformats = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "nrformats") ?? "";
+    const result = await options.get(denops, "nrformats");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "nrformats", value);
@@ -9467,7 +9854,8 @@ export const nrformats = {
     return options.remove(denops, "nrformats");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "nrformats") ?? "";
+    const result = await localOptions.get(denops, "nrformats");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "nrformats", value);
@@ -9477,14 +9865,14 @@ export const nrformats = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&nrformats");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&nrformats", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&nrformats");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&nrformats", value);
@@ -9518,7 +9906,8 @@ export const nrformats = {
  */
 export const number = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "number") ?? false;
+    const result = await options.get(denops, "number");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "number", value);
@@ -9527,7 +9916,8 @@ export const number = {
     return options.remove(denops, "number");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "number") ?? false;
+    const result = await localOptions.get(denops, "number");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "number", value);
@@ -9537,14 +9927,14 @@ export const number = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&number");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&number", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&number");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&number", value);
@@ -9571,7 +9961,8 @@ export const number = {
  */
 export const numberwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "numberwidth") ?? 0;
+    const result = await options.get(denops, "numberwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "numberwidth", value);
@@ -9580,7 +9971,8 @@ export const numberwidth = {
     return options.remove(denops, "numberwidth");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "numberwidth") ?? 0;
+    const result = await localOptions.get(denops, "numberwidth");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "numberwidth", value);
@@ -9590,14 +9982,14 @@ export const numberwidth = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&numberwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&numberwidth", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&numberwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&numberwidth", value);
@@ -9622,7 +10014,8 @@ export const numberwidth = {
  */
 export const omnifunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "omnifunc") ?? "";
+    const result = await options.get(denops, "omnifunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "omnifunc", value);
@@ -9631,7 +10024,8 @@ export const omnifunc = {
     return options.remove(denops, "omnifunc");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "omnifunc") ?? "";
+    const result = await localOptions.get(denops, "omnifunc");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "omnifunc", value);
@@ -9641,14 +10035,14 @@ export const omnifunc = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&omnifunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&omnifunc", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&omnifunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&omnifunc", value);
@@ -9667,7 +10061,8 @@ export const omnifunc = {
  */
 export const opendevice = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "opendevice") ?? false;
+    const result = await options.get(denops, "opendevice");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "opendevice", value);
@@ -9676,7 +10071,8 @@ export const opendevice = {
     return options.remove(denops, "opendevice");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "opendevice") ?? false;
+    const result = await globalOptions.get(denops, "opendevice");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "opendevice", value);
@@ -9699,7 +10095,8 @@ export const opendevice = {
  */
 export const operatorfunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "operatorfunc") ?? "";
+    const result = await options.get(denops, "operatorfunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "operatorfunc", value);
@@ -9708,7 +10105,8 @@ export const operatorfunc = {
     return options.remove(denops, "operatorfunc");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "operatorfunc") ?? "";
+    const result = await globalOptions.get(denops, "operatorfunc");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "operatorfunc", value);
@@ -9725,7 +10123,8 @@ export const operatorfunc = {
  */
 export const packpath = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "packpath") ?? "";
+    const result = await options.get(denops, "packpath");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "packpath", value);
@@ -9734,7 +10133,8 @@ export const packpath = {
     return options.remove(denops, "packpath");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "packpath") ?? "";
+    const result = await globalOptions.get(denops, "packpath");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "packpath", value);
@@ -9752,7 +10152,8 @@ export const packpath = {
  */
 export const paragraphs = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "paragraphs") ?? "";
+    const result = await options.get(denops, "paragraphs");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "paragraphs", value);
@@ -9761,7 +10162,8 @@ export const paragraphs = {
     return options.remove(denops, "paragraphs");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "paragraphs") ?? "";
+    const result = await globalOptions.get(denops, "paragraphs");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "paragraphs", value);
@@ -9818,7 +10220,8 @@ export const paragraphs = {
  */
 export const paste = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "paste") ?? false;
+    const result = await options.get(denops, "paste");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "paste", value);
@@ -9827,7 +10230,8 @@ export const paste = {
     return options.remove(denops, "paste");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "paste") ?? false;
+    const result = await globalOptions.get(denops, "paste");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "paste", value);
@@ -9867,7 +10271,8 @@ export const paste = {
  */
 export const pastetoggle = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "pastetoggle") ?? "";
+    const result = await options.get(denops, "pastetoggle");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "pastetoggle", value);
@@ -9876,7 +10281,8 @@ export const pastetoggle = {
     return options.remove(denops, "pastetoggle");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "pastetoggle") ?? "";
+    const result = await globalOptions.get(denops, "pastetoggle");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "pastetoggle", value);
@@ -9896,7 +10302,8 @@ export const pastetoggle = {
  */
 export const patchexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "patchexpr") ?? "";
+    const result = await options.get(denops, "patchexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "patchexpr", value);
@@ -9905,7 +10312,8 @@ export const patchexpr = {
     return options.remove(denops, "patchexpr");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "patchexpr") ?? "";
+    const result = await globalOptions.get(denops, "patchexpr");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "patchexpr", value);
@@ -9937,7 +10345,8 @@ export const patchexpr = {
  */
 export const patchmode = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "patchmode") ?? "";
+    const result = await options.get(denops, "patchmode");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "patchmode", value);
@@ -9946,7 +10355,8 @@ export const patchmode = {
     return options.remove(denops, "patchmode");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "patchmode") ?? "";
+    const result = await globalOptions.get(denops, "patchmode");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "patchmode", value);
@@ -10030,7 +10440,8 @@ export const patchmode = {
  */
 export const path = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "path") ?? "";
+    const result = await options.get(denops, "path");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "path", value);
@@ -10039,7 +10450,8 @@ export const path = {
     return options.remove(denops, "path");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "path") ?? "";
+    const result = await globalOptions.get(denops, "path");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "path", value);
@@ -10048,7 +10460,8 @@ export const path = {
     return globalOptions.remove(denops, "path");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "path") ?? "";
+    const result = await localOptions.get(denops, "path");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "path", value);
@@ -10058,14 +10471,14 @@ export const path = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&path");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&path", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&path");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&path", value);
@@ -10091,7 +10504,8 @@ export const path = {
  */
 export const preserveindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "preserveindent") ?? false;
+    const result = await options.get(denops, "preserveindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "preserveindent", value);
@@ -10100,7 +10514,8 @@ export const preserveindent = {
     return options.remove(denops, "preserveindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "preserveindent") ?? false;
+    const result = await localOptions.get(denops, "preserveindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "preserveindent", value);
@@ -10110,14 +10525,14 @@ export const preserveindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&preserveindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&preserveindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&preserveindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&preserveindent", value);
@@ -10135,7 +10550,8 @@ export const preserveindent = {
  */
 export const previewheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "previewheight") ?? 0;
+    const result = await options.get(denops, "previewheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "previewheight", value);
@@ -10144,7 +10560,8 @@ export const previewheight = {
     return options.remove(denops, "previewheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "previewheight") ?? 0;
+    const result = await globalOptions.get(denops, "previewheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "previewheight", value);
@@ -10165,7 +10582,8 @@ export const previewheight = {
  */
 export const previewwindow = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "previewwindow") ?? false;
+    const result = await options.get(denops, "previewwindow");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "previewwindow", value);
@@ -10174,7 +10592,8 @@ export const previewwindow = {
     return options.remove(denops, "previewwindow");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "previewwindow") ?? false;
+    const result = await localOptions.get(denops, "previewwindow");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "previewwindow", value);
@@ -10184,14 +10603,14 @@ export const previewwindow = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&previewwindow");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&previewwindow", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&previewwindow");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&previewwindow", value);
@@ -10210,7 +10629,8 @@ export const previewwindow = {
  */
 export const printdevice = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printdevice") ?? "";
+    const result = await options.get(denops, "printdevice");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printdevice", value);
@@ -10219,7 +10639,8 @@ export const printdevice = {
     return options.remove(denops, "printdevice");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printdevice") ?? "";
+    const result = await globalOptions.get(denops, "printdevice");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printdevice", value);
@@ -10239,7 +10660,8 @@ export const printdevice = {
  */
 export const printencoding = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printencoding") ?? "";
+    const result = await options.get(denops, "printencoding");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printencoding", value);
@@ -10248,7 +10670,8 @@ export const printencoding = {
     return options.remove(denops, "printencoding");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printencoding") ?? "";
+    const result = await globalOptions.get(denops, "printencoding");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printencoding", value);
@@ -10270,7 +10693,8 @@ export const printencoding = {
  */
 export const printexpr = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printexpr") ?? "";
+    const result = await options.get(denops, "printexpr");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printexpr", value);
@@ -10279,7 +10703,8 @@ export const printexpr = {
     return options.remove(denops, "printexpr");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printexpr") ?? "";
+    const result = await globalOptions.get(denops, "printexpr");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printexpr", value);
@@ -10299,7 +10724,8 @@ export const printexpr = {
  */
 export const printfont = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printfont") ?? "";
+    const result = await options.get(denops, "printfont");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printfont", value);
@@ -10308,7 +10734,8 @@ export const printfont = {
     return options.remove(denops, "printfont");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printfont") ?? "";
+    const result = await globalOptions.get(denops, "printfont");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printfont", value);
@@ -10328,7 +10755,8 @@ export const printfont = {
  */
 export const printheader = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printheader") ?? "";
+    const result = await options.get(denops, "printheader");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printheader", value);
@@ -10337,7 +10765,8 @@ export const printheader = {
     return options.remove(denops, "printheader");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printheader") ?? "";
+    const result = await globalOptions.get(denops, "printheader");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printheader", value);
@@ -10357,7 +10786,8 @@ export const printheader = {
  */
 export const printmbcharset = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printmbcharset") ?? "";
+    const result = await options.get(denops, "printmbcharset");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printmbcharset", value);
@@ -10366,7 +10796,8 @@ export const printmbcharset = {
     return options.remove(denops, "printmbcharset");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printmbcharset") ?? "";
+    const result = await globalOptions.get(denops, "printmbcharset");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printmbcharset", value);
@@ -10386,7 +10817,8 @@ export const printmbcharset = {
  */
 export const printmbfont = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printmbfont") ?? "";
+    const result = await options.get(denops, "printmbfont");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printmbfont", value);
@@ -10395,7 +10827,8 @@ export const printmbfont = {
     return options.remove(denops, "printmbfont");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printmbfont") ?? "";
+    const result = await globalOptions.get(denops, "printmbfont");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printmbfont", value);
@@ -10415,7 +10848,8 @@ export const printmbfont = {
  */
 export const printoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "printoptions") ?? "";
+    const result = await options.get(denops, "printoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "printoptions", value);
@@ -10424,7 +10858,8 @@ export const printoptions = {
     return options.remove(denops, "printoptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "printoptions") ?? "";
+    const result = await globalOptions.get(denops, "printoptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "printoptions", value);
@@ -10443,7 +10878,8 @@ export const printoptions = {
  */
 export const pumheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "pumheight") ?? 0;
+    const result = await options.get(denops, "pumheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "pumheight", value);
@@ -10452,7 +10888,8 @@ export const pumheight = {
     return options.remove(denops, "pumheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "pumheight") ?? 0;
+    const result = await globalOptions.get(denops, "pumheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "pumheight", value);
@@ -10470,7 +10907,8 @@ export const pumheight = {
  */
 export const pumwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "pumwidth") ?? 0;
+    const result = await options.get(denops, "pumwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "pumwidth", value);
@@ -10479,7 +10917,8 @@ export const pumwidth = {
     return options.remove(denops, "pumwidth");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "pumwidth") ?? 0;
+    const result = await globalOptions.get(denops, "pumwidth");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "pumwidth", value);
@@ -10518,7 +10957,8 @@ export const pumwidth = {
  */
 export const pyxversion = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "pyxversion") ?? 0;
+    const result = await options.get(denops, "pyxversion");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "pyxversion", value);
@@ -10527,7 +10967,8 @@ export const pyxversion = {
     return options.remove(denops, "pyxversion");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "pyxversion") ?? 0;
+    const result = await globalOptions.get(denops, "pyxversion");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "pyxversion", value);
@@ -10556,7 +10997,8 @@ export const pyxversion = {
  */
 export const quickfixtextfunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "quickfixtextfunc") ?? "";
+    const result = await options.get(denops, "quickfixtextfunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "quickfixtextfunc", value);
@@ -10565,7 +11007,8 @@ export const quickfixtextfunc = {
     return options.remove(denops, "quickfixtextfunc");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "quickfixtextfunc") ?? "";
+    const result = await globalOptions.get(denops, "quickfixtextfunc");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "quickfixtextfunc", value);
@@ -10586,7 +11029,8 @@ export const quickfixtextfunc = {
  */
 export const quoteescape = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "quoteescape") ?? "";
+    const result = await options.get(denops, "quoteescape");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "quoteescape", value);
@@ -10595,7 +11039,8 @@ export const quoteescape = {
     return options.remove(denops, "quoteescape");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "quoteescape") ?? "";
+    const result = await localOptions.get(denops, "quoteescape");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "quoteescape", value);
@@ -10605,14 +11050,14 @@ export const quoteescape = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&quoteescape");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&quoteescape", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&quoteescape");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&quoteescape", value);
@@ -10633,7 +11078,8 @@ export const quoteescape = {
  */
 export const readonly = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "readonly") ?? false;
+    const result = await options.get(denops, "readonly");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "readonly", value);
@@ -10642,7 +11088,8 @@ export const readonly = {
     return options.remove(denops, "readonly");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "readonly") ?? false;
+    const result = await localOptions.get(denops, "readonly");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "readonly", value);
@@ -10652,14 +11099,14 @@ export const readonly = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&readonly");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&readonly", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&readonly");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&readonly", value);
@@ -10683,7 +11130,8 @@ export const readonly = {
  */
 export const redrawtime = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "redrawtime") ?? 0;
+    const result = await options.get(denops, "redrawtime");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "redrawtime", value);
@@ -10692,7 +11140,8 @@ export const redrawtime = {
     return options.remove(denops, "redrawtime");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "redrawtime") ?? 0;
+    const result = await globalOptions.get(denops, "redrawtime");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "redrawtime", value);
@@ -10720,7 +11169,8 @@ export const redrawtime = {
  */
 export const regexpengine = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "regexpengine") ?? 0;
+    const result = await options.get(denops, "regexpengine");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "regexpengine", value);
@@ -10729,7 +11179,8 @@ export const regexpengine = {
     return options.remove(denops, "regexpengine");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "regexpengine") ?? 0;
+    const result = await globalOptions.get(denops, "regexpengine");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "regexpengine", value);
@@ -10763,7 +11214,8 @@ export const regexpengine = {
  */
 export const relativenumber = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "relativenumber") ?? false;
+    const result = await options.get(denops, "relativenumber");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "relativenumber", value);
@@ -10772,7 +11224,8 @@ export const relativenumber = {
     return options.remove(denops, "relativenumber");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "relativenumber") ?? false;
+    const result = await localOptions.get(denops, "relativenumber");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "relativenumber", value);
@@ -10782,14 +11235,14 @@ export const relativenumber = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&relativenumber");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&relativenumber", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&relativenumber");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&relativenumber", value);
@@ -10807,7 +11260,8 @@ export const relativenumber = {
  */
 export const report = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "report") ?? 0;
+    const result = await options.get(denops, "report");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "report", value);
@@ -10816,7 +11270,8 @@ export const report = {
     return options.remove(denops, "report");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "report") ?? 0;
+    const result = await globalOptions.get(denops, "report");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "report", value);
@@ -10840,7 +11295,8 @@ export const report = {
  */
 export const revins = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "revins") ?? false;
+    const result = await options.get(denops, "revins");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "revins", value);
@@ -10849,7 +11305,8 @@ export const revins = {
     return options.remove(denops, "revins");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "revins") ?? false;
+    const result = await globalOptions.get(denops, "revins");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "revins", value);
@@ -10876,7 +11333,8 @@ export const revins = {
  */
 export const rightleft = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "rightleft") ?? false;
+    const result = await options.get(denops, "rightleft");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "rightleft", value);
@@ -10885,7 +11343,8 @@ export const rightleft = {
     return options.remove(denops, "rightleft");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "rightleft") ?? false;
+    const result = await localOptions.get(denops, "rightleft");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "rightleft", value);
@@ -10895,14 +11354,14 @@ export const rightleft = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&rightleft");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&rightleft", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&rightleft");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&rightleft", value);
@@ -10924,7 +11383,8 @@ export const rightleft = {
  */
 export const rightleftcmd = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "rightleftcmd") ?? "";
+    const result = await options.get(denops, "rightleftcmd");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "rightleftcmd", value);
@@ -10933,7 +11393,8 @@ export const rightleftcmd = {
     return options.remove(denops, "rightleftcmd");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "rightleftcmd") ?? "";
+    const result = await localOptions.get(denops, "rightleftcmd");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "rightleftcmd", value);
@@ -10943,14 +11404,14 @@ export const rightleftcmd = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&rightleftcmd");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&rightleftcmd", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&rightleftcmd");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&rightleftcmd", value);
@@ -10988,7 +11449,8 @@ export const rightleftcmd = {
  */
 export const ruler = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "ruler") ?? false;
+    const result = await options.get(denops, "ruler");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "ruler", value);
@@ -10997,7 +11459,8 @@ export const ruler = {
     return options.remove(denops, "ruler");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "ruler") ?? false;
+    const result = await globalOptions.get(denops, "ruler");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "ruler", value);
@@ -11025,7 +11488,8 @@ export const ruler = {
  */
 export const rulerformat = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "rulerformat") ?? "";
+    const result = await options.get(denops, "rulerformat");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "rulerformat", value);
@@ -11034,7 +11498,8 @@ export const rulerformat = {
     return options.remove(denops, "rulerformat");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "rulerformat") ?? "";
+    const result = await globalOptions.get(denops, "rulerformat");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "rulerformat", value);
@@ -11140,7 +11605,8 @@ export const rulerformat = {
  */
 export const runtimepath = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "runtimepath") ?? "";
+    const result = await options.get(denops, "runtimepath");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "runtimepath", value);
@@ -11149,7 +11615,8 @@ export const runtimepath = {
     return options.remove(denops, "runtimepath");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "runtimepath") ?? "";
+    const result = await globalOptions.get(denops, "runtimepath");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "runtimepath", value);
@@ -11172,7 +11639,8 @@ export const runtimepath = {
  */
 export const scroll = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "scroll") ?? 0;
+    const result = await options.get(denops, "scroll");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "scroll", value);
@@ -11181,7 +11649,8 @@ export const scroll = {
     return options.remove(denops, "scroll");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "scroll") ?? 0;
+    const result = await localOptions.get(denops, "scroll");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "scroll", value);
@@ -11191,14 +11660,14 @@ export const scroll = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&scroll");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&scroll", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&scroll");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&scroll", value);
@@ -11220,7 +11689,8 @@ export const scroll = {
  */
 export const scrollbind = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "scrollbind") ?? false;
+    const result = await options.get(denops, "scrollbind");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "scrollbind", value);
@@ -11229,7 +11699,8 @@ export const scrollbind = {
     return options.remove(denops, "scrollbind");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "scrollbind") ?? false;
+    const result = await localOptions.get(denops, "scrollbind");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "scrollbind", value);
@@ -11239,14 +11710,14 @@ export const scrollbind = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&scrollbind");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&scrollbind", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&scrollbind");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&scrollbind", value);
@@ -11266,7 +11737,8 @@ export const scrollbind = {
  */
 export const scrolljump = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "scrolljump") ?? 0;
+    const result = await options.get(denops, "scrolljump");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "scrolljump", value);
@@ -11275,7 +11747,8 @@ export const scrolljump = {
     return options.remove(denops, "scrolljump");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "scrolljump") ?? 0;
+    const result = await globalOptions.get(denops, "scrolljump");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "scrolljump", value);
@@ -11304,7 +11777,8 @@ export const scrolljump = {
  */
 export const scrolloff = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "scrolloff") ?? 0;
+    const result = await options.get(denops, "scrolloff");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "scrolloff", value);
@@ -11313,7 +11787,8 @@ export const scrolloff = {
     return options.remove(denops, "scrolloff");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "scrolloff") ?? 0;
+    const result = await globalOptions.get(denops, "scrolloff");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "scrolloff", value);
@@ -11322,7 +11797,8 @@ export const scrolloff = {
     return globalOptions.remove(denops, "scrolloff");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "scrolloff") ?? 0;
+    const result = await localOptions.get(denops, "scrolloff");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "scrolloff", value);
@@ -11332,14 +11808,14 @@ export const scrolloff = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&scrolloff");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&scrolloff", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&scrolloff");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&scrolloff", value);
@@ -11379,7 +11855,8 @@ export const scrolloff = {
  */
 export const scrollopt = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "scrollopt") ?? "";
+    const result = await options.get(denops, "scrollopt");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "scrollopt", value);
@@ -11388,7 +11865,8 @@ export const scrollopt = {
     return options.remove(denops, "scrollopt");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "scrollopt") ?? "";
+    const result = await globalOptions.get(denops, "scrollopt");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "scrollopt", value);
@@ -11407,7 +11885,8 @@ export const scrollopt = {
  */
 export const sections = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "sections") ?? "";
+    const result = await options.get(denops, "sections");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "sections", value);
@@ -11416,7 +11895,8 @@ export const sections = {
     return options.remove(denops, "sections");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "sections") ?? "";
+    const result = await globalOptions.get(denops, "sections");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "sections", value);
@@ -11441,7 +11921,8 @@ export const sections = {
  */
 export const secure = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "secure") ?? false;
+    const result = await options.get(denops, "secure");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "secure", value);
@@ -11450,7 +11931,8 @@ export const secure = {
     return options.remove(denops, "secure");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "secure") ?? false;
+    const result = await globalOptions.get(denops, "secure");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "secure", value);
@@ -11485,7 +11967,8 @@ export const secure = {
  */
 export const selection = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "selection") ?? "";
+    const result = await options.get(denops, "selection");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "selection", value);
@@ -11494,7 +11977,8 @@ export const selection = {
     return options.remove(denops, "selection");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "selection") ?? "";
+    const result = await globalOptions.get(denops, "selection");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "selection", value);
@@ -11518,7 +12002,8 @@ export const selection = {
  */
 export const selectmode = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "selectmode") ?? "";
+    const result = await options.get(denops, "selectmode");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "selectmode", value);
@@ -11527,7 +12012,8 @@ export const selectmode = {
     return options.remove(denops, "selectmode");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "selectmode") ?? "";
+    const result = await globalOptions.get(denops, "selectmode");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "selectmode", value);
@@ -11589,7 +12075,8 @@ export const selectmode = {
  */
 export const sessionoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "sessionoptions") ?? "";
+    const result = await options.get(denops, "sessionoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "sessionoptions", value);
@@ -11598,7 +12085,8 @@ export const sessionoptions = {
     return options.remove(denops, "sessionoptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "sessionoptions") ?? "";
+    const result = await globalOptions.get(denops, "sessionoptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "sessionoptions", value);
@@ -11653,7 +12141,8 @@ export const sessionoptions = {
  */
 export const shell = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shell") ?? "";
+    const result = await options.get(denops, "shell");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shell", value);
@@ -11662,7 +12151,8 @@ export const shell = {
     return options.remove(denops, "shell");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shell") ?? "";
+    const result = await globalOptions.get(denops, "shell");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shell", value);
@@ -11691,7 +12181,8 @@ export const shell = {
  */
 export const shellcmdflag = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellcmdflag") ?? "";
+    const result = await options.get(denops, "shellcmdflag");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellcmdflag", value);
@@ -11700,7 +12191,8 @@ export const shellcmdflag = {
     return options.remove(denops, "shellcmdflag");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellcmdflag") ?? "";
+    const result = await globalOptions.get(denops, "shellcmdflag");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellcmdflag", value);
@@ -11752,7 +12244,8 @@ export const shellcmdflag = {
  */
 export const shellpipe = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellpipe") ?? "";
+    const result = await options.get(denops, "shellpipe");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellpipe", value);
@@ -11761,7 +12254,8 @@ export const shellpipe = {
     return options.remove(denops, "shellpipe");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellpipe") ?? "";
+    const result = await globalOptions.get(denops, "shellpipe");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellpipe", value);
@@ -11786,7 +12280,8 @@ export const shellpipe = {
  */
 export const shellquote = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellquote") ?? "";
+    const result = await options.get(denops, "shellquote");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellquote", value);
@@ -11795,7 +12290,8 @@ export const shellquote = {
     return options.remove(denops, "shellquote");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellquote") ?? "";
+    const result = await globalOptions.get(denops, "shellquote");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellquote", value);
@@ -11835,7 +12331,8 @@ export const shellquote = {
  */
 export const shellredir = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellredir") ?? "";
+    const result = await options.get(denops, "shellredir");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellredir", value);
@@ -11844,7 +12341,8 @@ export const shellredir = {
     return options.remove(denops, "shellredir");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellredir") ?? "";
+    const result = await globalOptions.get(denops, "shellredir");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellredir", value);
@@ -11875,7 +12373,8 @@ export const shellredir = {
  */
 export const shellslash = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "shellslash") ?? false;
+    const result = await options.get(denops, "shellslash");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "shellslash", value);
@@ -11884,7 +12383,8 @@ export const shellslash = {
     return options.remove(denops, "shellslash");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "shellslash") ?? false;
+    const result = await globalOptions.get(denops, "shellslash");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "shellslash", value);
@@ -11918,7 +12418,8 @@ export const shellslash = {
  */
 export const shelltemp = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "shelltemp") ?? false;
+    const result = await options.get(denops, "shelltemp");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "shelltemp", value);
@@ -11927,7 +12428,8 @@ export const shelltemp = {
     return options.remove(denops, "shelltemp");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "shelltemp") ?? false;
+    const result = await globalOptions.get(denops, "shelltemp");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "shelltemp", value);
@@ -11947,7 +12449,8 @@ export const shelltemp = {
  */
 export const shellxescape = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellxescape") ?? "";
+    const result = await options.get(denops, "shellxescape");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellxescape", value);
@@ -11956,7 +12459,8 @@ export const shellxescape = {
     return options.remove(denops, "shellxescape");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellxescape") ?? "";
+    const result = await globalOptions.get(denops, "shellxescape");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellxescape", value);
@@ -11994,7 +12498,8 @@ export const shellxescape = {
  */
 export const shellxquote = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shellxquote") ?? "";
+    const result = await options.get(denops, "shellxquote");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shellxquote", value);
@@ -12003,7 +12508,8 @@ export const shellxquote = {
     return options.remove(denops, "shellxquote");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shellxquote") ?? "";
+    const result = await globalOptions.get(denops, "shellxquote");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shellxquote", value);
@@ -12023,7 +12529,8 @@ export const shellxquote = {
  */
 export const shiftround = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "shiftround") ?? false;
+    const result = await options.get(denops, "shiftround");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "shiftround", value);
@@ -12032,7 +12539,8 @@ export const shiftround = {
     return options.remove(denops, "shiftround");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "shiftround") ?? false;
+    const result = await globalOptions.get(denops, "shiftround");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "shiftround", value);
@@ -12052,7 +12560,8 @@ export const shiftround = {
  */
 export const shiftwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "shiftwidth") ?? 0;
+    const result = await options.get(denops, "shiftwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "shiftwidth", value);
@@ -12061,7 +12570,8 @@ export const shiftwidth = {
     return options.remove(denops, "shiftwidth");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "shiftwidth") ?? 0;
+    const result = await localOptions.get(denops, "shiftwidth");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "shiftwidth", value);
@@ -12071,14 +12581,14 @@ export const shiftwidth = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&shiftwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&shiftwidth", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&shiftwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&shiftwidth", value);
@@ -12146,7 +12656,8 @@ export const shiftwidth = {
  */
 export const shortmess = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "shortmess") ?? "";
+    const result = await options.get(denops, "shortmess");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "shortmess", value);
@@ -12155,7 +12666,8 @@ export const shortmess = {
     return options.remove(denops, "shortmess");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "shortmess") ?? "";
+    const result = await globalOptions.get(denops, "shortmess");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "shortmess", value);
@@ -12195,7 +12707,8 @@ export const shortmess = {
  */
 export const showbreak = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "showbreak") ?? "";
+    const result = await options.get(denops, "showbreak");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "showbreak", value);
@@ -12204,7 +12717,8 @@ export const showbreak = {
     return options.remove(denops, "showbreak");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "showbreak") ?? "";
+    const result = await globalOptions.get(denops, "showbreak");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "showbreak", value);
@@ -12213,7 +12727,8 @@ export const showbreak = {
     return globalOptions.remove(denops, "showbreak");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "showbreak") ?? "";
+    const result = await localOptions.get(denops, "showbreak");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "showbreak", value);
@@ -12223,14 +12738,14 @@ export const showbreak = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&showbreak");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&showbreak", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&showbreak");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&showbreak", value);
@@ -12257,7 +12772,8 @@ export const showbreak = {
  */
 export const showcmd = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "showcmd") ?? false;
+    const result = await options.get(denops, "showcmd");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "showcmd", value);
@@ -12266,7 +12782,8 @@ export const showcmd = {
     return options.remove(denops, "showcmd");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "showcmd") ?? false;
+    const result = await globalOptions.get(denops, "showcmd");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "showcmd", value);
@@ -12290,7 +12807,8 @@ export const showcmd = {
  */
 export const showfulltag = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "showfulltag") ?? false;
+    const result = await options.get(denops, "showfulltag");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "showfulltag", value);
@@ -12299,7 +12817,8 @@ export const showfulltag = {
     return options.remove(denops, "showfulltag");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "showfulltag") ?? false;
+    const result = await globalOptions.get(denops, "showfulltag");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "showfulltag", value);
@@ -12332,7 +12851,8 @@ export const showfulltag = {
  */
 export const showmatch = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "showmatch") ?? false;
+    const result = await options.get(denops, "showmatch");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "showmatch", value);
@@ -12341,7 +12861,8 @@ export const showmatch = {
     return options.remove(denops, "showmatch");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "showmatch") ?? false;
+    const result = await globalOptions.get(denops, "showmatch");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "showmatch", value);
@@ -12365,7 +12886,8 @@ export const showmatch = {
  */
 export const showmode = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "showmode") ?? false;
+    const result = await options.get(denops, "showmode");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "showmode", value);
@@ -12374,7 +12896,8 @@ export const showmode = {
     return options.remove(denops, "showmode");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "showmode") ?? false;
+    const result = await globalOptions.get(denops, "showmode");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "showmode", value);
@@ -12398,7 +12921,8 @@ export const showmode = {
  */
 export const showtabline = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "showtabline") ?? 0;
+    const result = await options.get(denops, "showtabline");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "showtabline", value);
@@ -12407,7 +12931,8 @@ export const showtabline = {
     return options.remove(denops, "showtabline");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "showtabline") ?? 0;
+    const result = await globalOptions.get(denops, "showtabline");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "showtabline", value);
@@ -12429,7 +12954,8 @@ export const showtabline = {
  */
 export const sidescroll = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "sidescroll") ?? 0;
+    const result = await options.get(denops, "sidescroll");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "sidescroll", value);
@@ -12438,7 +12964,8 @@ export const sidescroll = {
     return options.remove(denops, "sidescroll");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "sidescroll") ?? 0;
+    const result = await globalOptions.get(denops, "sidescroll");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "sidescroll", value);
@@ -12476,7 +13003,8 @@ export const sidescroll = {
  */
 export const sidescrolloff = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "sidescrolloff") ?? 0;
+    const result = await options.get(denops, "sidescrolloff");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "sidescrolloff", value);
@@ -12485,7 +13013,8 @@ export const sidescrolloff = {
     return options.remove(denops, "sidescrolloff");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "sidescrolloff") ?? 0;
+    const result = await globalOptions.get(denops, "sidescrolloff");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "sidescrolloff", value);
@@ -12494,7 +13023,8 @@ export const sidescrolloff = {
     return globalOptions.remove(denops, "sidescrolloff");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "sidescrolloff") ?? 0;
+    const result = await localOptions.get(denops, "sidescrolloff");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "sidescrolloff", value);
@@ -12504,14 +13034,14 @@ export const sidescrolloff = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&sidescrolloff");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&sidescrolloff", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&sidescrolloff");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&sidescrolloff", value);
@@ -12532,7 +13062,8 @@ export const sidescrolloff = {
  */
 export const signcolumn = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "signcolumn") ?? "";
+    const result = await options.get(denops, "signcolumn");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "signcolumn", value);
@@ -12541,7 +13072,8 @@ export const signcolumn = {
     return options.remove(denops, "signcolumn");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "signcolumn") ?? "";
+    const result = await localOptions.get(denops, "signcolumn");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "signcolumn", value);
@@ -12551,14 +13083,14 @@ export const signcolumn = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&signcolumn");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&signcolumn", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&signcolumn");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&signcolumn", value);
@@ -12578,7 +13110,8 @@ export const signcolumn = {
  */
 export const smartcase = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "smartcase") ?? false;
+    const result = await options.get(denops, "smartcase");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "smartcase", value);
@@ -12587,7 +13120,8 @@ export const smartcase = {
     return options.remove(denops, "smartcase");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "smartcase") ?? false;
+    const result = await globalOptions.get(denops, "smartcase");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "smartcase", value);
@@ -12625,7 +13159,8 @@ export const smartcase = {
  */
 export const smartindent = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "smartindent") ?? false;
+    const result = await options.get(denops, "smartindent");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "smartindent", value);
@@ -12634,7 +13169,8 @@ export const smartindent = {
     return options.remove(denops, "smartindent");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "smartindent") ?? false;
+    const result = await localOptions.get(denops, "smartindent");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "smartindent", value);
@@ -12644,14 +13180,14 @@ export const smartindent = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&smartindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&smartindent", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&smartindent");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&smartindent", value);
@@ -12677,7 +13213,8 @@ export const smartindent = {
  */
 export const smarttab = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "smarttab") ?? false;
+    const result = await options.get(denops, "smarttab");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "smarttab", value);
@@ -12686,7 +13223,8 @@ export const smarttab = {
     return options.remove(denops, "smarttab");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "smarttab") ?? false;
+    const result = await globalOptions.get(denops, "smarttab");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "smarttab", value);
@@ -12721,7 +13259,8 @@ export const smarttab = {
  */
 export const softtabstop = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "softtabstop") ?? 0;
+    const result = await options.get(denops, "softtabstop");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "softtabstop", value);
@@ -12730,7 +13269,8 @@ export const softtabstop = {
     return options.remove(denops, "softtabstop");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "softtabstop") ?? 0;
+    const result = await localOptions.get(denops, "softtabstop");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "softtabstop", value);
@@ -12740,14 +13280,14 @@ export const softtabstop = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&softtabstop");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&softtabstop", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&softtabstop");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&softtabstop", value);
@@ -12764,7 +13304,8 @@ export const softtabstop = {
  */
 export const spell = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "spell") ?? false;
+    const result = await options.get(denops, "spell");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "spell", value);
@@ -12773,7 +13314,8 @@ export const spell = {
     return options.remove(denops, "spell");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "spell") ?? false;
+    const result = await localOptions.get(denops, "spell");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "spell", value);
@@ -12783,14 +13325,14 @@ export const spell = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&spell");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&spell", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&spell");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&spell", value);
@@ -12814,7 +13356,8 @@ export const spell = {
  */
 export const spellcapcheck = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "spellcapcheck") ?? "";
+    const result = await options.get(denops, "spellcapcheck");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "spellcapcheck", value);
@@ -12823,7 +13366,8 @@ export const spellcapcheck = {
     return options.remove(denops, "spellcapcheck");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "spellcapcheck") ?? "";
+    const result = await localOptions.get(denops, "spellcapcheck");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "spellcapcheck", value);
@@ -12833,14 +13377,14 @@ export const spellcapcheck = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&spellcapcheck");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&spellcapcheck", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&spellcapcheck");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&spellcapcheck", value);
@@ -12876,7 +13420,8 @@ export const spellcapcheck = {
  */
 export const spellfile = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "spellfile") ?? "";
+    const result = await options.get(denops, "spellfile");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "spellfile", value);
@@ -12885,7 +13430,8 @@ export const spellfile = {
     return options.remove(denops, "spellfile");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "spellfile") ?? "";
+    const result = await localOptions.get(denops, "spellfile");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "spellfile", value);
@@ -12895,14 +13441,14 @@ export const spellfile = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&spellfile");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&spellfile", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&spellfile");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&spellfile", value);
@@ -12958,7 +13504,8 @@ export const spellfile = {
  */
 export const spelllang = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "spelllang") ?? "";
+    const result = await options.get(denops, "spelllang");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "spelllang", value);
@@ -12967,7 +13514,8 @@ export const spelllang = {
     return options.remove(denops, "spelllang");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "spelllang") ?? "";
+    const result = await localOptions.get(denops, "spelllang");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "spelllang", value);
@@ -12977,14 +13525,14 @@ export const spelllang = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&spelllang");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&spelllang", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&spelllang");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&spelllang", value);
@@ -13004,7 +13552,8 @@ export const spelllang = {
  */
 export const spelloptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "spelloptions") ?? "";
+    const result = await options.get(denops, "spelloptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "spelloptions", value);
@@ -13013,7 +13562,8 @@ export const spelloptions = {
     return options.remove(denops, "spelloptions");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "spelloptions") ?? "";
+    const result = await localOptions.get(denops, "spelloptions");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "spelloptions", value);
@@ -13023,14 +13573,14 @@ export const spelloptions = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&spelloptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&spelloptions", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&spelloptions");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&spelloptions", value);
@@ -13110,7 +13660,8 @@ export const spelloptions = {
  */
 export const spellsuggest = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "spellsuggest") ?? "";
+    const result = await options.get(denops, "spellsuggest");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "spellsuggest", value);
@@ -13119,7 +13670,8 @@ export const spellsuggest = {
     return options.remove(denops, "spellsuggest");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "spellsuggest") ?? "";
+    const result = await globalOptions.get(denops, "spellsuggest");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "spellsuggest", value);
@@ -13137,7 +13689,8 @@ export const spellsuggest = {
  */
 export const splitbelow = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "splitbelow") ?? false;
+    const result = await options.get(denops, "splitbelow");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "splitbelow", value);
@@ -13146,7 +13699,8 @@ export const splitbelow = {
     return options.remove(denops, "splitbelow");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "splitbelow") ?? false;
+    const result = await globalOptions.get(denops, "splitbelow");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "splitbelow", value);
@@ -13164,7 +13718,8 @@ export const splitbelow = {
  */
 export const splitright = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "splitright") ?? false;
+    const result = await options.get(denops, "splitright");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "splitright", value);
@@ -13173,7 +13728,8 @@ export const splitright = {
     return options.remove(denops, "splitright");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "splitright") ?? false;
+    const result = await globalOptions.get(denops, "splitright");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "splitright", value);
@@ -13199,7 +13755,8 @@ export const splitright = {
  */
 export const startofline = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "startofline") ?? false;
+    const result = await options.get(denops, "startofline");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "startofline", value);
@@ -13208,7 +13765,8 @@ export const startofline = {
     return options.remove(denops, "startofline");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "startofline") ?? false;
+    const result = await globalOptions.get(denops, "startofline");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "startofline", value);
@@ -13421,7 +13979,8 @@ export const startofline = {
  */
 export const statusline = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "statusline") ?? "";
+    const result = await options.get(denops, "statusline");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "statusline", value);
@@ -13430,7 +13989,8 @@ export const statusline = {
     return options.remove(denops, "statusline");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "statusline") ?? "";
+    const result = await globalOptions.get(denops, "statusline");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "statusline", value);
@@ -13439,7 +13999,8 @@ export const statusline = {
     return globalOptions.remove(denops, "statusline");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "statusline") ?? "";
+    const result = await localOptions.get(denops, "statusline");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "statusline", value);
@@ -13449,14 +14010,14 @@ export const statusline = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&statusline");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&statusline", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&statusline");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&statusline", value);
@@ -13479,7 +14040,8 @@ export const statusline = {
  */
 export const suffixes = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "suffixes") ?? "";
+    const result = await options.get(denops, "suffixes");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "suffixes", value);
@@ -13488,7 +14050,8 @@ export const suffixes = {
     return options.remove(denops, "suffixes");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "suffixes") ?? "";
+    const result = await globalOptions.get(denops, "suffixes");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "suffixes", value);
@@ -13508,7 +14071,8 @@ export const suffixes = {
  */
 export const suffixesadd = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "suffixesadd") ?? "";
+    const result = await options.get(denops, "suffixesadd");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "suffixesadd", value);
@@ -13517,7 +14081,8 @@ export const suffixesadd = {
     return options.remove(denops, "suffixesadd");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "suffixesadd") ?? "";
+    const result = await localOptions.get(denops, "suffixesadd");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "suffixesadd", value);
@@ -13527,14 +14092,14 @@ export const suffixesadd = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&suffixesadd");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&suffixesadd", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&suffixesadd");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&suffixesadd", value);
@@ -13565,7 +14130,8 @@ export const suffixesadd = {
  */
 export const swapfile = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "swapfile") ?? false;
+    const result = await options.get(denops, "swapfile");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "swapfile", value);
@@ -13574,7 +14140,8 @@ export const swapfile = {
     return options.remove(denops, "swapfile");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "swapfile") ?? false;
+    const result = await localOptions.get(denops, "swapfile");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "swapfile", value);
@@ -13584,14 +14151,14 @@ export const swapfile = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&swapfile");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&swapfile", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&swapfile");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&swapfile", value);
@@ -13627,7 +14194,8 @@ export const swapfile = {
  */
 export const switchbuf = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "switchbuf") ?? "";
+    const result = await options.get(denops, "switchbuf");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "switchbuf", value);
@@ -13636,7 +14204,8 @@ export const switchbuf = {
     return options.remove(denops, "switchbuf");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "switchbuf") ?? "";
+    const result = await globalOptions.get(denops, "switchbuf");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "switchbuf", value);
@@ -13660,7 +14229,8 @@ export const switchbuf = {
  */
 export const synmaxcol = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "synmaxcol") ?? 0;
+    const result = await options.get(denops, "synmaxcol");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "synmaxcol", value);
@@ -13669,7 +14239,8 @@ export const synmaxcol = {
     return options.remove(denops, "synmaxcol");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "synmaxcol") ?? 0;
+    const result = await localOptions.get(denops, "synmaxcol");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "synmaxcol", value);
@@ -13679,14 +14250,14 @@ export const synmaxcol = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&synmaxcol");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&synmaxcol", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&synmaxcol");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&synmaxcol", value);
@@ -13728,7 +14299,8 @@ export const synmaxcol = {
  */
 export const syntax = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "syntax") ?? "";
+    const result = await options.get(denops, "syntax");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "syntax", value);
@@ -13737,7 +14309,8 @@ export const syntax = {
     return options.remove(denops, "syntax");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "syntax") ?? "";
+    const result = await localOptions.get(denops, "syntax");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "syntax", value);
@@ -13747,14 +14320,14 @@ export const syntax = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&syntax");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&syntax", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&syntax");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&syntax", value);
@@ -13787,7 +14360,8 @@ export const syntax = {
  */
 export const tabline = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "tabline") ?? "";
+    const result = await options.get(denops, "tabline");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "tabline", value);
@@ -13796,7 +14370,8 @@ export const tabline = {
     return options.remove(denops, "tabline");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "tabline") ?? "";
+    const result = await globalOptions.get(denops, "tabline");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "tabline", value);
@@ -13814,7 +14389,8 @@ export const tabline = {
  */
 export const tabpagemax = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "tabpagemax") ?? 0;
+    const result = await options.get(denops, "tabpagemax");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "tabpagemax", value);
@@ -13823,7 +14399,8 @@ export const tabpagemax = {
     return options.remove(denops, "tabpagemax");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "tabpagemax") ?? 0;
+    const result = await globalOptions.get(denops, "tabpagemax");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "tabpagemax", value);
@@ -13867,7 +14444,8 @@ export const tabpagemax = {
  */
 export const tabstop = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "tabstop") ?? 0;
+    const result = await options.get(denops, "tabstop");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "tabstop", value);
@@ -13876,7 +14454,8 @@ export const tabstop = {
     return options.remove(denops, "tabstop");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "tabstop") ?? 0;
+    const result = await localOptions.get(denops, "tabstop");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "tabstop", value);
@@ -13886,14 +14465,14 @@ export const tabstop = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&tabstop");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&tabstop", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&tabstop");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&tabstop", value);
@@ -13956,7 +14535,8 @@ export const tabstop = {
  */
 export const tagbsearch = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "tagbsearch") ?? false;
+    const result = await options.get(denops, "tagbsearch");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "tagbsearch", value);
@@ -13965,7 +14545,8 @@ export const tagbsearch = {
     return options.remove(denops, "tagbsearch");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "tagbsearch") ?? false;
+    const result = await globalOptions.get(denops, "tagbsearch");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "tagbsearch", value);
@@ -13990,7 +14571,8 @@ export const tagbsearch = {
  */
 export const tagcase = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "tagcase") ?? "";
+    const result = await options.get(denops, "tagcase");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "tagcase", value);
@@ -13999,7 +14581,8 @@ export const tagcase = {
     return options.remove(denops, "tagcase");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "tagcase") ?? "";
+    const result = await globalOptions.get(denops, "tagcase");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "tagcase", value);
@@ -14008,7 +14591,8 @@ export const tagcase = {
     return globalOptions.remove(denops, "tagcase");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "tagcase") ?? "";
+    const result = await localOptions.get(denops, "tagcase");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "tagcase", value);
@@ -14018,14 +14602,14 @@ export const tagcase = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&tagcase");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&tagcase", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&tagcase");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&tagcase", value);
@@ -14046,7 +14630,8 @@ export const tagcase = {
  */
 export const tagfunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "tagfunc") ?? "";
+    const result = await options.get(denops, "tagfunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "tagfunc", value);
@@ -14055,7 +14640,8 @@ export const tagfunc = {
     return options.remove(denops, "tagfunc");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "tagfunc") ?? "";
+    const result = await localOptions.get(denops, "tagfunc");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "tagfunc", value);
@@ -14065,14 +14651,14 @@ export const tagfunc = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&tagfunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&tagfunc", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&tagfunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&tagfunc", value);
@@ -14086,7 +14672,8 @@ export const tagfunc = {
  */
 export const taglength = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "taglength") ?? 0;
+    const result = await options.get(denops, "taglength");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "taglength", value);
@@ -14095,7 +14682,8 @@ export const taglength = {
     return options.remove(denops, "taglength");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "taglength") ?? 0;
+    const result = await globalOptions.get(denops, "taglength");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "taglength", value);
@@ -14115,7 +14703,8 @@ export const taglength = {
  */
 export const tagrelative = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "tagrelative") ?? false;
+    const result = await options.get(denops, "tagrelative");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "tagrelative", value);
@@ -14124,7 +14713,8 @@ export const tagrelative = {
     return options.remove(denops, "tagrelative");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "tagrelative") ?? false;
+    const result = await globalOptions.get(denops, "tagrelative");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "tagrelative", value);
@@ -14162,7 +14752,8 @@ export const tagrelative = {
  */
 export const tags = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "tags") ?? "";
+    const result = await options.get(denops, "tags");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "tags", value);
@@ -14171,7 +14762,8 @@ export const tags = {
     return options.remove(denops, "tags");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "tags") ?? "";
+    const result = await globalOptions.get(denops, "tags");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "tags", value);
@@ -14180,7 +14772,8 @@ export const tags = {
     return globalOptions.remove(denops, "tags");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "tags") ?? "";
+    const result = await localOptions.get(denops, "tags");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "tags", value);
@@ -14190,14 +14783,14 @@ export const tags = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&tags");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&tags", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&tags");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&tags", value);
@@ -14217,7 +14810,8 @@ export const tags = {
  */
 export const tagstack = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "tagstack") ?? false;
+    const result = await options.get(denops, "tagstack");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "tagstack", value);
@@ -14226,7 +14820,8 @@ export const tagstack = {
     return options.remove(denops, "tagstack");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "tagstack") ?? false;
+    const result = await globalOptions.get(denops, "tagstack");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "tagstack", value);
@@ -14253,7 +14848,8 @@ export const tagstack = {
  */
 export const termbidi = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "termbidi") ?? false;
+    const result = await options.get(denops, "termbidi");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "termbidi", value);
@@ -14262,7 +14858,8 @@ export const termbidi = {
     return options.remove(denops, "termbidi");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "termbidi") ?? false;
+    const result = await globalOptions.get(denops, "termbidi");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "termbidi", value);
@@ -14304,7 +14901,8 @@ export const termbidi = {
  */
 export const termguicolors = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "termguicolors") ?? false;
+    const result = await options.get(denops, "termguicolors");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "termguicolors", value);
@@ -14313,7 +14911,8 @@ export const termguicolors = {
     return options.remove(denops, "termguicolors");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "termguicolors") ?? false;
+    const result = await globalOptions.get(denops, "termguicolors");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "termguicolors", value);
@@ -14338,7 +14937,8 @@ export const termguicolors = {
  */
 export const textwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "textwidth") ?? 0;
+    const result = await options.get(denops, "textwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "textwidth", value);
@@ -14347,7 +14947,8 @@ export const textwidth = {
     return options.remove(denops, "textwidth");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "textwidth") ?? 0;
+    const result = await localOptions.get(denops, "textwidth");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "textwidth", value);
@@ -14357,14 +14958,14 @@ export const textwidth = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&textwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&textwidth", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&textwidth");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&textwidth", value);
@@ -14391,7 +14992,8 @@ export const textwidth = {
  */
 export const thesaurus = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "thesaurus") ?? "";
+    const result = await options.get(denops, "thesaurus");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "thesaurus", value);
@@ -14400,7 +15002,8 @@ export const thesaurus = {
     return options.remove(denops, "thesaurus");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "thesaurus") ?? "";
+    const result = await globalOptions.get(denops, "thesaurus");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "thesaurus", value);
@@ -14409,7 +15012,8 @@ export const thesaurus = {
     return globalOptions.remove(denops, "thesaurus");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "thesaurus") ?? "";
+    const result = await localOptions.get(denops, "thesaurus");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "thesaurus", value);
@@ -14419,14 +15023,14 @@ export const thesaurus = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&thesaurus");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&thesaurus", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&thesaurus");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&thesaurus", value);
@@ -14448,7 +15052,8 @@ export const thesaurus = {
  */
 export const thesaurusfunc = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "thesaurusfunc") ?? "";
+    const result = await options.get(denops, "thesaurusfunc");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "thesaurusfunc", value);
@@ -14457,7 +15062,8 @@ export const thesaurusfunc = {
     return options.remove(denops, "thesaurusfunc");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "thesaurusfunc") ?? "";
+    const result = await globalOptions.get(denops, "thesaurusfunc");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "thesaurusfunc", value);
@@ -14466,7 +15072,8 @@ export const thesaurusfunc = {
     return globalOptions.remove(denops, "thesaurusfunc");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "thesaurusfunc") ?? "";
+    const result = await localOptions.get(denops, "thesaurusfunc");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "thesaurusfunc", value);
@@ -14476,14 +15083,14 @@ export const thesaurusfunc = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&thesaurusfunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&thesaurusfunc", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&thesaurusfunc");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&thesaurusfunc", value);
@@ -14498,7 +15105,8 @@ export const thesaurusfunc = {
  */
 export const tildeop = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "tildeop") ?? false;
+    const result = await options.get(denops, "tildeop");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "tildeop", value);
@@ -14507,7 +15115,8 @@ export const tildeop = {
     return options.remove(denops, "tildeop");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "tildeop") ?? false;
+    const result = await globalOptions.get(denops, "tildeop");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "tildeop", value);
@@ -14522,7 +15131,8 @@ export const tildeop = {
  */
 export const timeout = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "timeout") ?? false;
+    const result = await options.get(denops, "timeout");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "timeout", value);
@@ -14531,7 +15141,8 @@ export const timeout = {
     return options.remove(denops, "timeout");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "timeout") ?? false;
+    const result = await globalOptions.get(denops, "timeout");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "timeout", value);
@@ -14573,7 +15184,8 @@ export const timeout = {
  */
 export const ttimeout = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "ttimeout") ?? false;
+    const result = await options.get(denops, "ttimeout");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "ttimeout", value);
@@ -14582,7 +15194,8 @@ export const ttimeout = {
     return options.remove(denops, "ttimeout");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "ttimeout") ?? false;
+    const result = await globalOptions.get(denops, "ttimeout");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "ttimeout", value);
@@ -14597,7 +15210,8 @@ export const ttimeout = {
  */
 export const timeoutlen = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "timeoutlen") ?? 0;
+    const result = await options.get(denops, "timeoutlen");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "timeoutlen", value);
@@ -14606,7 +15220,8 @@ export const timeoutlen = {
     return options.remove(denops, "timeoutlen");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "timeoutlen") ?? 0;
+    const result = await globalOptions.get(denops, "timeoutlen");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "timeoutlen", value);
@@ -14640,7 +15255,8 @@ export const timeoutlen = {
  */
 export const ttimeoutlen = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "ttimeoutlen") ?? 0;
+    const result = await options.get(denops, "ttimeoutlen");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "ttimeoutlen", value);
@@ -14649,7 +15265,8 @@ export const ttimeoutlen = {
     return options.remove(denops, "ttimeoutlen");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "ttimeoutlen") ?? 0;
+    const result = await globalOptions.get(denops, "ttimeoutlen");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "ttimeoutlen", value);
@@ -14694,7 +15311,8 @@ export const ttimeoutlen = {
  */
 export const title = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "title") ?? false;
+    const result = await options.get(denops, "title");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "title", value);
@@ -14703,7 +15321,8 @@ export const title = {
     return options.remove(denops, "title");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "title") ?? false;
+    const result = await globalOptions.get(denops, "title");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "title", value);
@@ -14728,7 +15347,8 @@ export const title = {
  */
 export const titlelen = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "titlelen") ?? 0;
+    const result = await options.get(denops, "titlelen");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "titlelen", value);
@@ -14737,7 +15357,8 @@ export const titlelen = {
     return options.remove(denops, "titlelen");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "titlelen") ?? 0;
+    const result = await globalOptions.get(denops, "titlelen");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "titlelen", value);
@@ -14758,7 +15379,8 @@ export const titlelen = {
  */
 export const titleold = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "titleold") ?? "";
+    const result = await options.get(denops, "titleold");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "titleold", value);
@@ -14767,7 +15389,8 @@ export const titleold = {
     return options.remove(denops, "titleold");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "titleold") ?? "";
+    const result = await globalOptions.get(denops, "titleold");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "titleold", value);
@@ -14812,7 +15435,8 @@ export const titleold = {
  */
 export const titlestring = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "titlestring") ?? "";
+    const result = await options.get(denops, "titlestring");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "titlestring", value);
@@ -14821,7 +15445,8 @@ export const titlestring = {
     return options.remove(denops, "titlestring");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "titlestring") ?? "";
+    const result = await globalOptions.get(denops, "titlestring");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "titlestring", value);
@@ -14853,7 +15478,8 @@ export const titlestring = {
  */
 export const undodir = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "undodir") ?? "";
+    const result = await options.get(denops, "undodir");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "undodir", value);
@@ -14862,7 +15488,8 @@ export const undodir = {
     return options.remove(denops, "undodir");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "undodir") ?? "";
+    const result = await globalOptions.get(denops, "undodir");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "undodir", value);
@@ -14889,7 +15516,8 @@ export const undodir = {
  */
 export const undofile = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "undofile") ?? false;
+    const result = await options.get(denops, "undofile");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "undofile", value);
@@ -14898,7 +15526,8 @@ export const undofile = {
     return options.remove(denops, "undofile");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "undofile") ?? false;
+    const result = await localOptions.get(denops, "undofile");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "undofile", value);
@@ -14908,14 +15537,14 @@ export const undofile = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&undofile");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&undofile", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&undofile");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&undofile", value);
@@ -14949,7 +15578,8 @@ export const undofile = {
  */
 export const undolevels = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "undolevels") ?? 0;
+    const result = await options.get(denops, "undolevels");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "undolevels", value);
@@ -14958,7 +15588,8 @@ export const undolevels = {
     return options.remove(denops, "undolevels");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "undolevels") ?? 0;
+    const result = await globalOptions.get(denops, "undolevels");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "undolevels", value);
@@ -14967,7 +15598,8 @@ export const undolevels = {
     return globalOptions.remove(denops, "undolevels");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "undolevels") ?? 0;
+    const result = await localOptions.get(denops, "undolevels");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "undolevels", value);
@@ -14977,14 +15609,14 @@ export const undolevels = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&undolevels");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&undolevels", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&undolevels");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&undolevels", value);
@@ -15008,7 +15640,8 @@ export const undolevels = {
  */
 export const undoreload = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "undoreload") ?? 0;
+    const result = await options.get(denops, "undoreload");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "undoreload", value);
@@ -15017,7 +15650,8 @@ export const undoreload = {
     return options.remove(denops, "undoreload");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "undoreload") ?? 0;
+    const result = await globalOptions.get(denops, "undoreload");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "undoreload", value);
@@ -15045,7 +15679,8 @@ export const undoreload = {
  */
 export const updatecount = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "updatecount") ?? 0;
+    const result = await options.get(denops, "updatecount");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "updatecount", value);
@@ -15054,7 +15689,8 @@ export const updatecount = {
     return options.remove(denops, "updatecount");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "updatecount") ?? 0;
+    const result = await globalOptions.get(denops, "updatecount");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "updatecount", value);
@@ -15073,7 +15709,8 @@ export const updatecount = {
  */
 export const updatetime = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "updatetime") ?? 0;
+    const result = await options.get(denops, "updatetime");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "updatetime", value);
@@ -15082,7 +15719,8 @@ export const updatetime = {
     return options.remove(denops, "updatetime");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "updatetime") ?? 0;
+    const result = await globalOptions.get(denops, "updatetime");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "updatetime", value);
@@ -15117,7 +15755,8 @@ export const updatetime = {
  */
 export const varsofttabstop = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "varsofttabstop") ?? "";
+    const result = await options.get(denops, "varsofttabstop");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "varsofttabstop", value);
@@ -15126,7 +15765,8 @@ export const varsofttabstop = {
     return options.remove(denops, "varsofttabstop");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "varsofttabstop") ?? "";
+    const result = await localOptions.get(denops, "varsofttabstop");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "varsofttabstop", value);
@@ -15136,14 +15776,14 @@ export const varsofttabstop = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&varsofttabstop");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&varsofttabstop", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&varsofttabstop");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&varsofttabstop", value);
@@ -15169,7 +15809,8 @@ export const varsofttabstop = {
  */
 export const vartabstop = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "vartabstop") ?? "";
+    const result = await options.get(denops, "vartabstop");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "vartabstop", value);
@@ -15178,7 +15819,8 @@ export const vartabstop = {
     return options.remove(denops, "vartabstop");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "vartabstop") ?? "";
+    const result = await localOptions.get(denops, "vartabstop");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "vartabstop", value);
@@ -15188,14 +15830,14 @@ export const vartabstop = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&vartabstop");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&vartabstop", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&vartabstop");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&vartabstop", value);
@@ -15229,7 +15871,8 @@ export const vartabstop = {
  */
 export const verbose = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "verbose") ?? 0;
+    const result = await options.get(denops, "verbose");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "verbose", value);
@@ -15238,7 +15881,8 @@ export const verbose = {
     return options.remove(denops, "verbose");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "verbose") ?? 0;
+    const result = await globalOptions.get(denops, "verbose");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "verbose", value);
@@ -15261,7 +15905,8 @@ export const verbose = {
  */
 export const verbosefile = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "verbosefile") ?? "";
+    const result = await options.get(denops, "verbosefile");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "verbosefile", value);
@@ -15270,7 +15915,8 @@ export const verbosefile = {
     return options.remove(denops, "verbosefile");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "verbosefile") ?? "";
+    const result = await globalOptions.get(denops, "verbosefile");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "verbosefile", value);
@@ -15295,7 +15941,8 @@ export const verbosefile = {
  */
 export const viewdir = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "viewdir") ?? "";
+    const result = await options.get(denops, "viewdir");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "viewdir", value);
@@ -15304,7 +15951,8 @@ export const viewdir = {
     return options.remove(denops, "viewdir");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "viewdir") ?? "";
+    const result = await globalOptions.get(denops, "viewdir");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "viewdir", value);
@@ -15340,7 +15988,8 @@ export const viewdir = {
  */
 export const viewoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "viewoptions") ?? "";
+    const result = await options.get(denops, "viewoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "viewoptions", value);
@@ -15349,7 +15998,8 @@ export const viewoptions = {
     return options.remove(denops, "viewoptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "viewoptions") ?? "";
+    const result = await globalOptions.get(denops, "viewoptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "viewoptions", value);
@@ -15392,7 +16042,8 @@ export const viewoptions = {
  */
 export const virtualedit = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "virtualedit") ?? "";
+    const result = await options.get(denops, "virtualedit");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "virtualedit", value);
@@ -15401,7 +16052,8 @@ export const virtualedit = {
     return options.remove(denops, "virtualedit");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "virtualedit") ?? "";
+    const result = await globalOptions.get(denops, "virtualedit");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "virtualedit", value);
@@ -15410,7 +16062,8 @@ export const virtualedit = {
     return globalOptions.remove(denops, "virtualedit");
   },
   async getLocal(denops: Denops): Promise<string> {
-    return await localOptions.get(denops, "virtualedit") ?? "";
+    const result = await localOptions.get(denops, "virtualedit");
+    return (result ?? "") as string;
   },
   setLocal(denops: Denops, value: string): Promise<void> {
     return localOptions.set(denops, "virtualedit", value);
@@ -15420,14 +16073,14 @@ export const virtualedit = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<string> {
     const result = await getbufvar(denops, bufnr, "&virtualedit");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
     return setbufvar(denops, bufnr, "&virtualedit", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&virtualedit");
-    return (result as string) ?? "";
+    return (result ?? "") as string;
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&virtualedit", value);
@@ -15467,7 +16120,8 @@ export const virtualedit = {
  */
 export const visualbell = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "visualbell") ?? false;
+    const result = await options.get(denops, "visualbell");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "visualbell", value);
@@ -15476,7 +16130,8 @@ export const visualbell = {
     return options.remove(denops, "visualbell");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "visualbell") ?? false;
+    const result = await globalOptions.get(denops, "visualbell");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "visualbell", value);
@@ -15494,7 +16149,8 @@ export const visualbell = {
  */
 export const warn = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "warn") ?? false;
+    const result = await options.get(denops, "warn");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "warn", value);
@@ -15503,7 +16159,8 @@ export const warn = {
     return options.remove(denops, "warn");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "warn") ?? false;
+    const result = await globalOptions.get(denops, "warn");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "warn", value);
@@ -15549,7 +16206,8 @@ export const warn = {
  */
 export const whichwrap = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "whichwrap") ?? "";
+    const result = await options.get(denops, "whichwrap");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "whichwrap", value);
@@ -15558,7 +16216,8 @@ export const whichwrap = {
     return options.remove(denops, "whichwrap");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "whichwrap") ?? "";
+    const result = await globalOptions.get(denops, "whichwrap");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "whichwrap", value);
@@ -15586,7 +16245,8 @@ export const whichwrap = {
  */
 export const wildchar = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "wildchar") ?? 0;
+    const result = await options.get(denops, "wildchar");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "wildchar", value);
@@ -15595,7 +16255,8 @@ export const wildchar = {
     return options.remove(denops, "wildchar");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "wildchar") ?? 0;
+    const result = await globalOptions.get(denops, "wildchar");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "wildchar", value);
@@ -15621,7 +16282,8 @@ export const wildchar = {
  */
 export const wildcharm = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "wildcharm") ?? 0;
+    const result = await options.get(denops, "wildcharm");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "wildcharm", value);
@@ -15630,7 +16292,8 @@ export const wildcharm = {
     return options.remove(denops, "wildcharm");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "wildcharm") ?? 0;
+    const result = await globalOptions.get(denops, "wildcharm");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "wildcharm", value);
@@ -15659,7 +16322,8 @@ export const wildcharm = {
  */
 export const wildignore = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "wildignore") ?? "";
+    const result = await options.get(denops, "wildignore");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "wildignore", value);
@@ -15668,7 +16332,8 @@ export const wildignore = {
     return options.remove(denops, "wildignore");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "wildignore") ?? "";
+    const result = await globalOptions.get(denops, "wildignore");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "wildignore", value);
@@ -15688,7 +16353,8 @@ export const wildignore = {
  */
 export const wildignorecase = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "wildignorecase") ?? false;
+    const result = await options.get(denops, "wildignorecase");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "wildignorecase", value);
@@ -15697,7 +16363,8 @@ export const wildignorecase = {
     return options.remove(denops, "wildignorecase");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "wildignorecase") ?? false;
+    const result = await globalOptions.get(denops, "wildignorecase");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "wildignorecase", value);
@@ -15766,7 +16433,8 @@ export const wildignorecase = {
  */
 export const wildmenu = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "wildmenu") ?? false;
+    const result = await options.get(denops, "wildmenu");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "wildmenu", value);
@@ -15775,7 +16443,8 @@ export const wildmenu = {
     return options.remove(denops, "wildmenu");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "wildmenu") ?? false;
+    const result = await globalOptions.get(denops, "wildmenu");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "wildmenu", value);
@@ -15844,7 +16513,8 @@ export const wildmenu = {
  */
 export const wildmode = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "wildmode") ?? "";
+    const result = await options.get(denops, "wildmode");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "wildmode", value);
@@ -15853,7 +16523,8 @@ export const wildmode = {
     return options.remove(denops, "wildmode");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "wildmode") ?? "";
+    const result = await globalOptions.get(denops, "wildmode");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "wildmode", value);
@@ -15886,7 +16557,8 @@ export const wildmode = {
  */
 export const wildoptions = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "wildoptions") ?? "";
+    const result = await options.get(denops, "wildoptions");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "wildoptions", value);
@@ -15895,7 +16567,8 @@ export const wildoptions = {
     return options.remove(denops, "wildoptions");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "wildoptions") ?? "";
+    const result = await globalOptions.get(denops, "wildoptions");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "wildoptions", value);
@@ -15929,7 +16602,8 @@ export const wildoptions = {
  */
 export const winaltkeys = {
   async get(denops: Denops): Promise<string> {
-    return await options.get(denops, "winaltkeys") ?? "";
+    const result = await options.get(denops, "winaltkeys");
+    return (result ?? "") as string;
   },
   set(denops: Denops, value: string): Promise<void> {
     return options.set(denops, "winaltkeys", value);
@@ -15938,7 +16612,8 @@ export const winaltkeys = {
     return options.remove(denops, "winaltkeys");
   },
   async getGlobal(denops: Denops): Promise<string> {
-    return await globalOptions.get(denops, "winaltkeys") ?? "";
+    const result = await globalOptions.get(denops, "winaltkeys");
+    return (result ?? "") as string;
   },
   setGlobal(denops: Denops, value: string): Promise<void> {
     return globalOptions.set(denops, "winaltkeys", value);
@@ -15963,7 +16638,8 @@ export const winaltkeys = {
  */
 export const window = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "window") ?? 0;
+    const result = await options.get(denops, "window");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "window", value);
@@ -15972,7 +16648,8 @@ export const window = {
     return options.remove(denops, "window");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "window") ?? 0;
+    const result = await globalOptions.get(denops, "window");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "window", value);
@@ -16006,7 +16683,8 @@ export const window = {
  */
 export const winheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "winheight") ?? 0;
+    const result = await options.get(denops, "winheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "winheight", value);
@@ -16015,7 +16693,8 @@ export const winheight = {
     return options.remove(denops, "winheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "winheight") ?? 0;
+    const result = await globalOptions.get(denops, "winheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "winheight", value);
@@ -16035,7 +16714,8 @@ export const winheight = {
  */
 export const winfixheight = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "winfixheight") ?? false;
+    const result = await options.get(denops, "winfixheight");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "winfixheight", value);
@@ -16044,7 +16724,8 @@ export const winfixheight = {
     return options.remove(denops, "winfixheight");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "winfixheight") ?? false;
+    const result = await localOptions.get(denops, "winfixheight");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "winfixheight", value);
@@ -16054,14 +16735,14 @@ export const winfixheight = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&winfixheight");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&winfixheight", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&winfixheight");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&winfixheight", value);
@@ -16077,7 +16758,8 @@ export const winfixheight = {
  */
 export const winfixwidth = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "winfixwidth") ?? false;
+    const result = await options.get(denops, "winfixwidth");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "winfixwidth", value);
@@ -16086,7 +16768,8 @@ export const winfixwidth = {
     return options.remove(denops, "winfixwidth");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "winfixwidth") ?? false;
+    const result = await localOptions.get(denops, "winfixwidth");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "winfixwidth", value);
@@ -16096,14 +16779,14 @@ export const winfixwidth = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&winfixwidth");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&winfixwidth", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&winfixwidth");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&winfixwidth", value);
@@ -16125,7 +16808,8 @@ export const winfixwidth = {
  */
 export const winminheight = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "winminheight") ?? 0;
+    const result = await options.get(denops, "winminheight");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "winminheight", value);
@@ -16134,7 +16818,8 @@ export const winminheight = {
     return options.remove(denops, "winminheight");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "winminheight") ?? 0;
+    const result = await globalOptions.get(denops, "winminheight");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "winminheight", value);
@@ -16160,7 +16845,8 @@ export const winminheight = {
  */
 export const winminwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "winminwidth") ?? 0;
+    const result = await options.get(denops, "winminwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "winminwidth", value);
@@ -16169,7 +16855,8 @@ export const winminwidth = {
     return options.remove(denops, "winminwidth");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "winminwidth") ?? 0;
+    const result = await globalOptions.get(denops, "winminwidth");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "winminwidth", value);
@@ -16194,7 +16881,8 @@ export const winminwidth = {
  */
 export const winwidth = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "winwidth") ?? 0;
+    const result = await options.get(denops, "winwidth");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "winwidth", value);
@@ -16203,7 +16891,8 @@ export const winwidth = {
     return options.remove(denops, "winwidth");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "winwidth") ?? 0;
+    const result = await globalOptions.get(denops, "winwidth");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "winwidth", value);
@@ -16236,7 +16925,8 @@ export const winwidth = {
  */
 export const wrap = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "wrap") ?? false;
+    const result = await options.get(denops, "wrap");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "wrap", value);
@@ -16245,7 +16935,8 @@ export const wrap = {
     return options.remove(denops, "wrap");
   },
   async getLocal(denops: Denops): Promise<boolean> {
-    return await localOptions.get(denops, "wrap") ?? false;
+    const result = await localOptions.get(denops, "wrap");
+    return Boolean(result ?? false);
   },
   setLocal(denops: Denops, value: boolean): Promise<void> {
     return localOptions.set(denops, "wrap", value);
@@ -16255,14 +16946,14 @@ export const wrap = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
     const result = await getbufvar(denops, bufnr, "&wrap");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
     return setbufvar(denops, bufnr, "&wrap", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&wrap");
-    return (result as boolean) ?? false;
+    return Boolean(result ?? false);
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&wrap", value);
@@ -16284,7 +16975,8 @@ export const wrap = {
  */
 export const wrapmargin = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "wrapmargin") ?? 0;
+    const result = await options.get(denops, "wrapmargin");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "wrapmargin", value);
@@ -16293,7 +16985,8 @@ export const wrapmargin = {
     return options.remove(denops, "wrapmargin");
   },
   async getLocal(denops: Denops): Promise<number> {
-    return await localOptions.get(denops, "wrapmargin") ?? 0;
+    const result = await localOptions.get(denops, "wrapmargin");
+    return (result ?? 0) as number;
   },
   setLocal(denops: Denops, value: number): Promise<void> {
     return localOptions.set(denops, "wrapmargin", value);
@@ -16303,14 +16996,14 @@ export const wrapmargin = {
   },
   async getBuffer(denops: Denops, bufnr: number): Promise<number> {
     const result = await getbufvar(denops, bufnr, "&wrapmargin");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
     return setbufvar(denops, bufnr, "&wrapmargin", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&wrapmargin");
-    return (result as number) ?? 0;
+    return (result ?? 0) as number;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
     return setwinvar(denops, winnr, "&wrapmargin", value);
@@ -16325,7 +17018,8 @@ export const wrapmargin = {
  */
 export const wrapscan = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "wrapscan") ?? false;
+    const result = await options.get(denops, "wrapscan");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "wrapscan", value);
@@ -16334,7 +17028,8 @@ export const wrapscan = {
     return options.remove(denops, "wrapscan");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "wrapscan") ?? false;
+    const result = await globalOptions.get(denops, "wrapscan");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "wrapscan", value);
@@ -16355,7 +17050,8 @@ export const wrapscan = {
  */
 export const write = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "write") ?? false;
+    const result = await options.get(denops, "write");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "write", value);
@@ -16364,7 +17060,8 @@ export const write = {
     return options.remove(denops, "write");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "write") ?? false;
+    const result = await globalOptions.get(denops, "write");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "write", value);
@@ -16381,7 +17078,8 @@ export const write = {
  */
 export const writeany = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "writeany") ?? false;
+    const result = await options.get(denops, "writeany");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "writeany", value);
@@ -16390,7 +17088,8 @@ export const writeany = {
     return options.remove(denops, "writeany");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "writeany") ?? false;
+    const result = await globalOptions.get(denops, "writeany");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "writeany", value);
@@ -16421,7 +17120,8 @@ export const writeany = {
  */
 export const writebackup = {
   async get(denops: Denops): Promise<boolean> {
-    return await options.get(denops, "writebackup") ?? false;
+    const result = await options.get(denops, "writebackup");
+    return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
     return options.set(denops, "writebackup", value);
@@ -16430,7 +17130,8 @@ export const writebackup = {
     return options.remove(denops, "writebackup");
   },
   async getGlobal(denops: Denops): Promise<boolean> {
-    return await globalOptions.get(denops, "writebackup") ?? false;
+    const result = await globalOptions.get(denops, "writebackup");
+    return Boolean(result ?? false);
   },
   setGlobal(denops: Denops, value: boolean): Promise<void> {
     return globalOptions.set(denops, "writebackup", value);
@@ -16449,7 +17150,8 @@ export const writebackup = {
  */
 export const writedelay = {
   async get(denops: Denops): Promise<number> {
-    return await options.get(denops, "writedelay") ?? 0;
+    const result = await options.get(denops, "writedelay");
+    return (result ?? 0) as number;
   },
   set(denops: Denops, value: number): Promise<void> {
     return options.set(denops, "writedelay", value);
@@ -16458,7 +17160,8 @@ export const writedelay = {
     return options.remove(denops, "writedelay");
   },
   async getGlobal(denops: Denops): Promise<number> {
-    return await globalOptions.get(denops, "writedelay") ?? 0;
+    const result = await globalOptions.get(denops, "writedelay");
+    return (result ?? 0) as number;
   },
   setGlobal(denops: Denops, value: number): Promise<void> {
     return globalOptions.set(denops, "writedelay", value);
