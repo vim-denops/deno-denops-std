@@ -102,7 +102,7 @@ function formatBufferOptionBody(name: string, type: OptionType): string[] {
     `    return (result as ${type}) ?? ${defaultValue(type)};`,
     `  },`,
     `  setBuffer(denops: Denops, bufnr: number, value: ${type}): Promise<void> {`,
-    `    return setbufvar(denops, bufnr, "${name}", value);`,
+    `    return setbufvar(denops, bufnr, "&${name}", value);`,
     `  },`,
   ];
   return lines;
@@ -115,7 +115,7 @@ function formatWindowOptionBody(name: string, type: OptionType): string[] {
     `    return (result as ${type}) ?? ${defaultValue(type)};`,
     `  },`,
     `  setWindow(denops: Denops, winnr: number, value: ${type}): Promise<void> {`,
-    `    return setwinvar(denops, winnr, "${name}", value);`,
+    `    return setwinvar(denops, winnr, "&${name}", value);`,
     `  },`,
   ];
   return lines;

@@ -313,14 +313,14 @@ export const balloonexpr = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "balloonexpr", value);
+    return setbufvar(denops, bufnr, "&balloonexpr", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&balloonexpr");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "balloonexpr", value);
+    return setwinvar(denops, winnr, "&balloonexpr", value);
   },
 };
 
@@ -641,14 +641,14 @@ export const cryptmethod = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "cryptmethod", value);
+    return setbufvar(denops, bufnr, "&cryptmethod", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&cryptmethod");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "cryptmethod", value);
+    return setwinvar(denops, winnr, "&cryptmethod", value);
   },
 };
 
@@ -1334,14 +1334,14 @@ export const key = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "key", value);
+    return setbufvar(denops, bufnr, "&key", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&key");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "key", value);
+    return setwinvar(denops, winnr, "&key", value);
   },
 };
 
@@ -1665,14 +1665,14 @@ export const osfiletype = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "osfiletype", value);
+    return setbufvar(denops, bufnr, "&osfiletype", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&osfiletype");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "osfiletype", value);
+    return setwinvar(denops, winnr, "&osfiletype", value);
   },
 };
 
@@ -2216,14 +2216,14 @@ export const shortname = {
     return (result as boolean) ?? false;
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
-    return setbufvar(denops, bufnr, "shortname", value);
+    return setbufvar(denops, bufnr, "&shortname", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&shortname");
     return (result as boolean) ?? false;
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
-    return setwinvar(denops, winnr, "shortname", value);
+    return setwinvar(denops, winnr, "&shortname", value);
   },
 };
 
@@ -2454,14 +2454,14 @@ export const termwinkey = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "termwinkey", value);
+    return setbufvar(denops, bufnr, "&termwinkey", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&termwinkey");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "termwinkey", value);
+    return setwinvar(denops, winnr, "&termwinkey", value);
   },
 };
 
@@ -2501,14 +2501,14 @@ export const termwinscroll = {
     return (result as number) ?? 0;
   },
   setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
-    return setbufvar(denops, bufnr, "termwinscroll", value);
+    return setbufvar(denops, bufnr, "&termwinscroll", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<number> {
     const result = await getwinvar(denops, winnr, "&termwinscroll");
     return (result as number) ?? 0;
   },
   setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
-    return setwinvar(denops, winnr, "termwinscroll", value);
+    return setwinvar(denops, winnr, "&termwinscroll", value);
   },
 };
 
@@ -2562,14 +2562,14 @@ export const termwinsize = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "termwinsize", value);
+    return setbufvar(denops, bufnr, "&termwinsize", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&termwinsize");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "termwinsize", value);
+    return setwinvar(denops, winnr, "&termwinsize", value);
   },
 };
 
@@ -2706,14 +2706,14 @@ export const textmode = {
     return (result as boolean) ?? false;
   },
   setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
-    return setbufvar(denops, bufnr, "textmode", value);
+    return setbufvar(denops, bufnr, "&textmode", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<boolean> {
     const result = await getwinvar(denops, winnr, "&textmode");
     return (result as boolean) ?? false;
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
-    return setwinvar(denops, winnr, "textmode", value);
+    return setwinvar(denops, winnr, "&textmode", value);
   },
 };
 
@@ -3260,14 +3260,14 @@ export const wincolor = {
     return (result as string) ?? "";
   },
   setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "wincolor", value);
+    return setbufvar(denops, bufnr, "&wincolor", value);
   },
   async getWindow(denops: Denops, winnr: number): Promise<string> {
     const result = await getwinvar(denops, winnr, "&wincolor");
     return (result as string) ?? "";
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "wincolor", value);
+    return setwinvar(denops, winnr, "&wincolor", value);
   },
 };
 
