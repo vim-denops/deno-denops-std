@@ -167,11 +167,10 @@ test({
           await denops.cmd("new");
           await denops.cmd("setlocal dictionary=hello");
           await _generated.dictionary.setBuffer(denops, bufnr, "world");
-          // FIXME: setBuffer() should replace the option
-          // assertEquals(
-          //   await denops.call("getbufvar", bufnr, "&dictionary"),
-          //   "world",
-          // );
+          assertEquals(
+            await denops.call("getbufvar", bufnr, "&dictionary"),
+            "world",
+          );
           assertEquals(await denops.eval("&l:dictionary"), "hello");
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -217,11 +216,10 @@ test({
           await denops.cmd("botright split");
           await denops.cmd("setlocal colorcolumn=+1,+3");
           await _generated.colorcolumn.setWindow(denops, 1, "+42");
-          // FIXME: setWindow() should replace the option
-          // assertEquals(
-          //   await denops.call("getwinvar", 1, "&colorcolumn"),
-          //   "+42",
-          // );
+          assertEquals(
+            await denops.call("getwinvar", 1, "&colorcolumn"),
+            "+42",
+          );
           assertEquals(await denops.eval("&l:colorcolumn"), "+1,+3");
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -389,11 +387,10 @@ test({
           await denops.cmd("new");
           await denops.cmd("setlocal undolevels=123");
           await _generated.undolevels.setBuffer(denops, bufnr, 42);
-          // FIXME: setBuffer() should replace the option
-          // assertEquals(
-          //   await denops.call("getbufvar", bufnr, "&undolevels"),
-          //   42,
-          // );
+          assertEquals(
+            await denops.call("getbufvar", bufnr, "&undolevels"),
+            42,
+          );
           assertEquals(await denops.eval("&l:undolevels"), 123);
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -436,8 +433,7 @@ test({
           await denops.cmd("botright split");
           await denops.cmd("setlocal foldlevel=123");
           await _generated.foldlevel.setWindow(denops, 1, 456);
-          // FIXME: setWindow() should replace the option
-          // assertEquals(await denops.call("getwinvar", 1, "&foldlevel"), 456);
+          assertEquals(await denops.call("getwinvar", 1, "&foldlevel"), 456);
           assertEquals(await denops.eval("&l:foldlevel"), 123);
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -642,8 +638,7 @@ test({
           await denops.cmd("new");
           await denops.cmd("setlocal noautoread");
           await _generated.autoread.setBuffer(denops, bufnr, true);
-          // FIXME: setBuffer() should replace the option
-          // assertTruthy(await denops.call("getbufvar", bufnr, "&autoread"));
+          assertTruthy(await denops.call("getbufvar", bufnr, "&autoread"));
           assertFalsy(await denops.eval("&l:autoread"));
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -685,8 +680,7 @@ test({
           await denops.cmd("botright split");
           await denops.cmd("setlocal nolist");
           await _generated.list.setWindow(denops, 1, true);
-          // FIXME: setWindow() should replace the option
-          // assertTruthy(await denops.call("getwinvar", 1, "&list"));
+          assertTruthy(await denops.call("getwinvar", 1, "&list"));
           assertFalsy(await denops.eval("&l:list"));
         } finally {
           await denops.cmd("1,$bwipeout!");
