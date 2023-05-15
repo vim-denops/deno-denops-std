@@ -7,6 +7,11 @@ import {
   setwinvar,
 } from "../../function/mod.ts";
 import { globalOptions, localOptions, options } from "../../variable/mod.ts";
+import type {
+  GlobalOption,
+  GlobalOrLocalOption,
+  LocalOption,
+} from "../types.ts";
 
 /**
  * `channel` connected to the buffer, or 0 if no channel is connected.
@@ -15,7 +20,7 @@ import { globalOptions, localOptions, options } from "../../variable/mod.ts";
  *
  * (default: 0)
  */
-export const channel = {
+export const channel: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "channel") ?? 0;
   },
@@ -67,7 +72,7 @@ export const channel = {
  *
  * (default "nosplit")
  */
-export const inccommand = {
+export const inccommand: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "inccommand") ?? "";
   },
@@ -103,7 +108,7 @@ export const inccommand = {
  *
  * (default "")
  */
-export const jumpoptions = {
+export const jumpoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "jumpoptions") ?? "";
   },
@@ -146,7 +151,7 @@ export const jumpoptions = {
  *
  * (default "ver:3,hor:6")
  */
-export const mousescroll = {
+export const mousescroll: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "mousescroll") ?? "";
   },
@@ -183,7 +188,7 @@ export const mousescroll = {
  *
  * (default 0)
  */
-export const pumblend = {
+export const pumblend: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "pumblend") ?? 0;
   },
@@ -233,7 +238,7 @@ export const pumblend = {
  *
  * (default '')
  */
-export const redrawdebug = {
+export const redrawdebug: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "redrawdebug") ?? "";
   },
@@ -262,7 +267,7 @@ export const redrawdebug = {
  *
  * (default: 10000)
  */
-export const scrollback = {
+export const scrollback: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "scrollback") ?? 0;
   },
@@ -414,7 +419,7 @@ export const scrollback = {
  *  Win32:  !,'100,<50,s10,h,rA:,rB:
  *  others: !,'100,<50,s10,h)
  */
-export const shada = {
+export const shada: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shada") ?? "";
   },
@@ -445,7 +450,7 @@ export const shada = {
  *
  * (default: "")
  */
-export const shadafile = {
+export const shadafile: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shadafile") ?? "";
   },
@@ -488,7 +493,7 @@ export const shadafile = {
  *
  * (default: "BS,HT,ESC,DEL")
  */
-export const termpastefilter = {
+export const termpastefilter: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "termpastefilter") ?? "";
   },
@@ -526,7 +531,7 @@ export const termpastefilter = {
  *
  * (default empty)
  */
-export const winbar = {
+export const winbar: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "winbar") ?? "";
   },
@@ -579,7 +584,7 @@ export const winbar = {
  *
  * (default 0)
  */
-export const winblend = {
+export const winblend: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "winblend") ?? 0;
   },
@@ -635,7 +640,7 @@ export const winblend = {
  *
  * (default empty)
  */
-export const winhighlight = {
+export const winhighlight: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "winhighlight") ?? "";
   },

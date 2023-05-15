@@ -7,6 +7,11 @@ import {
   setwinvar,
 } from "./../function/mod.ts";
 import { globalOptions, localOptions, options } from "./../variable/mod.ts";
+import type {
+  GlobalOption,
+  GlobalOrLocalOption,
+  LocalOption,
+} from "./types.ts";
 
 /**
  * The ASCII code for the first letter of the Hebrew alphabet.  The
@@ -20,7 +25,7 @@ import { globalOptions, localOptions, options } from "./../variable/mod.ts";
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const aleph = {
+export const aleph: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "aleph") ?? 0;
   },
@@ -52,7 +57,7 @@ export const aleph = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const allowrevins = {
+export const allowrevins: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "allowrevins") ?? false;
   },
@@ -113,7 +118,7 @@ export const allowrevins = {
  *
  * (default: "single")
  */
-export const ambiwidth = {
+export const ambiwidth: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "ambiwidth") ?? "";
   },
@@ -146,7 +151,7 @@ export const ambiwidth = {
  *
  * *only available when compiled with it, use exists("+autochdir") to check*
  */
-export const autochdir = {
+export const autochdir: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "autochdir") ?? false;
   },
@@ -189,7 +194,7 @@ export const autochdir = {
  *
  * *only available when compiled with the `+arabic` feature*
  */
-export const arabic = {
+export const arabic: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "arabic") ?? false;
   },
@@ -243,7 +248,7 @@ export const arabic = {
  *
  * *only available when compiled with the `+arabic` feature*
  */
-export const arabicshape = {
+export const arabicshape: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "arabicshape") ?? false;
   },
@@ -281,7 +286,7 @@ export const arabicshape = {
  *
  * (default off)
  */
-export const autoindent = {
+export const autoindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "autoindent") ?? false;
   },
@@ -329,7 +334,7 @@ export const autoindent = {
  *
  * (default off)
  */
-export const autoread = {
+export const autoread: GlobalOrLocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "autoread") ?? false;
   },
@@ -388,7 +393,7 @@ export const autoread = {
  *
  * (default off)
  */
-export const autowrite = {
+export const autowrite: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "autowrite") ?? false;
   },
@@ -417,7 +422,7 @@ export const autowrite = {
  *
  * (default off)
  */
-export const autowriteall = {
+export const autowriteall: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "autowriteall") ?? false;
   },
@@ -508,7 +513,7 @@ export const autowriteall = {
  *
  * (default "dark" or "light", see below)
  */
-export const background = {
+export const background: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "background") ?? "";
   },
@@ -557,7 +562,7 @@ export const background = {
  * (default "", set to "indent,eol,start"
  *  in `defaults.vim`)
  */
-export const backspace = {
+export const backspace: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "backspace") ?? "";
   },
@@ -593,7 +598,7 @@ export const backspace = {
  *
  * (default off)
  */
-export const backup = {
+export const backup: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "backup") ?? false;
   },
@@ -682,7 +687,7 @@ export const backup = {
  *
  * (Vi default for Unix: "yes", otherwise: "auto")
  */
-export const backupcopy = {
+export const backupcopy: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "backupcopy") ?? "";
   },
@@ -777,7 +782,7 @@ export const backupcopy = {
  *  for Win32: ".,$TEMP,c:/tmp,c:/temp"
  *  for Unix: `".,~/tmp,~/"`)
  */
-export const backupdir = {
+export const backupdir: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "backupdir") ?? "";
   },
@@ -816,7 +821,7 @@ export const backupdir = {
  *
  * (default `"~"`, for VMS: "_")
  */
-export const backupext = {
+export const backupext: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "backupext") ?? "";
   },
@@ -864,7 +869,7 @@ export const backupext = {
  *  Unix: "/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*"
  *  Mac: "/private/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*")
  */
-export const backupskip = {
+export const backupskip: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "backupskip") ?? "";
   },
@@ -927,7 +932,7 @@ export const backupskip = {
  *
  * (default "")
  */
-export const belloff = {
+export const belloff: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "belloff") ?? "";
   },
@@ -978,7 +983,7 @@ export const belloff = {
  *
  * (default off)
  */
-export const binary = {
+export const binary: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "binary") ?? false;
   },
@@ -1032,7 +1037,7 @@ export const binary = {
  *
  * (default off)
  */
-export const bomb = {
+export const bomb: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "bomb") ?? false;
   },
@@ -1076,7 +1081,7 @@ export const bomb = {
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const breakat = {
+export const breakat: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "breakat") ?? "";
   },
@@ -1107,7 +1112,7 @@ export const breakat = {
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const breakindent = {
+export const breakindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "breakindent") ?? false;
   },
@@ -1175,7 +1180,7 @@ export const breakindent = {
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const breakindentopt = {
+export const breakindentopt: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "breakindentopt") ?? "";
   },
@@ -1222,7 +1227,7 @@ export const breakindentopt = {
  *
  * *only for Motif, GTK, Mac and Win32 GUI*
  */
-export const browsedir = {
+export const browsedir: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "browsedir") ?? "";
   },
@@ -1266,7 +1271,7 @@ export const browsedir = {
  *
  * (default: "")
  */
-export const bufhidden = {
+export const bufhidden: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "bufhidden") ?? "";
   },
@@ -1310,7 +1315,7 @@ export const bufhidden = {
  *
  * (default: on)
  */
-export const buflisted = {
+export const buflisted: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "buflisted") ?? false;
   },
@@ -1401,7 +1406,7 @@ export const buflisted = {
  *
  * (default: "")
  */
-export const buftype = {
+export const buftype: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "buftype") ?? "";
   },
@@ -1451,7 +1456,7 @@ export const buftype = {
  *
  * (default: "internal,keepascii")
  */
-export const casemap = {
+export const casemap: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "casemap") ?? "";
   },
@@ -1481,7 +1486,7 @@ export const casemap = {
  *
  * (default: off)
  */
-export const cdhome = {
+export const cdhome: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cdhome") ?? false;
   },
@@ -1523,7 +1528,7 @@ export const cdhome = {
  *
  * (default: equivalent to $CDPATH or ",,")
  */
-export const cdpath = {
+export const cdpath: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cdpath") ?? "";
   },
@@ -1561,7 +1566,7 @@ export const cdpath = {
  *
  * (Vi default: "", Vim default: CTRL-F)
  */
-export const cedit = {
+export const cedit: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cedit") ?? "";
   },
@@ -1639,7 +1644,7 @@ export const cedit = {
  *
  * *only available when compiled with the `+eval` feature*
  */
-export const charconvert = {
+export const charconvert: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "charconvert") ?? "";
   },
@@ -1676,7 +1681,7 @@ export const charconvert = {
  *
  * (default off)
  */
-export const cindent = {
+export const cindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cindent") ?? false;
   },
@@ -1720,7 +1725,7 @@ export const cindent = {
  *
  * (default "0**{,0}**,0),0],:,0#,!^F,o,O,e")
  */
-export const cinkeys = {
+export const cinkeys: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cinkeys") ?? "";
   },
@@ -1762,7 +1767,7 @@ export const cinkeys = {
  *
  * (default "")
  */
-export const cinoptions = {
+export const cinoptions: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cinoptions") ?? "";
   },
@@ -1807,7 +1812,7 @@ export const cinoptions = {
  *
  * (default "if,else,while,do,for,switch")
  */
-export const cinwords = {
+export const cinwords: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cinwords") ?? "";
   },
@@ -1851,7 +1856,7 @@ export const cinwords = {
  *
  * (default "public,protected,private")
  */
-export const cinscopedecls = {
+export const cinscopedecls: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cinscopedecls") ?? "";
   },
@@ -1973,7 +1978,7 @@ export const cinscopedecls = {
  *
  * *only in GUI versions or when the `+xterm_clipboard` feature is included*
  */
-export const clipboard = {
+export const clipboard: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "clipboard") ?? "";
   },
@@ -2002,7 +2007,7 @@ export const clipboard = {
  *
  * (default 1)
  */
-export const cmdheight = {
+export const cmdheight: GlobalOrLocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "cmdheight") ?? 0;
   },
@@ -2051,7 +2056,7 @@ export const cmdheight = {
  *
  * (default 7)
  */
-export const cmdwinheight = {
+export const cmdwinheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "cmdwinheight") ?? 0;
   },
@@ -2090,7 +2095,7 @@ export const cmdwinheight = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const colorcolumn = {
+export const colorcolumn: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "colorcolumn") ?? "";
   },
@@ -2144,7 +2149,7 @@ export const colorcolumn = {
  *
  * (default 80 or terminal width)
  */
-export const columns = {
+export const columns: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "columns") ?? 0;
   },
@@ -2173,7 +2178,7 @@ export const columns = {
  * (default
  *  "s1:/*,mb:*,ex:* /,://,b:#,:%,:XCOMM,n:>,fb:-")
  */
-export const comments = {
+export const comments: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "comments") ?? "";
   },
@@ -2217,7 +2222,7 @@ export const comments = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const commentstring = {
+export const commentstring: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "commentstring") ?? "";
   },
@@ -2297,7 +2302,7 @@ export const commentstring = {
  *
  * (default: ".,w,b,u,t,i")
  */
-export const complete = {
+export const complete: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "complete") ?? "";
   },
@@ -2346,7 +2351,7 @@ export const complete = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const completefunc = {
+export const completefunc: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "completefunc") ?? "";
   },
@@ -2397,7 +2402,7 @@ export const completefunc = {
  *
  * *only for MS-Windows*
  */
-export const completeslash = {
+export const completeslash: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "completeslash") ?? "";
   },
@@ -2477,7 +2482,7 @@ export const completeslash = {
  *
  * (default: "menu,preview")
  */
-export const completeopt = {
+export const completeopt: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "completeopt") ?? "";
   },
@@ -2519,7 +2524,7 @@ export const completeopt = {
  *
  * *not available when compiled without the `+conceal` feature*
  */
-export const concealcursor = {
+export const concealcursor: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "concealcursor") ?? "";
   },
@@ -2579,7 +2584,7 @@ export const concealcursor = {
  *
  * *not available when compiled without the `+conceal` feature*
  */
-export const conceallevel = {
+export const conceallevel: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "conceallevel") ?? 0;
   },
@@ -2626,7 +2631,7 @@ export const conceallevel = {
  *
  * (default off)
  */
-export const confirm = {
+export const confirm: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "confirm") ?? false;
   },
@@ -2661,7 +2666,7 @@ export const confirm = {
  *
  * (default off)
  */
-export const copyindent = {
+export const copyindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "copyindent") ?? false;
   },
@@ -3017,7 +3022,7 @@ export const copyindent = {
  * (Vim default: "aABceFs",
  *  Vi default:  all flags)
  */
-export const cpoptions = {
+export const cpoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cpoptions") ?? "";
   },
@@ -3047,7 +3052,7 @@ export const cpoptions = {
  *
  * *not available when compiled without the `+cscope` feature*
  */
-export const cscopepathcomp = {
+export const cscopepathcomp: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "cscopepathcomp") ?? 0;
   },
@@ -3077,7 +3082,7 @@ export const cscopepathcomp = {
  *
  * *not available when compiled without the `+cscope` feature*
  */
-export const cscopeprg = {
+export const cscopeprg: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cscopeprg") ?? "";
   },
@@ -3106,7 +3111,7 @@ export const cscopeprg = {
  *
  * *not available when compiled without the `+cscope` or `+quickfix` features*
  */
-export const cscopequickfix = {
+export const cscopequickfix: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cscopequickfix") ?? "";
   },
@@ -3137,7 +3142,7 @@ export const cscopequickfix = {
  *
  * *not available when compiled without the `+cscope` feature*
  */
-export const cscoperelative = {
+export const cscoperelative: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cscoperelative") ?? false;
   },
@@ -3166,7 +3171,7 @@ export const cscoperelative = {
  *
  * *not available when compiled without the `+cscope` feature*
  */
-export const cscopetag = {
+export const cscopetag: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cscopetag") ?? false;
   },
@@ -3196,7 +3201,7 @@ export const cscopetag = {
  *
  * *not available when compiled without the `+cscope` feature*
  */
-export const cscopetagorder = {
+export const cscopetagorder: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "cscopetagorder") ?? 0;
   },
@@ -3228,7 +3233,7 @@ export const cscopetagorder = {
  *
  * (default off)
  */
-export const cursorbind = {
+export const cursorbind: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cursorbind") ?? false;
   },
@@ -3277,7 +3282,7 @@ export const cursorbind = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorcolumn = {
+export const cursorcolumn: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cursorcolumn") ?? false;
   },
@@ -3322,7 +3327,7 @@ export const cursorcolumn = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorline = {
+export const cursorline: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "cursorline") ?? false;
   },
@@ -3376,7 +3381,7 @@ export const cursorline = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorlineopt = {
+export const cursorlineopt: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "cursorlineopt") ?? "";
   },
@@ -3425,7 +3430,7 @@ export const cursorlineopt = {
  *
  * (default "")
  */
-export const debug = {
+export const debug: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "debug") ?? "";
   },
@@ -3476,7 +3481,7 @@ export const debug = {
  *
  * (default "^\s*#\s*define")
  */
-export const define = {
+export const define: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "define") ?? "";
   },
@@ -3534,7 +3539,7 @@ export const define = {
  *
  * (default off)
  */
-export const delcombine = {
+export const delcombine: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "delcombine") ?? false;
   },
@@ -3581,7 +3586,7 @@ export const delcombine = {
  *
  * (default "")
  */
-export const dictionary = {
+export const dictionary: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "dictionary") ?? "";
   },
@@ -3633,7 +3638,7 @@ export const dictionary = {
  *
  * *not available when compiled without the `+diff` feature*
  */
-export const diff = {
+export const diff: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "diff") ?? false;
   },
@@ -3678,7 +3683,7 @@ export const diff = {
  *
  * *not available when compiled without the `+diff` feature*
  */
-export const diffexpr = {
+export const diffexpr: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "diffexpr") ?? "";
   },
@@ -3800,7 +3805,7 @@ export const diffexpr = {
  *
  * *not available when compiled without the `+diff` feature*
  */
-export const diffopt = {
+export const diffopt: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "diffopt") ?? "";
   },
@@ -3830,7 +3835,7 @@ export const diffopt = {
  *
  * *not available when compiled without the `+digraphs` feature*
  */
-export const digraph = {
+export const digraph: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "digraph") ?? false;
   },
@@ -3909,7 +3914,7 @@ export const digraph = {
  *  for Win32: ".,$TEMP,c:\tmp,c:\temp"
  *  for Unix: `".,~/tmp,/var/tmp,/tmp"`)
  */
-export const directory = {
+export const directory: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "directory") ?? "";
   },
@@ -3948,7 +3953,7 @@ export const directory = {
  * (default "", set to "truncate" in
  *  `defaults.vim`)
  */
-export const display = {
+export const display: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "display") ?? "";
   },
@@ -3977,7 +3982,7 @@ export const display = {
  *
  * (default "both")
  */
-export const eadirection = {
+export const eadirection: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "eadirection") ?? "";
   },
@@ -4007,7 +4012,7 @@ export const eadirection = {
  *
  * (default: on)
  */
-export const emoji = {
+export const emoji: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "emoji") ?? false;
   },
@@ -4092,7 +4097,7 @@ export const emoji = {
  * (default for MS-Windows: "utf-8",
  *  otherwise: value from $LANG or "latin1")
  */
-export const encoding = {
+export const encoding: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "encoding") ?? "";
   },
@@ -4128,7 +4133,7 @@ export const encoding = {
  *
  * (default on)
  */
-export const endofline = {
+export const endofline: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "endofline") ?? false;
   },
@@ -4181,7 +4186,7 @@ export const endofline = {
  *
  * (default on)
  */
-export const equalalways = {
+export const equalalways: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "equalalways") ?? false;
   },
@@ -4214,7 +4219,7 @@ export const equalalways = {
  *
  * (default "")
  */
-export const equalprg = {
+export const equalprg: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "equalprg") ?? "";
   },
@@ -4268,7 +4273,7 @@ export const equalprg = {
  *
  * (default off)
  */
-export const errorbells = {
+export const errorbells: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "errorbells") ?? false;
   },
@@ -4304,7 +4309,7 @@ export const errorbells = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const errorfile = {
+export const errorfile: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "errorfile") ?? "";
   },
@@ -4333,7 +4338,7 @@ export const errorfile = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const errorformat = {
+export const errorformat: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "errorformat") ?? "";
   },
@@ -4387,7 +4392,7 @@ export const errorformat = {
  *
  * (default "")
  */
-export const eventignore = {
+export const eventignore: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "eventignore") ?? "";
   },
@@ -4419,7 +4424,7 @@ export const eventignore = {
  *
  * (default off)
  */
-export const expandtab = {
+export const expandtab: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "expandtab") ?? false;
   },
@@ -4505,7 +4510,7 @@ export const expandtab = {
  *
  * (default: "")
  */
-export const fileencoding = {
+export const fileencoding: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "fileencoding") ?? "";
   },
@@ -4602,7 +4607,7 @@ export const fileencoding = {
  *  "ucs-bom,utf-8,default,latin1" when
  *  'encoding' is set to a Unicode value)
  */
-export const fileencodings = {
+export const fileencodings: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "fileencodings") ?? "";
   },
@@ -4645,7 +4650,7 @@ export const fileencodings = {
  * (MS-Windows default: "dos",
  *  Unix, macOS default: "unix")
  */
-export const fileformat = {
+export const fileformat: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "fileformat") ?? "";
   },
@@ -4738,7 +4743,7 @@ export const fileformat = {
  *  Vi     Cygwin: "unix,dos",
  *  Vi     others: "")
  */
-export const fileformats = {
+export const fileformats: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "fileformats") ?? "";
   },
@@ -4766,7 +4771,7 @@ export const fileformats = {
  * (default on for systems where case in file
  *  names is normally ignored)
  */
-export const fileignorecase = {
+export const fileignorecase: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "fileignorecase") ?? false;
   },
@@ -4812,7 +4817,7 @@ export const fileignorecase = {
  *
  * (default: "")
  */
-export const filetype = {
+export const filetype: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "filetype") ?? "";
   },
@@ -4892,7 +4897,7 @@ export const filetype = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const fillchars = {
+export const fillchars: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "fillchars") ?? "";
   },
@@ -4946,7 +4951,7 @@ export const fillchars = {
  *
  * (default on)
  */
-export const fixendofline = {
+export const fixendofline: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "fixendofline") ?? false;
   },
@@ -4990,7 +4995,7 @@ export const fixendofline = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldclose = {
+export const foldclose: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldclose") ?? "";
   },
@@ -5021,7 +5026,7 @@ export const foldclose = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldcolumn = {
+export const foldcolumn: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "foldcolumn") ?? 0;
   },
@@ -5069,7 +5074,7 @@ export const foldcolumn = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldenable = {
+export const foldenable: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "foldenable") ?? false;
   },
@@ -5122,7 +5127,7 @@ export const foldenable = {
  *
  * *not available when compiled without the `+folding` or `+eval` features*
  */
-export const foldexpr = {
+export const foldexpr: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldexpr") ?? "";
   },
@@ -5167,7 +5172,7 @@ export const foldexpr = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldignore = {
+export const foldignore: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldignore") ?? "";
   },
@@ -5213,7 +5218,7 @@ export const foldignore = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldlevel = {
+export const foldlevel: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "foldlevel") ?? 0;
   },
@@ -5263,7 +5268,7 @@ export const foldlevel = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldlevelstart = {
+export const foldlevelstart: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "foldlevelstart") ?? 0;
   },
@@ -5294,7 +5299,7 @@ export const foldlevelstart = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldmarker = {
+export const foldmarker: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldmarker") ?? "";
   },
@@ -5342,7 +5347,7 @@ export const foldmarker = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldmethod = {
+export const foldmethod: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldmethod") ?? "";
   },
@@ -5390,7 +5395,7 @@ export const foldmethod = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldminlines = {
+export const foldminlines: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "foldminlines") ?? 0;
   },
@@ -5434,7 +5439,7 @@ export const foldminlines = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldnestmax = {
+export const foldnestmax: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "foldnestmax") ?? 0;
   },
@@ -5506,7 +5511,7 @@ export const foldnestmax = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldopen = {
+export const foldopen: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldopen") ?? "";
   },
@@ -5544,7 +5549,7 @@ export const foldopen = {
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldtext = {
+export const foldtext: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "foldtext") ?? "";
   },
@@ -5626,7 +5631,7 @@ export const foldtext = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const formatexpr = {
+export const formatexpr: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "formatexpr") ?? "";
   },
@@ -5674,7 +5679,7 @@ export const formatexpr = {
  *
  * (default: "^\s*\d\+[\]:.)}\t ]\s*")
  */
-export const formatlistpat = {
+export const formatlistpat: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "formatlistpat") ?? "";
   },
@@ -5721,7 +5726,7 @@ export const formatlistpat = {
  *
  * (Vim default: "tcq", Vi default: "vt")
  */
-export const formatoptions = {
+export const formatoptions: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "formatoptions") ?? "";
   },
@@ -5771,7 +5776,7 @@ export const formatoptions = {
  *
  * (default "")
  */
-export const formatprg = {
+export const formatprg: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "formatprg") ?? "";
   },
@@ -5832,7 +5837,7 @@ export const formatprg = {
  *
  * (default on)
  */
-export const fsync = {
+export const fsync: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "fsync") ?? false;
   },
@@ -5872,7 +5877,7 @@ export const fsync = {
  *
  * (default off)
  */
-export const gdefault = {
+export const gdefault: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "gdefault") ?? false;
   },
@@ -5900,7 +5905,7 @@ export const gdefault = {
  *
  * (default "%f:%l:%m,%f:%l%m,%f  %l%m")
  */
-export const grepformat = {
+export const grepformat: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "grepformat") ?? "";
   },
@@ -5947,7 +5952,7 @@ export const grepformat = {
  *  Win32: "findstr /n" or "grep -n",
  *  VMS: "SEARCH/NUMBERS ")
  */
-export const grepprg = {
+export const grepprg: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "grepprg") ?? "";
   },
@@ -6077,7 +6082,7 @@ export const grepprg = {
  *
  * *only available when compiled with GUI enabled, and for Win32 console*
  */
-export const guicursor = {
+export const guicursor: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guicursor") ?? "";
   },
@@ -6107,7 +6112,7 @@ export const guicursor = {
  *
  * *only available when compiled with GUI enabled*
  */
-export const guifont = {
+export const guifont: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guifont") ?? "";
   },
@@ -6137,7 +6142,7 @@ export const guifont = {
  *
  * *only available when compiled with GUI enabled*
  */
-export const guifontwide = {
+export const guifontwide: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guifontwide") ?? "";
   },
@@ -6288,7 +6293,7 @@ export const guifontwide = {
  *
  * *only available when compiled with GUI enabled*
  */
-export const guioptions = {
+export const guioptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guioptions") ?? "";
   },
@@ -6328,7 +6333,7 @@ export const guioptions = {
  *
  * *only available when compiled with GUI enabled*
  */
-export const guitablabel = {
+export const guitablabel: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guitablabel") ?? "";
   },
@@ -6361,7 +6366,7 @@ export const guitablabel = {
  *
  * *only available when compiled with GUI enabled*
  */
-export const guitabtooltip = {
+export const guitabtooltip: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "guitabtooltip") ?? "";
   },
@@ -6396,7 +6401,7 @@ export const guitabtooltip = {
  * (default (MS-Windows) "$VIMRUNTIME\doc\help.txt"
  *  (others) "$VIMRUNTIME/doc/help.txt")
  */
-export const helpfile = {
+export const helpfile: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "helpfile") ?? "";
   },
@@ -6426,7 +6431,7 @@ export const helpfile = {
  *
  * (default 20)
  */
-export const helpheight = {
+export const helpheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "helpheight") ?? 0;
   },
@@ -6467,7 +6472,7 @@ export const helpheight = {
  *
  * *only available when compiled with the `+multi_lang` feature*
  */
-export const helplang = {
+export const helplang: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "helplang") ?? "";
   },
@@ -6507,7 +6512,7 @@ export const helplang = {
  *
  * (default off)
  */
-export const hidden = {
+export const hidden: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "hidden") ?? false;
   },
@@ -6539,7 +6544,7 @@ export const hidden = {
  * (Vim default: 50, Vi default: 0,
  *  set to 200 in `defaults.vim`)
  */
-export const history = {
+export const history: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "history") ?? 0;
   },
@@ -6570,7 +6575,7 @@ export const history = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const hkmap = {
+export const hkmap: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "hkmap") ?? false;
   },
@@ -6601,7 +6606,7 @@ export const hkmap = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const hkmapp = {
+export const hkmapp: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "hkmapp") ?? false;
   },
@@ -6647,7 +6652,7 @@ export const hkmapp = {
  *
  * *not available when compiled without the `+extra_search` feature*
  */
-export const hlsearch = {
+export const hlsearch: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "hlsearch") ?? false;
   },
@@ -6684,7 +6689,7 @@ export const hlsearch = {
  *
  * (default off, on when title can be restored)
  */
-export const icon = {
+export const icon: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "icon") ?? false;
   },
@@ -6721,7 +6726,7 @@ export const icon = {
  *
  * (default "")
  */
-export const iconstring = {
+export const iconstring: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "iconstring") ?? "";
   },
@@ -6751,7 +6756,7 @@ export const iconstring = {
  *
  * (default off)
  */
-export const ignorecase = {
+export const ignorecase: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "ignorecase") ?? false;
   },
@@ -6781,7 +6786,7 @@ export const ignorecase = {
  *
  * (default off)
  */
-export const imcmdline = {
+export const imcmdline: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "imcmdline") ?? false;
   },
@@ -6810,7 +6815,7 @@ export const imcmdline = {
  *
  * (default off, on for some systems (SGI))
  */
-export const imdisable = {
+export const imdisable: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "imdisable") ?? false;
   },
@@ -6857,7 +6862,7 @@ export const imdisable = {
  *
  * (default 0)
  */
-export const iminsert = {
+export const iminsert: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "iminsert") ?? 0;
   },
@@ -6909,7 +6914,7 @@ export const iminsert = {
  *
  * (default -1)
  */
-export const imsearch = {
+export const imsearch: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "imsearch") ?? 0;
   },
@@ -6961,7 +6966,7 @@ export const imsearch = {
  *
  * *not available when compiled without the `+find_in_path` feature*
  */
-export const include = {
+export const include: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "include") ?? "";
   },
@@ -7037,7 +7042,7 @@ export const include = {
  *
  * *not available when compiled without the `+find_in_path` or `+eval` features*
  */
-export const includeexpr = {
+export const includeexpr: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "includeexpr") ?? "";
   },
@@ -7126,7 +7131,7 @@ export const includeexpr = {
  *
  * *not available when compiled without the `+extra_search` features*
  */
-export const incsearch = {
+export const incsearch: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "incsearch") ?? false;
   },
@@ -7196,7 +7201,7 @@ export const incsearch = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const indentexpr = {
+export const indentexpr: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "indentexpr") ?? "";
   },
@@ -7239,7 +7244,7 @@ export const indentexpr = {
  *
  * (default "0**{,0}**,0),0],:,0#,!^F,o,O,e")
  */
-export const indentkeys = {
+export const indentkeys: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "indentkeys") ?? "";
   },
@@ -7286,7 +7291,7 @@ export const indentkeys = {
  *
  * (default off)
  */
-export const infercase = {
+export const infercase: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "infercase") ?? false;
   },
@@ -7375,7 +7380,7 @@ export const infercase = {
  *  for OS/390: `"@,240-249,/,.,-,_,+,,,#,$,%,~,="`
  *  otherwise: `"@,48-57,/,.,-,_,+,,,#,$,%,~,="`)
  */
-export const isfname = {
+export const isfname: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "isfname") ?? "";
   },
@@ -7410,7 +7415,7 @@ export const isfname = {
  *  "@,48-57,_,128-167,224-235"
  *  otherwise: "@,48-57,_,192-255")
  */
-export const isident = {
+export const isident: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "isident") ?? "";
   },
@@ -7452,7 +7457,7 @@ export const isident = {
  *  otherwise:  "@,48-57,_,192-255"
  *  Vi default: "@,48-57,_")
  */
-export const iskeyword = {
+export const iskeyword: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "iskeyword") ?? "";
   },
@@ -7518,7 +7523,7 @@ export const iskeyword = {
  * (default for Win32 and macOS:
  *  `"@,~-255"`; otherwise: "@,161-255")
  */
-export const isprint = {
+export const isprint: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "isprint") ?? "";
   },
@@ -7547,7 +7552,7 @@ export const isprint = {
  *
  * (default on)
  */
-export const joinspaces = {
+export const joinspaces: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "joinspaces") ?? false;
   },
@@ -7579,7 +7584,7 @@ export const joinspaces = {
  *
  * *only available when compiled with the `+keymap` feature*
  */
-export const keymap = {
+export const keymap: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "keymap") ?? "";
   },
@@ -7627,7 +7632,7 @@ export const keymap = {
  *
  * (default "")
  */
-export const keymodel = {
+export const keymodel: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "keymodel") ?? "";
   },
@@ -7669,7 +7674,7 @@ export const keymodel = {
  * (default "man" or "man -s",  DOS: ":help",
  *  VMS: "help")
  */
-export const keywordprg = {
+export const keywordprg: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "keywordprg") ?? "";
   },
@@ -7761,7 +7766,7 @@ export const keywordprg = {
  *
  * *only available when compiled with the `+langmap` feature*
  */
-export const langmap = {
+export const langmap: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "langmap") ?? "";
   },
@@ -7814,7 +7819,7 @@ export const langmap = {
  *
  * *only available when compiled with the `+menu` and `+multi_lang` features*
  */
-export const langmenu = {
+export const langmenu: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "langmenu") ?? "";
   },
@@ -7846,7 +7851,7 @@ export const langmenu = {
  *
  * *only available when compiled with the `+langmap` feature*
  */
-export const langremap = {
+export const langremap: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "langremap") ?? false;
   },
@@ -7878,7 +7883,7 @@ export const langremap = {
  *
  * (default 1)
  */
-export const laststatus = {
+export const laststatus: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "laststatus") ?? 0;
   },
@@ -7910,7 +7915,7 @@ export const laststatus = {
  *
  * (default off)
  */
-export const lazyredraw = {
+export const lazyredraw: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "lazyredraw") ?? false;
   },
@@ -7946,7 +7951,7 @@ export const lazyredraw = {
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const linebreak = {
+export const linebreak: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "linebreak") ?? false;
   },
@@ -8000,7 +8005,7 @@ export const linebreak = {
  *
  * (default 24 or terminal height)
  */
-export const lines = {
+export const lines: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "lines") ?? 0;
   },
@@ -8034,7 +8039,7 @@ export const lines = {
  *
  * *only in the GUI*
  */
-export const linespace = {
+export const linespace: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "linespace") ?? 0;
   },
@@ -8068,7 +8073,7 @@ export const linespace = {
  *
  * (default off)
  */
-export const lisp = {
+export const lisp: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "lisp") ?? false;
   },
@@ -8109,7 +8114,7 @@ export const lisp = {
  *
  * (default is very long)
  */
-export const lispwords = {
+export const lispwords: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "lispwords") ?? "";
   },
@@ -8171,7 +8176,7 @@ export const lispwords = {
  *
  * (default off)
  */
-export const list = {
+export const list: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "list") ?? false;
   },
@@ -8308,7 +8313,7 @@ export const list = {
  *
  * (default "eol:$")
  */
-export const listchars = {
+export const listchars: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "listchars") ?? "";
   },
@@ -8361,7 +8366,7 @@ export const listchars = {
  *
  * (default on)
  */
-export const loadplugins = {
+export const loadplugins: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "loadplugins") ?? false;
   },
@@ -8395,7 +8400,7 @@ export const loadplugins = {
  *
  * (default on)
  */
-export const magic = {
+export const magic: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "magic") ?? false;
   },
@@ -8433,7 +8438,7 @@ export const magic = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const makeef = {
+export const makeef: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "makeef") ?? "";
   },
@@ -8471,7 +8476,7 @@ export const makeef = {
  *
  * (default "")
  */
-export const makeencoding = {
+export const makeencoding: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "makeencoding") ?? "";
   },
@@ -8538,7 +8543,7 @@ export const makeencoding = {
  *
  * (default "make", VMS: "MMS")
  */
-export const makeprg = {
+export const makeprg: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "makeprg") ?? "";
   },
@@ -8603,7 +8608,7 @@ export const makeprg = {
  *
  * (default "(:),**{:}**,[:]")
  */
-export const matchpairs = {
+export const matchpairs: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "matchpairs") ?? "";
   },
@@ -8645,7 +8650,7 @@ export const matchpairs = {
  *
  * (default 5)
  */
-export const matchtime = {
+export const matchtime: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "matchtime") ?? 0;
   },
@@ -8679,7 +8684,7 @@ export const matchtime = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const maxfuncdepth = {
+export const maxfuncdepth: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "maxfuncdepth") ?? 0;
   },
@@ -8709,7 +8714,7 @@ export const maxfuncdepth = {
  *
  * (default 1000)
  */
-export const maxmapdepth = {
+export const maxmapdepth: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "maxmapdepth") ?? 0;
   },
@@ -8746,7 +8751,7 @@ export const maxmapdepth = {
  *
  * (default 1000)
  */
-export const maxmempattern = {
+export const maxmempattern: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "maxmempattern") ?? 0;
   },
@@ -8776,7 +8781,7 @@ export const maxmempattern = {
  *
  * *not available when compiled without the `+menu` feature*
  */
-export const menuitems = {
+export const menuitems: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "menuitems") ?? 0;
   },
@@ -8839,7 +8844,7 @@ export const menuitems = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const mkspellmem = {
+export const mkspellmem: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "mkspellmem") ?? "";
   },
@@ -8868,7 +8873,7 @@ export const mkspellmem = {
  * (Vim default: on (off for root),
  *  Vi default: off)
  */
-export const modeline = {
+export const modeline: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "modeline") ?? false;
   },
@@ -8912,7 +8917,7 @@ export const modeline = {
  *
  * (default: off)
  */
-export const modelineexpr = {
+export const modelineexpr: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "modelineexpr") ?? false;
   },
@@ -8942,7 +8947,7 @@ export const modelineexpr = {
  *
  * (default 5)
  */
-export const modelines = {
+export const modelines: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "modelines") ?? 0;
   },
@@ -8970,7 +8975,7 @@ export const modelines = {
  *
  * (default on)
  */
-export const modifiable = {
+export const modifiable: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "modifiable") ?? false;
   },
@@ -9030,7 +9035,7 @@ export const modifiable = {
  *
  * (default off)
  */
-export const modified = {
+export const modified: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "modified") ?? false;
   },
@@ -9074,7 +9079,7 @@ export const modified = {
  *
  * (Vim default: on, Vi default: off)
  */
-export const more = {
+export const more: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "more") ?? false;
   },
@@ -9134,7 +9139,7 @@ export const more = {
  * (default "", "a" for GUI and Win32,
  *  set to "a" or "nvi" in `defaults.vim`)
  */
-export const mouse = {
+export const mouse: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "mouse") ?? "";
   },
@@ -9168,7 +9173,7 @@ export const mouse = {
  *
  * *only works in the GUI*
  */
-export const mousefocus = {
+export const mousefocus: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "mousefocus") ?? false;
   },
@@ -9197,7 +9202,7 @@ export const mousefocus = {
  *
  * *only works in the GUI*
  */
-export const mousehide = {
+export const mousehide: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "mousehide") ?? false;
   },
@@ -9253,7 +9258,7 @@ export const mousehide = {
  *
  * (default "extend", "popup" for Win32)
  */
-export const mousemodel = {
+export const mousemodel: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "mousemodel") ?? "";
   },
@@ -9287,7 +9292,7 @@ export const mousemodel = {
  *
  * *only works in the GUI*
  */
-export const mousemoveevent = {
+export const mousemoveevent: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "mousemoveevent") ?? false;
   },
@@ -9376,7 +9381,7 @@ export const mousemoveevent = {
  *
  * *only available when compiled with the `+mouseshape` feature*
  */
-export const mouseshape = {
+export const mouseshape: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "mouseshape") ?? "";
   },
@@ -9404,7 +9409,7 @@ export const mouseshape = {
  *
  * (default 500)
  */
-export const mousetime = {
+export const mousetime: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "mousetime") ?? 0;
   },
@@ -9456,7 +9461,7 @@ export const mousetime = {
  * (default "bin,octal,hex",
  *  set to "bin,hex" in `defaults.vim`)
  */
-export const nrformats = {
+export const nrformats: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "nrformats") ?? "";
   },
@@ -9516,7 +9521,7 @@ export const nrformats = {
  *
  * (default off)
  */
-export const number = {
+export const number: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "number") ?? false;
   },
@@ -9569,7 +9574,7 @@ export const number = {
  *
  * *only available when compiled with the `+linebreak` feature*
  */
-export const numberwidth = {
+export const numberwidth: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "numberwidth") ?? 0;
   },
@@ -9620,7 +9625,7 @@ export const numberwidth = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const omnifunc = {
+export const omnifunc: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "omnifunc") ?? "";
   },
@@ -9665,7 +9670,7 @@ export const omnifunc = {
  *
  * (default off)
  */
-export const opendevice = {
+export const opendevice: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "opendevice") ?? false;
   },
@@ -9697,7 +9702,7 @@ export const opendevice = {
  *
  * (default: empty)
  */
-export const operatorfunc = {
+export const operatorfunc: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "operatorfunc") ?? "";
   },
@@ -9723,7 +9728,7 @@ export const operatorfunc = {
  *
  * (default: see 'runtimepath')
  */
-export const packpath = {
+export const packpath: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "packpath") ?? "";
   },
@@ -9750,7 +9755,7 @@ export const packpath = {
  *
  * (default "IPLPPPQPP TPHPLIPpLpItpplpipbp")
  */
-export const paragraphs = {
+export const paragraphs: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "paragraphs") ?? "";
   },
@@ -9816,7 +9821,7 @@ export const paragraphs = {
  *
  * (default off)
  */
-export const paste = {
+export const paste: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "paste") ?? false;
   },
@@ -9865,7 +9870,7 @@ export const paste = {
  *
  * (default "")
  */
-export const pastetoggle = {
+export const pastetoggle: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "pastetoggle") ?? "";
   },
@@ -9894,7 +9899,7 @@ export const pastetoggle = {
  *
  * *not available when compiled without the `+diff` feature*
  */
-export const patchexpr = {
+export const patchexpr: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "patchexpr") ?? "";
   },
@@ -9935,7 +9940,7 @@ export const patchexpr = {
  *
  * (default "")
  */
-export const patchmode = {
+export const patchmode: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "patchmode") ?? "";
   },
@@ -10028,7 +10033,7 @@ export const patchmode = {
  * (default on Unix: ".,/usr/include,,"
  *  other systems: ".,,")
  */
-export const path = {
+export const path: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "path") ?? "";
   },
@@ -10089,7 +10094,7 @@ export const path = {
  *
  * (default off)
  */
-export const preserveindent = {
+export const preserveindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "preserveindent") ?? false;
   },
@@ -10133,7 +10138,7 @@ export const preserveindent = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const previewheight = {
+export const previewheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "previewheight") ?? 0;
   },
@@ -10163,7 +10168,7 @@ export const previewheight = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const previewwindow = {
+export const previewwindow: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "previewwindow") ?? false;
   },
@@ -10208,7 +10213,7 @@ export const previewwindow = {
  *
  * *only available when compiled with the `+printer` feature*
  */
-export const printdevice = {
+export const printdevice: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printdevice") ?? "";
   },
@@ -10237,7 +10242,7 @@ export const printdevice = {
  *
  * *only available when compiled with the `+printer` and `+postscript` features*
  */
-export const printencoding = {
+export const printencoding: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printencoding") ?? "";
   },
@@ -10268,7 +10273,7 @@ export const printencoding = {
  *
  * *only available when compiled with the `+printer` and `+postscript` features*
  */
-export const printexpr = {
+export const printexpr: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printexpr") ?? "";
   },
@@ -10297,7 +10302,7 @@ export const printexpr = {
  *
  * *only available when compiled with the `+printer` feature*
  */
-export const printfont = {
+export const printfont: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printfont") ?? "";
   },
@@ -10326,7 +10331,7 @@ export const printfont = {
  *
  * *only available when compiled with the `+printer` feature*
  */
-export const printheader = {
+export const printheader: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printheader") ?? "";
   },
@@ -10355,7 +10360,7 @@ export const printheader = {
  *
  * *only available when compiled with the `+printer` and `+postscript` features*
  */
-export const printmbcharset = {
+export const printmbcharset: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printmbcharset") ?? "";
   },
@@ -10384,7 +10389,7 @@ export const printmbcharset = {
  *
  * *only available when compiled with the `+printer` and `+postscript` features*
  */
-export const printmbfont = {
+export const printmbfont: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printmbfont") ?? "";
   },
@@ -10413,7 +10418,7 @@ export const printmbfont = {
  *
  * *only available when compiled with `+printer` feature*
  */
-export const printoptions = {
+export const printoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "printoptions") ?? "";
   },
@@ -10441,7 +10446,7 @@ export const printoptions = {
  *
  * (default 0)
  */
-export const pumheight = {
+export const pumheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "pumheight") ?? 0;
   },
@@ -10468,7 +10473,7 @@ export const pumheight = {
  *
  * (default 15)
  */
-export const pumwidth = {
+export const pumwidth: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "pumwidth") ?? 0;
   },
@@ -10516,7 +10521,7 @@ export const pumwidth = {
  *
  * *only available when compiled with the `+python` or the `+python3` feature*
  */
-export const pyxversion = {
+export const pyxversion: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "pyxversion") ?? 0;
   },
@@ -10554,7 +10559,7 @@ export const pyxversion = {
  *
  * *only available when compiled with the `+quickfix` feature*
  */
-export const quickfixtextfunc = {
+export const quickfixtextfunc: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "quickfixtextfunc") ?? "";
   },
@@ -10584,7 +10589,7 @@ export const quickfixtextfunc = {
  *
  * (default "\")
  */
-export const quoteescape = {
+export const quoteescape: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "quoteescape") ?? "";
   },
@@ -10631,7 +10636,7 @@ export const quoteescape = {
  *
  * (default off)
  */
-export const readonly = {
+export const readonly: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "readonly") ?? false;
   },
@@ -10681,7 +10686,7 @@ export const readonly = {
  *
  * *only available when compiled with the `+reltime` feature*
  */
-export const redrawtime = {
+export const redrawtime: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "redrawtime") ?? 0;
   },
@@ -10718,7 +10723,7 @@ export const redrawtime = {
  *
  * (default 0)
  */
-export const regexpengine = {
+export const regexpengine: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "regexpengine") ?? 0;
   },
@@ -10761,7 +10766,7 @@ export const regexpengine = {
  *
  * (default off)
  */
-export const relativenumber = {
+export const relativenumber: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "relativenumber") ?? false;
   },
@@ -10805,7 +10810,7 @@ export const relativenumber = {
  *
  * (default 2)
  */
-export const report = {
+export const report: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "report") ?? 0;
   },
@@ -10838,7 +10843,7 @@ export const report = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const revins = {
+export const revins: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "revins") ?? false;
   },
@@ -10874,7 +10879,7 @@ export const revins = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const rightleft = {
+export const rightleft: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "rightleft") ?? false;
   },
@@ -10922,7 +10927,7 @@ export const rightleft = {
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const rightleftcmd = {
+export const rightleftcmd: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "rightleftcmd") ?? "";
   },
@@ -10986,7 +10991,7 @@ export const rightleftcmd = {
  *
  * *not available when compiled without the `+cmdline_info` feature*
  */
-export const ruler = {
+export const ruler: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "ruler") ?? false;
   },
@@ -11023,7 +11028,7 @@ export const ruler = {
  *
  * *not available when compiled without the `+statusline` feature*
  */
-export const rulerformat = {
+export const rulerformat: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "rulerformat") ?? "";
   },
@@ -11138,7 +11143,7 @@ export const rulerformat = {
  *  $VIM/vimfiles/after,
  *  sys$login:vimfiles/after")
  */
-export const runtimepath = {
+export const runtimepath: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "runtimepath") ?? "";
   },
@@ -11170,7 +11175,7 @@ export const runtimepath = {
  *
  * (default: half the window height)
  */
-export const scroll = {
+export const scroll: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "scroll") ?? 0;
   },
@@ -11218,7 +11223,7 @@ export const scroll = {
  *
  * (default off)
  */
-export const scrollbind = {
+export const scrollbind: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "scrollbind") ?? false;
   },
@@ -11264,7 +11269,7 @@ export const scrollbind = {
  *
  * (default 1)
  */
-export const scrolljump = {
+export const scrolljump: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "scrolljump") ?? 0;
   },
@@ -11302,7 +11307,7 @@ export const scrolljump = {
  *
  * (default 0, set to 5 in `defaults.vim`)
  */
-export const scrolloff = {
+export const scrolloff: GlobalOrLocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "scrolloff") ?? 0;
   },
@@ -11377,7 +11382,7 @@ export const scrolloff = {
  *
  * (default "ver,jump")
  */
-export const scrollopt = {
+export const scrollopt: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "scrollopt") ?? "";
   },
@@ -11405,7 +11410,7 @@ export const scrollopt = {
  *
  * (default "SHNHH HUnhsh")
  */
-export const sections = {
+export const sections: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "sections") ?? "";
   },
@@ -11439,7 +11444,7 @@ export const sections = {
  *
  * (default off)
  */
-export const secure = {
+export const secure: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "secure") ?? false;
   },
@@ -11483,7 +11488,7 @@ export const secure = {
  *
  * (default "inclusive")
  */
-export const selection = {
+export const selection: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "selection") ?? "";
   },
@@ -11516,7 +11521,7 @@ export const selection = {
  *
  * (default "")
  */
-export const selectmode = {
+export const selectmode: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "selectmode") ?? "";
   },
@@ -11587,7 +11592,7 @@ export const selectmode = {
  *
  * *not available when compiled without the `+mksession` feature*
  */
-export const sessionoptions = {
+export const sessionoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "sessionoptions") ?? "";
   },
@@ -11651,7 +11656,7 @@ export const sessionoptions = {
  *
  * (default $SHELL or "sh", Win32: "cmd.exe")
  */
-export const shell = {
+export const shell: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shell") ?? "";
   },
@@ -11689,7 +11694,7 @@ export const shell = {
  *  "-Command", or when it does not contain "sh"
  *  somewhere: "/c")
  */
-export const shellcmdflag = {
+export const shellcmdflag: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellcmdflag") ?? "";
   },
@@ -11750,7 +11755,7 @@ export const shellcmdflag = {
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const shellpipe = {
+export const shellpipe: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellpipe") ?? "";
   },
@@ -11784,7 +11789,7 @@ export const shellpipe = {
  *
  * (default: "")
  */
-export const shellquote = {
+export const shellquote: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellquote") ?? "";
   },
@@ -11833,7 +11838,7 @@ export const shellquote = {
  * (default ">", ">&", ">%s 2>&1", or
  *  "2>&1 | Out-File -Encoding default")
  */
-export const shellredir = {
+export const shellredir: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellredir") ?? "";
   },
@@ -11873,7 +11878,7 @@ export const shellredir = {
  *
  * *only for MS-Windows*
  */
-export const shellslash = {
+export const shellslash: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "shellslash") ?? false;
   },
@@ -11916,7 +11921,7 @@ export const shellslash = {
  *
  * (Vi default off, Vim default on)
  */
-export const shelltemp = {
+export const shelltemp: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "shelltemp") ?? false;
   },
@@ -11945,7 +11950,7 @@ export const shelltemp = {
  * (default: "";
  *  for MS-Windows: `"\"&|<>()@^"`)
  */
-export const shellxescape = {
+export const shellxescape: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellxescape") ?? "";
   },
@@ -11992,7 +11997,7 @@ export const shellxescape = {
  *  somewhere: "\""
  *  for Unix, when using system(): "\"")
  */
-export const shellxquote = {
+export const shellxquote: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shellxquote") ?? "";
   },
@@ -12021,7 +12026,7 @@ export const shellxquote = {
  *
  * (default off)
  */
-export const shiftround = {
+export const shiftround: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "shiftround") ?? false;
   },
@@ -12050,7 +12055,7 @@ export const shiftround = {
  *
  * (default 8)
  */
-export const shiftwidth = {
+export const shiftwidth: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "shiftwidth") ?? 0;
   },
@@ -12144,7 +12149,7 @@ export const shiftwidth = {
  * (Vim default "filnxtToOS", Vi default: "S",
  *  POSIX default: "AS")
  */
-export const shortmess = {
+export const shortmess: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "shortmess") ?? "";
   },
@@ -12193,7 +12198,7 @@ export const shortmess = {
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const showbreak = {
+export const showbreak: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "showbreak") ?? "";
   },
@@ -12255,7 +12260,7 @@ export const showbreak = {
  *
  * *not available when compiled without the `+cmdline_info` feature*
  */
-export const showcmd = {
+export const showcmd: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "showcmd") ?? false;
   },
@@ -12288,7 +12293,7 @@ export const showcmd = {
  *
  * (default off)
  */
-export const showfulltag = {
+export const showfulltag: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "showfulltag") ?? false;
   },
@@ -12330,7 +12335,7 @@ export const showfulltag = {
  *
  * (default off)
  */
-export const showmatch = {
+export const showmatch: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "showmatch") ?? false;
   },
@@ -12363,7 +12368,7 @@ export const showmatch = {
  *
  * (Vim default: on, Vi default: off)
  */
-export const showmode = {
+export const showmode: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "showmode") ?? false;
   },
@@ -12396,7 +12401,7 @@ export const showmode = {
  *
  * (default 1)
  */
-export const showtabline = {
+export const showtabline: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "showtabline") ?? 0;
   },
@@ -12427,7 +12432,7 @@ export const showtabline = {
  *
  * (default 0)
  */
-export const sidescroll = {
+export const sidescroll: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "sidescroll") ?? 0;
   },
@@ -12474,7 +12479,7 @@ export const sidescroll = {
  *
  * (default 0)
  */
-export const sidescrolloff = {
+export const sidescrolloff: GlobalOrLocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "sidescrolloff") ?? 0;
   },
@@ -12530,7 +12535,7 @@ export const sidescrolloff = {
  *
  * *not available when compiled without the `+signs` feature*
  */
-export const signcolumn = {
+export const signcolumn: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "signcolumn") ?? "";
   },
@@ -12576,7 +12581,7 @@ export const signcolumn = {
  *
  * (default off)
  */
-export const smartcase = {
+export const smartcase: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "smartcase") ?? false;
   },
@@ -12623,7 +12628,7 @@ export const smartcase = {
  *
  * (default off)
  */
-export const smartindent = {
+export const smartindent: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "smartindent") ?? false;
   },
@@ -12675,7 +12680,7 @@ export const smartindent = {
  *
  * (default off)
  */
-export const smarttab = {
+export const smarttab: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "smarttab") ?? false;
   },
@@ -12719,7 +12724,7 @@ export const smarttab = {
  *
  * (default 0)
  */
-export const softtabstop = {
+export const softtabstop: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "softtabstop") ?? 0;
   },
@@ -12762,7 +12767,7 @@ export const softtabstop = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spell = {
+export const spell: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "spell") ?? false;
   },
@@ -12812,7 +12817,7 @@ export const spell = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spellcapcheck = {
+export const spellcapcheck: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "spellcapcheck") ?? "";
   },
@@ -12874,7 +12879,7 @@ export const spellcapcheck = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spellfile = {
+export const spellfile: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "spellfile") ?? "";
   },
@@ -12956,7 +12961,7 @@ export const spellfile = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spelllang = {
+export const spelllang: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "spelllang") ?? "";
   },
@@ -13002,7 +13007,7 @@ export const spelllang = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spelloptions = {
+export const spelloptions: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "spelloptions") ?? "";
   },
@@ -13108,7 +13113,7 @@ export const spelloptions = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spellsuggest = {
+export const spellsuggest: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "spellsuggest") ?? "";
   },
@@ -13135,7 +13140,7 @@ export const spellsuggest = {
  *
  * (default off)
  */
-export const splitbelow = {
+export const splitbelow: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "splitbelow") ?? false;
   },
@@ -13162,7 +13167,7 @@ export const splitbelow = {
  *
  * (default off)
  */
-export const splitright = {
+export const splitright: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "splitright") ?? false;
   },
@@ -13197,7 +13202,7 @@ export const splitright = {
  *
  * (default on)
  */
-export const startofline = {
+export const startofline: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "startofline") ?? false;
   },
@@ -13419,7 +13424,7 @@ export const startofline = {
  *
  * *not available when compiled without the `+statusline` feature*
  */
-export const statusline = {
+export const statusline: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "statusline") ?? "";
   },
@@ -13477,7 +13482,7 @@ export const statusline = {
  *
  * (default `".bak,~,.o,.h,.info,.swp,.obj"`)
  */
-export const suffixes = {
+export const suffixes: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "suffixes") ?? "";
   },
@@ -13506,7 +13511,7 @@ export const suffixes = {
  *
  * (default "")
  */
-export const suffixesadd = {
+export const suffixesadd: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "suffixesadd") ?? "";
   },
@@ -13563,7 +13568,7 @@ export const suffixesadd = {
  *
  * (default on)
  */
-export const swapfile = {
+export const swapfile: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "swapfile") ?? false;
   },
@@ -13625,7 +13630,7 @@ export const swapfile = {
  *
  * (default "")
  */
-export const switchbuf = {
+export const switchbuf: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "switchbuf") ?? "";
   },
@@ -13658,7 +13663,7 @@ export const switchbuf = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const synmaxcol = {
+export const synmaxcol: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "synmaxcol") ?? 0;
   },
@@ -13726,7 +13731,7 @@ export const synmaxcol = {
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const syntax = {
+export const syntax: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "syntax") ?? "";
   },
@@ -13785,7 +13790,7 @@ export const syntax = {
  *
  * (default empty)
  */
-export const tabline = {
+export const tabline: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "tabline") ?? "";
   },
@@ -13812,7 +13817,7 @@ export const tabline = {
  *
  * (default 10)
  */
-export const tabpagemax = {
+export const tabpagemax: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "tabpagemax") ?? 0;
   },
@@ -13865,7 +13870,7 @@ export const tabpagemax = {
  *
  * (default 8)
  */
-export const tabstop = {
+export const tabstop: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "tabstop") ?? 0;
   },
@@ -13954,7 +13959,7 @@ export const tabstop = {
  *
  * (default on)
  */
-export const tagbsearch = {
+export const tagbsearch: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "tagbsearch") ?? false;
   },
@@ -13988,7 +13993,7 @@ export const tagbsearch = {
  *
  * (default "followic")
  */
-export const tagcase = {
+export const tagcase: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "tagcase") ?? "";
   },
@@ -14044,7 +14049,7 @@ export const tagcase = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const tagfunc = {
+export const tagfunc: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "tagfunc") ?? "";
   },
@@ -14084,7 +14089,7 @@ export const tagfunc = {
  *
  * (default 0)
  */
-export const taglength = {
+export const taglength: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "taglength") ?? 0;
   },
@@ -14113,7 +14118,7 @@ export const taglength = {
  *
  * (Vim default: on, Vi default: off)
  */
-export const tagrelative = {
+export const tagrelative: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "tagrelative") ?? false;
   },
@@ -14160,7 +14165,7 @@ export const tagrelative = {
  * (default "./tags,tags", when compiled with
  *  `+emacs_tags`: "./tags,./TAGS,tags,TAGS")
  */
-export const tags = {
+export const tags: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "tags") ?? "";
   },
@@ -14215,7 +14220,7 @@ export const tags = {
  *
  * (default on)
  */
-export const tagstack = {
+export const tagstack: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "tagstack") ?? false;
   },
@@ -14251,7 +14256,7 @@ export const tagstack = {
  *
  * *only available when compiled with the `+arabic` feature*
  */
-export const termbidi = {
+export const termbidi: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "termbidi") ?? false;
   },
@@ -14302,7 +14307,7 @@ export const termbidi = {
  *
  * *not available when compiled without the `+termguicolors` feature*
  */
-export const termguicolors = {
+export const termguicolors: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "termguicolors") ?? false;
   },
@@ -14336,7 +14341,7 @@ export const termguicolors = {
  *
  * (default 0)
  */
-export const textwidth = {
+export const textwidth: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "textwidth") ?? 0;
   },
@@ -14389,7 +14394,7 @@ export const textwidth = {
  *
  * (default "")
  */
-export const thesaurus = {
+export const thesaurus: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "thesaurus") ?? "";
   },
@@ -14446,7 +14451,7 @@ export const thesaurus = {
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const thesaurusfunc = {
+export const thesaurusfunc: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "thesaurusfunc") ?? "";
   },
@@ -14496,7 +14501,7 @@ export const thesaurusfunc = {
  *
  * (default off)
  */
-export const tildeop = {
+export const tildeop: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "tildeop") ?? false;
   },
@@ -14520,7 +14525,7 @@ export const tildeop = {
 /**
  * (default on)
  */
-export const timeout = {
+export const timeout: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "timeout") ?? false;
   },
@@ -14571,7 +14576,7 @@ export const timeout = {
  *
  * (default off, set in `defaults.vim`)
  */
-export const ttimeout = {
+export const ttimeout: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "ttimeout") ?? false;
   },
@@ -14595,7 +14600,7 @@ export const ttimeout = {
 /**
  * (default 1000)
  */
-export const timeoutlen = {
+export const timeoutlen: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "timeoutlen") ?? 0;
   },
@@ -14638,7 +14643,7 @@ export const timeoutlen = {
  *
  * (default -1, set to 100 in `defaults.vim`)
  */
-export const ttimeoutlen = {
+export const ttimeoutlen: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "ttimeoutlen") ?? 0;
   },
@@ -14692,7 +14697,7 @@ export const ttimeoutlen = {
  *
  * (default off, on when title can be restored)
  */
-export const title = {
+export const title: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "title") ?? false;
   },
@@ -14726,7 +14731,7 @@ export const title = {
  *
  * (default 85)
  */
-export const titlelen = {
+export const titlelen: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "titlelen") ?? 0;
   },
@@ -14756,7 +14761,7 @@ export const titlelen = {
  *
  * (default "Thanks for flying Vim")
  */
-export const titleold = {
+export const titleold: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "titleold") ?? "";
   },
@@ -14810,7 +14815,7 @@ export const titleold = {
  *
  * (default "")
  */
-export const titlestring = {
+export const titlestring: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "titlestring") ?? "";
   },
@@ -14851,7 +14856,7 @@ export const titlestring = {
  *
  * *only when compiled with the `+persistent_undo` feature*
  */
-export const undodir = {
+export const undodir: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "undodir") ?? "";
   },
@@ -14887,7 +14892,7 @@ export const undodir = {
  *
  * *only when compiled with the `+persistent_undo` feature*
  */
-export const undofile = {
+export const undofile: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "undofile") ?? false;
   },
@@ -14947,7 +14952,7 @@ export const undofile = {
  *
  * (default 100, 1000 for Unix, VMS and Win32)
  */
-export const undolevels = {
+export const undolevels: GlobalOrLocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "undolevels") ?? 0;
   },
@@ -15006,7 +15011,7 @@ export const undolevels = {
  *
  * (default 10000)
  */
-export const undoreload = {
+export const undoreload: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "undoreload") ?? 0;
   },
@@ -15043,7 +15048,7 @@ export const undoreload = {
  *
  * (default: 200)
  */
-export const updatecount = {
+export const updatecount: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "updatecount") ?? 0;
   },
@@ -15071,7 +15076,7 @@ export const updatecount = {
  *
  * (default 4000)
  */
-export const updatetime = {
+export const updatetime: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "updatetime") ?? 0;
   },
@@ -15115,7 +15120,7 @@ export const updatetime = {
  *
  * *only available when compiled with the `+vartabs` feature*
  */
-export const varsofttabstop = {
+export const varsofttabstop: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "varsofttabstop") ?? "";
   },
@@ -15167,7 +15172,7 @@ export const varsofttabstop = {
  *
  * *only available when compiled with the `+vartabs` feature*
  */
-export const vartabstop = {
+export const vartabstop: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "vartabstop") ?? "";
   },
@@ -15227,7 +15232,7 @@ export const vartabstop = {
  *
  * (default 0)
  */
-export const verbose = {
+export const verbose: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "verbose") ?? 0;
   },
@@ -15259,7 +15264,7 @@ export const verbose = {
  *
  * (default empty)
  */
-export const verbosefile = {
+export const verbosefile: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "verbosefile") ?? "";
   },
@@ -15293,7 +15298,7 @@ export const verbosefile = {
  *
  * *not available when compiled without the `+mksession` feature*
  */
-export const viewdir = {
+export const viewdir: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "viewdir") ?? "";
   },
@@ -15338,7 +15343,7 @@ export const viewdir = {
  *
  * *not available when compiled without the `+mksession` feature*
  */
-export const viewoptions = {
+export const viewoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "viewoptions") ?? "";
   },
@@ -15390,7 +15395,7 @@ export const viewoptions = {
  *
  * (default "")
  */
-export const virtualedit = {
+export const virtualedit: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "virtualedit") ?? "";
   },
@@ -15465,7 +15470,7 @@ export const virtualedit = {
  *
  * (default off)
  */
-export const visualbell = {
+export const visualbell: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "visualbell") ?? false;
   },
@@ -15492,7 +15497,7 @@ export const visualbell = {
  *
  * (default on)
  */
-export const warn = {
+export const warn: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "warn") ?? false;
   },
@@ -15547,7 +15552,7 @@ export const warn = {
  *
  * (Vim default: "b,s", Vi default: "")
  */
-export const whichwrap = {
+export const whichwrap: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "whichwrap") ?? "";
   },
@@ -15584,7 +15589,7 @@ export const whichwrap = {
  *
  * (Vim default: `<Tab>`, Vi default: CTRL-E)
  */
-export const wildchar = {
+export const wildchar: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "wildchar") ?? 0;
   },
@@ -15619,7 +15624,7 @@ export const wildchar = {
  *
  * (default: none (0))
  */
-export const wildcharm = {
+export const wildcharm: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "wildcharm") ?? 0;
   },
@@ -15657,7 +15662,7 @@ export const wildcharm = {
  *
  * (default "")
  */
-export const wildignore = {
+export const wildignore: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "wildignore") ?? "";
   },
@@ -15686,7 +15691,7 @@ export const wildignore = {
  *
  * (default off)
  */
-export const wildignorecase = {
+export const wildignorecase: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "wildignorecase") ?? false;
   },
@@ -15764,7 +15769,7 @@ export const wildignorecase = {
  *
  * (default off, set in `defaults.vim`)
  */
-export const wildmenu = {
+export const wildmenu: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "wildmenu") ?? false;
   },
@@ -15842,7 +15847,7 @@ export const wildmenu = {
  *
  * (Vim default: "full")
  */
-export const wildmode = {
+export const wildmode: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "wildmode") ?? "";
   },
@@ -15884,7 +15889,7 @@ export const wildmode = {
  *
  * (default "")
  */
-export const wildoptions = {
+export const wildoptions: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "wildoptions") ?? "";
   },
@@ -15927,7 +15932,7 @@ export const wildoptions = {
  *
  * *only used in Win32, Motif, GTK and Photon GUI*
  */
-export const winaltkeys = {
+export const winaltkeys: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
     return await options.get(denops, "winaltkeys") ?? "";
   },
@@ -15961,7 +15966,7 @@ export const winaltkeys = {
  *
  * (default screen height - 1)
  */
-export const window = {
+export const window: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "window") ?? 0;
   },
@@ -16004,7 +16009,7 @@ export const window = {
  *
  * (default 1)
  */
-export const winheight = {
+export const winheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "winheight") ?? 0;
   },
@@ -16033,7 +16038,7 @@ export const winheight = {
  *
  * (default off)
  */
-export const winfixheight = {
+export const winfixheight: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "winfixheight") ?? false;
   },
@@ -16075,7 +16080,7 @@ export const winfixheight = {
  *
  * (default off)
  */
-export const winfixwidth = {
+export const winfixwidth: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "winfixwidth") ?? false;
   },
@@ -16123,7 +16128,7 @@ export const winfixwidth = {
  *
  * (default 1)
  */
-export const winminheight = {
+export const winminheight: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "winminheight") ?? 0;
   },
@@ -16158,7 +16163,7 @@ export const winminheight = {
  *
  * (default 1)
  */
-export const winminwidth = {
+export const winminwidth: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "winminwidth") ?? 0;
   },
@@ -16192,7 +16197,7 @@ export const winminwidth = {
  *
  * (default 20)
  */
-export const winwidth = {
+export const winwidth: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "winwidth") ?? 0;
   },
@@ -16234,7 +16239,7 @@ export const winwidth = {
  *
  * (default on)
  */
-export const wrap = {
+export const wrap: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "wrap") ?? false;
   },
@@ -16282,7 +16287,7 @@ export const wrap = {
  *
  * (default 0)
  */
-export const wrapmargin = {
+export const wrapmargin: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "wrapmargin") ?? 0;
   },
@@ -16323,7 +16328,7 @@ export const wrapmargin = {
  *
  * (default on)
  */
-export const wrapscan = {
+export const wrapscan: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "wrapscan") ?? false;
   },
@@ -16353,7 +16358,7 @@ export const wrapscan = {
  *
  * (default on)
  */
-export const write = {
+export const write: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "write") ?? false;
   },
@@ -16379,7 +16384,7 @@ export const write = {
  *
  * (default off)
  */
-export const writeany = {
+export const writeany: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "writeany") ?? false;
   },
@@ -16419,7 +16424,7 @@ export const writeany = {
  * (default on with `+writebackup` feature, off
  *  otherwise)
  */
-export const writebackup = {
+export const writebackup: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
     return await options.get(denops, "writebackup") ?? false;
   },
@@ -16447,7 +16452,7 @@ export const writebackup = {
  *
  * (default 0)
  */
-export const writedelay = {
+export const writedelay: GlobalOption<number> = {
   async get(denops: Denops): Promise<number> {
     return await options.get(denops, "writedelay") ?? 0;
   },
