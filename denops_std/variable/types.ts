@@ -1,6 +1,6 @@
 import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
-export interface Getter {
+export type Getter = {
   get<T = unknown>(
     denops: Denops,
     prop: string,
@@ -10,12 +10,12 @@ export interface Getter {
     denops: Denops,
     prop: string,
   ): Promise<T | null>;
-}
+};
 
-export interface Setter {
+export type Setter = {
   set<T = unknown>(denops: Denops, prop: string, value: T): Promise<void>;
-}
+};
 
-export interface Remover {
+export type Remover = {
   remove(denops: Denops, prop: string): Promise<void>;
-}
+};
