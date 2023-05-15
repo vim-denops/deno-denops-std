@@ -1,4 +1,4 @@
-import type { Option, OptionType } from "./types.ts";
+import type { Option, OptionScope, OptionType } from "./types.ts";
 
 const denops = "https://deno.land/x/denops_core@v4.0.0/mod.ts";
 
@@ -30,11 +30,12 @@ export function formatDocs(docs: string): string[] {
   return ["/**", ...normalizedLines, " */"];
 }
 
-function formatOption({ name, type, scope, docs }: Option): string[] {
-  name = translate[name] ?? name;
+function formatOption(option: Option): string[] {
+  const { type, scope, docs } = option;
+  const name = translate[option.name] ?? option.name;
   const lines = [
     ...formatDocs(docs),
-    `export const ${name} = {`,
+    `export const ${name}: ${getOptionTypeName(scope, type)} = {`,
     ...formatOptionBody(name, type),
     ...(scope.includes("global") ? formatGlobalOptionBody(name, type) : []),
     ...(scope.includes("local") ? formatLocalOptionBody(name, type) : []),
@@ -44,6 +45,16 @@ function formatOption({ name, type, scope, docs }: Option): string[] {
     "",
   ];
   return lines;
+}
+
+function getOptionTypeName(scope: OptionScope[], type: OptionType): string {
+  if (scope.includes("global") && scope.includes("local")) {
+    return `GlobalOrLocalOption<${type}>`;
+  } else if (scope.includes("global")) {
+    return `GlobalOption<${type}>`;
+  } else {
+    return `LocalOption<${type}>`;
+  }
 }
 
 function formatOptionBody(name: string, type: OptionType): string[] {
@@ -124,11 +135,13 @@ function formatWindowOptionBody(name: string, type: OptionType): string[] {
 export function format(options: Option[], root: string): string[] {
   const fn = `${root}/../function/mod.ts`;
   const variable = `${root}/../variable/mod.ts`;
+  const types = `${root}/types.ts`;
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
     `import type { Denops } from "${denops}";`,
     `import { getbufvar, setbufvar, getwinvar, setwinvar } from "${fn}";`,
     `import { globalOptions, localOptions, options } from "${variable}";`,
+    `import type { GlobalOption, GlobalOrLocalOption, LocalOption } from "${types}";`,
     "",
     ...options.map(formatOption),
   ];
