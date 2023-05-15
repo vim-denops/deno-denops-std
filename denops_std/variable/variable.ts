@@ -84,6 +84,7 @@ export const globals: Getter & Setter & Remover = {
     return removeVar(denops, "g", prop);
   },
 };
+/** Shorthand for {@linkcode globals} */
 export const g = globals;
 
 /**
@@ -131,6 +132,7 @@ export const buffers: Getter & Setter & Remover = {
     return removeVar(denops, "b", prop);
   },
 };
+/** Shorthand for {@linkcode buffers} */
 export const b = buffers;
 
 /**
@@ -178,6 +180,7 @@ export const windows: Getter & Setter & Remover = {
     return removeVar(denops, "w", prop);
   },
 };
+/** Shorthand for {@linkcode windows} */
 export const w = windows;
 
 /**
@@ -225,6 +228,7 @@ export const tabpages: Getter & Setter & Remover = {
     return removeVar(denops, "t", prop);
   },
 };
+/** Shorthand for {@linkcode tabpages} */
 export const t = tabpages;
 
 /**
@@ -262,4 +266,5 @@ export const vim: Getter & Setter = {
     return setVar(denops, "v", prop, value);
   },
 };
+/** Shorthand for {@linkcode vim} */
 export const v = vim;

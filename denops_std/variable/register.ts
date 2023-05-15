@@ -58,4 +58,5 @@ export const register: Getter & Setter = {
     });
   },
 };
+/** Shorthand for {@linkcode register} */
 export const r = register;

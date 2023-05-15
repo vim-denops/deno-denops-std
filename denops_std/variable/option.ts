@@ -87,6 +87,7 @@ export const options: Getter & Setter & Remover = {
     return removeOption(denops, "", prop);
   },
 };
+/** Shorthand for {@linkcode options} */
 export const o = options;
 
 /**
@@ -140,6 +141,7 @@ export const localOptions: Getter & Setter & Remover = {
     return removeOption(denops, "l", prop);
   },
 };
+/** Shorthand for {@linkcode localOptions} */
 export const lo = localOptions;
 
 /**
@@ -193,4 +195,5 @@ export const globalOptions: Getter & Setter & Remover = {
     return removeOption(denops, "g", prop);
   },
 };
+/** Shorthand for {@linkcode globalOptions} */
 export const go = globalOptions;
