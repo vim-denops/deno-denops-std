@@ -63,4 +63,5 @@ export const environment: Getter & Setter & Remover = {
     await denops.cmd(`unlet ${name}`);
   },
 };
+/** Shorthand for {@linkcode environment} */
 export const e = environment;
