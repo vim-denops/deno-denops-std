@@ -5,4 +5,3 @@
  */
 export * from "./batch.ts";
 export * from "./collect.ts";
-export * from "./gather.ts";
