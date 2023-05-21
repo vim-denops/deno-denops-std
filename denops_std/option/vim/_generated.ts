@@ -256,7 +256,7 @@ export const balloonevalterm: GlobalOption<boolean> = {
  *                 \ ' on word "' .. v:beval_text .. '"'
  *     endfunction
  *     set bexpr=MyBalloonExpr()
- *     set ballooneval
+ *     set ballooneval balloonevalterm
  *
  * Also see `balloon_show()`, it can be used if the content of the balloon
  * is to be fetched asynchronously.  In that case evaluating
@@ -587,12 +587,14 @@ export const conskey: GlobalOption<boolean> = {
  *
  *    zip          PkZip compatible method.  A weak kind of encryption.
  *                 Backwards compatible with Vim 7.2 and older.
+ *                 Only use if you need to be backwards compatible.
  *
  *    blowfish     Blowfish method.  Medium strong encryption but it has
  *                 an implementation flaw.  Requires Vim 7.3 or later,
  *                 files can NOT be read by Vim 7.2 and older.  This adds
  *                 a "seed" to the file, every time you write the file
  *                 the encrypted bytes will be different.
+ *                 Obsolete, please do no longer use.
  *
  *    blowfish2    Blowfish method.  Medium strong encryption.  Requires
  *                 Vim 7.4.401 or later, files can NOT be read by Vim 7.3
@@ -613,11 +615,21 @@ export const conskey: GlobalOption<boolean> = {
  *                 enabled.
  *                 Encryption of undo files is not yet supported,
  *                 therefore no undo file will currently be written.
- *                 CURRENTLY EXPERIMENTAL: Files written with this method
+ *                 CAREFUL: Files written with this method might have to
+ *                 be read back with the same version of Vim if the
+ *                 binary format changes later.
+ *                 Obsolete, please do no longer use.
+ *    xchacha20v2  Same algorithm as with "xchacha20" that correctly
+ *                 stores the key derivation parameters together with the
+ *                 encrypted file.  Should work better in case the
+ *                 parameters in the libsodium library ever change.
+ *                 STILL EXPERIMENTAL: Files written with this method
  *                 might have to be read back with the same version of
  *                 Vim if the binary format changes later.
  *
- * You should use "blowfish2", also to re-encrypt older files.
+ * You should use "blowfish2", also to re-encrypt older files.  The
+ * "xchacha20" method provides better encryption, but it does not work
+ * with all versions of Vim.
  *
  * When reading an encrypted file 'cryptmethod' will be set automatically
  * to the detected method of the file being read.  Thus if you write it
@@ -743,6 +755,53 @@ export const edcompatible: GlobalOption<boolean> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "edcompatible");
+  },
+};
+
+/**
+ * Indicates that a CTRL-Z character was found at the end of the file
+ * when reading it.  Normally only happens when 'fileformat' is "dos".
+ * When writing a file and this option is off and the 'binary' option
+ * is on, or 'fixeol' option is off, no CTRL-Z will be written at the
+ * end of the file.
+ * See `eol-and-eof` for example settings.
+ *
+ * (default off)
+ */
+export const endoffile: LocalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "endoffile");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "endoffile", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "endoffile");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "endoffile");
+    return Boolean(result ?? false);
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "endoffile", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "endoffile");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&endoffile");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&endoffile", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&endoffile");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&endoffile", value);
   },
 };
 
@@ -1048,6 +1107,10 @@ export const guipty: GlobalOption<boolean> = {
  * `hl-SpellLocal`  L  word from other region `spell`
  * `hl-Pmenu`       +  popup menu normal line
  * `hl-PmenuSel`    =  popup menu selected line
+ * `hl-PmenuKind`   [  popup menu "kind" normal line
+ * `hl-PmenuKindSel`  ]  popup menu "kind" selected line
+ * `hl-PmenuExtra`  {  popup menu "kind" normal line
+ * `hl-PmenuExtraSel` }  popup menu "kind" selected line
  * `hl-PmenuSbar`   x  popup menu scrollbar
  * `hl-PmenuThumb`  X  popup menu scrollbar thumb
  *
@@ -1087,6 +1150,8 @@ export const guipty: GlobalOption<boolean> = {
  *  T:DiffText,>:SignColumn,-:Conceal,
  *  B:SpellBad,P:SpellCap,R:SpellRare,
  *  L:SpellLocal,+:Pmenu,=:PmenuSel,
+ *  [:PmenuKind,]:PmenuKindSel,
+ *  {:PmenuExtra,}:PmenuExtraSel,
  *  x:PmenuSbar,X:PmenuThumb,*:TabLine,
  *  #:TabLineSel,_:TabLineFill,!:CursorColumn,
  *  .:CursorLine,o:ColorColumn,q:QuickFixLine,
@@ -1409,6 +1474,82 @@ export const key: LocalOption<string> = {
 };
 
 /**
+ * Specifies what keyboard protocol to use depending on the value of
+ * 'term'.  The supported keyboard protocols names are:
+ *         none    whatever the terminal uses
+ *         mok2    modifyOtherKeys level 2, as supported by xterm
+ *         kitty   Kitty keyboard protocol, as supported by Kitty
+ *
+ * The option value is a list of comma separated items.  Each item has
+ * a pattern that is matched against the 'term' option, a colon and the
+ * protocol name to be used.  To illustrate this, the default value would
+ * be set with:
+ *
+ *     set keyprotocol=kitty:kitty,foot:kitty,wezterm:kitty,xterm:mok2
+ *
+ * This means that when 'term' contains "kitty, "foot" or "wezterm"
+ * somewhere then the "kitty" protocol is used.  When 'term' contains
+ * "xterm" somewhere, then the "mok2" protocol is used.
+ *
+ * The first match is used, thus if you want to have "kitty" use the
+ * kitty protocol, but "badkitty" not, then you should match "badkitty"
+ * first and use the "none" value:
+ *
+ *     set keyprotocol=badkitty:none,kitty:kitty
+ *
+ * The option is used after 'term' has been changed.  First the termcap
+ * entries are set, possibly using the builtin list, see `builtin-terms`.
+ * Then this option is inspected and if there is a match and a protocol
+ * is specified the following happens:
+ *         none    Nothing, the regular t_TE and t_TI values remain
+ *
+ *         mok2    The t_TE value is changed to:
+ *                     CSI >4;m    disables modifyOtherKeys
+ *                 The t_TI value is changed to:
+ *                     CSI >4;2m   enables modifyOtherKeys
+ *                     CSI ?4m     request the modifyOtherKeys state
+ *
+ *         kitty   The t_TE value is changed to:
+ *                     CSI >4;m    disables modifyOtherKeys
+ *                     CSI =0;1u   disables the kitty keyboard protocol
+ *                 The t_TI value is changed to:
+ *                     CSI =1;1u   enables the kitty keyboard protocol
+ *                     CSI ?u      request kitty keyboard protocol state
+ *                     CSI >c      request the termresponse
+ *
+ * If you notice problems, such as characters being displayed that
+ * disappear after `CTRL-L`, you might want to try making this option
+ * empty.  Then set the 'term' option to have it take effect:
+ *
+ *     set keyprotocol=
+ *     let &term = &term
+ *
+ * (default: see below)
+ */
+export const keyprotocol: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "keyprotocol");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "keyprotocol", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "keyprotocol");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "keyprotocol");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "keyprotocol", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "keyprotocol");
+  },
+};
+
+/**
  * This is just like 'langremap' but with the value inverted.  It only
  * exists for backwards compatibility.  When setting 'langremap' then
  * 'langnoremap' is set to the inverted value, and the other way around.
@@ -1437,6 +1578,54 @@ export const langnoremap: GlobalOption<boolean> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "langnoremap");
+  },
+};
+
+/**
+ * Comma-separated list of items that influence the Lisp indenting when
+ * enabled with the `'lisp'` option.  Currently only one item is
+ * supported:
+ *         expr:1  use 'indentexpr' for Lisp indenting when it is set
+ *         expr:0  do not use 'indentexpr' for Lisp indenting (default)
+ * Note that when using 'indentexpr' the `=` operator indents all the
+ * lines, otherwise the first line is not indented (Vi-compatible).
+ *
+ * (default "")
+ */
+export const lispoptions: LocalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "lispoptions");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "lispoptions", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "lispoptions");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    const result = await localOptions.get(denops, "lispoptions");
+    return (result ?? "") as string;
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "lispoptions", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "lispoptions");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&lispoptions");
+    return (result ?? "") as string;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "&lispoptions", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&lispoptions");
+    return (result ?? "") as string;
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "&lispoptions", value);
   },
 };
 
@@ -2339,37 +2528,126 @@ export const shortname: LocalOption<boolean> = {
 };
 
 /**
- * The value of this option determines the scroll behavior when opening,
- * closing or resizing horizontal splits. When "on", splitting a window
- * horizontally will keep the same relative cursor position in the old and
- * new window, as well windows that are resized. When "off", scrolling
- * will be avoided to stabilize the window content. Instead, the cursor
- * position will be changed when necessary. In this case, the jumplist
- * will be populated with the previous cursor position. Scrolling cannot
- * be guaranteed to be avoided when 'wrap' is enabled.
+ * This option can be used to display the (partially) entered command in
+ * another location.  Possible values are:
+ *   last          Last line of the screen (default).
+ *   statusline    Status line of the current window.
+ *   tabline       First line of the screen if 'showtabline' is enabled.
+ * Setting this option to "statusline" or "tabline" means that these will
+ * be redrawn whenever the command changes, which can be on every key
+ * pressed.
+ * The %S 'statusline' item can be used in 'statusline' or 'tabline' to
+ * place the text.  Without a custom 'statusline' or 'tabline' it will be
+ * displayed in a convenient location.
  *
- * (default on)
+ * (default "last")
  */
-export const splitscroll: GlobalOption<boolean> = {
+export const showcmdloc: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "showcmdloc");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "showcmdloc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "showcmdloc");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "showcmdloc");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "showcmdloc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "showcmdloc");
+  },
+};
+
+/**
+ * Scrolling works with screen lines.  When 'wrap' is set and the first
+ * line in the window wraps part of it may not be visible, as if it is
+ * above the window. `"<<<"` is displayed at the start of the first line,
+ * highlighted with `hl-NonText`.
+ * NOTE: only partly implemented, currently works with CTRL-E, CTRL-Y
+ * and scrolling with the mouse.
+ *
+ * (default off)
+ */
+export const smoothscroll: LocalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "splitscroll");
+    const result = await options.get(denops, "smoothscroll");
     return Boolean(result ?? false);
   },
   set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "splitscroll", value);
+    return options.set(denops, "smoothscroll", value);
   },
   reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "splitscroll");
+    return options.remove(denops, "smoothscroll");
   },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "splitscroll");
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "smoothscroll");
     return Boolean(result ?? false);
   },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "splitscroll", value);
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "smoothscroll", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "smoothscroll");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&smoothscroll");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&smoothscroll", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&smoothscroll");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&smoothscroll", value);
+  },
+};
+
+/**
+ * The value of this option determines the scroll behavior when opening,
+ * closing or resizing horizontal splits.
+ *
+ * Possible values are:
+ *   cursor        Keep the same relative cursor position.
+ *   screen        Keep the text on the same screen line.
+ *   topline       Keep the topline the same.
+ *
+ * For the "screen" and "topline" values, the cursor position will be
+ * changed when necessary. In this case, the jumplist will be populated
+ * with the previous cursor position. For "screen", the text cannot always
+ * be kept on the same screen line when 'wrap' is enabled.
+ *
+ * (default "cursor")
+ */
+export const splitkeep: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "splitkeep");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "splitkeep", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "splitkeep");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "splitkeep");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "splitkeep", value);
   },
   resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "splitscroll");
+    return globalOptions.remove(denops, "splitkeep");
   },
 };
 
@@ -2995,10 +3273,16 @@ export const ttybuiltin: GlobalOption<boolean> = {
  * line for lines that wrap.  This helps when using copy/paste with the
  * mouse in an xterm and other terminals.
  *
- * (default off, on when 'term' is xterm, hpterm,
- *  sun-cmd, screen, rxvt, dtterm or
- *  iris-ansi; also on when running Vim in
- *  a DOS console)
+ * The default used to be set only for some terminal names, but these
+ * days nearly all terminals are fast, therefore the default is now "on".
+ * If you have a slow connection you may want to set this option off,
+ * e.g. depending on the host name:
+ *
+ *     if hostname() =~ 'faraway'
+ *        set nottyfast
+ *     endif
+ *
+ * (default on)
  */
 export const ttyfast: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
@@ -3078,6 +3362,9 @@ export const ttyfast: GlobalOption<boolean> = {
  * set to a name that starts with "xterm", "mlterm", "screen", "tmux",
  * "st" (full match only), "st-" or "stterm", and 'ttymouse' is not set
  * already.
+ * If the terminfo/termcap entry "XM" exists and the first number is
+ * "1006" then 'ttymouse' will be set to "sgr".  This works for many
+ * modern terminals.
  * Additionally, if vim is compiled with the `+termresponse` feature and
  * `t_RV` is set to the escape sequence to request the xterm version
  * number, more intelligent detection is done.

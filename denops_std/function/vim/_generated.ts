@@ -37,16 +37,17 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  * Returns v:true on success and v:false on failure.
  * Examples:
  *
- *             " Create a buffer-local autocmd for buffer 5
- *             let acmd = {}
- *             let acmd.group = 'MyGroup'
- *             let acmd.event = 'BufEnter'
- *             let acmd.bufnr = 5
- *             let acmd.cmd = 'call BufEnterFunc()'
- *             call autocmd_add([acmd])
+ *     " Create a buffer-local autocmd for buffer 5
+ *     let acmd = {}
+ *     let acmd.group = 'MyGroup'
+ *     let acmd.event = 'BufEnter'
+ *     let acmd.bufnr = 5
+ *     let acmd.cmd = 'call BufEnterFunc()'
+ *     call autocmd_add([acmd])
  *
- *     Can also be used as a |method|: >
- *             GetAutocmdList()->autocmd_add()
+ * Can also be used as a `method`:
+ *
+ *     GetAutocmdList()->autocmd_add()
  */
 export function autocmd_add(denops: Denops, acmds: unknown): Promise<boolean>;
 export function autocmd_add(
@@ -328,8 +329,7 @@ export function exists_compiled(
 /**
  * Like `extend()` but instead of adding items to **{expr1}** a new
  * List or Dictionary is created and returned.  **{expr1}** remains
- * unchanged.  Items can still be changed by **{expr2}**, if you
- * don't want that use `deepcopy()` first.
+ * unchanged.
  */
 export function extendnew(
   denops: Denops,
@@ -377,6 +377,36 @@ export function foreground(
 }
 
 /**
+ * Just like `getbufline()` but only get one line and return it
+ * as a string.
+ */
+export function getbufoneline(
+  denops: Denops,
+  buf: unknown,
+  lnum: unknown,
+): Promise<string>;
+export function getbufoneline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getbufoneline", ...args);
+}
+
+/**
+ * Returns a `List` of cell widths of character ranges overridden
+ * by `setcellwidths()`.  The format is equal to the argument of
+ * `setcellwidths()`.  If no character ranges have their cell
+ * widths overridden, an empty List is returned.
+ */
+export function getcellwidths(denops: Denops): Promise<unknown[]>;
+export function getcellwidths(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcellwidths", ...args);
+}
+
+/**
  * The result is a Number, which is `TRUE` when the IME status is
  * active and `FALSE` otherwise.
  * See 'imstatusfunc'.
@@ -390,6 +420,20 @@ export function getimstatus(
 }
 
 /**
+ * Returns the name of the currently showing mouse pointer.
+ * When the `+mouseshape` feature is not supported or the shape
+ * is unknown an empty string is returned.
+ * This function is mainly intended for testing.
+ */
+export function getmouseshape(denops: Denops): Promise<string>;
+export function getmouseshape(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getmouseshape", ...args);
+}
+
+/**
  * Returns a `List` with information about all the sourced Vim
  * scripts in the order they were sourced, like what
  * `:scriptnames` shows.
@@ -398,7 +442,7 @@ export function getimstatus(
  * optional items:
  *     name        Script name match pattern. If specified,
  *                 and "sid" is not specified, information about
- *                 scripts with name that match the pattern
+ *                 scripts with a name that match the pattern
  *                 "name" are returned.
  *     sid         Script ID `<SID>`.  If specified, only
  *                 information about the script with ID "sid" is
@@ -419,7 +463,7 @@ export function getimstatus(
  *                 this script name links to, if any, otherwise
  *                 zero
  *     variables   A dictionary with the script-local variables.
- *                 Present only when the a particular script is
+ *                 Present only when a particular script is
  *                 specified using the "sid" item in **{opts}**.
  *                 Note that this is a copy, the value of
  *                 script-local variables cannot be changed using
@@ -793,7 +837,8 @@ export function list2blob(
  *                 the change; one if unknown or the whole line
  *                 was affected; this is a byte index, first
  *                 character has a value of one.
- * When lines are inserted the values are:
+ * When lines are inserted (not when a line is split, e.g. by
+ * typing CR in Insert mode) the values are:
  *     lnum        line above which the new line is added
  *     end         equal to "lnum"
  *     added       number of lines inserted
@@ -892,8 +937,7 @@ export function listener_remove(
  * argument accessible as _A inside first **{expr}**.
  * Strings are returned as they are.
  * Boolean objects are converted to numbers.
- * Numbers are converted to `Float` values if vim was compiled
- * with `+float` and to numbers otherwise.
+ * Numbers are converted to `Float` values.
  * Dictionaries and lists obtained by vim.eval() are returned
  * as-is.
  * Other objects are returned as zero without any errors.
@@ -1006,11 +1050,40 @@ export function mzeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Read file **{fname}** in binary mode and return a `Blob`.
+ * If **{offset}** is specified, read the file from the specified
+ * offset.  If it is a negative value, it is used as an offset
+ * from the end of the file.  E.g., to read the last 12 bytes:
+ *
+ *     readblob('file.bin', -12)
+ *
+ * If **{size}** is specified, only the specified size will be read.
+ * E.g. to read the first 100 bytes of a file:
+ *
+ *     readblob('file.bin', 0, 100)
+ *
+ * If **{size}** is -1 or omitted, the whole data starting from
+ * **{offset}** will be read.
+ * This can be also used to read the data from a character device
+ * on Unix when **{size}** is explicitly set.  Only if the device
+ * supports seeking **{offset}** can be used.  Otherwise it should be
+ * zero.  E.g. to read 10 bytes from a serial console:
+ *
+ *     readblob('/dev/ttyS0', 0, 10)
+ *
  * When the file can't be opened an error message is given and
  * the result is an empty `Blob`.
+ * When the offset is beyond the end of the file the result is an
+ * empty blob.
+ * When trying to read more bytes than are available the result
+ * is truncated.
  * Also see `readfile()` and `writefile()`.
  */
-export function readblob(denops: Denops, fname: unknown): Promise<unknown>;
+export function readblob(
+  denops: Denops,
+  fname: unknown,
+  offset?: unknown,
+  size?: unknown,
+): Promise<unknown>;
 export function readblob(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("readblob", ...args);
 }
@@ -1378,6 +1451,9 @@ export function sound_clear(
  * On MS-Windows, **{name}** can be SystemAsterisk, SystemDefault,
  * SystemExclamation, SystemExit, SystemHand, SystemQuestion,
  * SystemStart, SystemWelcome, etc.
+ * On macOS, **{name}** refers to files located in
+ * /System/Library/Sounds (e.g. "Tink").  It will also work for
+ * custom installed sounds in folders like `~/Library/Sounds`.
  *
  * When **{callback}** is specified it is invoked when the sound is
  * finished.  The first argument is the sound ID, the second
@@ -1529,6 +1605,61 @@ export function strcharlen(
 }
 
 /**
+ * The result is a Number, which is the number of UTF-16 code
+ * units in String **{string}** (after converting it to UTF-16).
+ *
+ * When **{countcc}** is TRUE, composing characters are counted
+ * separately.
+ * When **{countcc}** is omitted or FALSE, composing characters are
+ * ignored.
+ *
+ * Returns zero on error.
+ *
+ * Also see `strlen()` and `strcharlen()`.
+ * Examples:
+ *
+ *         echo strutf16len('a')               returns 1
+ *         echo strutf16len('©')               returns 1
+ *         echo strutf16len('😊')               returns 2
+ *         echo strutf16len('ą́')             returns 1
+ *         echo strutf16len('ą́', v:true)     returns 3
+ *
+ *     Can also be used as a |method|: >
+ *             GetText()->strutf16len()
+ */
+export function strutf16len(
+  denops: Denops,
+  string: unknown,
+  countcc?: unknown,
+): Promise<number>;
+export function strutf16len(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("strutf16len", ...args);
+}
+
+/**
+ * Returns a list of swap file names, like what "vim -r" shows.
+ * See the `-r` command argument.  The 'directory' option is used
+ * for the directories to inspect.  If you only want to get a
+ * list of swap files in the current directory then temporarily
+ * set 'directory' to a dot:
+ *
+ *     let save_dir = &directory
+ *     let &directory = '.'
+ *     let swapfiles = swapfilelist()
+ *     let &directory = save_dir
+ */
+export function swapfilelist(denops: Denops): Promise<unknown[]>;
+export function swapfilelist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("swapfilelist", ...args);
+}
+
+/**
  * Returns a `Dictionary` with properties of the terminal that Vim
  * detected from the response to `t_RV` request.  See
  * `v:termresponse` for the response itself.  If `v:termresponse`
@@ -1537,6 +1668,7 @@ export function strcharlen(
  *    cursor_blink_mode    whether sending `t_RC` works  **
  *    underline_rgb        whether `t_8u` works **
  *    mouse                mouse type supported
+ *    kitty                whether Kitty terminal was detected
  *
  * ** value 'u' for unknown, 'y' for yes, 'n' for no
  *
@@ -1574,11 +1706,51 @@ export function terminalprops(
  * Example:
  *
  *     echo typename([1, 2, 3])
- *     list<number>
+ *
+ *         list<number>
  */
 export function typename(denops: Denops, expr: unknown): Promise<string>;
 export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("typename", ...args);
+}
+
+/**
+ * Same as `charidx()` but returns the UTF-16 index of the byte
+ * at **{idx}** in **{string}** (after converting it to UTF-16).
+ *
+ * When **{charidx}** is present and TRUE, **{idx}** is used as the
+ * character index in the String **{string}** instead of as the byte
+ * index.
+ * An **{idx}** in the middle of a UTF-8 sequence is rounded upwards
+ * to the end of that sequence.
+ *
+ * See `byteidx()` and `byteidxcomp()` for getting the byte index
+ * from the UTF-16 index and `charidx()` for getting the
+ * character index from the UTF-16 index.
+ * Refer to `string-offset-encoding` for more information.
+ * Examples:
+ *
+ *     echo utf16idx('a😊😊', 3) returns 2
+ *     echo utf16idx('a😊😊', 7) returns 4
+ *     echo utf16idx('a😊😊', 1, 0, 1)   returns 2
+ *     echo utf16idx('a😊😊', 2, 0, 1)   returns 4
+ *     echo utf16idx('aą́c', 6)               returns 2
+ *     echo utf16idx('aą́c', 6, 1)    returns 4
+ *     echo utf16idx('a😊😊', 9) returns -1
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetName()->utf16idx(idx)
+ */
+export function utf16idx(
+  denops: Denops,
+  string: unknown,
+  idx: unknown,
+  countcc?: unknown,
+  charidx?: unknown,
+): Promise<number>;
+export function utf16idx(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("utf16idx", ...args);
 }
 
 /**
@@ -1785,6 +1957,9 @@ export function ch_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Write String **{msg}** in the channel log file, if it was opened
  * with `ch_logfile()`.
+ * The text "ch_log():" is prepended to the message to make clear
+ * it came from this function call and make it easier to find in
+ * the log file.
  * When **{handle}** is passed the channel number is used for the
  * message.
  * **{handle}** can be a Channel or a Job that has a Channel.  The
@@ -3127,7 +3302,7 @@ export function test_getvalue(
  *     "findrepl"  search and replace text.
  *     "mouse"     mouse button click event.
  *     "scrollbar" move or drag the scrollbar.
- *     "sendevent" send a low-level GUI event.
+ *     "key"       send a low-level keyboard event.
  *     "tabline"   select a tab page by mouse click.
  *     "tabmenu"   select a tabline menu entry.
  *
@@ -3168,9 +3343,9 @@ export function test_getvalue(
  *   Inject either a mouse button click, or a mouse move, event.
  *   The supported items in **{args}** are:
  *     button:     mouse button.  The supported values are:
- *                     0   right mouse button
+ *                     0   left mouse button
  *                     1   middle mouse button
- *                     2   left mouse button
+ *                     2   right mouse button
  *                     3   mouse button release
  *                     4   scroll wheel down
  *                     5   scroll wheel up
@@ -3211,8 +3386,8 @@ export function test_getvalue(
  *     dragging:   1 to drag the scrollbar and 0 to click in the
  *                 scrollbar.
  *
- * "sendevent":
- *   Send a low-level GUI event (e.g. key-up or down).
+ * "key":
+ *   Send a low-level keyboard event (e.g. key-up or down).
  *   Currently only supported on MS-Windows.
  *   The supported items in **{args}** are:
  *     event:      The supported string values are:
@@ -3276,6 +3451,89 @@ export function test_ignore_error(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("test_ignore_error", ...args);
+}
+
+/**
+ * Generate a low-level MS-Windows **{event}** with arguments **{args}**
+ * for testing Vim functionality.  It works for MS-Windows GUI
+ * and for the console.
+ *
+ * **{event}** is a String and the supported values are:
+ *     "mouse"     mouse event.
+ *     "key"       keyboard event.
+ *
+ * "mouse":
+ *   Inject either a mouse button click, or a mouse move, event.
+ *   The supported items in **{args}** are:
+ *     button:     mouse button.  The supported values are:
+ *                     0   right mouse button
+ *                     1   middle mouse button
+ *                     2   left mouse button
+ *                     3   mouse button release
+ *                     4   scroll wheel down
+ *                     5   scroll wheel up
+ *                     6   scroll wheel left
+ *                     7   scroll wheel right
+ *     row:        mouse click row number.  The first row of the
+ *                 Vim window is 1 and the last row is 'lines'.
+ *     col:        mouse click column number.  The maximum value
+ *                 of **{col}** is 'columns'.
+ *                 Note: row and col are always interpreted as
+ *                 screen cells for the console application.
+ *                 But, they may be interpreted as pixels
+ *                 for the GUI, depending on "cell".
+ *     multiclick: set to 1 to inject a double-click mouse event.
+ *     modifiers:  key modifiers.  The supported values are:
+ *                     4   shift is pressed
+ *                     8   alt is pressed
+ *                    16   ctrl is pressed
+ *     move:       Optional; if used and TRUE then a mouse move
+ *                 event can be generated.
+ *                 Only **{args}** row: and col: are used and
+ *                 required.
+ *                 Only results in an event when 'mousemoveevent'
+ *                 is set or a popup uses mouse move events.
+ *     cell:       Optional for the GUI: when present and TRUE
+ *                 then "move" uses screen cells instead of pixel
+ *                 positions.  Not used by the console.
+ *
+ * "key":
+ *   Send a low-level keyboard event (e.g. keyup or keydown).
+ *   The supported items in **{args}** are:
+ *     event:      The supported string values are:
+ *                     keyup   generate a keyup event
+ *                     keydown generate a keydown event
+ *     keycode:    Keycode to use for a keyup or a keydown event.
+ *     modifiers:  Optional; key modifiers.
+ *                 The supported values are:
+ *                     2   shift is pressed
+ *                     4   ctrl is pressed
+ *                     8   alt is pressed
+ *                 Note: These values are different from the
+ *                 mouse modifiers.
+ *     execute:    Optional. Similar to `feedkeys()` mode x.
+ *                 When this is included and set to true
+ *                 (non-zero) then Vim will process any buffered
+ *                 unprocessed key events.  All other **{args}**
+ *                 items are optional when this is set and true.
+ *
+ * Returns TRUE if the event is successfully added or executed,
+ * FALSE if there is a failure.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetEvent()->test_mswin_event({args})
+ */
+export function test_mswin_event(
+  denops: Denops,
+  event: unknown,
+  args: unknown,
+): Promise<boolean>;
+export function test_mswin_event(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_mswin_event", ...args);
 }
 
 /**
@@ -3924,9 +4182,13 @@ export function assert_true(
  *                 then "id" must not be present and will be set
  *                 automatically to a negative number; otherwise
  *                 zero is used
- *    text         text to be displayed before **{col}**, or after the
- *                 line if **{col}** is zero; prepend and/or append
- *                 spaces for padding with highlighting
+ *
+ *    text         text to be displayed before **{col}**, or
+ *                 above/below the line if **{col}** is zero; prepend
+ *                 and/or append spaces for padding with
+ *                 highlighting; cannot be used with "length",
+ *                 "end_lnum" and "end_col"
+ *                 See `virtual-text` for more information.
  *
  *    text_align   when "text" is present and **{col}** is zero;
  *                 specifies where to display the text:
@@ -3938,7 +4200,7 @@ export function assert_true(
  *                    above   just above the line
  *                 When omitted "after" is used.  Only one
  *                 "right" property can fit in each line, if
- *                 there are two ore more these will go in a
+ *                 there are two or more these will go in a
  *                 separate line (still right aligned).
  *    text_padding_left
  *                 used when "text" is present and **{col}** is zero;
@@ -3951,6 +4213,9 @@ export function assert_true(
  *                    wrap      wrap the text to the next line
  *                    truncate  truncate the text to make it fit
  *                 When omitted "truncate" is used.
+ *                 Note that this applies to the individual text
+ *                 property, the 'wrap' option sets the overall
+ *                 behavior
  * All fields except "type" are optional.
  *
  * It is an error when both "length" and "end_lnum" or "end_col"
@@ -3971,12 +4236,23 @@ export function assert_true(
  * If not found an error is given.
  *
  * When "text" is used and the column is non-zero then this text
- * will be displayed at the start location of the text property
- * after the text.  The text of the buffer line will be shifted
- * to make room.  This is called "virtual text".
- * When the column is zero the virtual text will appear after the
- * buffer text.  The "text_align" and "text_wrap" arguments
- * determine how it is displayed.
+ * will be displayed at the specified start location of the text
+ * property.  The text of the buffer line will be shifted to make
+ * room.  This is called "virtual text".
+ * When the column is zero the virtual text will appear above,
+ * after or below the buffer text.  The "text_align" and
+ * "text_wrap" arguments determine how it is displayed.
+ * To separate the virtual text from the buffer text prepend
+ * and/or append spaces to the "text" field or use the
+ * "text_padding_left" value.
+ *
+ * Make sure to use a highlight that makes clear to the user that
+ * this is virtual text, otherwise it will be very confusing that
+ * the text cannot be edited.  When using "above" you need to
+ * make clear this text belongs to the text line below it, when
+ * using "below" you need to make sure it belongs to the text
+ * line above it.
+ *
  * The text will be displayed but it is not part of the actual
  * buffer line, the cursor cannot be placed on it.  A mouse click
  * in the text will move the cursor to the first character after
@@ -3984,15 +4260,16 @@ export function assert_true(
  * Any Tab and other control character in the text will be
  * changed to a space (Rationale: otherwise the size of the text
  * is difficult to compute).
- * A negative "id" will be chosen and is returned.  Once a
- * property with "text" has been added for a buffer then using a
- * negative "id" for any other property will give an error:
+ * A negative "id" will be chosen and is returned.
  *
- * Make sure to use a highlight that makes clear to the user that
- * this is virtual text, otherwise it will be very confusing that
- * the text cannot be edited.
- * To separate the virtual text from the buffer text prepend
- * and/or append spaces to the "text" field.
+ * Before text properties with text were supported it was
+ * possible to use a negative "id", even though this was very
+ * rare.  Now that negative "id"s are reserved for text
+ * properties with text an error is given when using a negative
+ * "id".  When a text property with text already exists using a
+ * negative "id" results in *E1293* .  If a negative "id" was
+ * used and later a text property with text is added results in
+ * *E1339* .
  *
  * Can also be used as a `method`:
  *

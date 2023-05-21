@@ -228,7 +228,8 @@ export async function has(
  *
  *     ComputeLnum()->getline()
  *
- * To get lines from another buffer see `getbufline()`
+ * To get lines from another buffer see `getbufline()` and
+ * `getbufoneline()`
  */
 export async function getline(
   denops: Denops,
@@ -256,7 +257,8 @@ export async function getline(
  * When **{lnum}** is just below the last line the **{text}** will be
  * added below the last line.
  * **{text}** can be any type or a List of any type, each item is
- * converted to a String.
+ * converted to a String.  When **{text}** is an empty List then
+ * nothing is changed and FALSE is returned.
  *
  * If this succeeds, FALSE is returned.  If this fails (most likely
  * because **{lnum}** is invalid) TRUE is returned.

@@ -70,6 +70,9 @@ export interface GetBufInfoDictArg {
  *
  *     :let failed = appendbufline(13, 0, "# THE START")
  *
+ * However, when **{text}** is an empty list then no error is given
+ * for an invalid **{lnum}**, since **{lnum}** isn't actually used.
+ *
  * Can also be used as a `method` after a List, the base is
  * passed as the second argument:
  *
@@ -295,7 +298,8 @@ export async function bufnr(
  *
  *     echo "A window containing buffer 1 is " .. (bufwinid(1))
  *
- * Only deals with the current tab page.
+ * Only deals with the current tab page.  See `win_findbuf()` for
+ * finding more.
  *
  * Can also be used as a `method`:
  *
@@ -460,7 +464,8 @@ export async function getbufinfo(
 /**
  * Return a `List` with the lines starting from **{lnum}** to **{end}**
  * (inclusive) in the buffer **{buf}**.  If **{end}** is omitted, a
- * `List` with only the line **{lnum}** is returned.
+ * `List` with only the line **{lnum}** is returned.  See
+ * `getbufoneline()` for only getting the line.
  *
  * For the use of **{buf}**, see `bufname()` above.
  *
@@ -607,9 +612,10 @@ export async function getmarklist(
  * To insert lines use `appendbufline()`.
  * Any text properties in **{lnum}** are cleared.
  *
- * **{text}** can be a string to set one line, or a list of strings
- * to set multiple lines.  If the list extends below the last
- * line then those lines are added.
+ * **{text}** can be a string to set one line, or a List of strings
+ * to set multiple lines.  If the List extends below the last
+ * line then those lines are added.  If the List is empty then
+ * nothing is changed and zero is returned.
  *
  * For the use of **{buf}**, see `bufname()` above.
  *
