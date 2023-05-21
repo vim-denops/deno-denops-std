@@ -9,7 +9,7 @@ import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
-const VIM_VERSION = "9.0.0472";
+const VIM_VERSION = "9.0.1499";
 const NVIM_VERSION = "0.8.0";
 
 const commonGenerateModule = "../../denops_std/option/_generated.ts";

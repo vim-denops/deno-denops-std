@@ -1688,6 +1688,9 @@ export const cedit: GlobalOption<string> = {
  * Note that v:charconvert_from and v:charconvert_to may be different
  * from 'encoding'.  Vim internally uses UTF-8 instead of UCS-2 or UCS-4.
  *
+ * The advantage of using a function call without arguments is that it is
+ * faster, see `expr-option-function`.
+ *
  * Encryption is not done by Vim when using 'charconvert'.  If you want
  * to encrypt the file after conversion, 'charconvert' should take care
  * of this.
@@ -1975,6 +1978,7 @@ export const cinscopedecls: LocalOption<string> = {
  *
  *     set clipboard^=unnamed
  *
+ * When using the GUI see `'go-A'`.
  * These names are recognized:
  *
  * unnamed         When included, Vim will use the clipboard register '*'
@@ -4085,7 +4089,7 @@ export const directory: GlobalOption<string> = {
 };
 
 /**
- * Change the way text is displayed.  This is comma-separated list of
+ * Change the way text is displayed.  This is a comma-separated list of
  * flags:
  * lastline        When included, as much as possible of the last line
  *                 in a window will be displayed.  "@@@" is put in the
@@ -4098,6 +4102,9 @@ export const directory: GlobalOption<string> = {
  *
  * When neither "lastline" nor "truncate" is included, a last line that
  * doesn't fit is replaced with "@" lines.
+ *
+ * The "@" character can be changed by setting the "lastline" item in
+ * 'fillchars'.  The character is highlighted with `hl-NonText`.
  *
  * (default "", set to "truncate" in
  *  `defaults.vim`)
@@ -4287,6 +4294,7 @@ export const encoding: GlobalOption<string> = {
  * to remember the presence of a `<EOL>` for the last line in the file, so
  * that when you write the file the situation from the original file can
  * be kept.  But you can change it if you want to.
+ * See `eol-and-eof` for example settings.
  *
  * (default on)
  */
@@ -5055,6 +5063,7 @@ export const filetype: LocalOption<string> = {
  *   foldsep       '|'             open fold middle character
  *   diff          '-'             deleted lines of the 'diff' option
  *   eob           `'~'`             empty lines below the end of a buffer
+ *   lastline      '@'             'display' contains lastline/truncate
  *
  * Any one that is omitted will fall back to the default.  For "stl" and
  * "stlnc" the space will be used when there is highlighting, '^' or '='
@@ -5079,6 +5088,7 @@ export const filetype: LocalOption<string> = {
  *   fold          Folded                  `hl-Folded`
  *   diff          DiffDelete              `hl-DiffDelete`
  *   eob           EndOfBuffer             `hl-EndOfBuffer`
+ *   lastline      NonText                 `hl-NonText`
  *
  * (default `"vert:|,fold:-,eob:~"`)
  *
@@ -5133,11 +5143,12 @@ export const fillchars: GlobalOrLocalOption<string> = {
 
 /**
  * When writing a file and this option is on, `<EOL>` at the end of file
- * will be restored if missing. Turn this option off if you want to
+ * will be restored if missing.  Turn this option off if you want to
  * preserve the situation from the original file.
  * When the 'binary' option is set the value of this option doesn't
  * matter.
  * See the 'endofline' option.
+ * See `eol-and-eof` for example settings.
  *
  * (default on)
  */
@@ -5821,6 +5832,9 @@ export const foldtext: LocalOption<string> = {
  * This will invoke the mylang#Format() function in the
  * autoload/mylang.vim file in 'runtimepath'. `autoload`
  *
+ * The advantage of using a function call without arguments is that it is
+ * faster, see `expr-option-function`.
+ *
  * The expression is also evaluated when 'textwidth' is set and adding
  * text beyond that limit.  This happens under the same conditions as
  * when internal formatting is used.  Make sure the cursor is kept in the
@@ -6447,6 +6461,8 @@ export const guifontwide: GlobalOption<string> = {
  *                  "a"            yes                     yes
  *                  "A"             -                      yes
  *                  "aA"           yes                     yes
+ *
+ *         When using a terminal see the 'clipboard' option.
  *
  *   'c'   Use console dialogs instead of popup dialogs for simple
  *         choices.
@@ -7295,9 +7311,14 @@ export const include: GlobalOrLocalOption<string> = {
  * Expression to be used to transform the string found with the 'include'
  * option to a file name.  Mostly useful to change "." to "/" for Java:
  *
- *     :set includeexpr=substitute(v:fname,'\\.','/','g')
+ *     :setlocal includeexpr=substitute(v:fname,'\\.','/','g')
  *
  * The "v:fname" variable will be set to the file name that was detected.
+ * Note the double backslash: the `:set` command first halves them, then
+ * one remains it the value, where "\." matches a dot literally.  For
+ * simple character replacements `tr()` avoids the need for escaping:
+ *
+ *     :setlocal includeexpr=tr(v:fname,'.','/')
  *
  * Also used for the `gf` command if an unmodified file name can't be
  * found.  Allows doing "gf" on the name after an 'include' statement.
@@ -7306,11 +7327,14 @@ export const include: GlobalOrLocalOption<string> = {
  * If the expression starts with s: or `<SID>`, then it is replaced with
  * the script ID (`local-function`). Example:
  *
- *     set includeexpr=s:MyIncludeExpr(v:fname)
- *     set includeexpr=<SID>SomeIncludeExpr(v:fname)
+ *     setlocal includeexpr=s:MyIncludeExpr()
+ *     setlocal includeexpr=<SID>SomeIncludeExpr()
  *
  * Otherwise, the expression is evaluated in the context of the script
  * where the option was set, thus script-local items are available.
+ *
+ * It is more efficient if the value is just a function call without
+ * arguments, see `expr-option-function`.
  *
  * The expression will be evaluated in the `sandbox` when set from a
  * modeline, see `sandbox-option`.
@@ -7443,7 +7467,7 @@ export const incsearch: GlobalOption<boolean> = {
  * in Insert mode as specified with the 'indentkeys' option.
  * When this option is not empty, it overrules the 'cindent' and
  * 'smartindent' indenting.  When 'lisp' is set, this option is
- * overridden by the Lisp indentation algorithm.
+ * is only used when 'lispoptions' contains "expr:1".
  * When 'paste' is set this option is not used for indenting.
  * The expression is evaluated with `v:lnum` set to the line number for
  * which the indent is to be computed.  The cursor is also in this line
@@ -7457,6 +7481,9 @@ export const incsearch: GlobalOption<boolean> = {
  *
  * Otherwise, the expression is evaluated in the context of the script
  * where the option was set, thus script-local items are available.
+ *
+ * The advantage of using a function call without arguments is that it is
+ * faster, see `expr-option-function`.
  *
  * The expression must return the number of spaces worth of indent.  It
  * can return "-1" to keep the current indent (this means 'autoindent' is
@@ -11449,8 +11476,6 @@ export const rightleftcmd: LocalOption<string> = {
  * NOTE: This option is reset when 'compatible' is set.
  *
  * (default off, set in `defaults.vim`)
- *
- * *not available when compiled without the `+cmdline_info` feature*
  */
 export const ruler: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
@@ -12613,34 +12638,40 @@ export const shiftwidth: LocalOption<number> = {
  *   r     use "[RO]" instead of "[readonly]"
  *   w     use "[w]" instead of "written" for file write message
  *         and "[a]" instead of "appended" for ':w >> file' command
- *   x     use "[dos]" instead of "[dos format]", "[unix]" instead of
- *         "[unix format]" and "[mac]" instead of "[mac format]".
+ *   x     use "[dos]" instead of "[dos format]", "[unix]"
+ *         instead of "[unix format]" and "[mac]" instead of "[mac
+ *         format]"
  *   a     all of the above abbreviations
  *
- *   o     overwrite message for writing a file with subsequent message
- *         for reading a file (useful for ":wn" or when 'autowrite' on)
- *   O     message for reading a file overwrites any previous message.
- *         Also for quickfix message (e.g., ":cn").
- *   s     don't give "search hit BOTTOM, continuing at TOP" or "search
- *         hit TOP, continuing at BOTTOM" messages; when using the search
- *         count do not show "W" after the count message (see S below)
- *   t     truncate file message at the start if it is too long to fit
- *         on the command-line, `"<"` will appear in the left most column.
- *         Ignored in Ex mode.
- *   T     truncate other messages in the middle if they are too long to
- *         fit on the command line.  "..." will appear in the middle.
- *         Ignored in Ex mode.
+ *   o     overwrite message for writing a file with subsequent
+ *         message for reading a file (useful for ":wn" or when
+ *         'autowrite' on)
+ *   O     message for reading a file overwrites any previous
+ *         message;  also for quickfix message (e.g., ":cn")
+ *   s     don't give "search hit BOTTOM, continuing at TOP" or
+ *         "search hit TOP, continuing at BOTTOM" messages; when using
+ *         the search count do not show "W" after the count message (see
+ *         S below)
+ *   t     truncate file message at the start if it is too long
+ *         to fit on the command-line, `"<"` will appear in the left most
+ *         column; ignored in Ex mode
+ *   T     truncate other messages in the middle if they are too
+ *         long to fit on the command line; "..." will appear in the
+ *         middle; ignored in Ex mode
  *   W     don't give "written" or "[w]" when writing a file
- *   A     don't give the "ATTENTION" message when an existing swap file
- *         is found.
- *   I     don't give the intro message when starting Vim `:intro`.
- *   c     don't give `ins-completion-menu` messages.  For example,
- *         "-- XXX completion (YYY)", "match 1 of 2", "The only match",
- *         "Pattern not found", "Back at original", etc.
+ *   A     don't give the "ATTENTION" message when an existing
+ *         swap file is found
+ *   I     don't give the intro message when starting Vim,
+ *         see `:intro`
+ *   c     don't give `ins-completion-menu` messages; for
+ *         example, "-- XXX completion (YYY)", "match 1 of 2", "The only
+ *         match", "Pattern not found", "Back at original", etc.
+ *   C     don't give messages while scanning for ins-completion
+ *         items, for instance "scanning tags"
  *   q     use "recording" instead of "recording @a"
- *   F     don't give the file info when editing a file, like `:silent`
- *         was used for the command; note that this also affects messages
- *         from autocommands
+ *   F     don't give the file info when editing a file, like
+ *         `:silent` was used for the command; note that this also
+ *         affects messages from autocommands
  *   S     do not show search count message when searching, e.g.
  *         "[1/5]"
  *
@@ -12767,13 +12798,13 @@ export const showbreak: GlobalOrLocalOption<string> = {
  * - When selecting more than one line, the number of lines.
  * - When selecting a block, the size in screen characters:
  *   **{lines}**x**{columns}**.
+ * This information can be displayed in an alternative location using the
+ * 'showcmdloc' option.
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
  *
  * (Vim default: on, off for Unix,
  *  Vi default: off, set in `defaults.vim`)
- *
- * *not available when compiled without the `+cmdline_info` feature*
  */
 export const showcmd: GlobalOption<boolean> = {
   async get(denops: Denops): Promise<boolean> {
@@ -13639,9 +13670,11 @@ export const spelloptions: LocalOption<string> = {
  *                 The file is used for all languages.
  *
  * expr:**{expr}**     Evaluate expression **{expr}**.  Use a function to avoid
- *                 trouble with spaces.  `v:val` holds the badly spelled
- *                 word.  The expression must evaluate to a List of
- *                 Lists, each with a suggestion and a score.
+ *                 trouble with spaces.  Best is to call a function
+ *                 without arguments, see `expr-option-function`.
+ *                 `v:val` holds the badly spelled word.  The expression
+ *                 must evaluate to a List of Lists, each with a
+ *                 suggestion and a score.
  *                 Example:
  *                         [['the', 33], ['that', 44]]
  *                 Set 'verbose' and use `z=` to see the scores that the
@@ -13747,11 +13780,12 @@ export const splitright: GlobalOption<boolean> = {
 /**
  * When "on" the commands listed below move the cursor to the first
  * non-blank of the line.  When off the cursor is kept in the same column
- * (if possible).  This applies to the commands: CTRL-D, CTRL-U, CTRL-B,
- * CTRL-F, "G", "H", "M", "L", gg, and to the commands "d", `"<<"` and ">>"
- * with a linewise operator, with "%" with a count and to buffer changing
- * commands (CTRL-^, :bnext, :bNext, etc.).  Also for an Ex command that
- * only has a line number, e.g., ":25" or ":+".
+ * (if possible).  This applies to the commands:
+ * - CTRL-D, CTRL-U, CTRL-B, CTRL-F, "G", "H", "M", "L", "gg"
+ * - "d", `"<<"` and ">>" with a linewise operator
+ * - "%" with a count
+ * - buffer changing commands (CTRL-^, :bnext, :bNext, etc.)
+ * - Ex commands that only has a line number, e.g., ":25" or ":+".
  * In case of buffer changing commands the cursor is placed at the column
  * where it was the last time the buffer was edited.
  * NOTE: This option is set when 'compatible' is set.
@@ -13805,6 +13839,8 @@ export const startofline: GlobalOption<boolean> = {
  *
  * When there is error while evaluating the option then it will be made
  * empty to avoid further errors.  Otherwise screen updating would loop.
+ * When the result contains unprintable characters the result is
+ * unpredictable.
  *
  * Note that the only effect of 'ruler' when this option is set (and
  * 'laststatus' is 2) is controlling the output of `CTRL-G`.
@@ -13864,6 +13900,7 @@ export const startofline: GlobalOption<boolean> = {
  * P S   Percentage through file of displayed window.  This is like the
  *       percentage described for 'ruler'.  Always 3 in length, unless
  *       translated.
+ * S S   'showcmd' content, see 'showcmdloc'.
  * a S   Argument list status as in default title.  (**{current}** of **{max}**)
  *       Empty if the argument file count is zero or one.
  * { NF  Evaluate expression between '%{' and '}' and substitute result.
@@ -13894,7 +13931,10 @@ export const startofline: GlobalOption<boolean> = {
  *       mark.  This information is used for mouse clicks.
  * < -   Where to truncate line if too long.  Default is at the start.
  *       No width fields allowed.
- * = -   Separation point between left and right aligned items.
+ * = -   Separation point between alignment sections.  Each section will
+ *       be separated by an equal number of spaces.  With one %= what
+ *       comes after it will be right-aligned.  With two %= there is a
+ *       middle part, with white space left and right of it.
  *       No width fields allowed.
  * `#` -   Set highlight group.  The name must follow and then a # again.
  *       Thus use %#HLname# for highlight group HLname.  The same
@@ -13902,8 +13942,8 @@ export const startofline: GlobalOption<boolean> = {
  *       windows.
  * * -   Set highlight group to User**{N}**, where **{N}** is taken from the
  *       minwid field, e.g. %1*.  Restore normal highlight with %* or %0*.
- *       The difference between User**{N}** and StatusLine  will be applied
- *       to StatusLineNC for the statusline of non-current windows.
+ *       The difference between User**{N}** and StatusLine will be applied to
+ *       StatusLineNC for the statusline of non-current windows.
  *       The number N must be between 1 and 9.  See `hl-User1..9`
  *
  * When displaying a flag, Vim removes the leading comma, if any, when

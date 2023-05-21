@@ -7,3 +7,28 @@ To add options manually, create or modify corresponding module under `option`,
 `_manual.ts` under corresponding module. After that, execute `make gen` on the
 repository top so that `gen-option.ts` automatically remove duplicated options
 from `_generated.ts`.
+
+### 💥 Breaking Changes (v5)
+
+When a Boolean option was specified in Getter, 0 or 1 was returned instead of
+Boolean, but since v5, Boolean has been returned.
+
+```ts
+import type { Denops } from "https://deno.land/x/denops_std/mod.ts";
+import * as op from "https://deno.land/x/denops_std/option/mod.ts";
+
+export async function test(denops: Denops) {
+  await denops.cmd("setglobal autoread");
+  await denops.cmd("setlocal autoread");
+
+  console.log(await op.autoread.get(denops));
+  console.log(await op.autoread.getGlobal(denops));
+  console.log(await op.autoread.getLocal(denops));
+  console.log(await op.autoread.getBuffer(denops, 1));
+  console.log(await op.autoread.getWindow(denops, 1));
+}
+```
+
+Above shows `true` five times in v5 but `1` five times in v4.
+
+https://github.com/vim-denops/deno-denops-std/pull/204
