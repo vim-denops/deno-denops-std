@@ -1,8 +1,8 @@
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
-import * as itertools from "https://deno.land/x/itertools@v1.1.0/mod.ts";
+import * as itertools from "https://deno.land/x/itertools@v1.1.1/mod.ts";
 import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
