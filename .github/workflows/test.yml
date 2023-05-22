@@ -103,6 +103,9 @@ jobs:
           ${DENOPS_TEST_NVIM} --version
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
+      - name: Cache
+        run: deno cache $(find . -name '*.ts')
+        working-directory: ./repo
       - name: Test
         run: deno task test
         env:
