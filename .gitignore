@@ -1,2 +1,4 @@
 /.tools
+/.coverage
 deno.lock
+
