@@ -1,7 +1,7 @@
 import {
   AssertError,
   isLike,
-} from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
+} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
 
 /**
  * Type of `screenpos()` result.
@@ -40,18 +40,6 @@ export function assertScreenPos(x: unknown): asserts x is ScreenPos {
 }
 
 /**
- * Ensure if `x` is ScreenPos by raising an `AssertError` when it's not.
- *
- * @deprecated
- */
-export function ensureScreenPos(x: unknown): asserts x is ScreenPos {
-  console.warn(
-    "The 'ensureScreenPos' is deprecated. Use 'assertScreenPos' instead.",
-  );
-  assertScreenPos(x);
-}
-
-/**
  * Type of `getpos()` or `setpos()` result.
  */
 export type Position = [
@@ -77,18 +65,6 @@ export function assertPosition(x: unknown): asserts x is Position {
   if (!isPosition(x)) {
     throw new AssertError("The value must be Position");
   }
-}
-
-/**
- * Ensure if `x` is Position by raising an `AssertError` when it's not.
- *
- * @deprecated
- */
-export function ensurePosition(x: unknown): asserts x is Position {
-  console.warn(
-    "The 'ensurePosition' is deprecated. Use 'assertPosition' instead.",
-  );
-  assertPosition(x);
 }
 
 const validBuiltinCompletions = [

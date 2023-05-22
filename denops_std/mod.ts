@@ -12,7 +12,7 @@
  * import * as vars from "./variable/mod.ts";
  * import * as helper from "./helper/mod.ts";
  *
- * import * as unknownutil from "https://deno.land/x/unknownutil/mod.ts";
+ * import * as unknownutil from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {
@@ -54,4 +54,4 @@ export type {
   Denops,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+} from "https://deno.land/x/denops_core@v5.0.0/mod.ts";

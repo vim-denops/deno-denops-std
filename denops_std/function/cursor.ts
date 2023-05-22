@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import type { Position, ScreenPos } from "./types.ts";
 
 /**
@@ -17,6 +17,8 @@ import type { Position, ScreenPos } from "./types.ts";
  * and column number. Most useful when the column is "$", to get
  * the last column of a specific line.  When "lnum" or "col" is
  * out of range then col() returns zero.
+ * With the optional **{winid}** argument the values are obtained for
+ * that window instead of the current window.
  * To get the line number use `line()`.  To get both use
  * `getpos()`.
  * For the screen column position use `virtcol()`.  For the
@@ -29,17 +31,16 @@ import type { Position, ScreenPos } from "./types.ts";
  *     col("'t")               column of mark t
  *     col("'" .. markname)    column of mark markname
  *
- * The first column is 1.  Returns 0 if **{expr}** is invalid.
+ * The first column is 1.  Returns 0 if **{expr}** is invalid or when
+ * the window with ID **{winid}** is not found.
  * For an uppercase mark the column may actually be in another
  * buffer.
  * For the cursor position, when 'virtualedit' is active, the
  * column is one higher if the cursor is after the end of the
- * line.  This can be used to obtain the column in Insert mode:
+ * line.  Also, when using a `<Cmd>` mapping the cursor isn't
+ * moved, this can be used to obtain the column in Insert mode:
  *
- *     :imap <F2> <C-O>:let save_ve = &ve<CR>
- *             \<C-O>:set ve=all<CR>
- *             \<C-O>:echo col(".") .. "\n" <Bar>
- *             \let &ve = save_ve<CR>
+ *     :imap <F2> <Cmd>echowin col(".")<CR>
  *
  * Can also be used as a `method`:
  *
@@ -207,10 +208,10 @@ export async function winline(denops: Denops): Promise<number> {
  * `setcursorcharpos()`.
  *
  * Does not change the jumplist.
- * **{lnum}** is used like with `getline()`.
+ * **{lnum}** is used like with `getline()`, except that if **{lnum}** is
+ * zero, the cursor will stay in the current line.
  * If **{lnum}** is greater than the number of lines in the buffer,
  * the cursor will be positioned at the last line in the buffer.
- * If **{lnum}** is zero, the cursor will stay in the current line.
  * If **{col}** is greater than the number of bytes in the line,
  * the cursor will be positioned at the last character in the
  * line.

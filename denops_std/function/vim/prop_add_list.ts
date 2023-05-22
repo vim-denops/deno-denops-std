@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 
 export type PropAddListProps = {
   bufnr?: number;
@@ -25,21 +25,28 @@ export type PropAddListItem = [
  *    type         name of the text property type
  * All fields except "type" are optional.
  *
- * The second argument is a List of Lists where each list
- * specifies the starting and ending position of the text.  The
- * first two items **{lnum}** and **{col}** specify the starting position
- * of the text where the property will be attached and the last
- * two items **{end-lnum}** and **{end-col}** specify the position just
- * after the text.
+ * The second argument is a List of items, where each **{item}** is a
+ * list that specifies the starting and ending position of the
+ * text: [**{lnum}**, **{col}**, **{end-lnum}**, **{end-col}**]
+ * or:   [**{lnum}**, **{col}**, **{end-lnum}**, **{end-col}**, **{id}**]
+ *
+ * The first two items **{lnum}** and **{col}** specify the starting
+ * position of the text where the property will be attached.
+ * The next two items **{end-lnum}** and **{end-col}** specify the
+ * position just after the text.
+ * An optional fifth item **{id}** can be used to give a different ID
+ * to a property.  When omitted the ID from **{props}** is used,
+ * falling back to zero if none are present.
  *
  * It is not possible to add a text property with a "text" field
  * here.
  *
  * Example:
- *         call prop_add_list(#{type: 'MyProp', id: 2},
- *                         \ [[1, 4, 1, 7],
- *                         \  [1, 15, 1, 20],
- *                         \  [2, 30, 3, 30]]
+ *
+ *     call prop_add_list(#{type: 'MyProp', id: 2},
+ *                     \ [[1, 4, 1, 7],
+ *                     \  [1, 15, 1, 20],
+ *                     \  [2, 30, 3, 30]]
  *
  * Can also be used as a `method`:
  *

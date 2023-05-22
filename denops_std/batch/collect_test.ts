@@ -1,9 +1,9 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.186.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_test@v1.1.0/mod.ts";
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+} from "https://deno.land/std@0.188.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_test@v1.3.1/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import { collect } from "./collect.ts";
 
 test({

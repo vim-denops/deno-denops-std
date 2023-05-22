@@ -2,8 +2,8 @@ import {
   assert as assertTruthy,
   assertEquals,
   assertFalse as assertFalsy,
-} from "https://deno.land/std@0.186.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_test@v1.1.0/mod.ts";
+} from "https://deno.land/std@0.188.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_test@v1.3.1/mod.ts";
 import * as _generated from "./_generated.ts";
 
 test({
@@ -447,15 +447,11 @@ test({
   mode: "all",
   name: "option (boolean)",
   fn: async (denops, t) => {
-    // FIXME: Boolean options should return true|false instead of 1|0.
-    const TRUE = 1 as unknown as true;
-    const FALSE = 0 as unknown as false;
-
     await t.step({
       name: "autoread.get() return the value of the option",
       fn: async () => {
         await denops.cmd("set autoread");
-        assertEquals(await _generated.autoread.get(denops), TRUE);
+        assertEquals(await _generated.autoread.get(denops), true);
       },
     });
     await t.step({
@@ -463,7 +459,7 @@ test({
       fn: async () => {
         await denops.cmd("set autoread&");
         if (await denops.call("has", "nvim")) {
-          assertEquals(await _generated.autoread.get(denops), TRUE);
+          assertEquals(await _generated.autoread.get(denops), true);
         } else {
           assertEquals(await _generated.autoread.get(denops), false);
         }
@@ -495,7 +491,7 @@ test({
       fn: async () => {
         await denops.cmd("setglobal autoread");
         await denops.cmd("setlocal noautoread");
-        assertEquals(await _generated.autoread.getGlobal(denops), TRUE);
+        assertEquals(await _generated.autoread.getGlobal(denops), true);
       },
     });
     await t.step({
@@ -505,7 +501,7 @@ test({
         await denops.cmd("setglobal autoread&");
         await denops.cmd("setlocal autoread& autoread!");
         if (await denops.call("has", "nvim")) {
-          assertEquals(await _generated.autoread.getGlobal(denops), TRUE);
+          assertEquals(await _generated.autoread.getGlobal(denops), true);
         } else {
           assertEquals(await _generated.autoread.getGlobal(denops), false);
         }
@@ -542,7 +538,7 @@ test({
       fn: async () => {
         await denops.cmd("setglobal noautoread");
         await denops.cmd("setlocal autoread");
-        assertEquals(await _generated.autoread.getLocal(denops), TRUE);
+        assertEquals(await _generated.autoread.getLocal(denops), true);
       },
     });
     await t.step({
@@ -552,7 +548,7 @@ test({
         await denops.cmd("setglobal autoread& autoread!");
         await denops.cmd("setlocal autoread&");
         if (await denops.call("has", "nvim")) {
-          assertEquals(await _generated.autoread.getLocal(denops), TRUE);
+          assertEquals(await _generated.autoread.getLocal(denops), true);
         } else {
           assertEquals(await _generated.autoread.getLocal(denops), false);
         }
@@ -595,7 +591,7 @@ test({
           await denops.cmd("setlocal noautoread");
           assertEquals(
             await _generated.autoread.getBuffer(denops, bufnr),
-            TRUE,
+            true,
           );
         } finally {
           await denops.cmd("1,$bwipeout!");
@@ -615,12 +611,12 @@ test({
           if (await denops.call("has", "nvim")) {
             assertEquals(
               await _generated.autoread.getBuffer(denops, bufnr),
-              TRUE,
+              true,
             );
           } else {
             assertEquals(
               await _generated.autoread.getBuffer(denops, bufnr),
-              FALSE,
+              false,
             );
           }
         } finally {
@@ -653,7 +649,7 @@ test({
           await denops.cmd("setlocal list");
           await denops.cmd("botright split");
           await denops.cmd("setlocal nolist");
-          assertEquals(await _generated.list.getWindow(denops, 1), TRUE);
+          assertEquals(await _generated.list.getWindow(denops, 1), true);
         } finally {
           await denops.cmd("1,$bwipeout!");
         }
@@ -666,7 +662,7 @@ test({
           await denops.cmd("setlocal list&");
           await denops.cmd("botright split");
           await denops.cmd("setlocal list");
-          assertEquals(await _generated.list.getWindow(denops, 1), FALSE);
+          assertEquals(await _generated.list.getWindow(denops, 1), false);
         } finally {
           await denops.cmd("1,$bwipeout!");
         }

@@ -54,10 +54,10 @@ jobs:
           - macos-latest
           - ubuntu-latest
         version:
-          - "1.28.0"
+          - "1.32.x"
           - "1.x"
         host_version:
-          - vim: "v9.0.0472"
+          - vim: "v9.0.1499"
             nvim: "v0.8.0"
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
@@ -85,7 +85,10 @@ jobs:
         with:
           vim_type: "Vim"
           vim_version: "${{ matrix.host_version.vim }}"
-          download: "never"
+          # NOTE:
+          # On Linux, Vim must be built from source to fix `input` issue
+          # https://github.com/thinca/action-setup-vim/issues/11
+          download: "${{ (runner.OS == 'Linux' && 'never') || 'available' }}"
       - name: Check Vim
         run: |
           echo ${DENOPS_TEST_VIM}
@@ -103,6 +106,9 @@ jobs:
           ${DENOPS_TEST_NVIM} --version
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
+      - name: Cache
+        run: deno cache $(find . -name '*.ts')
+        working-directory: ./repo
       - name: Test
         run: deno task test
         env:

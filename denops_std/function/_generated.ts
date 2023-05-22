@@ -1,6 +1,6 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 // deno-lint-ignore-file camelcase
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 
 /**
  * Return the absolute value of **{expr}**.  When **{expr}** evaluates to
@@ -24,8 +24,6 @@ import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
  * Can also be used as a `method`:
  *
  *     Compute()->abs()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function abs(denops: Denops, expr: unknown): Promise<number>;
 export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -50,8 +48,6 @@ export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->acos()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function acos(denops: Denops, expr: unknown): Promise<number>;
 export function acos(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -114,8 +110,10 @@ export function and(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * **{lnum}** can be zero to insert a line before the first one.
  * **{lnum}** is used like with `getline()`.
  * Returns 1 for failure (**{lnum}** out of range or out of memory),
- * 0 for success.  In `Vim9` script an invalid argument or
- * negative number results in an error.  Example:
+ * 0 for success.  When **{text}** is an empty list zero is returned,
+ * no matter the value of **{lnum}**.
+ * In `Vim9` script an invalid argument or negative number
+ * results in an error.  Example:
  *
  *     :let failed = append(line('$'), "# THE END")
  *     :let failed = append(0, ["Chapter 1", "the beginning"])
@@ -232,8 +230,6 @@ export function argv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->asin()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function asin(denops: Denops, expr: unknown): Promise<number>;
 export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -258,8 +254,6 @@ export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->atan()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function atan(denops: Denops, expr: unknown): Promise<number>;
 export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -285,8 +279,6 @@ export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->atan2(1)
- *
- * *only available when compiled with the `+float` feature*
  */
 export function atan2(
   denops: Denops,
@@ -353,6 +345,13 @@ export function browsedir(
  * length is added to the preceding base character.  See
  * `byteidxcomp()` below for counting composing characters
  * separately.
+ * When **{utf16}** is present and TRUE, **{nr}** is used as the UTF-16
+ * index in the String **{expr}** instead of as the character index.
+ * The UTF-16 index is the index in the string when it is encoded
+ * with 16-bit words.  If the specified UTF-16 index is in the
+ * middle of a character (e.g. in a 4-byte character), then the
+ * byte index of the first byte in the character is returned.
+ * Refer to `string-offset-encoding` for more information.
  * Example :
  *
  *     echo matchstr(str, ".", byteidx(str, 3))
@@ -368,6 +367,13 @@ export function browsedir(
  * If there are less than **{nr}** characters -1 is returned.
  * If there are exactly **{nr}** characters the length of the string
  * in bytes is returned.
+ * See `charidx()` and `utf16idx()` for getting the character and
+ * UTF-16 index respectively from the byte index.
+ * Examples:
+ *
+ *     echo byteidx('a😊😊', 2)  returns 5
+ *     echo byteidx('a😊😊', 2, 1)       returns 1
+ *     echo byteidx('a😊😊', 3, 1)       returns 5
  *
  * Can also be used as a `method`:
  *
@@ -377,6 +383,7 @@ export function byteidx(
   denops: Denops,
   expr: unknown,
   nr: unknown,
+  utf16?: unknown,
 ): Promise<number>;
 export function byteidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("byteidx", ...args);
@@ -405,6 +412,7 @@ export function byteidxcomp(
   denops: Denops,
   expr: unknown,
   nr: unknown,
+  utf16?: unknown,
 ): Promise<number>;
 export function byteidxcomp(
   denops: Denops,
@@ -459,8 +467,6 @@ export function call(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->ceil()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function ceil(denops: Denops, expr: unknown): Promise<number>;
 export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -552,7 +558,11 @@ export function charclass(
  *
  *     GetPos()->col()
  */
-export function charcol(denops: Denops, expr: unknown): Promise<number>;
+export function charcol(
+  denops: Denops,
+  expr: unknown,
+  winid?: unknown,
+): Promise<number>;
 export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("charcol", ...args);
 }
@@ -562,23 +572,32 @@ export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The index of the first character is zero.
  * If there are no multibyte characters the returned value is
  * equal to **{idx}**.
+ *
  * When **{countcc}** is omitted or `FALSE`, then composing characters
- * are not counted separately, their byte length is
- * added to the preceding base character.
+ * are not counted separately, their byte length is added to the
+ * preceding base character.
  * When **{countcc}** is `TRUE`, then composing characters are
  * counted as separate characters.
+ *
+ * When **{utf16}** is present and TRUE, **{idx}** is used as the UTF-16
+ * index in the String **{expr}** instead of as the byte index.
+ *
  * Returns -1 if the arguments are invalid or if **{idx}** is greater
  * than the index of the last byte in **{string}**.  An error is
  * given if the first argument is not a string, the second
  * argument is not a number or when the third argument is present
  * and is not zero or one.
+ *
  * See `byteidx()` and `byteidxcomp()` for getting the byte index
- * from the character index.
+ * from the character index and `utf16idx()` for getting the
+ * UTF-16 index from the character index.
+ * Refer to `string-offset-encoding` for more information.
  * Examples:
  *
  *     echo charidx('áb́ć', 3)               returns 1
  *     echo charidx('áb́ć', 6, 1)    returns 4
  *     echo charidx('áb́ć', 16)              returns -1
+ *     echo charidx('a😊😊', 4, 0, 1)    returns 2
  *
  * Can also be used as a `method`:
  *
@@ -589,6 +608,7 @@ export function charidx(
   string: unknown,
   idx: unknown,
   countcc?: unknown,
+  utf16?: unknown,
 ): Promise<number>;
 export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("charidx", ...args);
@@ -928,8 +948,6 @@ export function copy(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->cos()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function cos(denops: Denops, expr: unknown): Promise<number>;
 export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -954,8 +972,6 @@ export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->cosh()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function cosh(denops: Denops, expr: unknown): Promise<number>;
 export function cosh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1476,6 +1492,8 @@ export function executable(
  *     {command}
  *     redir END
  *
+ * Except that line continuation in **{command}** is not recognized.
+ *
  * The optional **{silent}** argument can have these values:
  *         ""              no `:silent` used
  *         "silent"        `:silent` used
@@ -1547,8 +1565,6 @@ export function exepath(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->exp()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function exp(denops: Denops, expr: unknown): Promise<number>;
 export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2056,7 +2072,7 @@ export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Convert **{expr}** to a Number by omitting the part after the
  * decimal point.
- * **{expr}** must evaluate to a `Float` or a Number.
+ * **{expr}** must evaluate to a `Float` or a `Number`.
  * Returns 0 if **{expr}** is not a `Float` or a `Number`.
  * When the value of **{expr}** is out of range for a `Number` the
  * result is truncated to 0x7fffffff or -0x7fffffff (or when
@@ -2088,8 +2104,6 @@ export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->float2nr()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function float2nr(denops: Denops, expr: unknown): Promise<number>;
 export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2118,8 +2132,6 @@ export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->floor()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function floor(denops: Denops, expr: unknown): Promise<number>;
 export function floor(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2149,8 +2161,6 @@ export function floor(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->fmod(1.22)
- *
- * *only available when compiled with `+float` feature*
  */
 export function fmod(
   denops: Denops,
@@ -2344,8 +2354,14 @@ export function foldtextresult(
  *
  * The string argument **{name}** may start with a `:` and can
  * include a [range], these are skipped and not returned.
- * Returns an empty string if a command doesn't exist or if it's
- * ambiguous (for user-defined commands).
+ * Returns an empty string if a command doesn't exist, if it's
+ * ambiguous (for user-defined commands) or cannot be shortened
+ * this way. `vim9-no-shorten`
+ *
+ * Without the **{vim9}** argument uses the current script version.
+ * If **{vim9}** is present and FALSE then legacy script rules are
+ * used.  When **{vim9}** is present and TRUE then Vim9 rules are
+ * used, e.g. "en" is not a short form of "endif".
  *
  * For example `fullcommand('s')`, `fullcommand('sub')`,
  * `fullcommand(':%substitute')` all return "substitute".
@@ -2354,7 +2370,11 @@ export function foldtextresult(
  *
  *     GetName()->fullcommand()
  */
-export function fullcommand(denops: Denops, name: unknown): Promise<string>;
+export function fullcommand(
+  denops: Denops,
+  name: unknown,
+  vim9?: unknown,
+): Promise<string>;
 export function fullcommand(
   denops: Denops,
   ...args: unknown[]
@@ -2882,6 +2902,7 @@ export function getcmdwintype(
  * messages        `:messages` suboptions
  * option          options
  * packadd         optional package `pack-add` names
+ * runtime         `:runtime` completion
  * scriptnames     sourced script names `:scriptnames`
  * shellcmd        Shell command
  * sign            `:sign` suboptions
@@ -4402,8 +4423,6 @@ export function isdirectory(
  * Can also be used as a `method`:
  *
  *     Compute()->isinf()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function isinf(denops: Denops, expr: unknown): Promise<number>;
 export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4447,8 +4466,6 @@ export function islocked(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->isnan()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function isnan(denops: Denops, expr: unknown): Promise<number>;
 export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4810,8 +4827,6 @@ export function localtime(
  * Can also be used as a `method`:
  *
  *     Compute()->log()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function log(denops: Denops, expr: unknown): Promise<number>;
 export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4835,8 +4850,6 @@ export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->log10()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function log10(denops: Denops, expr: unknown): Promise<number>;
 export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4876,6 +4889,10 @@ export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If **{expr2}** is a `Funcref` it is called with two arguments:
  *         1. The key or the index of the current item.
  *         2. the value of the current item.
+ * With a legacy script lambda you don't get an error if it only
+ * accepts one argument, but with a Vim9 lambda you get "E1106:
+ * One argument too many", the number of arguments must match.
+ *
  * The function must return the new value of the item. Example
  * that changes each value by "key-value":
  *
@@ -4972,7 +4989,7 @@ export function map(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *              "!"     Insert and Commandline mode
  *                      (`mapmode-ic`)
  *   "sid"      The script local ID, used for `<sid>` mappings
- *              (`<SID>`).
+ *              (`<SID>`).  Negative for special contexts.
  *   "scriptversion"  The version of the script.  999999 for
  *                    `Vim9` script.
  *   "lnum"     The line number in "sid", zero if unknown.
@@ -5229,7 +5246,7 @@ export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * respectively.  3 is reserved for use by the `matchparen`
  * plugin.
  * If the **{id}** argument is not specified or -1, `matchadd()`
- * automatically chooses a free ID.
+ * automatically chooses a free ID, which is at least 1000.
  *
  * The optional **{dict}** argument allows for further custom
  * values. Currently this is used to specify a match specific
@@ -5297,8 +5314,6 @@ export function matchadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *   be highlighted.
  * - A list with three numbers, e.g., [23, 11, 3]. As above, but
  *   the third number gives the length of the highlight in bytes.
- *
- * The maximum number of positions in **{pos}** is 8.
  *
  * Returns -1 on error.
  *
@@ -5792,15 +5807,18 @@ export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Create directory **{name}**.
  *
- * If **{path}** contains "p" then intermediate directories are
- * created as necessary.  Otherwise it must be "".
+ * When **{flags}** is present it must be a string.  An empty string
+ * has no effect.
  *
- * If **{path}** contains "D" then **{name}** is deleted at the end of
+ * If **{flags}** contains "p" then intermediate directories are
+ * created as necessary.
+ *
+ * If **{flags}** contains "D" then **{name}** is deleted at the end of
  * the current function, as with:
  *
  *     defer delete({name}, 'd')
  *
- * If **{path}** contains "R" then **{name}** is deleted recursively at
+ * If **{flags}** contains "R" then **{name}** is deleted recursively at
  * the end of the current function, as with:
  *
  *     defer delete({name}, 'rf')
@@ -5851,7 +5869,7 @@ export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function mkdir(
   denops: Denops,
   name: unknown,
-  path?: unknown,
+  flags?: unknown,
   prot?: unknown,
 ): Promise<number>;
 export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6024,8 +6042,6 @@ export function perleval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->pow(3)
- *
- * *only available when compiled with the `+float` feature*
  */
 export function pow(denops: Denops, x: unknown, y: unknown): Promise<number>;
 export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6722,9 +6738,14 @@ export function reg_recording(
 /**
  * Return an item that represents a time value.  The item is a
  * list with items that depend on the system.  In Vim 9 script
- * list<any> can be used.
+ * the type list<any> can be used.
  * The item can be passed to `reltimestr()` to convert it to a
- * string or `reltimefloat()` to convert to a Float.
+ * string or `reltimefloat()` to convert to a Float.  For
+ * example, to see the time spent in function Work():
+ *
+ *     var startTime = reltime()
+ *     Work()
+ *     echo startTime->reltime()->reltimestr()
  *
  * Without an argument reltime() returns the current time (the
  * representation is system-dependent, it can not be used as the
@@ -6746,8 +6767,8 @@ export function reg_recording(
  */
 export function reltime(
   denops: Denops,
-  start?: unknown,
-  end?: unknown,
+  start: unknown,
+  end: unknown,
 ): Promise<unknown[]>;
 export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("reltime", ...args);
@@ -6790,7 +6811,8 @@ export function reltimefloat(
  *     echo reltimestr(reltime(start))
  *
  * Note that overhead for the commands will be added to the time.
- * The accuracy depends on the system.
+ * The accuracy depends on the system. Use reltimefloat() for the
+ * greatest accuracy which is nanoseconds on some systems.
  * Leading spaces are used to make the string align nicely.  You
  * can use split() to remove it.
  *
@@ -6838,7 +6860,7 @@ export function remove(
   denops: Denops,
   list: unknown,
   idx: unknown,
-  end?: unknown,
+  end: unknown,
 ): Promise<unknown>;
 export function remove(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("remove", ...args);
@@ -6958,8 +6980,6 @@ export function reverse(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->round()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function round(denops: Denops, expr: unknown): Promise<number>;
 export function round(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7613,31 +7633,39 @@ export function serverlist(
 
 /**
  * Specify overrides for cell widths of character ranges.  This
- * tells Vim how wide characters are, counted in screen cells.
- * This overrides 'ambiwidth'.  Example:
+ * tells Vim how wide characters are when displayed in the
+ * terminal, counted in screen cells.  The values override
+ * 'ambiwidth'.  Example:
  *
- *     setcellwidths([[0xad, 0xad, 1],
- *                  \ [0x2194, 0x2199, 2]])
+ *     call setcellwidths([
+ *                  \ [0x111, 0x111, 1],
+ *                  \ [0x2194, 0x2199, 2],
+ *                  \ ])
  *
- * The **{list}** argument is a list of lists with each three
- * numbers. These three numbers are [low, high, width].  "low"
- * and "high" can be the same, in which case this refers to one
- * character. Otherwise it is the range of characters from "low"
- * to "high" (inclusive).  "width" is either 1 or 2, indicating
- * the character width in screen cells.
+ * The **{list}** argument is a List of Lists with each three
+ * numbers: [**{low}**, **{high}**, **{width}**].
+ * **{low}** and **{high}** can be the same, in which case this refers to
+ * one character.  Otherwise it is the range of characters from
+ * **{low}** to **{high}** (inclusive).
+ * Only characters with value 0x80 and higher can be used.
+ *
+ * **{width}** must be either 1 or 2, indicating the character width
+ * in screen cells.
  * An error is given if the argument is invalid, also when a
  * range overlaps with another.
- * Only characters with value 0x100 and higher can be used.
  *
  * If the new value causes 'fillchars' or 'listchars' to become
  * invalid it is rejected and an error is given.
  *
- * To clear the overrides pass an empty list:
+ * To clear the overrides pass an empty **{list}**:
  *
  *     setcellwidths([]);
  *
  * You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
- * the effect for known emoji characters.
+ * the effect for known emoji characters.  Move the cursor
+ * through the text to check if the cell widths of your terminal
+ * match with what Vim knows about each emoji.  If it doesn't
+ * look right you need to adjust the **{list}** argument.
  */
 export function setcellwidths(denops: Denops, list: unknown): Promise<void>;
 export function setcellwidths(
@@ -8405,8 +8433,6 @@ export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sin()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function sin(denops: Denops, expr: unknown): Promise<number>;
 export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -8431,8 +8457,6 @@ export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sinh()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function sinh(denops: Denops, expr: unknown): Promise<number>;
 export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -8477,8 +8501,9 @@ export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * When **{how}** is given and it is 'n' then all items will be
  * sorted numerical (Implementation detail: this uses the
- * strtod() function to parse numbers, Strings, Lists, Dicts and
- * Funcrefs will be considered as being 0).
+ * strtod() function to parse numbers.  Strings, Lists, Dicts and
+ * Funcrefs will be considered as being 0).  Note that this won't
+ * sort a list of strings with numbers!
  *
  * When **{how}** is given and it is 'N' then all items will be
  * sorted numerical. This is like 'n' but a string containing
@@ -8699,8 +8724,6 @@ export function split(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sqrt()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function sqrt(denops: Denops, expr: unknown): Promise<number>;
 export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -8750,8 +8773,6 @@ export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     let f = text->substitute(',', '', 'g')->str2float()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function str2float(
   denops: Denops,
@@ -9043,6 +9064,8 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Blob            0z00112233.44556677.8899
  *         List            [item, item]
  *         Dictionary      {key: value, key: value}
+ *         Class           class SomeName
+ *         Object          object of SomeName {lnum: 1, col: 3}
  *
  * When a `List` or `Dictionary` has a recursive reference it is
  * replaced by "[...]" or "**{...}**".  Using eval() on the result
@@ -9836,8 +9859,6 @@ export function taglist(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->tan()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function tan(denops: Denops, expr: unknown): Promise<number>;
 export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9862,8 +9883,6 @@ export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->tanh()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function tanh(denops: Denops, expr: unknown): Promise<number>;
 export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9956,6 +9975,8 @@ export function timer_pause(
  * **{time}** is the waiting time in milliseconds. This is the
  * minimum time before invoking the callback.  When the system is
  * busy or Vim is not waiting for input the time will be longer.
+ * Zero can be used to execute the callback when Vim is back in
+ * the main loop.
  *
  * **{callback}** is the function to call.  It can be the name of a
  * function or a `Funcref`.  It is called with one argument, which
@@ -10174,8 +10195,6 @@ export function trim(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->trunc()
- *
- * *only available when compiled with the `+float` feature*
  */
 export function trunc(denops: Denops, expr: unknown): Promise<number>;
 export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10197,6 +10216,8 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Job:        8  `v:t_job`
  *         Channel:    9  `v:t_channel`
  *         Blob:      10  `v:t_blob`
+ *         Class      12  `v:t_class`
+ *         Object     13  `v:t_object`
  * For backward compatibility, this method can be used:
  *
  *     :if type(myvar) == type(0)
@@ -10587,6 +10608,7 @@ export function win_id2win(
  * FALSE otherwise.
  * This will fail for the rightmost window and a full-width
  * window, since it has no separator on the right.
+ * Only works for the current tab page.
  *
  * Can also be used as a `method`:
  *
@@ -10614,6 +10636,7 @@ export function win_move_separator(
  * movement may be smaller than specified (e.g., as a consequence
  * of maintaining 'winminheight'). Returns TRUE if the window can
  * be found and FALSE otherwise.
+ * Only works for the current tab page.
  *
  * Can also be used as a `method`:
  *
