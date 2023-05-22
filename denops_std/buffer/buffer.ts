@@ -1,4 +1,4 @@
-import type { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";

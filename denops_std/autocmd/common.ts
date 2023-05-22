@@ -1,4 +1,4 @@
-import { Denops } from "https://deno.land/x/denops_core@v4.0.0/mod.ts";
+import { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import {
   AutocmdEvent,
   DefineOptions,
