@@ -85,7 +85,6 @@ jobs:
         with:
           vim_type: "Vim"
           vim_version: "${{ matrix.host_version.vim }}"
-          download: "never"
       - name: Check Vim
         run: |
           echo ${DENOPS_TEST_VIM}
