@@ -1,7 +1,7 @@
 import {
   AssertError,
   isLike,
-} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
+} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts#^";
 
 /**
  * Type of `screenpos()` result.
