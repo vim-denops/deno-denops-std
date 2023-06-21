@@ -1,9 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.188.0/testing/asserts.ts";
-import {
-  assertArray,
-  isObject,
-} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.3.1/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.192.0/testing/asserts.ts";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
 import { BufInfo } from "./types.ts";
 import * as buffer from "./buffer.ts";
 
@@ -23,7 +20,7 @@ test({
         await denops.cmd("bunload!");
 
         const actual = await buffer.getbufinfo(denops);
-        assertArray(actual, (x): x is BufInfo => isObject(x));
+        assert(actual, is.ArrayOf((x): x is BufInfo => is.Record(x)));
         assertEquals(actual.length, 4);
         assertEquals(
           actual.map(({ changed, hidden, listed, loaded }) => (

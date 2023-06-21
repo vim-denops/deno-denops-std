@@ -1,8 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
-import {
-  assertNumber,
-  assertString,
-} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
 import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";
@@ -214,9 +211,9 @@ export async function input(
   const completion = options.completion ?? null;
   if (completion && typeof completion !== "string") {
     const id = lambda.register(denops, async (arglead, cmdline, cursorpos) => {
-      assertString(arglead);
-      assertString(cmdline);
-      assertNumber(cursorpos);
+      assert(arglead, is.String);
+      assert(cmdline, is.String);
+      assert(cursorpos, is.Number);
       return await completion(arglead, cmdline, cursorpos);
     });
     try {
