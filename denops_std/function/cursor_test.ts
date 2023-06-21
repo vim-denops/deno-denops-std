@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.192.0/testing/asserts.ts";
-import { assertNumber } from "https://deno.land/x/unknownutil@v2.1.1/mod.ts#^";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
 import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
 import * as cursor from "./cursor.ts";
 import { assertPosition, assertScreenPos, isScreenPos } from "./types.ts";
@@ -15,7 +15,7 @@ test({
         await denops.call("setline", 1, "abcdef");
         await denops.cmd("norm gg4|mx6|mY2|");
 
-        assertNumber(await cursor.col(denops, "."));
+        assert(await cursor.col(denops, "."), is.Number);
         assertEquals(await cursor.col(denops, "."), 2);
         assertEquals(await cursor.col(denops, [1, 2]), 2);
         assertEquals(await cursor.col(denops, [1, "$"]), 7);
@@ -28,7 +28,7 @@ test({
         await denops.cmd("enew!");
         await denops.call("setline", 1, "\tab");
 
-        assertNumber(await cursor.virtcol(denops, "."));
+        assert(await cursor.virtcol(denops, "."), is.Number);
         assertEquals(await cursor.virtcol(denops, "."), 8);
         assertEquals(await cursor.virtcol(denops, [1, 1]), 8);
         assertEquals(await cursor.virtcol(denops, [1, "$"]), 11);
@@ -45,10 +45,10 @@ test({
         const winid = await denops.call("bufwinid", "%") as number;
         await denops.call("setline", 1, ["a", "b", "c"]);
 
-        assertNumber(await cursor.line(denops, "."));
+        assert(await cursor.line(denops, "."), is.Number);
         assertEquals(await cursor.line(denops, "."), 1);
         assertEquals(await cursor.line(denops, "$"), 3);
-        assertNumber(await cursor.line(denops, ".", winid));
+        assert(await cursor.line(denops, ".", winid), is.Number);
         assertEquals(await cursor.line(denops, ".", winid), 1);
       },
     });
@@ -57,7 +57,7 @@ test({
       name: "wincol()",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.wincol(denops));
+        assert(await cursor.wincol(denops), is.Number);
       },
     });
 
@@ -65,7 +65,7 @@ test({
       name: "winline()",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.winline(denops));
+        assert(await cursor.winline(denops), is.Number);
       },
     });
 
@@ -73,10 +73,10 @@ test({
       name: "cursor()",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.cursor(denops, 1, 2));
-        assertNumber(await cursor.cursor(denops, 1, 2, 3));
-        assertNumber(await cursor.cursor(denops, [1, 2, 3]));
-        assertNumber(await cursor.cursor(denops, [1, 2, 3, 4]));
+        assert(await cursor.cursor(denops, 1, 2), is.Number);
+        assert(await cursor.cursor(denops, 1, 2, 3), is.Number);
+        assert(await cursor.cursor(denops, [1, 2, 3]), is.Number);
+        assert(await cursor.cursor(denops, [1, 2, 3, 4]), is.Number);
       },
     });
 
@@ -123,11 +123,13 @@ test({
       name: "setpos",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(
+        assert(
           await cursor.setpos(denops, "'b", await cursor.getpos(denops, "'a")),
+          is.Number,
         );
-        assertNumber(
+        assert(
           await cursor.setpos(denops, "'b", await cursor.getcurpos(denops)),
+          is.Number,
         );
       },
     });
@@ -136,7 +138,7 @@ test({
       name: "byte2line",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.byte2line(denops, 1));
+        assert(await cursor.byte2line(denops, 1), is.Number);
       },
     });
 
@@ -144,7 +146,7 @@ test({
       name: "line2byte",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.line2byte(denops, 1));
+        assert(await cursor.line2byte(denops, 1), is.Number);
       },
     });
 
@@ -152,8 +154,8 @@ test({
       name: "diff_filler()",
       fn: async () => {
         await denops.cmd("enew!");
-        assertNumber(await cursor.diff_filler(denops, 1));
-        assertNumber(await cursor.diff_filler(denops, "."));
+        assert(await cursor.diff_filler(denops, 1), is.Number);
+        assert(await cursor.diff_filler(denops, "."), is.Number);
       },
     });
   },

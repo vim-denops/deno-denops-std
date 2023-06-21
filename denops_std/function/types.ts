@@ -1,7 +1,4 @@
-import {
-  AssertError,
-  isLike,
-} from "https://deno.land/x/unknownutil@v2.1.1/mod.ts#^";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
 
 /**
  * Type of `screenpos()` result.
@@ -14,29 +11,23 @@ export type ScreenPos = {
 };
 
 /**
- * Reference ScreenPos struct for isLike.
- */
-const refScreenPos: ScreenPos = {
-  row: 0,
-  col: 0,
-  endcol: 0,
-  curscol: 0,
-};
-
-/**
  * Return true if the value is ScreenPos.
  */
 export function isScreenPos(x: unknown): x is ScreenPos {
-  return isLike(refScreenPos, x);
+  const predObj = {
+    row: is.Number,
+    col: is.Number,
+    endcol: is.Number,
+    curscol: is.Number,
+  };
+  return is.ObjectOf(predObj)(x);
 }
 
 /**
  * Assert if `x` is ScreenPos by raising an `AssertError` when it's not.
  */
 export function assertScreenPos(x: unknown): asserts x is ScreenPos {
-  if (!isScreenPos(x)) {
-    throw new AssertError("The value must be ScreenPos");
-  }
+  assert(x, isScreenPos, { message: "The value must be ScreenPos" });
 }
 
 /**
@@ -54,17 +45,18 @@ export type Position = [
  * Return true if the value is Position.
  */
 export function isPosition(x: unknown): x is Position {
-  return Array.isArray(x) && (x.length === 4 || x.length === 5) &&
-    x.every((x) => typeof x === "number");
+  const pred = is.OneOf([
+    is.TupleOf([is.Number, is.Number, is.Number, is.Number]),
+    is.TupleOf([is.Number, is.Number, is.Number, is.Number, is.Number]),
+  ]);
+  return pred(x);
 }
 
 /**
  * Assert if `x` is Position by raising an `AssertError` when it's not.
  */
 export function assertPosition(x: unknown): asserts x is Position {
-  if (!isPosition(x)) {
-    throw new AssertError("The value must be Position");
-  }
+  assert(x, isPosition, { message: "The value must be Position" });
 }
 
 const validBuiltinCompletions = [

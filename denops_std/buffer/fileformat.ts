@@ -1,4 +1,4 @@
-import * as unknownutil from "https://deno.land/x/unknownutil@v2.1.1/mod.ts#^";
+import { is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
 
 export type FileFormat = "unix" | "dos" | "mac";
 
@@ -9,7 +9,7 @@ const fileFormatDelimiters = {
 };
 
 export function isFileFormat(v: unknown): v is FileFormat {
-  return unknownutil.isString(v) && v in fileFormatDelimiters;
+  return is.String(v) && v in fileFormatDelimiters;
 }
 
 export function assertFileFormat(v: unknown): asserts v is FileFormat {
