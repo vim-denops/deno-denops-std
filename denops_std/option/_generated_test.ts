@@ -2,8 +2,8 @@ import {
   assert as assertTruthy,
   assertEquals,
   assertFalse as assertFalsy,
-} from "https://deno.land/std@0.188.0/testing/asserts.ts";
-import { test } from "https://deno.land/x/denops_test@v1.3.1/mod.ts";
+} from "https://deno.land/std@0.192.0/testing/asserts.ts";
+import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
 import * as _generated from "./_generated.ts";
 
 test({
