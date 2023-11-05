@@ -1,4 +1,4 @@
-import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 
 /**
  * Type of `screenpos()` result.

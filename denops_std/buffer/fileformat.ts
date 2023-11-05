@@ -1,4 +1,4 @@
-import { is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+import { is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 
 export type FileFormat = "unix" | "dos" | "mac";
 

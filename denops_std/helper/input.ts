@@ -1,5 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
-import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";

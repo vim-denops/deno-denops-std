@@ -12,7 +12,7 @@
  * import * as vars from "./variable/mod.ts";
  * import * as helper from "./helper/mod.ts";
  *
- * import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+ * import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {

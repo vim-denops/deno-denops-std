@@ -3,8 +3,8 @@ import {
   assertInstanceOf,
   assertRejects,
   assertThrows,
-} from "https://deno.land/std@0.192.0/testing/asserts.ts";
-import { stub } from "https://deno.land/std@0.192.0/testing/mock.ts";
+} from "https://deno.land/std@0.205.0/testing/asserts.ts";
+import { stub } from "https://deno.land/std@0.205.0/testing/mock.ts";
 
 import {
   Counter,

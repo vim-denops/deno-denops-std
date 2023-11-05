@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.192.0/testing/asserts.ts";
-import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+import { assertEquals } from "https://deno.land/std@0.205.0/testing/asserts.ts";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
 import { BufInfo } from "./types.ts";
 import * as buffer from "./buffer.ts";

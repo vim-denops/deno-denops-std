@@ -1,5 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
-import { lt } from "https://deno.land/std@0.192.0/semver/mod.ts";
+import { lt, parse } from "https://deno.land/std@0.205.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
 import { generateUniqueString } from "../util.ts";
 
@@ -69,7 +69,10 @@ export async function getreginfo(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  if (denops.meta.host === "vim" && lt(denops.meta.version, "9.0.936")) {
+  if (
+    denops.meta.host === "vim" &&
+    lt(parse(denops.meta.version), parse("9.0.936"))
+  ) {
     // Vim prior to 9.0.0936 need a workaround
     // https://github.com/vim/vim/issues/11598
     const suffix = await ensurePrerequisites(denops);
