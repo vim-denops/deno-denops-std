@@ -78,7 +78,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/testing/asserts.ts";
+ * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import { format } from "../bufname/mod.ts";
  *
  * assertEquals(
@@ -130,7 +130,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * constructing a buffer name from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/testing/asserts.ts";
+ * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import * as path from "https://deno.land/std/path/mod.ts";
  * import { format } from "../bufname/mod.ts";
  *
@@ -170,7 +170,7 @@ export function format(
  * For example, if it contains unusable characters ("<>|?*).
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/testing/asserts.ts";
+ * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import { parse } from "../bufname/mod.ts";
  *
  * assertEquals(
@@ -224,7 +224,7 @@ export function format(
  * was constructed from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/testing/asserts.ts";
+ * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import * as path from "https://deno.land/std/path/mod.ts";
  * import { parse } from "../bufname/mod.ts";
  *

@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.205.0/testing/asserts.ts";
+} from "https://deno.land/std@0.205.0/assert/mod.ts";
 import * as path from "https://deno.land/std@0.205.0/path/mod.ts";
 import { format, parse } from "./bufname.ts";
 
