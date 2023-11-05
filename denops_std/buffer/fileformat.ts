@@ -1,34 +1,29 @@
-import { is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
+import {
+  assert,
+  ensure,
+  is,
+  maybe,
+  PredicateType,
+} from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 
-export type FileFormat = "unix" | "dos" | "mac";
+export const isFileFormat = is.LiteralOneOf(["unix", "dos", "mac"] as const);
+
+export type FileFormat = PredicateType<typeof isFileFormat>;
+
+export const assertFileFormat = (v: unknown): asserts v is FileFormat =>
+  assert(v, isFileFormat);
+
+export const ensureFileFormat = (v: unknown): FileFormat =>
+  ensure(v, isFileFormat);
+
+export const maybeFileFormat = (v: unknown): FileFormat | undefined =>
+  maybe(v, isFileFormat);
 
 const fileFormatDelimiters = {
   unix: "\n",
   dos: "\r\n",
   mac: "\r",
 };
-
-export function isFileFormat(v: unknown): v is FileFormat {
-  return is.String(v) && v in fileFormatDelimiters;
-}
-
-export function assertFileFormat(v: unknown): asserts v is FileFormat {
-  if (!isFileFormat(v)) {
-    throw new Error(`Unknown fileformat '${v}' is specified`);
-  }
-}
-
-export function ensureFileFormat(v: unknown): FileFormat {
-  assertFileFormat(v);
-  return v;
-}
-
-export function maybeFileFormat(v: unknown): FileFormat | undefined {
-  if (isFileFormat(v)) {
-    return v;
-  }
-  return undefined;
-}
 
 /**
  * Split text as Text File in POSIX.
