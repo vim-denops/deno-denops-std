@@ -6,16 +6,28 @@ import {
   PredicateType,
 } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 
+/**
+ * Predicate that the value is FileFormat.
+ */
 export const isFileFormat = is.LiteralOneOf(["unix", "dos", "mac"] as const);
 
 export type FileFormat = PredicateType<typeof isFileFormat>;
 
+/**
+ * Assert that the value is FileFormat.
+ */
 export const assertFileFormat = (v: unknown): asserts v is FileFormat =>
   assert(v, isFileFormat);
 
+/**
+ * Ensure that the value is FileFormat.
+ */
 export const ensureFileFormat = (v: unknown): FileFormat =>
   ensure(v, isFileFormat);
 
+/**
+ * Maybe that the value is FileFormat.
+ */
 export const maybeFileFormat = (v: unknown): FileFormat | undefined =>
   maybe(v, isFileFormat);
 
