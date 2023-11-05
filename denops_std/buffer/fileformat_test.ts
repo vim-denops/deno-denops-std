@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.192.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
 import { FileFormat, findFileFormat, splitText } from "./fileformat.ts";
 
 Deno.test("splitText", async (t) => {

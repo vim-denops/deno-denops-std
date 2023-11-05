@@ -1,4 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
+import { maybe } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
@@ -7,7 +8,7 @@ import { execute } from "../helper/mod.ts";
 import {
   FileFormat,
   findFileFormat,
-  maybeFileFormat,
+  isFileFormat,
   splitText,
 } from "./fileformat.ts";
 import { tryDecode } from "./fileencoding.ts";
@@ -284,7 +285,7 @@ export async function decode(
   } else {
     [enc, text] = tryDecode(data, fileencodings);
   }
-  const ff = maybeFileFormat(options.fileformat) ??
+  const ff = maybe(options.fileformat, isFileFormat) ??
     findFileFormat(text, fileformats) ?? fileformat;
   return {
     content: splitText(text, ff),

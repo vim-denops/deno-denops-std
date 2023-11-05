@@ -8,19 +8,28 @@
  *
  * ```typescript
  * import { Denops } from "./mod.ts";
+ * import * as batch from "./batch/mod.ts";
  * import * as fn from "./function/mod.ts";
  * import * as vars from "./variable/mod.ts";
  * import * as helper from "./helper/mod.ts";
  *
- * import { assert, is } from "https://deno.land/x/unknownutil@v3.0.0/mod.ts#^";
+ * import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {
+ *     async init(): Promise<void> {
+ *       // This is just an example. Developers usually should define commands directly in Vim script.
+ *       await batch.batch(denops, async (denops) => {
+ *         await denops.cmd(`command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`);
+ *         await denops.cmd(`command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`);
+ *       });
+ *     },
  *     async say(where: unknown): Promise<void> {
  *       assert(where, is.String);
- *
- *       const name = await fn.input(denops, "Your name: ");
- *       const progname = await vars.v.get(denops, "progname");
+ *       const [name, progname] = await batch.collect(denops, (denops) => [
+ *         fn.input(denops, "Your name: "),
+ *         vars.v.get(denops, "progname"),
+ *       ]);
  *       const messages = [
  *         `Hello ${where}.`,
  *         `Your name is ${name}.`,
@@ -29,16 +38,11 @@
  *       await helper.echo(denops, messages.join("\n"));
  *     },
  *   };
- *
- *   await helper.execute(
- *     denops,
- *     `
- *     command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])
- *     command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])
- *     `,
- *   );
  * }
  * ```
+ *
+ * Note that developers should avoid calling initialization code within the `main` function.
+ * If necessary, add an `init` API or a similar approach like above and call it from `plugin/<your_plugin>.vim`.
  *
  * See [Denops Documentation](https://vim-denops.github.io/denops-documentation/)
  * or [denops-helloworld.vim](https://github.com/vim-denops/denops-helloworld.vim)
