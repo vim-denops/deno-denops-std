@@ -4,6 +4,7 @@ import type {
   Dispatcher,
   Meta,
 } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
+import is from "https://deno.land/x/unknownutil@v3.10.0/is.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
@@ -29,7 +30,7 @@ type TemplateSubstitutions = any[];
 const cacheKey = "denops_std/helper/exprStr@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (typeof denops.context[cacheKey] === "string") {
+  if (is.String(denops.context[cacheKey])) {
     return denops.context[cacheKey];
   }
   const suffix = generateUniqueString();
@@ -69,6 +70,10 @@ export function exprQuote(
   });
 }
 
+const isInstanceOfBoolean = is.InstanceOf(Boolean);
+const isInstanceOfNumber = is.InstanceOf(Number);
+const isInstanceOfString = is.InstanceOf(String);
+
 /**
  * Returns `true` if the value is a string marked as Vim's string constant format.
  *
@@ -80,11 +85,17 @@ export function exprQuote(
  * ```
  */
 export function isExprString(x: unknown): x is ExprString {
-  return x instanceof String && (x as ExprString)[EXPR_STRING_MARK] === 1;
+  return is.ObjectOf({
+    [EXPR_STRING_MARK]: is.LiteralOf(1),
+  })(x);
 }
 
 function isJsonable(x: unknown): x is Jsonable {
-  return x != null && typeof (x as Jsonable).toJSON === "function";
+  return x != null && is.Function((x as Jsonable).toJSON);
+}
+
+function isIgnoreRecordValue(x: unknown): boolean {
+  return is.Undefined(x) || is.Function(x) || is.Symbol(x);
 }
 
 /**
@@ -95,30 +106,33 @@ export function vimStringify(value: unknown, key?: string | number): string {
     return vimStringify(JSON.parse(value.toJSON(key)));
   }
   if (isExprString(value)) {
+    // Return Vim's expr-string
     return `"${value.replaceAll('"', '\\"')}"`;
   }
-  if (value == null || ["function", "symbol"].includes(typeof value)) {
+  if ((is.Nullish(value) || is.Function(value) || is.Symbol(value))) {
     return "v:null";
   }
-  if (typeof value === "boolean" || value instanceof Boolean) {
-    return value == true ? "v:true" : "v:false";
+  if (is.Boolean(value) || isInstanceOfBoolean(value)) {
+    // Return v:true or v:false
+    return `v:${value}`;
   }
-  if (typeof value === "number" || value instanceof Number) {
+  if (is.Number(value) || isInstanceOfNumber(value)) {
     // Replace `5e-10` to `5.0e-10`
     return `${value}`.replace(/^(\d+)e/, "$1.0e");
   }
-  if (typeof value === "string" || value instanceof String) {
+  if (is.String(value) || isInstanceOfString(value)) {
+    // Returns Vim's literal-string
     return `'${value.replaceAll("'", "''")}'`;
   }
-  if (Array.isArray(value)) {
+  if (is.Array(value)) {
+    // Returns Vim's list
     return `[${value.map(vimStringify).join(",")}]`;
   }
-  if (typeof value === "object") {
+  if (is.Record(value)) {
+    // Returns Vim's dict
     return `{${
       Object.entries(value)
-        .filter(([, value]) =>
-          !["undefined", "function", "symbol"].includes(typeof value)
-        )
+        .filter(([, value]) => !isIgnoreRecordValue(value))
         .map(([key, value]) =>
           `'${key.replaceAll("'", "''")}':${vimStringify(value, key)}`
         )
@@ -130,7 +144,7 @@ export function vimStringify(value: unknown, key?: string | number): string {
 }
 
 function trimEndOfArgs(args: unknown[]): unknown[] {
-  const last = args.findIndex((v) => v === undefined);
+  const last = args.findIndex(is.Undefined);
   return last < 0 ? args : args.slice(0, last);
 }
 
