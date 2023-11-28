@@ -27,7 +27,7 @@ type Jsonable = {
 // deno-lint-ignore no-explicit-any
 type TemplateSubstitutions = any[];
 
-const cacheKey = "denops_std/helper/exprStr@1";
+const cacheKey = "denops_std/helper/expr_string@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
   if (is.String(denops.context[cacheKey])) {
