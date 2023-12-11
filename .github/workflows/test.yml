@@ -67,10 +67,10 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: "./repo"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: "vim-denops/denops.vim"
           path: "./denops.vim"
