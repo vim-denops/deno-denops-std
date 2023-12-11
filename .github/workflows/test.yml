@@ -4,14 +4,17 @@ on:
   schedule:
     - cron: "0 7 * * 0"
   push:
-    branches:
-      - main
+    paths:
+      - "**.md"
+      - "**.ts"
+      - ".github/workflows/test.yml"
+      - "deno.jsonc"
   pull_request:
     paths:
       - "**.md"
       - "**.ts"
       - ".github/workflows/test.yml"
-      - "Makefile"
+      - "deno.jsonc"
 
 defaults:
   run:
@@ -64,10 +67,10 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: "./repo"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: "vim-denops/denops.vim"
           path: "./denops.vim"
@@ -80,32 +83,27 @@ jobs:
           restore-keys: deno-
           path: |
             /home/runner/.cache/deno/deps/https/deno.land
-      - uses: thinca/action-setup-vim@v1
+      - uses: rhysd/action-setup-vim@v1
         id: vim
         with:
-          vim_type: "Vim"
-          vim_version: "${{ matrix.host_version.vim }}"
-          # NOTE:
-          # On Linux, Vim must be built from source to fix `input` issue
-          # https://github.com/thinca/action-setup-vim/issues/11
-          download: "${{ (runner.OS == 'Linux' && 'never') || 'available' }}"
+          version: "${{ matrix.host_version.vim }}"
       - name: Check Vim
         run: |
           echo ${DENOPS_TEST_VIM}
           ${DENOPS_TEST_VIM} --version
         env:
-          DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable_path }}
-      - uses: thinca/action-setup-vim@v1
+          DENOPS_TEST_VIM: ${{ steps.vim.outputs.executable }}
+      - uses: rhysd/action-setup-vim@v1
         id: nvim
         with:
-          vim_type: "Neovim"
-          vim_version: "${{ matrix.host_version.nvim }}"
+          neovim: true
+          version: "${{ matrix.host_version.nvim }}"
       - name: Check Neovim
         run: |
           echo ${DENOPS_TEST_NVIM}
           ${DENOPS_TEST_NVIM} --version
         env:
-          DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable_path }}
+          DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable }}
       - name: Cache
         run: deno cache $(find . -name '*.ts')
         working-directory: ./repo
@@ -113,8 +111,8 @@ jobs:
         run: deno task test
         env:
           DENOPS_TEST_DENOPS_PATH: "../denops.vim"
-          DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim.outputs.executable_path }}
-          DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable_path }}
+          DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim.outputs.executable }}
+          DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable }}
         working-directory: ./repo
         timeout-minutes: 3
       - run: |
