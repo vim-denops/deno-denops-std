@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.210.0/assert/mod.ts";
 import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
-import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
+import { test } from "https://deno.land/x/denops_test@v1.5.1/mod.ts";
 import * as cursor from "./cursor.ts";
 import { assertPosition, assertScreenPos, isScreenPos } from "./types.ts";
 
