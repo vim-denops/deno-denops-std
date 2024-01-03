@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertRejects,
-} from "https://deno.land/std@0.205.0/assert/mod.ts";
+} from "https://deno.land/std@0.210.0/assert/mod.ts";
 import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
 import { collect } from "./collect.ts";

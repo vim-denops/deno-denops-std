@@ -1,5 +1,5 @@
 import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
-import { lt, parse } from "https://deno.land/std@0.205.0/semver/mod.ts";
+import { lt, parse } from "https://deno.land/std@0.210.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
 import { generateUniqueString } from "../util.ts";
 

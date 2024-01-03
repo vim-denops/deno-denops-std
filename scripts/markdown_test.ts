@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.210.0/assert/mod.ts";
 
 import { createMarkdownFromHelp } from "./markdown.ts";
 

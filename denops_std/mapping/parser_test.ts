@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.205.0/assert/mod.ts";
+} from "https://deno.land/std@0.210.0/assert/mod.ts";
 import { Mapping } from "./types.ts";
 import { parse } from "./parser.ts";
 
