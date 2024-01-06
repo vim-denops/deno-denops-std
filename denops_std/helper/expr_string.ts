@@ -4,7 +4,7 @@ import type {
   Dispatcher,
   Meta,
 } from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
-import is from "https://deno.land/x/unknownutil@v3.10.0/is.ts";
+import is from "https://deno.land/x/unknownutil@v3.11.0/is.ts";
 import { execute } from "./execute.ts";
 import { generateUniqueString } from "../util.ts";
 
