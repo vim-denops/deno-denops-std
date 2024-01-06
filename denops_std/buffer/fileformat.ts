@@ -4,7 +4,7 @@ import {
   is,
   maybe,
   PredicateType,
-} from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
+} from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 
 /**
  * Predicate that the value is FileFormat.
