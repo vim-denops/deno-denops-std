@@ -263,25 +263,57 @@ export function balloon_split(
 }
 
 /**
- * Return a List containing the number value of each byte in Blob
- * **{blob}**.  Examples:
+ * Checks for the existence of a `cscope` connection.  If no
+ * parameters are specified, then the function returns:
+ *         0, if cscope was not available (not compiled in), or
+ *            if there are no cscope connections;
+ *         1, if there is at least one cscope connection.
  *
- *     blob2list(0z0102.0304)  returns [1, 2, 3, 4]
- *     blob2list(0z)           returns []
+ * If parameters are specified, then the value of **{num}**
+ * determines how existence of a cscope connection is checked:
  *
- * Returns an empty List on error.  `list2blob()` does the
- * opposite.
+ * **{num}**   Description of existence check
+ * -----   ------------------------------
+ * 0       Same as no parameters (e.g., "cscope_connection()").
+ * 1       Ignore **{prepend}**, and use partial string matches for
+ *         **{dbpath}**.
+ * 2       Ignore **{prepend}**, and use exact string matches for
+ *         **{dbpath}**.
+ * 3       Use **{prepend}**, use partial string matches for both
+ *         **{dbpath}** and **{prepend}**.
+ * 4       Use **{prepend}**, use exact string matches for both
+ *         **{dbpath}** and **{prepend}**.
  *
- * Can also be used as a `method`:
+ * Note: All string comparisons are case sensitive!
  *
- *     GetBlob()->blob2list()
+ * Examples.  Suppose we had the following (from ":cs show"):
+ *
+ *     # pid    database name                        prepend path
+ *     0 27664  cscope.out                           /usr/local
+ *
+ * Invocation                                      Return Val
+ * ----------                                      ----------
+ *
+ *     cscope_connection()                                     1
+ *     cscope_connection(1, "out")                             1
+ *     cscope_connection(2, "out")                             0
+ *     cscope_connection(3, "out")                             0
+ *     cscope_connection(3, "out", "local")                    1
+ *     cscope_connection(4, "out")                             0
+ *     cscope_connection(4, "out", "local")                    0
+ *     cscope_connection(4, "cscope.out", "/usr/local")        1
  */
-export function blob2list(denops: Denops, blob: unknown): Promise<unknown[]>;
-export function blob2list(
+export function cscope_connection(
+  denops: Denops,
+  num?: unknown,
+  dbpath?: unknown,
+  prepend?: unknown,
+): Promise<number>;
+export function cscope_connection(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("blob2list", ...args);
+  return denops.call("cscope_connection", ...args);
 }
 
 /**
@@ -300,6 +332,21 @@ export function blob2list(
 export function echoraw(denops: Denops, string: unknown): Promise<void>;
 export function echoraw(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("echoraw", ...args);
+}
+
+/**
+ * Produce an error with number 418, needed for implementation of
+ * RFC 2324.
+ * If **{expr}** is present and it is TRUE error 503 is given,
+ * indicating that coffee is temporarily not available.
+ * If **{expr}** is present it must be a String.
+ */
+export function err_teapot(denops: Denops, expr?: unknown): Promise<void>;
+export function err_teapot(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("err_teapot", ...args);
 }
 
 /**
@@ -327,39 +374,6 @@ export function exists_compiled(
 }
 
 /**
- * Like `extend()` but instead of adding items to **{expr1}** a new
- * List or Dictionary is created and returned.  **{expr1}** remains
- * unchanged.
- */
-export function extendnew(
-  denops: Denops,
-  expr1: unknown,
-  expr2: unknown,
-  expr3?: unknown,
-): Promise<unknown[] | Record<string, unknown>>;
-export function extendnew(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("extendnew", ...args);
-}
-
-/**
- * Like `flatten()` but first make a copy of **{list}**.
- */
-export function flattennew(
-  denops: Denops,
-  list: unknown,
-  maxdepth?: unknown,
-): Promise<unknown[]>;
-export function flattennew(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("flattennew", ...args);
-}
-
-/**
  * Move the Vim window to the foreground.  Useful when sent from
  * a client to a Vim server. `remote_send()`
  * On Win32 systems this might not work, the OS does not always
@@ -374,36 +388,6 @@ export function foreground(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("foreground", ...args);
-}
-
-/**
- * Just like `getbufline()` but only get one line and return it
- * as a string.
- */
-export function getbufoneline(
-  denops: Denops,
-  buf: unknown,
-  lnum: unknown,
-): Promise<string>;
-export function getbufoneline(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getbufoneline", ...args);
-}
-
-/**
- * Returns a `List` of cell widths of character ranges overridden
- * by `setcellwidths()`.  The format is equal to the argument of
- * `setcellwidths()`.  If no character ranges have their cell
- * widths overridden, an empty List is returned.
- */
-export function getcellwidths(denops: Denops): Promise<unknown[]>;
-export function getcellwidths(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getcellwidths", ...args);
 }
 
 /**
@@ -431,75 +415,6 @@ export function getmouseshape(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getmouseshape", ...args);
-}
-
-/**
- * Returns a `List` with information about all the sourced Vim
- * scripts in the order they were sourced, like what
- * `:scriptnames` shows.
- *
- * The optional Dict argument **{opts}** supports the following
- * optional items:
- *     name        Script name match pattern. If specified,
- *                 and "sid" is not specified, information about
- *                 scripts with a name that match the pattern
- *                 "name" are returned.
- *     sid         Script ID `<SID>`.  If specified, only
- *                 information about the script with ID "sid" is
- *                 returned and "name" is ignored.
- *
- * Each item in the returned List is a `Dict` with the following
- * items:
- *     autoload    Set to TRUE for a script that was used with
- *                 `import autoload` but was not actually sourced
- *                 yet (see `import-autoload`).
- *     functions   List of script-local function names defined in
- *                 the script.  Present only when a particular
- *                 script is specified using the "sid" item in
- *                 **{opts}**.
- *     name        Vim script file name.
- *     sid         Script ID `<SID>`.
- *     sourced     Script ID of the actually sourced script that
- *                 this script name links to, if any, otherwise
- *                 zero
- *     variables   A dictionary with the script-local variables.
- *                 Present only when a particular script is
- *                 specified using the "sid" item in **{opts}**.
- *                 Note that this is a copy, the value of
- *                 script-local variables cannot be changed using
- *                 this dictionary.
- *     version     Vimscript version (`scriptversion`)
- *
- * Examples:
- *
- *     :echo getscriptinfo({'name': 'myscript'})
- *     :echo getscriptinfo({'sid': 15}).variables
- */
-export function getscriptinfo(
-  denops: Denops,
-  opts?: unknown,
-): Promise<unknown[]>;
-export function getscriptinfo(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("getscriptinfo", ...args);
-}
-
-/**
- * Translate String **{text}** if possible.
- * This is mainly for use in the distributed Vim scripts.  When
- * generating message translations the **{text}** is extracted by
- * xgettext, the translator can add the translated message in the
- * .po file and Vim will lookup the translation when gettext() is
- * called.
- * For **{text}** double quoted strings are preferred, because
- * xgettext does not understand escaping in single quoted
- * strings.
- */
-export function gettext(denops: Denops, text: unknown): Promise<string>;
-export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("gettext", ...args);
 }
 
 /**
@@ -623,59 +538,6 @@ export function hlset(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Returns the index of an item in **{object}** where **{expr}** is
- * v:true.  **{object}** must be a `List` or a `Blob`.
- *
- * If **{object}** is a `List`, evaluate **{expr}** for each item in the
- * List until the expression is v:true and return the index of
- * this item.
- *
- * If **{object}** is a `Blob` evaluate **{expr}** for each byte in the
- * Blob until the expression is v:true and return the index of
- * this byte.
- *
- * **{expr}** must be a `string` or `Funcref`.
- *
- * If **{expr}** is a `string`: If **{object}** is a `List`, inside
- * **{expr}** `v:key` has the index of the current List item and
- * `v:val` has the value of the item.  If **{object}** is a `Blob`,
- * inside **{expr}** `v:key` has the index of the current byte and
- * `v:val` has the byte value.
- *
- * If **{expr}** is a `Funcref` it must take two arguments:
- *         1. the key or the index of the current item.
- *         2. the value of the current item.
- * The function must return `TRUE` if the item is found and the
- * search should stop.
- *
- * The optional argument **{opts}** is a Dict and supports the
- * following items:
- *     startidx    start evaluating **{expr}** at the item with this
- *                 index; may be negative for an item relative to
- *                 the end
- * Returns -1 when **{expr}** evaluates to v:false for all the items.
- * Example:
- *
- *     :let l = [#{n: 10}, #{n: 20}, #{n: 30}]
- *     :echo indexof(l, "v:val.n == 20")
- *     :echo indexof(l, {i, v -> v.n == 30})
- *     :echo indexof(l, "v:val.n == 20", #{startidx: 1})
- *
- * Can also be used as a `method`:
- *
- *     mylist->indexof(expr)
- */
-export function indexof(
-  denops: Denops,
-  object: unknown,
-  expr: unknown,
-  opts?: unknown,
-): Promise<number>;
-export function indexof(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("indexof", ...args);
-}
-
-/**
  * Like `input()`, but when the GUI is running and text dialogs
  * are supported, a dialog window pops up to input the text.
  * Example:
@@ -706,6 +568,32 @@ export function inputdialog(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("inputdialog", ...args);
+}
+
+/**
+ * The result is a Number, which is `TRUE` when the **{object}**
+ * argument is a direct or indirect instance of a `Class`,
+ * `Interface`, or class `:type` alias specified by **{class}**.
+ * If **{class}** is varargs, the function returns `TRUE` when
+ * **{object}** is an instance of any of the specified classes.
+ * Example:
+ *
+ *     instanceof(animal, Dog, Cat)
+ *
+ * Can also be used as a `method`:
+ *
+ *     myobj->instanceof(mytype)
+ */
+export function instanceof_(
+  denops: Denops,
+  object: unknown,
+  class_: unknown,
+): Promise<number>;
+export function instanceof_(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("instanceof_", ...args);
 }
 
 /**
@@ -778,30 +666,6 @@ export function js_encode(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("js_encode", ...args);
-}
-
-/**
- * Return a Blob concatenating all the number values in **{list}**.
- * Examples:
- *
- *     list2blob([1, 2, 3, 4]) returns 0z01020304
- *     list2blob([])           returns 0z
- *
- * Returns an empty Blob on error.  If one of the numbers is
- * negative or more than 255 error *E1239* is given.
- *
- * `blob2list()` does the opposite.
- *
- * Can also be used as a `method`:
- *
- *     GetList()->list2blob()
- */
-export function list2blob(denops: Denops, list: unknown): Promise<unknown>;
-export function list2blob(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("list2blob", ...args);
 }
 
 /**
@@ -1046,46 +910,6 @@ export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function mzeval(denops: Denops, expr: unknown): Promise<unknown>;
 export function mzeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mzeval", ...args);
-}
-
-/**
- * Read file **{fname}** in binary mode and return a `Blob`.
- * If **{offset}** is specified, read the file from the specified
- * offset.  If it is a negative value, it is used as an offset
- * from the end of the file.  E.g., to read the last 12 bytes:
- *
- *     readblob('file.bin', -12)
- *
- * If **{size}** is specified, only the specified size will be read.
- * E.g. to read the first 100 bytes of a file:
- *
- *     readblob('file.bin', 0, 100)
- *
- * If **{size}** is -1 or omitted, the whole data starting from
- * **{offset}** will be read.
- * This can be also used to read the data from a character device
- * on Unix when **{size}** is explicitly set.  Only if the device
- * supports seeking **{offset}** can be used.  Otherwise it should be
- * zero.  E.g. to read 10 bytes from a serial console:
- *
- *     readblob('/dev/ttyS0', 0, 10)
- *
- * When the file can't be opened an error message is given and
- * the result is an empty `Blob`.
- * When the offset is beyond the end of the file the result is an
- * empty blob.
- * When trying to read more bytes than are available the result
- * is truncated.
- * Also see `readfile()` and `writefile()`.
- */
-export function readblob(
-  denops: Denops,
-  fname: unknown,
-  offset?: unknown,
-  size?: unknown,
-): Promise<unknown>;
-export function readblob(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("readblob", ...args);
 }
 
 /**
@@ -1351,8 +1175,9 @@ export function remote_send(
 }
 
 /**
- * Become the server **{name}**.  This fails if already running as a
- * server, when `v:servername` is not empty.
+ * Become the server **{name}**.  **{name}** must be a non-empty string.
+ * This fails if already running as a server, when `v:servername`
+ * is not empty.
  *
  * Can also be used as a `method`:
  *
@@ -1583,28 +1408,6 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * The result is a Number, which is the number of characters
- * in String **{string}**.  Composing characters are ignored.
- * `strchars()` can count the number of characters, counting
- * composing characters separately.
- *
- * Returns 0 if **{string}** is empty or on error.
- *
- * Also see `strlen()`, `strdisplaywidth()` and `strwidth()`.
- *
- * Can also be used as a `method`:
- *
- *     GetText()->strcharlen()
- */
-export function strcharlen(denops: Denops, string: unknown): Promise<number>;
-export function strcharlen(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("strcharlen", ...args);
-}
-
-/**
  * The result is a Number, which is the number of UTF-16 code
  * units in String **{string}** (after converting it to UTF-16).
  *
@@ -1618,14 +1421,15 @@ export function strcharlen(
  * Also see `strlen()` and `strcharlen()`.
  * Examples:
  *
- *         echo strutf16len('a')               returns 1
- *         echo strutf16len('©')               returns 1
- *         echo strutf16len('😊')               returns 2
- *         echo strutf16len('ą́')             returns 1
- *         echo strutf16len('ą́', v:true)     returns 3
+ *     echo strutf16len('a')               returns 1
+ *     echo strutf16len('©')               returns 1
+ *     echo strutf16len('😊')               returns 2
+ *     echo strutf16len('ą́')             returns 1
+ *     echo strutf16len('ą́', v:true)     returns 3
  *
- *     Can also be used as a |method|: >
- *             GetText()->strutf16len()
+ * Can also be used as a `method`:
+ *
+ *     GetText()->strutf16len()
  */
 export function strutf16len(
   denops: Denops,
@@ -1715,14 +1519,18 @@ export function typename(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Same as `charidx()` but returns the UTF-16 index of the byte
- * at **{idx}** in **{string}** (after converting it to UTF-16).
+ * Same as `charidx()` but returns the UTF-16 code unit index of
+ * the byte at **{idx}** in **{string}** (after converting it to UTF-16).
  *
  * When **{charidx}** is present and TRUE, **{idx}** is used as the
  * character index in the String **{string}** instead of as the byte
  * index.
- * An **{idx}** in the middle of a UTF-8 sequence is rounded upwards
- * to the end of that sequence.
+ * An **{idx}** in the middle of a UTF-8 sequence is rounded
+ * downwards to the beginning of that sequence.
+ *
+ * Returns -1 if the arguments are invalid or if there are less
+ * than **{idx}** bytes in **{string}**. If there are exactly **{idx}** bytes
+ * the length of the string in UTF-16 code units is returned.
  *
  * See `byteidx()` and `byteidxcomp()` for getting the byte index
  * from the UTF-16 index and `charidx()` for getting the
@@ -2319,7 +2127,7 @@ export function job_setoptions(
  * to String.  This works best on Unix.
  *
  * On MS-Windows, job_start() makes a GUI application hidden. If
- * want to show it, Use `:!start` instead.
+ * you want to show it, use `:!start` instead.
  *
  * The command is executed directly, not through a shell, the
  * 'shell' option is not used.  To use the shell:
@@ -3374,15 +3182,17 @@ export function test_getvalue(
  *   Set or drag the left, right or horizontal scrollbar.  Only
  *   works when the scrollbar actually exists.  The supported
  *   items in **{args}** are:
- *     which:      scrollbar. The supported values are:
+ *     which:      Selects the scrollbar. The supported values
+ *                 are:
  *                     left  Left scrollbar of the current window
  *                     right Right scrollbar of the current window
  *                     hor   Horizontal scrollbar
- *     value:      amount to scroll.  For the vertical scrollbars
- *                 the value can be 1 to the line-count of the
- *                 buffer.  For the horizontal scrollbar the
- *                 value can be between 1 and the maximum line
- *                 length, assuming 'wrap' is not set.
+ *     value:      Amount to scroll.  For the vertical scrollbars
+ *                 the value can be between 0 to the line-count
+ *                 of the buffer minus one.  For the horizontal
+ *                 scrollbar the value can be between 1 and the
+ *                 maximum line length, assuming 'wrap' is not
+ *                 set.
  *     dragging:   1 to drag the scrollbar and 0 to click in the
  *                 scrollbar.
  *
@@ -3681,6 +3491,7 @@ export function test_option_not_set(
  *              string is detected
  * ui_delay     time in msec to use in ui_delay(); overrules a
  *              wait time of up to 3 seconds for messages
+ * unreachable  no error for code after `:throw` and `:return`
  * uptime       overrules sysinfo.uptime
  * vterm_title  setting the window title by a job running in a
  *              terminal window
@@ -3690,8 +3501,8 @@ export function test_option_not_set(
  * "starting" is to be used when a test should behave like
  * startup was done.  Since the tests are run by sourcing a
  * script the "starting" variable is non-zero. This is usually a
- * good thing (tests run faster), but sometimes changes behavior
- * in a way that the test doesn't work properly.
+ * good thing (tests run faster), but sometimes this changes
+ * behavior in a way that the test doesn't work properly.
  * When using:
  *
  *     call test_override('starting', 1)
@@ -3699,6 +3510,12 @@ export function test_option_not_set(
  * The value of "starting" is saved.  It is restored by:
  *
  *     call test_override('starting', 0)
+ *
+ * To make sure the flag is reset later using `:defer` can be
+ * useful:
+ *
+ *     call test_override('unreachable', 1)
+ *     defer call test_override('unreachable', 0)
  *
  * Can also be used as a `method`:
  *
@@ -3829,13 +3646,14 @@ export function assert_beeps(
 /**
  * When **{expected}** and **{actual}** are not equal an error message is
  * added to `v:errors` and 1 is returned.  Otherwise zero is
- * returned `assert-return`.
+ * returned. `assert-return`
+ * The error is in the form "Expected **{expected}** but got
+ * **{actual}**".  When **{msg}** is present it is prefixed to that.
+ *
  * There is no automatic conversion, the String "4" is different
  * from the Number 4.  And the number 4 is different from the
  * Float 4.0.  The value of 'ignorecase' is not used here, case
  * always matters.
- * When **{msg}** is omitted an error in the form "Expected
- * **{expected}** but got **{actual}**" is produced.
  * Example:
  *
  *     assert_equal('foo', 'bar')
@@ -3975,11 +3793,12 @@ export function assert_fails(
 /**
  * When **{actual}** is not false an error message is added to
  * `v:errors`, like with `assert_equal()`.
+ * The error is in the form "Expected False but got **{actual}**".
+ * When **{msg}** is present it is prepended to that.
  * Also see `assert-return`.
+ *
  * A value is false when it is zero. When **{actual}** is not a
  * number the assert fails.
- * When **{msg}** is omitted an error in the form
- * "Expected False but got **{actual}**" is produced.
  *
  * Can also be used as a `method`:
  *
@@ -4001,9 +3820,9 @@ export function assert_false(
  * This asserts number and `Float` values.  When **{actual}**  is lower
  * than **{lower}** or higher than **{upper}** an error message is added
  * to `v:errors`.  Also see `assert-return`.
- * When **{msg}** is omitted an error in the form
- * "Expected range **{lower}** - **{upper}**, but got **{actual}**" is
- * produced.
+ * The error is in the form "Expected range **{lower}** - **{upper}**,
+ * but got **{actual}**".  When **{msg}** is present it is prefixed to
+ * that.
  */
 export function assert_inrange(
   denops: Denops,
@@ -4022,6 +3841,8 @@ export function assert_inrange(
 /**
  * When **{pattern}** does not match **{actual}** an error message is
  * added to `v:errors`.  Also see `assert-return`.
+ * The error is in the form "Pattern **{pattern}** does not match
+ * **{actual}**".  When **{msg}** is present it is prefixed to that.
  *
  * **{pattern}** is used as with `=~`: The matching is always done
  * like 'magic' was set and 'cpoptions' is empty, no matter what
@@ -4031,8 +3852,6 @@ export function assert_inrange(
  * Use "^" and "$" to match with the start and end of the text.
  * Use both to match the whole text.
  *
- * When **{msg}** is omitted an error in the form
- * "Pattern **{pattern}** does not match **{actual}**" is produced.
  * Example:
  *
  *     assert_match('^f.*o$', 'foobar')
@@ -4140,8 +3959,7 @@ export function assert_report(
  * Also see `assert-return`.
  * A value is TRUE when it is a non-zero number.  When **{actual}**
  * is not a number the assert fails.
- * When **{msg}** is omitted an error in the form "Expected True but
- * got **{actual}**" is produced.
+ * When **{msg}** is given it precedes the default message.
  *
  * Can also be used as a `method`:
  *
@@ -4205,8 +4023,8 @@ export function assert_true(
  *    text_padding_left
  *                 used when "text" is present and **{col}** is zero;
  *                 padding between the end of the text line
- *                 (leftmost column for "below") and the virtual
- *                 text, not highlighted
+ *                 (leftmost column for "above" and "below") and
+ *                 the virtual text, not highlighted
  *    text_wrap    when "text" is present and **{col}** is zero,
  *                 specifies what happens if the text doesn't
  *                 fit:
@@ -4371,6 +4189,12 @@ export function prop_find(
  *    length       length in bytes, one more if line break is
  *                 included
  *    id           property ID
+ *    text         text to be displayed before **{col}**.  Only
+ *                 present for `virtual-text` properties.
+ *    text_align   alignment property of `virtual-text`.
+ *    text_padding_left
+ *                 left padding used for virtual text.
+ *    text_wrap    specifies whether `virtual-text` is wrapped.
  *    type         name of the property type, omitted if
  *                 the type was deleted
  *    type_bufnr   buffer number for which this type was defined;

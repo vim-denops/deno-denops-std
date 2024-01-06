@@ -290,6 +290,28 @@ export function atan2(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Return a List containing the number value of each byte in Blob
+ * **{blob}**.  Examples:
+ *
+ *     blob2list(0z0102.0304)  returns [1, 2, 3, 4]
+ *     blob2list(0z)           returns []
+ *
+ * Returns an empty List on error.  `list2blob()` does the
+ * opposite.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBlob()->blob2list()
+ */
+export function blob2list(denops: Denops, blob: unknown): Promise<unknown[]>;
+export function blob2list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("blob2list", ...args);
+}
+
+/**
  * Put up a file requester.  This only works when "has("browse")"
  * returns `TRUE` (only in some GUI versions).
  * The input fields are:
@@ -582,11 +604,13 @@ export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * When **{utf16}** is present and TRUE, **{idx}** is used as the UTF-16
  * index in the String **{expr}** instead of as the byte index.
  *
- * Returns -1 if the arguments are invalid or if **{idx}** is greater
- * than the index of the last byte in **{string}**.  An error is
- * given if the first argument is not a string, the second
- * argument is not a number or when the third argument is present
- * and is not zero or one.
+ * Returns -1 if the arguments are invalid or if there are less
+ * than **{idx}** bytes. If there are exactly **{idx}** bytes the length
+ * of the string in characters is returned.
+ *
+ * An error is given and -1 is returned if the first argument is
+ * not a string, the second argument is not a number or when the
+ * third argument is present and is not zero or one.
  *
  * See `byteidx()` and `byteidxcomp()` for getting the byte index
  * from the character index and `utf16idx()` for getting the
@@ -703,7 +727,7 @@ export function clearmatches(
  *
  *     inoremap <F5> <C-R>=ListMonths()<CR>
  *
- *     func! ListMonths()
+ *     func ListMonths()
  *       call complete(col('.'), ['January', 'February', 'March',
  *             \ 'April', 'May', 'June', 'July', 'August', 'September',
  *             \ 'October', 'November', 'December'])
@@ -1004,60 +1028,6 @@ export function count(
 ): Promise<number>;
 export function count(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("count", ...args);
-}
-
-/**
- * Checks for the existence of a `cscope` connection.  If no
- * parameters are specified, then the function returns:
- *         0, if cscope was not available (not compiled in), or
- *            if there are no cscope connections;
- *         1, if there is at least one cscope connection.
- *
- * If parameters are specified, then the value of **{num}**
- * determines how existence of a cscope connection is checked:
- *
- * **{num}**   Description of existence check
- * -----   ------------------------------
- * 0       Same as no parameters (e.g., "cscope_connection()").
- * 1       Ignore **{prepend}**, and use partial string matches for
- *         **{dbpath}**.
- * 2       Ignore **{prepend}**, and use exact string matches for
- *         **{dbpath}**.
- * 3       Use **{prepend}**, use partial string matches for both
- *         **{dbpath}** and **{prepend}**.
- * 4       Use **{prepend}**, use exact string matches for both
- *         **{dbpath}** and **{prepend}**.
- *
- * Note: All string comparisons are case sensitive!
- *
- * Examples.  Suppose we had the following (from ":cs show"):
- *
- *     # pid    database name                        prepend path
- *     0 27664  cscope.out                           /usr/local
- *
- * Invocation                                      Return Val
- * ----------                                      ----------
- *
- *     cscope_connection()                                     1
- *     cscope_connection(1, "out")                             1
- *     cscope_connection(2, "out")                             0
- *     cscope_connection(3, "out")                             0
- *     cscope_connection(3, "out", "local")                    1
- *     cscope_connection(4, "out")                             0
- *     cscope_connection(4, "out", "local")                    0
- *     cscope_connection(4, "cscope.out", "/usr/local")        1
- */
-export function cscope_connection(
-  denops: Denops,
-  num?: unknown,
-  dbpath?: unknown,
-  prepend?: unknown,
-): Promise<number>;
-export function cscope_connection(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("cscope_connection", ...args);
 }
 
 /**
@@ -1486,7 +1456,7 @@ export function executable(
  * string.
  * **{command}** can be a string or a List.  In case of a List the
  * lines are executed one by one.
- * This is equivalent to:
+ * This is more or less equivalent to:
  *
  *     redir => var
  *     {command}
@@ -1775,6 +1745,24 @@ export function extend(
 ): Promise<unknown[] | Record<string, unknown>>;
 export function extend(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("extend", ...args);
+}
+
+/**
+ * Like `extend()` but instead of adding items to **{expr1}** a new
+ * List or Dictionary is created and returned.  **{expr1}** remains
+ * unchanged.
+ */
+export function extendnew(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+  expr3?: unknown,
+): Promise<unknown[] | Record<string, unknown>>;
+export function extendnew(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("extendnew", ...args);
 }
 
 /**
@@ -2067,6 +2055,21 @@ export function flatten(
 ): Promise<unknown[]>;
 export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("flatten", ...args);
+}
+
+/**
+ * Like `flatten()` but first make a copy of **{list}**.
+ */
+export function flattennew(
+  denops: Denops,
+  list: unknown,
+  maxdepth?: unknown,
+): Promise<unknown[]>;
+export function flattennew(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("flattennew", ...args);
 }
 
 /**
@@ -2567,6 +2570,36 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Just like `getbufline()` but only get one line and return it
+ * as a string.
+ */
+export function getbufoneline(
+  denops: Denops,
+  buf: unknown,
+  lnum: unknown,
+): Promise<string>;
+export function getbufoneline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getbufoneline", ...args);
+}
+
+/**
+ * Returns a `List` of cell widths of character ranges overridden
+ * by `setcellwidths()`.  The format is equal to the argument of
+ * `setcellwidths()`.  If no character ranges have their cell
+ * widths overridden, an empty List is returned.
+ */
+export function getcellwidths(denops: Denops): Promise<unknown[]>;
+export function getcellwidths(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcellwidths", ...args);
+}
+
+/**
  * Get a single character from the user or input stream.
  * If [expr] is omitted, wait until a character is available.
  * If [expr] is 0, only get a character when one is available.
@@ -2883,6 +2916,8 @@ export function getcmdwintype(
  * cmdline         `cmdline-completion` result
  * compiler        compilers
  * cscope          `:cscope` suboptions
+ * custom,**{func}**   custom completion, defined via **{func}**
+ * customlist,**{func}** custom completion, defined via **{func}**
  * diff_buffer     `:diffget` and `:diffput` completion
  * dir             directory names
  * environment     environment variable names
@@ -3292,6 +3327,8 @@ export function getmatches(
  *         wincol          column inside "winid"
  *         line            text line inside "winid"
  *         column          text column inside "winid"
+ *         coladd          offset (in screen columns) from the
+ *                         start of the clicked char
  * All numbers are 1-based.
  *
  * If not over a window, e.g. when in the command line, then only
@@ -3345,6 +3382,9 @@ export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         text    description of the error
  *         type    type of the error, 'E', '1', etc.
  *         valid   `TRUE`: recognized error message
+ *         user_data
+ *                 custom data associated with the item, can be
+ *                 any type.
  *
  * When there is no error list or it's empty, an empty list is
  * returned. Quickfix list entries with a non-existing buffer
@@ -3507,6 +3547,59 @@ export function getregtype(
 }
 
 /**
+ * Returns a `List` with information about all the sourced Vim
+ * scripts in the order they were sourced, like what
+ * `:scriptnames` shows.
+ *
+ * The optional Dict argument **{opts}** supports the following
+ * optional items:
+ *     name        Script name match pattern. If specified,
+ *                 and "sid" is not specified, information about
+ *                 scripts with a name that match the pattern
+ *                 "name" are returned.
+ *     sid         Script ID `<SID>`.  If specified, only
+ *                 information about the script with ID "sid" is
+ *                 returned and "name" is ignored.
+ *
+ * Each item in the returned List is a `Dict` with the following
+ * items:
+ *     autoload    Set to TRUE for a script that was used with
+ *                 `import autoload` but was not actually sourced
+ *                 yet (see `import-autoload`).
+ *     functions   List of script-local function names defined in
+ *                 the script.  Present only when a particular
+ *                 script is specified using the "sid" item in
+ *                 **{opts}**.
+ *     name        Vim script file name.
+ *     sid         Script ID `<SID>`.
+ *     sourced     Script ID of the actually sourced script that
+ *                 this script name links to, if any, otherwise
+ *                 zero
+ *     variables   A dictionary with the script-local variables.
+ *                 Present only when a particular script is
+ *                 specified using the "sid" item in **{opts}**.
+ *                 Note that this is a copy, the value of
+ *                 script-local variables cannot be changed using
+ *                 this dictionary.
+ *     version     Vim script version (`scriptversion`)
+ *
+ * Examples:
+ *
+ *     :echo getscriptinfo({'name': 'myscript'})
+ *     :echo getscriptinfo({'sid': 15}).variables
+ */
+export function getscriptinfo(
+  denops: Denops,
+  opts?: unknown,
+): Promise<unknown[]>;
+export function getscriptinfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getscriptinfo", ...args);
+}
+
+/**
  * If **{tabnr}** is not specified, then information about all the
  * tab pages is returned as a `List`. Each List item is a
  * `Dictionary`.  Otherwise, **{tabnr}** specifies the tab page
@@ -3645,6 +3738,22 @@ export function gettagstack(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("gettagstack", ...args);
+}
+
+/**
+ * Translate String **{text}** if possible.
+ * This is mainly for use in the distributed Vim scripts.  When
+ * generating message translations the **{text}** is extracted by
+ * xgettext, the translator can add the translated message in the
+ * .po file and Vim will lookup the translation when gettext() is
+ * called.
+ * For **{text}** double quoted strings are preferred, because
+ * xgettext does not understand escaping in single quoted
+ * strings.
+ */
+export function gettext(denops: Denops, text: unknown): Promise<string>;
+export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("gettext", ...args);
 }
 
 /**
@@ -4318,6 +4427,59 @@ export function index(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Returns the index of an item in **{object}** where **{expr}** is
+ * v:true.  **{object}** must be a `List` or a `Blob`.
+ *
+ * If **{object}** is a `List`, evaluate **{expr}** for each item in the
+ * List until the expression is v:true and return the index of
+ * this item.
+ *
+ * If **{object}** is a `Blob` evaluate **{expr}** for each byte in the
+ * Blob until the expression is v:true and return the index of
+ * this byte.
+ *
+ * **{expr}** must be a `string` or `Funcref`.
+ *
+ * If **{expr}** is a `string`: If **{object}** is a `List`, inside
+ * **{expr}** `v:key` has the index of the current List item and
+ * `v:val` has the value of the item.  If **{object}** is a `Blob`,
+ * inside **{expr}** `v:key` has the index of the current byte and
+ * `v:val` has the byte value.
+ *
+ * If **{expr}** is a `Funcref` it must take two arguments:
+ *         1. the key or the index of the current item.
+ *         2. the value of the current item.
+ * The function must return `TRUE` if the item is found and the
+ * search should stop.
+ *
+ * The optional argument **{opts}** is a Dict and supports the
+ * following items:
+ *     startidx    start evaluating **{expr}** at the item with this
+ *                 index; may be negative for an item relative to
+ *                 the end
+ * Returns -1 when **{expr}** evaluates to v:false for all the items.
+ * Example:
+ *
+ *     :let l = [#{n: 10}, #{n: 20}, #{n: 30}]
+ *     :echo indexof(l, "v:val.n == 20")
+ *     :echo indexof(l, {i, v -> v.n == 30})
+ *     :echo indexof(l, "v:val.n == 20", #{startidx: 1})
+ *
+ * Can also be used as a `method`:
+ *
+ *     mylist->indexof(expr)
+ */
+export function indexof(
+  denops: Denops,
+  object: unknown,
+  expr: unknown,
+  opts?: unknown,
+): Promise<number>;
+export function indexof(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("indexof", ...args);
+}
+
+/**
  * When **{object}** is a `List` or a `Blob` insert **{item}** at the start
  * of it.
  *
@@ -4482,6 +4644,10 @@ export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     for [key, value] in items(mydict)
  *        echo key .. ': ' .. value
  *     endfor
+ *
+ * A List or a String argument is also supported.  In these
+ * cases, items() returns a List with the index and the value at
+ * the index.
  *
  * Can also be used as a `method`:
  *
@@ -4761,6 +4927,30 @@ export function lispindent(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("lispindent", ...args);
+}
+
+/**
+ * Return a Blob concatenating all the number values in **{list}**.
+ * Examples:
+ *
+ *     list2blob([1, 2, 3, 4]) returns 0z01020304
+ *     list2blob([])           returns 0z
+ *
+ * Returns an empty Blob on error.  If one of the numbers is
+ * negative or more than 255 error *E1239* is given.
+ *
+ * `blob2list()` does the opposite.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetList()->list2blob()
+ */
+export function list2blob(denops: Denops, list: unknown): Promise<unknown>;
+export function list2blob(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("list2blob", ...args);
 }
 
 /**
@@ -6115,7 +6305,11 @@ export function prevnonblank(
  * The "%" starts a conversion specification.  The following
  * arguments appear in sequence:
  *
- *         %  [flags]  [field-width]  [.precision]  type
+ *         % [pos-argument] [flags] [field-width] [.precision] type
+ *
+ * pos-argument
+ *         At most one positional argument specifier. These
+ *         take the form {n$}, where n is >= 1.
  *
  * flags
  *         Zero or more of the following flags:
@@ -6189,6 +6383,12 @@ export function prevnonblank(
  * This limits the length of the text used from "line" to
  * "width" bytes.
  *
+ * If the argument to be formatted is specified using a
+ * positional argument specifier, and a '*' is used to indicate
+ * that a number argument is to be used to specify the width or
+ * precision, the argument(s) to be used must also be specified
+ * using a {n$} positional argument specifier. See `printf-$`.
+ *
  * The conversion specifiers and their meanings are:
  *
  * dbBoxX  The Number argument is converted to signed decimal
@@ -6205,8 +6405,13 @@ export function prevnonblank(
  *         a conversion is wider than the field width, the field
  *         is expanded to contain the conversion result.
  *         The 'h' modifier indicates the argument is 16 bits.
- *         The 'l' modifier indicates the argument is 32 bits.
- *         The 'L' modifier indicates the argument is 64 bits.
+ *         The 'l' modifier indicates the argument is a long
+ *         integer.  The size will be 32 bits or 64 bits
+ *         depending on your platform.
+ *         The "ll" modifier indicates the argument is 64 bits.
+ *         The b and B conversion specifiers never take a width
+ *         modifier and always assume their argument is a 64 bit
+ *         integer.
  *         Generally, these modifiers are not useful. They are
  *         ignored when type is known from the argument.
  *
@@ -6270,6 +6475,135 @@ export function prevnonblank(
  * The number of **{exprN}** arguments must exactly match the number
  * of "%" items.  If there are not sufficient or too many
  * arguments an error is given.  Up to 18 arguments can be used.
+ *
+ * In certain languages, error and informative messages are
+ * more readable when the order of words is different from the
+ * corresponding message in English. To accommodate translations
+ * having a different word order, positional arguments may be
+ * used to indicate this. For instance:
+ *
+ *     #, c-format
+ *     msgid "%s returning %s"
+ *     msgstr "waarde %2$s komt terug van %1$s"
+ *
+ * In this example, the sentence has its 2 string arguments
+ * reversed in the output.
+ *
+ *     echo printf(
+ *         "In The Netherlands, vim's creator's name is: %1$s %2$s",
+ *         "Bram", "Moolenaar")
+ *
+ *     In The Netherlands, vim's creator's name is: Bram Moolenaar
+ *
+ *     echo printf(
+ *         "In Belgium, vim's creator's name is: %2$s %1$s",
+ *         "Bram", "Moolenaar")
+ *
+ *     In Belgium, vim's creator's name is: Moolenaar Bram
+ *
+ * Width (and precision) can be specified using the '*' specifier.
+ * In this case, you must specify the field width position in the
+ * argument list.
+ *
+ *     echo printf("%1$*2$.*3$d", 1, 2, 3)
+ *
+ *     001
+ *
+ *     echo printf("%2$*3$.*1$d", 1, 2, 3)
+ *
+ *       2
+ *
+ *     echo printf("%3$*1$.*2$d", 1, 2, 3)
+ *
+ *     03
+ *
+ *     echo printf("%1$*2$.*3$g", 1.4142, 2, 3)
+ *
+ *     1.414
+ *
+ * You can mix specifying the width and/or precision directly
+ * and via positional arguments:
+ *
+ *     echo printf("%1$4.*2$f", 1.4142135, 6)
+ *
+ *     1.414214
+ *
+ *     echo printf("%1$*2$.4f", 1.4142135, 6)
+ *
+ *     1.4142
+ *
+ *     echo printf("%1$*2$.*3$f", 1.4142135, 6, 2)
+ *
+ *       1.41
+ *
+ * You cannot mix positional and non-positional arguments:
+ *
+ *     echo printf("%s%1$s", "One", "Two")
+ *
+ *     E1500: Cannot mix positional and non-positional arguments:
+ *     %s%1$s
+ *
+ * You cannot skip a positional argument in a format string:
+ *
+ *     echo printf("%3$s%1$s", "One", "Two", "Three")
+ *
+ *     E1501: format argument 2 unused in $-style format:
+ *     %3$s%1$s
+ *
+ * You can re-use a [field-width] (or [precision]) argument:
+ *
+ *     echo printf("%1$d at width %2$d is: %01$*2$d", 1, 2)
+ *
+ *     1 at width 2 is: 01
+ *
+ * However, you can't use it as a different type:
+ *
+ *     echo printf("%1$d at width %2$ld is: %01$*2$d", 1, 2)
+ *
+ *     E1502: Positional argument 2 used as field width reused as
+ *     different type: long int/int
+ *
+ * When a positional argument is used, but not the correct number
+ * or arguments is given, an error is raised:
+ *
+ *     echo printf("%1$d at width %2$d is: %01$*2$.*3$d", 1, 2)
+ *
+ *     E1503: Positional argument 3 out of bounds: %1$d at width
+ *     %2$d is: %01$*2$.*3$d
+ *
+ * Only the first error is reported:
+ *
+ *     echo printf("%01$*2$.*3$d %4$d", 1, 2)
+ *
+ *     E1503: Positional argument 3 out of bounds: %01$*2$.*3$d
+ *     %4$d
+ *
+ * A positional argument can be used more than once:
+ *
+ *     echo printf("%1$s %2$s %1$s", "One", "Two")
+ *
+ *     One Two One
+ *
+ * However, you can't use a different type the second time:
+ *
+ *     echo printf("%1$s %2$s %1$d", "One", "Two")
+ *
+ *     E1504: Positional argument 1 type used inconsistently:
+ *     int/string
+ *
+ * Various other errors that lead to a format string being
+ * wrongly formatted lead to:
+ *
+ *     echo printf("%1$d at width %2$d is: %01$*2$.3$d", 1, 2)
+ *
+ *     E1505: Invalid format specifier: %1$d at width %2$d is:
+ *     %01$*2$.3$d
+ *
+ * This internal error indicates that the logic to parse a
+ * positional format argument ran into a problem that couldn't be
+ * otherwise reported.  Please file a bug against Vim if you run
+ * into this, copying the exact format string and parameters that
+ * were used.
  */
 export function printf(
   denops: Denops,
@@ -6319,17 +6653,20 @@ export function prompt_getprompt(
  * if the user only typed Enter.
  * Example:
  *
- *     call prompt_setcallback(bufnr(), function('s:TextEntered'))
  *     func s:TextEntered(text)
  *       if a:text == 'exit' || a:text == 'quit'
  *         stopinsert
+ *         " Reset 'modified' to allow the buffer to be closed.
+ *         " We assume there is nothing useful to be saved.
+ *         set nomodified
  *         close
  *       else
+ *         " Do something useful with "a:text".  In this example
+ *         " we just repeat it.
  *         call append(line('$') - 1, 'Entered: "' .. a:text .. '"')
- *         " Reset 'modified' to allow the buffer to be closed.
- *         set nomodified
  *       endif
  *     endfunc
+ *     call prompt_setcallback(bufnr(), function('s:TextEntered'))
  *
  * Can also be used as a `method`:
  *
@@ -6553,6 +6890,46 @@ export function range(
 ): Promise<unknown[]>;
 export function range(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("range", ...args);
+}
+
+/**
+ * Read file **{fname}** in binary mode and return a `Blob`.
+ * If **{offset}** is specified, read the file from the specified
+ * offset.  If it is a negative value, it is used as an offset
+ * from the end of the file.  E.g., to read the last 12 bytes:
+ *
+ *     readblob('file.bin', -12)
+ *
+ * If **{size}** is specified, only the specified size will be read.
+ * E.g. to read the first 100 bytes of a file:
+ *
+ *     readblob('file.bin', 0, 100)
+ *
+ * If **{size}** is -1 or omitted, the whole data starting from
+ * **{offset}** will be read.
+ * This can be also used to read the data from a character device
+ * on Unix when **{size}** is explicitly set.  Only if the device
+ * supports seeking **{offset}** can be used.  Otherwise it should be
+ * zero.  E.g. to read 10 bytes from a serial console:
+ *
+ *     readblob('/dev/ttyS0', 0, 10)
+ *
+ * When the file can't be opened an error message is given and
+ * the result is an empty `Blob`.
+ * When the offset is beyond the end of the file the result is an
+ * empty blob.
+ * When trying to read more bytes than are available the result
+ * is truncated.
+ * Also see `readfile()` and `writefile()`.
+ */
+export function readblob(
+  denops: Denops,
+  fname: unknown,
+  offset?: unknown,
+  size?: unknown,
+): Promise<unknown>;
+export function readblob(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("readblob", ...args);
 }
 
 /**
@@ -6940,11 +7317,13 @@ export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Reverse the order of items in **{object}** in-place.
- * **{object}** can be a `List` or a `Blob`.
- * Returns **{object}**.
- * Returns zero if **{object}** is not a List or a Blob.
- * If you want an object to remain unmodified make a copy first:
+ * Reverse the order of items in **{object}**.  **{object}** can be a
+ * `List`, a `Blob` or a `String`.  For a List and a Blob the
+ * items are reversed in-place and **{object}** is returned.
+ * For a String a new String is returned.
+ * Returns zero if **{object}** is not a List, Blob or a String.
+ * If you want a List or Blob to remain unmodified make a copy
+ * first:
  *
  *     :let revlist = reverse(copy(mylist))
  *
@@ -6952,7 +7331,10 @@ export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     mylist->reverse()
  */
-export function reverse(denops: Denops, object: unknown): Promise<unknown[]>;
+export function reverse(
+  denops: Denops,
+  object: unknown,
+): Promise<unknown[] | unknown | string>;
 export function reverse(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("reverse", ...args);
 }
@@ -7970,6 +8352,8 @@ export function setmatches(
  *     text        description of the error
  *     type        single-character error type, 'E', 'W', etc.
  *     valid       recognized error message
+ *     user_data   custom data associated with the item, can be
+ *                 any type.
  *
  * The "col", "vcol", "nr", "type" and "text" entries are
  * optional.  Either "lnum" or "pattern" entry can be used to
@@ -8847,6 +9231,28 @@ export function str2nr(
 ): Promise<number>;
 export function str2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("str2nr", ...args);
+}
+
+/**
+ * The result is a Number, which is the number of characters
+ * in String **{string}**.  Composing characters are ignored.
+ * `strchars()` can count the number of characters, counting
+ * composing characters separately.
+ *
+ * Returns 0 if **{string}** is empty or on error.
+ *
+ * Also see `strlen()`, `strdisplaywidth()` and `strwidth()`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->strcharlen()
+ */
+export function strcharlen(denops: Denops, string: unknown): Promise<number>;
+export function strcharlen(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("strcharlen", ...args);
 }
 
 /**
@@ -10127,9 +10533,9 @@ export function tr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Return **{text}** as a String where any character in **{mask}** is
  * removed from the beginning and/or end of **{text}**.
  *
- * If **{mask}** is not given, **{mask}** is all characters up to 0x20,
- * which includes Tab, space, NL and CR, plus the non-breaking
- * space character 0xa0.
+ * If **{mask}** is not given, or is an empty string, **{mask}** is all
+ * characters up to 0x20, which includes Tab, space, NL and CR,
+ * plus the non-breaking space character 0xa0.
  *
  * The optional **{dir}** argument specifies where to remove the
  * characters:
@@ -10216,8 +10622,9 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Job:        8  `v:t_job`
  *         Channel:    9  `v:t_channel`
  *         Blob:      10  `v:t_blob`
- *         Class      12  `v:t_class`
- *         Object     13  `v:t_object`
+ *         Class:     12  `v:t_class`
+ *         Object:    13  `v:t_object`
+ *         Typealias: 14  `v:t_typealias`
  * For backward compatibility, this method can be used:
  *
  *     :if type(myvar) == type(0)
@@ -10265,8 +10672,9 @@ export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Return the current state of the undo tree in a dictionary with
- * the following items:
+ * Return the current state of the undo tree for the current
+ * buffer, or for a specific buffer if **{buf}** is given.  The
+ * result is a dictionary with the following items:
  *   "seq_last"    The highest undo sequence number used.
  *   "seq_cur"     The sequence number of the current position in
  *                 the undo tree.  This differs from "seq_last"
@@ -10307,7 +10715,7 @@ export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *                 blocks.  Each item may again have an "alt"
  *                 item.
  */
-export function undotree(denops: Denops): Promise<unknown[]>;
+export function undotree(denops: Denops, buf?: unknown): Promise<unknown[]>;
 export function undotree(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("undotree", ...args);
 }
@@ -10357,9 +10765,14 @@ export function values(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * character in window **{winid}** at buffer line **{lnum}** and virtual
  * column **{col}**.
  *
+ * If buffer line **{lnum}** is an empty line, 0 is returned.
+ *
  * If **{col}** is greater than the last virtual column in line
  * **{lnum}**, then the byte index of the character at the last
  * virtual column is returned.
+ *
+ * For a multi-byte character, the column number of the first
+ * byte in the character is returned.
  *
  * The **{winid}** argument can be the window number or the
  * `window-ID`. If this is zero, then the current window is used.
