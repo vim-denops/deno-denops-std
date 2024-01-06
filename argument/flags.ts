@@ -1,4 +1,4 @@
-import { parsePattern } from "./util.ts";
+import { parsePattern } from "./_util.ts";
 
 export type Flags = Record<string, string | string[] | undefined>;
 

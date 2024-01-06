@@ -6,7 +6,7 @@ import {
   ListOptions,
   RemoveOptions,
 } from "./types.ts";
-import { buildDefineExpr, buildRemoveExpr } from "./utils.ts";
+import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
 
 /**
  * Define an autocmd

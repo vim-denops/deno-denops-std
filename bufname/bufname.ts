@@ -1,4 +1,4 @@
-import { bufnameUnusablePattern, decode, encode } from "./utils.ts";
+import { bufnameUnusablePattern, decode, encode } from "./_utils.ts";
 
 export type BufnameParams = Record<string, string | string[] | undefined>;
 
