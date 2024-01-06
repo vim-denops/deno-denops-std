@@ -3,7 +3,7 @@ import {
   assertRejects,
 } from "https://deno.land/std@0.211.0/assert/mod.ts";
 import { test } from "https://deno.land/x/denops_test@v1.4.0/mod.ts";
-import type { Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
 import { collect } from "./collect.ts";
 
 test({
