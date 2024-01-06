@@ -223,7 +223,7 @@ export interface OpenResult {
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   // ...
  *   // Reload the content of the `bufnr` buffer.
  *   await reload(denops, bufnr);
@@ -251,7 +251,7 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   const data = await Deno.readFile("README.md");
  *   const { content } = await decode(denops, bufnr, data);
  *   await replace(denops, bufnr, content);
@@ -315,7 +315,7 @@ export interface DecodeResult {
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   // Append the content under the cursor position of the `bufnr` buffer
  *   await append(denops, bufnr, ["Hello", "World"]);
  * }
@@ -355,7 +355,7 @@ export interface AppendOptions {
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   // Set the content of the `bufnr` buffer
  *   await replace(denops, bufnr, ["Hello", "World"]);
  * }
@@ -403,7 +403,7 @@ export interface ReplaceOptions {
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   await fn.setbufvar(denops, bufnr, "&buftype", "nofile");
  *   await replace(denops, bufnr, ["Hello", "World"]);
  *   await concrete(denops, bufnr);
@@ -454,7 +454,7 @@ export async function concrete(
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   // ...
  *   await ensure(denops, bufnr, async () => {
  *     await option.buftype.set(denops, "nofile");
@@ -510,7 +510,7 @@ export async function ensure<T>(
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
- *   const bufnr = (await fn.bufnr(denops)) as number;
+ *   const bufnr = await fn.bufnr(denops);
  *   // ...
  *   await modifiable(denops, bufnr, async () => {
  *     await fn.setline(denops, 1, ["Hello", "World"]);

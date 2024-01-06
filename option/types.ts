@@ -4,7 +4,7 @@ import type { Denops } from "../mod.ts";
  * An option that can be retrieved and modified.
  * @template T The type of the option value.
  */
-export type Option<T> = {
+export interface Option<T> {
   /**
    * Gets the value of the option.
    * @returns A Promise that resolves to the value of the option.
@@ -23,13 +23,13 @@ export type Option<T> = {
    * @returns A Promise that resolves when the option has been successfully reset.
    */
   reset(denops: Denops): Promise<void>;
-};
+}
 
 /**
  * A global option that can be retrieved and modified.
  * @template T The type of the option value.
  */
-export type GlobalOption<T> = Option<T> & {
+export interface GlobalOption<T> extends Option<T> {
   /**
    * Gets the global value of the option.
    * @returns A Promise that resolves to the value of the option.
@@ -48,13 +48,13 @@ export type GlobalOption<T> = Option<T> & {
    * @returns A Promise that resolves when the option has been successfully reset.
    */
   resetGlobal(denops: Denops): Promise<void>;
-};
+}
 
 /**
  * A local option that can be retrieved and modified.
  * @template T The type of the option value.
  */
-export type LocalOption<T> = Option<T> & {
+export interface LocalOption<T> extends Option<T> {
   /**
    * Gets the local value of the option.
    * @returns A Promise that resolves to the value of the option.
@@ -103,7 +103,7 @@ export type LocalOption<T> = Option<T> & {
    * @returns A Promise that resolves when the option has been successfully set.
    */
   setWindow(denops: Denops, winnr: number, value: T): Promise<void>;
-};
+}
 
 /**
  * A global or local option that can be retrieved and modified.

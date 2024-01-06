@@ -35,8 +35,8 @@ function toKeys(keys: KeysSpecifier): Keys {
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { send } from "./keymap.ts";
- * import { exprQuote as q } from "./expr_string.ts";
+ * import { exprQuote as q } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ * import { send } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/keymap.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {

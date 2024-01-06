@@ -5,7 +5,7 @@ import type { Context, Denops } from "../mod.ts";
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { execute } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { execute } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/execute.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await execute(

@@ -42,6 +42,59 @@
  *   scheme             expr                       params            fragment
  * ```
  *
+ * Developers can use `format` and `parse` functions like below:
+ *
+ * ```typescript
+ * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
+ * import { format, parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
+ *
+ * // Format
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *   }),
+ *   "denops:///Users/John Titor/test.git",
+ * );
+ * // Parse
+ * assertEquals(
+ *   parse("denops:///Users/John Titor/test.git"),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *   },
+ * );
+ *
+ * // Format (complex)
+ * assertEquals(
+ *   format({
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *     fragment: "README.md",
+ *   }),
+ *   "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+ * );
+ * // Parse (complex)
+ * assertEquals(
+ *   parse(
+ *     "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
+ *   ),
+ *   {
+ *     scheme: "denops",
+ *     expr: "/Users/John Titor/test.git",
+ *     params: {
+ *       foo: "foo",
+ *       bar: ["bar1", "bar2"],
+ *     },
+ *     fragment: "README.md",
+ *   },
+ * );
+ * ```
+ *
  * @module
  */
 export * from "./bufname.ts";

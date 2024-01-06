@@ -46,7 +46,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * Returns a `String` wrapper object instead of a primitive string.
  *
  * ```typescript
- * import { exprQuote } from "./expr_string.ts";
+ * import { exprQuote } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  *
  * console.log(exprQuote`foo` == "foo"); // outputs: true
  * console.log(exprQuote`foo` === "foo"); // outputs: false
@@ -73,7 +73,7 @@ const isInstanceOfString = is.InstanceOf(String);
  * Returns `true` if the value is a string marked as Vim's string constant format.
  *
  * ```typescript
- * import { exprQuote, isExprString } from "./expr_string.ts";
+ * import { exprQuote, isExprString } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  *
  * console.log(isExprString(exprQuote`foo`)); // outputs: true
  * console.log(isExprString("foo")); // outputs: false
@@ -213,8 +213,8 @@ class ExprStringHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { exprQuote as q, useExprString } from "./expr_string.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import { exprQuote as q, useExprString } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await useExprString(denops, async (denops) => {

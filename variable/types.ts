@@ -3,7 +3,7 @@ import type { Denops } from "../mod.ts";
 /**
  * Represents a getter method for retrieving property value.
  */
-export type Getter = {
+export interface Getter {
   /**
    * Gets the value of the specified property, or default value if it doesn't exist.
    * @param prop - The name of the property.
@@ -18,12 +18,12 @@ export type Getter = {
    * @returns A promise that resolves to the value of the property.
    */
   get<T = unknown>(denops: Denops, prop: string): Promise<T | null>;
-};
+}
 
 /**
  * Represents a setter method for setting property value.
  */
-export type Setter = {
+export interface Setter {
   /**
    * Sets the value of the specified property.
    * @param prop - The name of the property.
@@ -31,16 +31,16 @@ export type Setter = {
    * @returns A promise that resolves when the value has been set.
    */
   set<T = unknown>(denops: Denops, prop: string, value: T): Promise<void>;
-};
+}
 
 /**
  * Represents a remover method for removing property value.
  */
-export type Remover = {
+export interface Remover {
   /**
    * Removes the value of the specified property or resets to its default value.
    * @param prop - The name of the property.
    * @returns A promise that resolves when the value has been removed or reset.
    */
   remove(denops: Denops, prop: string): Promise<void>;
-};
+}

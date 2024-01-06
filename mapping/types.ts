@@ -21,32 +21,54 @@ export type Mode =
   | "nos";
 
 export interface Mapping {
-  // Modes for which the mapping is defined
+  /**
+   * Modes for which the mapping is defined
+   */
   mode: Mode;
-  // The {lhs} of the mapping
+  /**
+   * The {lhs} of the mapping
+   */
   lhs: string;
-  // The {rhs} of the mapping as typed
+  /**
+   * The {rhs} of the mapping as typed
+   */
   rhs: string;
-  // True if the {rhs} of the mapping is not remappable
+  /**
+   * True if the {rhs} of the mapping is not remappable
+   */
   noremap: boolean;
-  // True if mapping was defined with <script>
+  /**
+   * True if mapping was defined with <script>
+   */
   script: boolean;
-  // True for a buffer local mapping
+  /**
+   * True for a buffer local mapping
+   */
   buffer: boolean;
 
-  // The script local ID, used for <sid> mappings
-  // This attribute is missing if the Mapping is returned from `list()`
+  /**
+   * The script local ID, used for <sid> mappings
+   * This attribute is missing if the Mapping is returned from `list()`
+   */
   sid?: number;
-  // The line number in "sid", zero if unknown
-  // This attribute is missing if the Mapping is returned from `list()`
+  /**
+   * The line number in "sid", zero if unknown
+   * This attribute is missing if the Mapping is returned from `list()`
+   */
   lnum?: number;
-  // True for an expression mapping
-  // This attribute is missing if the Mapping is returned from `list()`
+  /**
+   * True for an expression mapping
+   * This attribute is missing if the Mapping is returned from `list()`
+   */
   expr?: boolean;
-  // Do not wait for other, longer mappings
-  // This attribute is missing if the Mapping is returned from `list()`
+  /**
+   * Do not wait for other, longer mappings
+   * This attribute is missing if the Mapping is returned from `list()`
+   */
   nowait?: boolean;
-  // True for a :map-silent mapping, else False
-  // This attribute is missing if the Mapping is returned from `list()`
+  /**
+   * True for a :map-silent mapping, else False
+   * This attribute is missing if the Mapping is returned from `list()`
+   */
   silent?: boolean;
 }

@@ -94,7 +94,7 @@ class BatchHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "./batch.ts";
+ * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await batch(denops, async (denops) => {
@@ -110,7 +110,7 @@ class BatchHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "./batch.ts";
+ * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * async function replace(denops: Denops, content: string): Promise<void> {
  *   await batch(denops, async (denops) => {
@@ -135,7 +135,7 @@ class BatchHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "./batch.ts";
+ * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await batch(denops, async (denops) => {
@@ -154,8 +154,8 @@ class BatchHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "./batch.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+ * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await batch(denops, async (denops) => {
