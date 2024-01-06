@@ -7,7 +7,7 @@
  * By using this module, developers can write Vim/Neovim denops plugins like:
  *
  * ```typescript
- * import { Denops } from "./mod.ts";
+ * import type { Denops } from "./mod.ts";
  * import * as batch from "./batch/mod.ts";
  * import * as fn from "./function/mod.ts";
  * import * as vars from "./variable/mod.ts";

@@ -40,7 +40,7 @@ async function removeOption(
  * Options (`options` or `o`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { options } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -94,7 +94,7 @@ export const o = options;
  * Local options (`localOptions` or `lo`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { localOptions } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -148,7 +148,7 @@ export const lo = localOptions;
  * Global options (`globalOptions` or `go`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { globalOptions } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

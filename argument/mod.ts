@@ -69,7 +69,7 @@ import { Flags, parseFlags } from "./flags.ts";
  * Parse string array to extract opts, flags.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { parse } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

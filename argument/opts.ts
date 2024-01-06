@@ -24,7 +24,7 @@ const optPattern = /^\+\+([a-zA-Z0-9-]+)(?:=(.*))?/;
  * Parse string array to extract opts (++opt).
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { parseOpts } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -77,7 +77,7 @@ export function parseOpts(args: string[]): [Opts, string[]] {
  * Validate if `opts` has unknown attributes.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { builtinOpts, parse, validateOpts } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -112,7 +112,7 @@ export function validateOpts(opts: Opts, knownAttributes: string[]): void {
  * Format `key` and `value` to construct string array.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { formatOpt } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -132,7 +132,7 @@ export function formatOpt(key: string, value: string | undefined): string[] {
  * Format `opts` to construct string array.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { formatOpts, parse } from "../argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

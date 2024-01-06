@@ -134,7 +134,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * Open a `bufname` buffer with given options on the current window
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { open } from "../buffer/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -155,7 +155,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * the option like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { open } from "../buffer/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -167,7 +167,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * tabpage number like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { open } from "../buffer/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -217,7 +217,7 @@ export interface OpenResult {
  * Reload the content of the `bufnr` buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { open, reload } from "../buffer/mod.ts";
  *
@@ -245,7 +245,7 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
  * Decode raw binary content for string array for the `bufnr` buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { decode, open, replace } from "../buffer/mod.ts";
  *
@@ -309,7 +309,7 @@ export interface DecodeResult {
  * Append content under the current cursor position or given lnum of the buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { append, open } from "../buffer/mod.ts";
  *
@@ -349,7 +349,7 @@ export interface AppendOptions {
  * Replace the content of the `bufnr` buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { open, replace } from "../buffer/mod.ts";
  *
@@ -397,7 +397,7 @@ export interface ReplaceOptions {
  * this function to concrete the content of such buffer to prevent this discard.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { concrete, open, replace } from "../buffer/mod.ts";
  *
@@ -447,7 +447,7 @@ export async function concrete(
  * Ensure the executor is executed under the specified buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as option from "../option/mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { ensure, open } from "../buffer/mod.ts";
@@ -504,7 +504,7 @@ export async function ensure<T>(
  * Ensure the executor is executed under a modifiable buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { modifiable, open } from "../buffer/mod.ts";
  *

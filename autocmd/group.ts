@@ -10,7 +10,7 @@ export type GroupRemoveOptions = Omit<RemoveOptions, "group">;
  * Create an autocmd group and define/remove autocmds in that group.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { group } from "./group.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

@@ -1,4 +1,4 @@
-import { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import {
   AutocmdEvent,
   DefineOptions,
@@ -12,7 +12,7 @@ import { buildDefineExpr, buildRemoveExpr } from "./utils.ts";
  * Define an autocmd
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as autocmd from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -54,7 +54,7 @@ export async function define(
  * Remove an autocmd
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as autocmd from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -88,7 +88,7 @@ export async function remove(
  * List defined autocmds
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as autocmd from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -138,7 +138,7 @@ export async function list(
  * Emit an autocmd in a buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as autocmd from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -182,7 +182,7 @@ export async function emit(
  * Emit an autocmd in all buffers
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as autocmd from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
