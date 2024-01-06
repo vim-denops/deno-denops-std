@@ -24,8 +24,8 @@ const optPattern = /^\+\+([a-zA-Z0-9-]+)(?:=(.*))?/;
  * Parse string array to extract opts (++opt).
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { parseOpts } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { parseOpts } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [
@@ -77,8 +77,8 @@ export function parseOpts(args: string[]): [Opts, string[]] {
  * Validate if `opts` has unknown attributes.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { builtinOpts, parse, validateOpts } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { builtinOpts, parse, validateOpts } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [
@@ -112,8 +112,8 @@ export function validateOpts(opts: Opts, knownAttributes: string[]): void {
  * Format `key` and `value` to construct string array.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { formatOpt } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { formatOpt } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   console.log(formatOpt("enc", "sjis"));
@@ -132,8 +132,8 @@ export function formatOpt(key: string, value: string | undefined): string[] {
  * Format `opts` to construct string array.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { formatOpts, parse } from "../argument/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { formatOpts, parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [

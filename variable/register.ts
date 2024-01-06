@@ -5,8 +5,8 @@ import { Getter, Setter } from "./types.ts";
  * Register (`register` or `r`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { register } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { register } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set register

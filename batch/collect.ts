@@ -1,9 +1,4 @@
-import type {
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
-} from "../mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
 
 type VimVoid<T> = T extends void ? 0 : T;
 
@@ -91,7 +86,7 @@ class CollectHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead and return values
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { collect } from "./collect.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -110,7 +105,7 @@ class CollectHelper implements Denops {
  * `collect()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { collect } from "./collect.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

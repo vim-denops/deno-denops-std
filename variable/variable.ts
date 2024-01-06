@@ -43,8 +43,8 @@ async function removeVar(
  * Global variables (`globals` or `g`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { globals } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { globals } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set global variable
@@ -91,8 +91,8 @@ export const g = globals;
  * Buffer local variables (`buffers` or `b`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { buffers } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { buffers } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set buffer variable
@@ -139,8 +139,8 @@ export const b = buffers;
  * Window local variables (`windows` or `w`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { windows } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { windows } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set window variable
@@ -187,8 +187,8 @@ export const w = windows;
  * Tabpage local variables (`tabpages` or `t`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { tabpages } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { tabpages } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set tabpage variable
@@ -235,8 +235,8 @@ export const t = tabpages;
  * Vim variables (`vim` or `v`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { vim } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { vim } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set vim variable

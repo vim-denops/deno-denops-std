@@ -1,9 +1,4 @@
-import type {
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
-} from "../mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
 
 type Redraw = undefined | boolean;
 
@@ -98,7 +93,7 @@ class BatchHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "./batch.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -114,7 +109,7 @@ class BatchHelper implements Denops {
  * `batch()` like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "./batch.ts";
  *
  * async function replace(denops: Denops, content: string): Promise<void> {
@@ -139,7 +134,7 @@ class BatchHelper implements Denops {
  * falsy value in `batch()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "./batch.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -158,9 +153,9 @@ class BatchHelper implements Denops {
  * like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "./batch.ts";
- * import * as lambda from "../lambda/mod.ts";
+ * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await batch(denops, async (denops) => {

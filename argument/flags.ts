@@ -9,8 +9,8 @@ const shortPattern = /^-([a-zA-Z0-9])(.*)/;
  * Parse string array to extract flags (-f/--flag).
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { parseFlags } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { parseFlags } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [
@@ -66,8 +66,8 @@ export function parseFlags(args: string[]): [Flags, string[]] {
  * Validate if `flags` has unknown attributes.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { parse, validateFlags } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { parse, validateFlags } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [
@@ -102,8 +102,8 @@ export function validateFlags(flags: Flags, knownAttributes: string[]): void {
  * Format `key` and `value` to construct string array.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { formatFlag } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { formatFlag } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   console.log(formatFlag("f", ""));
@@ -133,8 +133,8 @@ export function formatFlag(
  * Format `flags` to construct string array.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { formatFlags, parse } from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { formatFlags, parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const args = [

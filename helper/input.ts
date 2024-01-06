@@ -124,8 +124,8 @@ export interface InputOptions {
  * - It automatically guard input when `inputsave` option is specified
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { input } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   console.log(
@@ -145,8 +145,8 @@ export interface InputOptions {
  * completions and Vim script custom completion like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { input } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Built-in completions
@@ -188,8 +188,8 @@ export interface InputOptions {
  * `inputsave` option like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { input } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {

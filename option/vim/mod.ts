@@ -2,8 +2,8 @@
  * A module to provide accessors of Vim native options.
  *
  * ```typescript
- * import type { Denops } from "../../mod.ts";
- * import * as vimOp from "../../option/vim/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as vimOp from "https://deno.land/x/denops_std@$MODULE_VERSION/option/vim/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // vimOp has options only exist in Vim
