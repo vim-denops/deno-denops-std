@@ -1,4 +1,3 @@
-import { deferred } from "https://deno.land/std@0.211.0/async/deferred.ts";
 import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import {
   exprQuote as q,
@@ -71,8 +70,8 @@ export async function send(
   denops: Denops,
   keys: KeysSpecifier | KeysSpecifier[],
 ): Promise<void> {
-  const waiter = deferred<void>();
-  const id = register(denops, () => waiter.resolve(), { once: true });
+  const { promise: waiter, resolve } = Promise.withResolvers<void>();
+  const id = register(denops, () => resolve(), { once: true });
   await Promise.all([
     useExprString(denops, async (denops) => {
       await batch(denops, async (denops) => {
