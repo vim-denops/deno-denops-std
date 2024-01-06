@@ -3,7 +3,7 @@ import type {
   Denops,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
+} from "../mod.ts";
 import is from "https://deno.land/x/unknownutil@v3.11.0/is.ts";
 import { execute } from "./execute.ts";
 import { ulid } from "https://deno.land/std@0.211.0/ulid/mod.ts";

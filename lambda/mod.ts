@@ -31,7 +31,7 @@
  * @module
  */
 
-import type { Denops } from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
+import type { Denops } from "../mod.ts";
 
 /**
  * Lambda function identifier

@@ -3,7 +3,7 @@ import type {
   Denops,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
+} from "../mod.ts";
 
 type Redraw = undefined | boolean;
 
