@@ -8,13 +8,21 @@ import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
 export interface Decoration {
-  // Line number
+  /**
+   * Line number
+   */
   line: number;
-  // Column number (bytes)
+  /**
+   * Column number (bytes)
+   */
   column: number;
-  // Length (bytes)
+  /**
+   * Length (bytes)
+   */
   length: number;
-  // Highlight name
+  /**
+   * Highlight name
+   */
   highlight: string;
 }
 

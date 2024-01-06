@@ -45,13 +45,21 @@ export type BufnameParams = Record<string, string | string[] | undefined>;
  * ```
  */
 export interface Bufname {
-  // Scheme part of a buffer name. Note that Vim supports only alphabets in scheme part.
+  /**
+   * Scheme part of a buffer name. Note that Vim supports only alphabets in scheme part.
+   */
   scheme: string;
-  // Expression part of a buffer name. Note that '<>|?*' are not supported in Vim on Windows.
+  /**
+   * Expression part of a buffer name. Note that '<>|?*' are not supported in Vim on Windows.
+   */
   expr: string;
-  // Params part of a buffer name. While '?' is not supported, the params part are splitted by ';' instead.
+  /**
+   * Params part of a buffer name. While '?' is not supported, the params part are splitted by ';' instead.
+   */
   params?: BufnameParams;
-  // Fragment part of a buffer name. This is mainly used to regulate the suffix of the buffer name.
+  /**
+   * Fragment part of a buffer name. This is mainly used to regulate the suffix of the buffer name.
+   */
   fragment?: string;
 }
 
@@ -78,7 +86,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
+ * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
  * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * assertEquals(
@@ -130,8 +138,8 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * constructing a buffer name from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
- * import * as path from "https://deno.land/std/path/mod.ts";
+ * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
+ * import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
  * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * // NOTE:
@@ -170,7 +178,7 @@ export function format(
  * For example, if it contains unusable characters ("<>|?*).
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
+ * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
  * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * assertEquals(
@@ -224,8 +232,8 @@ export function format(
  * was constructed from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
- * import * as path from "https://deno.land/std/path/mod.ts";
+ * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
+ * import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
  * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");

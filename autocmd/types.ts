@@ -119,19 +119,19 @@ export type AutocmdEvent =
   | "WinNew"
   | "WinScrolled";
 
-type CommonOptions = {
+interface CommonOptions {
   group?: string;
-};
+}
 
-export type DefineOptions = CommonOptions & {
+export interface DefineOptions extends CommonOptions {
   once?: boolean;
   nested?: boolean;
-};
+}
 
 export type RemoveOptions = CommonOptions;
 
 export type ListOptions = CommonOptions;
 
-export type EmitOptions = CommonOptions & {
+export interface EmitOptions extends CommonOptions {
   nomodeline?: boolean;
-};
+}

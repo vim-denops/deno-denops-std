@@ -87,7 +87,7 @@ class CollectHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { collect } from "./collect.ts";
+ * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const results = await collect(denops, (denops) => [
@@ -106,7 +106,7 @@ class CollectHelper implements Denops {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { collect } from "./collect.ts";
+ * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const results = await collect(denops, (denops) => {

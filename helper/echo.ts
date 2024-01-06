@@ -47,7 +47,7 @@ export function getSilent(denops: Denops): Silent {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo, echoerr, setSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { echo, echoerr, setSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
@@ -79,7 +79,7 @@ export function setSilent(denops: Denops, silent: Silent): void {
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo, echoerr, ensureSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { echo, echoerr, ensureSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
@@ -129,7 +129,7 @@ export async function ensureSilent<T>(
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { echo } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await echo(denops, "Hello\nWorld!");
@@ -172,7 +172,7 @@ export function echo(
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echoerr } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { echoerr } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await echoerr(denops, "This is error message");
@@ -214,7 +214,7 @@ export async function echoerr(
  *
  * ```typescript
  * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { friendlyCall } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+ * import { friendlyCall } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {
