@@ -1,8 +1,9 @@
 {
   "lock": false,
-  "exclude": [
-    "docs/**"
-  ],
+  "exclude": ["docs/**"],
+  "imports": {
+    "https://deno.land/x/denops_std@$MODULE_VERSION/": "./"
+  },
   "tasks": {
     "test": "deno test -A --doc --parallel --shuffle",
     "test:coverage": "deno task test --coverage=.coverage",
