@@ -1,8 +1,8 @@
 /**
- * Standard module for [denops.vim](https://github.com/vim-denops/denops.vim).
+ * Standard module for [denops.vim].
  *
- * This module is assumed to be used for developing denops plugins. The code
- * is assumed to be called in a dedicated worker thread of each plugins.
+ * This module is assumed to be used for developing denops plugins. The code is
+ * assumed to be called in a dedicated worker thread.
  *
  * By using this module, developers can write Vim/Neovim denops plugins like:
  *
@@ -20,8 +20,12 @@
  *     async init(): Promise<void> {
  *       // This is just an example. Developers usually should define commands directly in Vim script.
  *       await batch.batch(denops, async (denops) => {
- *         await denops.cmd(`command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`);
- *         await denops.cmd(`command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`);
+ *         await denops.cmd(
+ *           `command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`,
+ *         );
+ *         await denops.cmd(
+ *           `command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`,
+ *         );
  *       });
  *     },
  *     async say(where: unknown): Promise<void> {
@@ -41,12 +45,15 @@
  * }
  * ```
  *
- * Note that developers should avoid calling initialization code within the `main` function.
- * If necessary, add an `init` API or a similar approach like above and call it from `plugin/<your_plugin>.vim`.
+ * **Note that developers should avoid calling initialization code within the
+ * `main` function**. If necessary, add an `init` API or a similar approach like
+ * above and call it from `plugin/<your_plugin>.vim`.
  *
- * See [Denops Documentation](https://vim-denops.github.io/denops-documentation/)
- * or [denops-helloworld.vim](https://github.com/vim-denops/denops-helloworld.vim)
- * for more details.
+ * See [Denops Documentation] or [denops-helloworld.vim] for more details.
+ *
+ * [denops.vim]: https://github.com/vim-denops/denops.vim
+ * [Denops Documentation]: https://vim-denops.github.io/denops-documentation
+ * [denops-helloworld.vim]: https://github.com/vim-denops/denops-helloworld.vim
  *
  * @module
  */
