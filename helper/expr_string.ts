@@ -6,7 +6,7 @@ import type {
 } from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
 import is from "https://deno.land/x/unknownutil@v3.11.0/is.ts";
 import { execute } from "./execute.ts";
-import { generateUniqueString } from "../util.ts";
+import { ulid } from "https://deno.land/std@0.211.0/ulid/mod.ts";
 
 const EXPR_STRING_MARK = "__denops_expr_string";
 
@@ -33,7 +33,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   if (is.String(denops.context[cacheKey])) {
     return denops.context[cacheKey];
   }
-  const suffix = generateUniqueString();
+  const suffix = ulid();
   denops.context[cacheKey] = suffix;
   const script = `
   let g:loaded_denops_std_helper_exprStr_${suffix} = 1

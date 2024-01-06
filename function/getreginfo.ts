@@ -1,7 +1,7 @@
 import type { Denops } from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
 import { lt, parse } from "https://deno.land/std@0.211.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
-import { generateUniqueString } from "../util.ts";
+import { ulid } from "https://deno.land/std@0.211.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/function/getreginfo.ts@1";
 
@@ -9,7 +9,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   if (typeof denops.context[cacheKey] === "string") {
     return denops.context[cacheKey];
   }
-  const suffix = generateUniqueString();
+  const suffix = ulid();
   denops.context[cacheKey] = suffix;
   const script = `
   function! DenopsStdFunctionGetreginfo_${suffix}(...) abort
