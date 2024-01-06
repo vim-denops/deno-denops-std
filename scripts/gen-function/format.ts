@@ -16,6 +16,8 @@ const translate: Record<string, string> = {
   "fname-two": "fname_two",
   "function": "function_",
   "lnum-end": "lnum_end",
+  "instanceof": "instanceof_",
+  "class": "class_",
 };
 
 export function formatDocs(docs: string): string[] {
