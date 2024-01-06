@@ -1,5 +1,5 @@
 import { deferred } from "https://deno.land/std@0.211.0/async/deferred.ts";
-import { type Denops } from "https://deno.land/x/denops_core@v5.0.0/mod.ts";
+import { type Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import {
   exprQuote as q,
   ExprString,
