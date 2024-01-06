@@ -7,13 +7,13 @@
  * By using this module, developers can write Vim/Neovim denops plugins like:
  *
  * ```typescript
- * import type { Denops } from "./mod.ts";
- * import * as batch from "./batch/mod.ts";
- * import * as fn from "./function/mod.ts";
- * import * as vars from "./variable/mod.ts";
- * import * as helper from "./helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as batch from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import * as vars from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import * as helper from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
- * import { assert, is } from "https://deno.land/x/unknownutil@v3.10.0/mod.ts#^";
+ * import { assert, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   denops.dispatcher = {

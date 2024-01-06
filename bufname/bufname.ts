@@ -79,7 +79,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  *
  * ```typescript
  * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
- * import { format } from "../bufname/mod.ts";
+ * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * assertEquals(
  *   format({
@@ -132,7 +132,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * ```typescript
  * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import * as path from "https://deno.land/std/path/mod.ts";
- * import { format } from "../bufname/mod.ts";
+ * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * // NOTE:
  * // Works only on Windows (Use path.win32.toFileUrl instead on other platforms)
@@ -171,7 +171,7 @@ export function format(
  *
  * ```typescript
  * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
- * import { parse } from "../bufname/mod.ts";
+ * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * assertEquals(
  *   parse("denops:///Users/John Titor/test.git"),
@@ -226,7 +226,7 @@ export function format(
  * ```typescript
  * import { assertEquals } from "https://deno.land/std@0.205.0/assert/mod.ts";
  * import * as path from "https://deno.land/std/path/mod.ts";
- * import { parse } from "../bufname/mod.ts";
+ * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
  *
  * const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
  * assertEquals(bufname, {

@@ -40,8 +40,8 @@ async function removeOption(
  * Options (`options` or `o`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { options } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { options } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set option
@@ -94,8 +94,8 @@ export const o = options;
  * Local options (`localOptions` or `lo`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { localOptions } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { localOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set option
@@ -148,8 +148,8 @@ export const lo = localOptions;
  * Global options (`globalOptions` or `go`)
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { globalOptions } from "../variable/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { globalOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Set option

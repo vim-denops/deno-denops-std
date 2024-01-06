@@ -33,8 +33,8 @@ function toKeys(keys: KeysSpecifier): Keys {
  * `denops#request` blocks, so note that it can only be used within `denops#notify`.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as fn from "../function/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import { send } from "./keymap.ts";
  * import { exprQuote as q } from "./expr_string.ts";
  *

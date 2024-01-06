@@ -16,8 +16,8 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false`.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { load } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Load '../../foo.vim' from this file
@@ -32,8 +32,8 @@ export type LoadOptions = {
  * specified like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { load } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const url = new URL("../../foo.vim", import.meta.url);
@@ -52,8 +52,8 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false` like:
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { load } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const url = new URL("../../foo.vim", import.meta.url);

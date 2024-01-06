@@ -22,9 +22,9 @@ export interface Decoration {
  * Decorate the specified buffer with decorations
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as fn from "../function/mod.ts";
- * import { decorate, open } from "../buffer/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import { decorate, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");
@@ -69,9 +69,9 @@ export function decorate(
  * Undecorate the specified buffer
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as fn from "../function/mod.ts";
- * import { decorate, open, undecorate } from "../buffer/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import { decorate, open, undecorate } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await open(denops, "README.md");

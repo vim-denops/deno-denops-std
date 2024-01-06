@@ -12,8 +12,8 @@ import { buildDefineExpr, buildRemoveExpr } from "./utils.ts";
  * Define an autocmd
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as autocmd from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Define new autocmd for BufEnter
@@ -54,8 +54,8 @@ export async function define(
  * Remove an autocmd
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as autocmd from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Remove BufEnter autocmd
@@ -88,8 +88,8 @@ export async function remove(
  * List defined autocmds
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as autocmd from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // List all autocmd
@@ -138,8 +138,8 @@ export async function list(
  * Emit an autocmd in a buffer
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as autocmd from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Emit an autocmd in a current buffer
@@ -182,8 +182,8 @@ export async function emit(
  * Emit an autocmd in all buffers
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import * as autocmd from "./mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Emit an autocmd in all buffers

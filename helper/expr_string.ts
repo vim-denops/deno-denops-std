@@ -1,9 +1,4 @@
-import type {
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
-} from "../mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
 import is from "https://deno.land/x/unknownutil@v3.11.0/is.ts";
 import { execute } from "./execute.ts";
 import { ulid } from "https://deno.land/std@0.211.0/ulid/mod.ts";
@@ -217,9 +212,9 @@ class ExprStringHelper implements Denops {
  * Call the denops function using Vim's string constant format.
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { exprQuote as q, useExprString } from "./expr_string.ts";
- * import * as fn from "../function/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await useExprString(denops, async (denops) => {

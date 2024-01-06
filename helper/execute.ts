@@ -1,14 +1,11 @@
-import type {
-  Context,
-  Denops,
-} from "../mod.ts";
+import type { Context, Denops } from "../mod.ts";
 
 /**
  * Execute multi-lined Vim script directly
  *
  * ```typescript
- * import type { Denops } from "../mod.ts";
- * import { execute } from "../helper/mod.ts";
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import { execute } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await execute(
