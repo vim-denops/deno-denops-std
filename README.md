@@ -1,7 +1,7 @@
 # 🐜 denops_std
 
 [![Vim 9.0.2189 or above](https://img.shields.io/badge/Vim-Support%209.0.2189-yellowgreen.svg?logo=vim)](https://github.com/vim/vim/tree/v9.0.2189)
-[![Neovim 0.8.0 or above](https://img.shields.io/badge/Neovim-Support%200.8.0-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.8.0)
+[![Neovim 0.9.4 or above](https://img.shields.io/badge/Neovim-Support%200.9.4-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.9.4)
 [![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
 [![codecov](https://codecov.io/github/vim-denops/deno-denops-std/branch/main/graph/badge.svg?token=RKAZMUQ3D9)](https://codecov.io/github/vim-denops/deno-denops-std)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)

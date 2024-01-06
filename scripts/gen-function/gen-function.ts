@@ -10,7 +10,7 @@ import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
 const VIM_VERSION = "9.0.2189";
-const NVIM_VERSION = "0.8.0";
+const NVIM_VERSION = "0.9.4";
 
 const commonGenerateModule = "../../denops_std/function/_generated.ts";
 const vimGenerateModule = "../../denops_std/function/vim/_generated.ts";
