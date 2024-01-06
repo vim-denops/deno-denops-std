@@ -43,7 +43,7 @@ async function removeVar(
  * Global variables (`globals` or `g`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { globals } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -91,7 +91,7 @@ export const g = globals;
  * Buffer local variables (`buffers` or `b`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { buffers } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -139,7 +139,7 @@ export const b = buffers;
  * Window local variables (`windows` or `w`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { windows } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -187,7 +187,7 @@ export const w = windows;
  * Tabpage local variables (`tabpages` or `t`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { tabpages } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -235,7 +235,7 @@ export const t = tabpages;
  * Vim variables (`vim` or `v`)
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { vim } from "../variable/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

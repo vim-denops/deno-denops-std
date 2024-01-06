@@ -16,7 +16,7 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false`.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { load } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -32,7 +32,7 @@ export type LoadOptions = {
  * specified like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { load } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -52,7 +52,7 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false` like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { load } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

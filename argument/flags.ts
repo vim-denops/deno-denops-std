@@ -9,7 +9,7 @@ const shortPattern = /^-([a-zA-Z0-9])(.*)/;
  * Parse string array to extract flags (-f/--flag).
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { parseFlags } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -66,7 +66,7 @@ export function parseFlags(args: string[]): [Flags, string[]] {
  * Validate if `flags` has unknown attributes.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { parse, validateFlags } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -102,7 +102,7 @@ export function validateFlags(flags: Flags, knownAttributes: string[]): void {
  * Format `key` and `value` to construct string array.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { formatFlag } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -133,7 +133,7 @@ export function formatFlag(
  * Format `flags` to construct string array.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { formatFlags, parse } from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

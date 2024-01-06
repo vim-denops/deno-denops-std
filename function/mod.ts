@@ -2,7 +2,7 @@
  * A module to provide functions of Vim and Neovim native functions.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

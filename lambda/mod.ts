@@ -5,7 +5,7 @@
  * to create a lambda function of Vim script that is callable from Deno.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as lambda from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -55,7 +55,7 @@ export interface Options {
  * Register a lambda function as a denops API and return the identifier.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as lambda from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -81,7 +81,7 @@ export interface Options {
  * If you need an one-time lambda function, use `once` option like
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as lambda from "./mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

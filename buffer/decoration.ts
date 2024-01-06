@@ -22,7 +22,7 @@ export interface Decoration {
  * Decorate the specified buffer with decorations
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { decorate, open } from "../buffer/mod.ts";
  *
@@ -69,7 +69,7 @@ export function decorate(
  * Undecorate the specified buffer
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as fn from "../function/mod.ts";
  * import { decorate, open, undecorate } from "../buffer/mod.ts";
  *

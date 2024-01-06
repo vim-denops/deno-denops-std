@@ -217,7 +217,7 @@ class ExprStringHelper implements Denops {
  * Call the denops function using Vim's string constant format.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { exprQuote as q, useExprString } from "./expr_string.ts";
  * import * as fn from "../function/mod.ts";
  *

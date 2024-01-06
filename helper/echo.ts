@@ -46,7 +46,7 @@ export function getSilent(denops: Denops): Silent {
  * `silent!` messages as follows.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { echo, echoerr, setSilent } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -78,7 +78,7 @@ export function setSilent(denops: Denops, silent: Silent): void {
  * function, use this function as follows
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { echo, echoerr, ensureSilent } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -128,7 +128,7 @@ export async function ensureSilent<T>(
  * running as 'test' mode to avoid unwilling test failures.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { echo } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -171,7 +171,7 @@ export function echo(
  * equivalent to `echoerr` command in Vim/Neovim.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { echoerr } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -213,7 +213,7 @@ export async function echoerr(
  * Print a stack trace when denops is running in debug mode.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { friendlyCall } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

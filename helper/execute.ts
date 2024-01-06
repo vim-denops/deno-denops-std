@@ -7,7 +7,7 @@ import type {
  * Execute multi-lined Vim script directly
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { execute } from "../helper/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

@@ -2,7 +2,7 @@
  * A module to provide accessors of Neovim native options.
  *
  * ```typescript
- * import { Denops } from "../../mod.ts";
+ * import type { Denops } from "../../mod.ts";
  * import * as nvimOp from "../../option/nvim/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {

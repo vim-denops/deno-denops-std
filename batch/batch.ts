@@ -98,7 +98,7 @@ class BatchHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { batch } from "./batch.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -114,7 +114,7 @@ class BatchHelper implements Denops {
  * `batch()` like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { batch } from "./batch.ts";
  *
  * async function replace(denops: Denops, content: string): Promise<void> {
@@ -139,7 +139,7 @@ class BatchHelper implements Denops {
  * falsy value in `batch()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { batch } from "./batch.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -158,7 +158,7 @@ class BatchHelper implements Denops {
  * like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import { batch } from "./batch.ts";
  * import * as lambda from "../lambda/mod.ts";
  *

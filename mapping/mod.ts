@@ -24,7 +24,7 @@ export interface MapOptions {
  * Register a mapping for `lhs` to `rhs` with given options.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -38,7 +38,7 @@ export interface MapOptions {
  * Users can specify multiple `mode` value like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -80,7 +80,7 @@ export interface UnmapOptions {
  * Remove a mapping for `lhs`.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -99,7 +99,7 @@ export interface UnmapOptions {
  * Users can specify multiple `mode` value like:
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -135,7 +135,7 @@ export interface ReadOptions {
  * Read a mapping and return a `Mapping` instance.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
@@ -193,7 +193,7 @@ export interface ListOptions {
  * List mappings which starts from `lhs`.
  *
  * ```typescript
- * import { Denops } from "../mod.ts";
+ * import type { Denops } from "../mod.ts";
  * import * as mapping from "../mapping/mod.ts";
  *
  * export async function main(denops: Denops): Promise<void> {
