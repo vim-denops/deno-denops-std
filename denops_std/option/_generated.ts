@@ -14,41 +14,6 @@ import type {
 } from "./types.ts";
 
 /**
- * The ASCII code for the first letter of the Hebrew alphabet.  The
- * routine that maps the keyboard in Hebrew mode, both in Insert mode
- * (when hkmap is set) and on the command-line (when hitting CTRL-_)
- * outputs the Hebrew characters in the range [aleph..aleph+26].
- * aleph=128 applies to PC code, and aleph=224 applies to ISO 8859-8.
- * See `rileft.txt`.
- *
- * (default 128 for MS-Windows, 224 otherwise)
- *
- * *only available when compiled with the `+rightleft` feature*
- */
-export const aleph: GlobalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "aleph");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "aleph", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "aleph");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    const result = await globalOptions.get(denops, "aleph");
-    return (result ?? 0) as number;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "aleph", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "aleph");
-  },
-};
-
-/**
  * Allow CTRL-_ in Insert and Command-line mode.  This is default off, to
  * avoid that users that accidentally type CTRL-_ instead of SHIFT-_ get
  * into reverse Insert mode, and don't know how to get out.  See
@@ -142,41 +107,6 @@ export const ambiwidth: GlobalOption<string> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "ambiwidth");
-  },
-};
-
-/**
- * When on, Vim will change the current working directory whenever you
- * open a file, switch buffers, delete a buffer or open/close a window.
- * It will change to the directory containing the file which was opened
- * or selected.  When a buffer has no name it also has no directory, thus
- * the current directory won't change when navigating to it.
- * Note: When this option is on some plugins may not work.
- *
- * (default off)
- *
- * *only available when compiled with it, use exists("+autochdir") to check*
- */
-export const autochdir: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "autochdir");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "autochdir", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "autochdir");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "autochdir");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "autochdir", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "autochdir");
   },
 };
 
@@ -278,6 +208,41 @@ export const arabicshape: GlobalOption<boolean> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "arabicshape");
+  },
+};
+
+/**
+ * When on, Vim will change the current working directory whenever you
+ * open a file, switch buffers, delete a buffer or open/close a window.
+ * It will change to the directory containing the file which was opened
+ * or selected.  When a buffer has no name it also has no directory, thus
+ * the current directory won't change when navigating to it.
+ * Note: When this option is on some plugins may not work.
+ *
+ * (default off)
+ *
+ * *only available when compiled with it, use exists("+autochdir") to check*
+ */
+export const autochdir: GlobalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "autochdir");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "autochdir", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "autochdir");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    const result = await globalOptions.get(denops, "autochdir");
+    return Boolean(result ?? false);
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "autochdir", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "autochdir");
   },
 };
 
@@ -407,6 +372,9 @@ export const autoread: GlobalOrLocalOption<boolean> = {
  * 'autowriteall' for that.
  * Some buffers will not be written, specifically when 'buftype' is
  * "nowrite", "nofile", "terminal" or "prompt".
+ * USE WITH CARE: If you make temporary changes to a buffer that you
+ * don't want to be saved this option may cause it to be saved anyway.
+ * Renaming the buffer with ":file **{name}**" may help avoid this.
  *
  * (default off)
  */
@@ -1068,7 +1036,7 @@ export const binary: LocalOption<boolean> = {
  * Some applications use the BOM to recognize the encoding of the file.
  * Often used for UCS-2 files on MS-Windows.  For other applications it
  * causes trouble, for example: "cat file1 file2" makes the BOM of file2
- * appear halfway the resulting file.  Gcc doesn't accept a BOM.
+ * appear halfway through the resulting file.  Gcc doesn't accept a BOM.
  * When Vim reads a file and 'fileencodings' starts with "ucs-bom", a
  * check for the presence of the BOM is done and 'bomb' set accordingly.
  * Unless 'binary' is set, it is removed from the first line, so that you
@@ -1540,6 +1508,8 @@ export const casemap: GlobalOption<string> = {
  * current working directory to the `$HOME` directory like in Unix.
  * When off, those commands just print the current directory name.
  * On Unix this option has no effect.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  * NOTE: This option is reset when 'compatible' is set.
  *
  * (default: off)
@@ -1878,6 +1848,52 @@ export const cinoptions: LocalOption<string> = {
 };
 
 /**
+ * Keywords that are interpreted as a C++ scope declaration by `cino-g`.
+ * Useful e.g. for working with the Qt framework that defines additional
+ * scope declarations "signals", "public slots" and "private slots":
+ *
+ *     set cinscopedecls+=signals,public\ slots,private\ slots
+ *
+ * (default "public,protected,private")
+ */
+export const cinscopedecls: LocalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "cinscopedecls");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "cinscopedecls", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "cinscopedecls");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    const result = await localOptions.get(denops, "cinscopedecls");
+    return (result ?? "") as string;
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "cinscopedecls", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "cinscopedecls");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&cinscopedecls");
+    return (result ?? "") as string;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "&cinscopedecls", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&cinscopedecls");
+    return (result ?? "") as string;
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "&cinscopedecls", value);
+  },
+};
+
+/**
  * These keywords start an extra indent in the next line when
  * 'smartindent' or 'cindent' is set.  For 'cindent' this is only done at
  * an appropriate place (inside {}).
@@ -1921,52 +1937,6 @@ export const cinwords: LocalOption<string> = {
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&cinwords", value);
-  },
-};
-
-/**
- * Keywords that are interpreted as a C++ scope declaration by `cino-g`.
- * Useful e.g. for working with the Qt framework that defines additional
- * scope declarations "signals", "public slots" and "private slots":
- *
- *     set cinscopedecls+=signals,public\ slots,private\ slots
- *
- * (default "public,protected,private")
- */
-export const cinscopedecls: LocalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "cinscopedecls");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "cinscopedecls", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cinscopedecls");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    const result = await localOptions.get(denops, "cinscopedecls");
-    return (result ?? "") as string;
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "cinscopedecls", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "cinscopedecls");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
-    const result = await getbufvar(denops, bufnr, "&cinscopedecls");
-    return (result ?? "") as string;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "&cinscopedecls", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<string> {
-    const result = await getwinvar(denops, winnr, "&cinscopedecls");
-    return (result ?? "") as string;
-  },
-  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "&cinscopedecls", value);
   },
 };
 
@@ -2171,7 +2141,7 @@ export const cmdwinheight: GlobalOption<number> = {
  * The screen column can be an absolute number, or a number preceded with
  * '+' or '-', which is added to or subtracted from 'textwidth'.
  *
- *     :set cc=+1  " highlight column after 'textwidth'
+ *     :set cc=+1        " highlight column after 'textwidth'
  *     :set cc=+1,+2,+3  " highlight three columns after 'textwidth'
  *     :hi ColorColumn ctermbg=lightgrey guibg=lightgrey
  *
@@ -2486,59 +2456,6 @@ export const completefunc: LocalOption<string> = {
 };
 
 /**
- * When this option is set it overrules 'shellslash' for completion:
- * - When this option is set to "slash", a forward slash is used for path
- *   completion in insert mode. This is useful when editing HTML tag, or
- *   Makefile with 'noshellslash' on MS-Windows.
- * - When this option is set to "backslash", backslash is used. This is
- *   useful when editing a batch file with 'shellslash' set on MS-Windows.
- * - When this option is empty, same character is used as for
- *   'shellslash'.
- * For Insert mode completion the buffer-local value is used.  For
- * command line completion the global value is used.
- *
- * (default: "")
- *
- * *only for MS-Windows*
- */
-export const completeslash: LocalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "completeslash");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "completeslash", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "completeslash");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    const result = await localOptions.get(denops, "completeslash");
-    return (result ?? "") as string;
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "completeslash", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "completeslash");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
-    const result = await getbufvar(denops, bufnr, "&completeslash");
-    return (result ?? "") as string;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "&completeslash", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<string> {
-    const result = await getwinvar(denops, winnr, "&completeslash");
-    return (result ?? "") as string;
-  },
-  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "&completeslash", value);
-  },
-};
-
-/**
  * A comma-separated list of options for Insert mode completion
  * `ins-completion`.  The supported values are:
  *
@@ -2603,6 +2520,59 @@ export const completeopt: GlobalOption<string> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "completeopt");
+  },
+};
+
+/**
+ * When this option is set it overrules 'shellslash' for completion:
+ * - When this option is set to "slash", a forward slash is used for path
+ *   completion in insert mode. This is useful when editing HTML tag, or
+ *   Makefile with 'noshellslash' on MS-Windows.
+ * - When this option is set to "backslash", backslash is used. This is
+ *   useful when editing a batch file with 'shellslash' set on MS-Windows.
+ * - When this option is empty, same character is used as for
+ *   'shellslash'.
+ * For Insert mode completion the buffer-local value is used.  For
+ * command line completion the global value is used.
+ *
+ * (default: "")
+ *
+ * *only for MS-Windows*
+ */
+export const completeslash: LocalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "completeslash");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "completeslash", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "completeslash");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    const result = await localOptions.get(denops, "completeslash");
+    return (result ?? "") as string;
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "completeslash", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "completeslash");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&completeslash");
+    return (result ?? "") as string;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "&completeslash", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&completeslash");
+    return (result ?? "") as string;
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "&completeslash", value);
   },
 };
 
@@ -3157,197 +3127,6 @@ export const cpoptions: GlobalOption<string> = {
 };
 
 /**
- * Determines how many components of the path to show in a list of tags.
- * See `cscopepathcomp`.
- * NOTE: This option is set to 0 when 'compatible' is set.
- *
- * (default 0)
- *
- * *not available when compiled without the `+cscope` feature*
- */
-export const cscopepathcomp: GlobalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "cscopepathcomp");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "cscopepathcomp", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscopepathcomp");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    const result = await globalOptions.get(denops, "cscopepathcomp");
-    return (result ?? 0) as number;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "cscopepathcomp", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscopepathcomp");
-  },
-};
-
-/**
- * Specifies the command to execute cscope.  See `cscopeprg`.
- * This option cannot be set from a `modeline` or in the `sandbox`, for
- * security reasons.
- *
- * (default "cscope")
- *
- * *not available when compiled without the `+cscope` feature*
- */
-export const cscopeprg: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "cscopeprg");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "cscopeprg", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscopeprg");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "cscopeprg");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "cscopeprg", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscopeprg");
-  },
-};
-
-/**
- * Specifies whether to use quickfix window to show cscope results.
- * See `cscopequickfix`.
- *
- * (default "")
- *
- * *not available when compiled without the `+cscope` or `+quickfix` features*
- */
-export const cscopequickfix: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "cscopequickfix");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "cscopequickfix", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscopequickfix");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "cscopequickfix");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "cscopequickfix", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscopequickfix");
-  },
-};
-
-/**
- * In the absence of a prefix (-P) for cscope. setting this option enables
- * to use the basename of cscope.out path as the prefix.
- * See `cscoperelative`.
- * NOTE: This option is reset when 'compatible' is set.
- *
- * (default off)
- *
- * *not available when compiled without the `+cscope` feature*
- */
-export const cscoperelative: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "cscoperelative");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "cscoperelative", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscoperelative");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "cscoperelative");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "cscoperelative", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscoperelative");
-  },
-};
-
-/**
- * Use cscope for tag commands.  See `cscope-options`.
- * NOTE: This option is reset when 'compatible' is set.
- *
- * (default off)
- *
- * *not available when compiled without the `+cscope` feature*
- */
-export const cscopetag: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "cscopetag");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "cscopetag", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscopetag");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "cscopetag");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "cscopetag", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscopetag");
-  },
-};
-
-/**
- * Determines the order in which ":cstag" performs a search.  See
- * `cscopetagorder`.
- * NOTE: This option is set to 0 when 'compatible' is set.
- *
- * (default 0)
- *
- * *not available when compiled without the `+cscope` feature*
- */
-export const cscopetagorder: GlobalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "cscopetagorder");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "cscopetagorder", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "cscopetagorder");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    const result = await globalOptions.get(denops, "cscopetagorder");
-    return (result ?? 0) as number;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "cscopetagorder", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "cscopetagorder");
-  },
-};
-
-/**
  * When this option is set, as the cursor in the current
  * window moves other cursorbound windows (windows that also have
  * this option set) move their cursors to the corresponding line and
@@ -3866,7 +3645,8 @@ export const diffexpr: GlobalOption<string> = {
  *                         When omitted a context of six lines is used.
  *                         When using zero the context is actually one,
  *                         since folds require a line in between, also
- *                         for a deleted line.
+ *                         for a deleted line. Set it to a very large
+ *                         value (999999) to disable folding completely.
  *                         See `fold-diff`.
  *
  *         iblank          Ignore changes where lines are all blank.  Adds
@@ -4283,6 +4063,53 @@ export const encoding: GlobalOption<string> = {
 };
 
 /**
+ * Indicates that a CTRL-Z character was found at the end of the file
+ * when reading it.  Normally only happens when 'fileformat' is "dos".
+ * When writing a file and this option is off and the 'binary' option
+ * is on, or 'fixeol' option is off, no CTRL-Z will be written at the
+ * end of the file.
+ * See `eol-and-eof` for example settings.
+ *
+ * (default off)
+ */
+export const endoffile: LocalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "endoffile");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "endoffile", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "endoffile");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "endoffile");
+    return Boolean(result ?? false);
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "endoffile", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "endoffile");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&endoffile");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&endoffile", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&endoffile");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&endoffile", value);
+  },
+};
+
+/**
  * When writing a file and this option is off and the 'binary' option
  * is on, or 'fixeol' option is off, no `<EOL>` will be written for the
  * last line in the file.  This option is automatically set or reset when
@@ -4639,6 +4466,47 @@ export const expandtab: LocalOption<boolean> = {
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&expandtab", value);
+  },
+};
+
+/**
+ * Enables the reading of .vimrc, .exrc and .gvimrc in the current
+ * directory.
+ *
+ * Setting this option is a potential security leak.  E.g., consider
+ * unpacking a package or fetching files from github, a .vimrc in there
+ * might be a trojan horse.  BETTER NOT SET THIS OPTION!
+ * Instead, define an autocommand in your .vimrc to set options for a
+ * matching directory.
+ *
+ * If you do switch this option on you should also consider setting the
+ * 'secure' option (see `initialization`).
+ * Also see `.vimrc` and `gui-init`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
+ *
+ * (default off)
+ */
+export const exrc: GlobalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "exrc");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "exrc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "exrc");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    const result = await globalOptions.get(denops, "exrc");
+    return Boolean(result ?? false);
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "exrc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "exrc");
   },
 };
 
@@ -5054,8 +4922,8 @@ export const filetype: LocalOption<string> = {
  * and the value of that item:
  *
  *   item name     default         Used for
- *   stl           ' ' or '^'      statusline of the current window
- *   stlnc         ' ' or '='      statusline of the non-current windows
+ *   stl           ' '             statusline of the current window
+ *   stlnc         ' '             statusline of the non-current windows
  *   vert          '|'             vertical separators `:vsplit`
  *   fold          '-'             filling 'foldtext'
  *   foldopen      '-'             mark the beginning of a fold
@@ -5065,16 +4933,11 @@ export const filetype: LocalOption<string> = {
  *   eob           `'~'`             empty lines below the end of a buffer
  *   lastline      '@'             'display' contains lastline/truncate
  *
- * Any one that is omitted will fall back to the default.  For "stl" and
- * "stlnc" the space will be used when there is highlighting, '^' or '='
- * otherwise.
+ * Any one that is omitted will fall back to the default.
  *
  * Example:
  *
- *     :set fillchars=stl:^,stlnc:=,vert:\|,fold:-,diff:-
- *
- * This is similar to the default, except that these characters will also
- * be used when there is highlighting.
+ *     :set fillchars=stl:\ ,stlnc:\ ,vert:\|,fold:-,diff:-
  *
  * For the "stl", "stlnc", "foldopen", "foldclose" and "foldsep" items
  * single-byte and multibyte characters are supported.  But double-width
@@ -5952,9 +5815,10 @@ export const formatlistpat: LocalOption<string> = {
 
 /**
  * This is a sequence of letters which describes how automatic
- * formatting is to be done.  See `fo-table`.  When the 'paste' option is
- * on, no formatting is done (like 'formatoptions' is empty).  Commas can
- * be inserted for readability.
+ * formatting is to be done.
+ * See `fo-table` for possible values and `gq` for how to format text.
+ * When the 'paste' option is on, no formatting is done (like
+ * 'formatoptions' is empty).  Commas can be inserted for readability.
  * To avoid problems with flags that are added in the future, use the
  * "+=" and "-=" feature of ":set" `add-option-flags`.
  * NOTE: This option is set to the Vi default value when 'compatible' is
@@ -6113,9 +5977,9 @@ export const fsync: GlobalOption<boolean> = {
  *         :s///gg           subst. all      subst. one
  *
  * NOTE: This option is reset when 'compatible' is set.
- * DEPRECATED: Setting this option may break plugins that are not aware
- * of this option.  Also, many users get confused that adding the /g flag
- * has the opposite effect of that it normally does.
+ * Setting this option may break plugins that rely on the default
+ * behavior of the 'g' flag. This will also make the 'g' flag have the
+ * opposite effect of that documented in `:s_g`.
  * This option is not used in `Vim9` script.
  *
  * (default off)
@@ -6840,72 +6704,6 @@ export const history: GlobalOption<number> = {
 };
 
 /**
- * When on, the keyboard is mapped for the Hebrew character set.
- * Normally you would set 'allowrevins' and use CTRL-_ in insert mode to
- * toggle this option.  See `rileft.txt`.
- * NOTE: This option is reset when 'compatible' is set.
- *
- * (default off)
- *
- * *only available when compiled with the `+rightleft` feature*
- */
-export const hkmap: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "hkmap");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "hkmap", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "hkmap");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "hkmap");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "hkmap", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "hkmap");
-  },
-};
-
-/**
- * When on, phonetic keyboard mapping is used.  'hkmap' must also be on.
- * This is useful if you have a non-Hebrew keyboard.
- * See `rileft.txt`.
- * NOTE: This option is reset when 'compatible' is set.
- *
- * (default off)
- *
- * *only available when compiled with the `+rightleft` feature*
- */
-export const hkmapp: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "hkmapp");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "hkmapp", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "hkmapp");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "hkmapp");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "hkmapp", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "hkmapp");
-  },
-};
-
-/**
  * When there is a previous search pattern, highlight all its matches.
  * The type of highlighting used can be set with the 'l' occasion in the
  * 'highlight' option.  This uses the "Search" highlight group by
@@ -7032,8 +6830,8 @@ export const iconstring: GlobalOption<string> = {
 };
 
 /**
- * Ignore case in search patterns.  Also used when searching in the tags
- * file.
+ * Ignore case in search patterns, `cmdline-completion`, when
+ * searching in the tags file, and non-|Vim9| `expr-==`.
  * Also see 'smartcase' and 'tagcase'.
  * Can be overruled by using "\c" or "\C" in the pattern, see
  * `/ignorecase`.
@@ -7902,6 +7700,39 @@ export const joinspaces: GlobalOption<boolean> = {
 };
 
 /**
+ * List of words that change the behavior of the `jumplist`.
+ *   stack         Make the jumplist behave like the tagstack.
+ *                 Relative location of entries in the jumplist is
+ *                 preserved at the cost of discarding subsequent entries
+ *                 when navigating backwards in the jumplist and then
+ *                 jumping to a location.  `jumplist-stack`
+ *
+ * (default "")
+ */
+export const jumpoptions: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "jumpoptions");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "jumpoptions", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "jumpoptions");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "jumpoptions");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "jumpoptions", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "jumpoptions");
+  },
+};
+
+/**
  * Name of a keyboard mapping.  See `mbyte-keymap`.
  * Setting this option to a valid keymap name has the side effect of
  * setting 'iminsert' to one, so that the keymap becomes effective.
@@ -8458,6 +8289,54 @@ export const lisp: LocalOption<boolean> = {
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&lisp", value);
+  },
+};
+
+/**
+ * Comma-separated list of items that influence the Lisp indenting when
+ * enabled with the `'lisp'` option.  Currently only one item is
+ * supported:
+ *         expr:1  use 'indentexpr' for Lisp indenting when it is set
+ *         expr:0  do not use 'indentexpr' for Lisp indenting (default)
+ * Note that when using 'indentexpr' the `=` operator indents all the
+ * lines, otherwise the first line is not indented (Vi-compatible).
+ *
+ * (default "")
+ */
+export const lispoptions: LocalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "lispoptions");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "lispoptions", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "lispoptions");
+  },
+  async getLocal(denops: Denops): Promise<string> {
+    const result = await localOptions.get(denops, "lispoptions");
+    return (result ?? "") as string;
+  },
+  setLocal(denops: Denops, value: string): Promise<void> {
+    return localOptions.set(denops, "lispoptions", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "lispoptions");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
+    const result = await getbufvar(denops, bufnr, "&lispoptions");
+    return (result ?? "") as string;
+  },
+  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
+    return setbufvar(denops, bufnr, "&lispoptions", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<string> {
+    const result = await getwinvar(denops, winnr, "&lispoptions");
+    return (result ?? "") as string;
+  },
+  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
+    return setwinvar(denops, winnr, "&lispoptions", value);
   },
 };
 
@@ -9056,6 +8935,7 @@ export const matchtime: GlobalOption<number> = {
  * Increasing this limit above 200 also changes the maximum for Ex
  * command recursion, see `E169`.
  * See also `:function`.
+ * Also used for maximum depth of callback functions.
  *
  * (default 100)
  *
@@ -9223,7 +9103,8 @@ export const menuitems: GlobalOption<number> = {
  * If you have less than 512 Mbyte `:mkspell` may fail for some
  * languages, no matter what you set 'mkspellmem' to.
  *
- * This option cannot be set from a `modeline` or in the `sandbox`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default "460000,2000,500")
  *
@@ -10150,6 +10031,8 @@ export const operatorfunc: GlobalOption<string> = {
 
 /**
  * Directories used to find packages.  See `packages`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default: see 'runtimepath')
  */
@@ -10206,127 +10089,10 @@ export const paragraphs: GlobalOption<string> = {
 };
 
 /**
- * Put Vim in Paste mode.  This is useful if you want to cut or copy
- * some text from one window and paste it in Vim.  This will avoid
- * unexpected effects.
- * Setting this option is useful when using Vim in a terminal, where Vim
- * cannot distinguish between typed text and pasted text.  In the GUI, Vim
- * knows about pasting and will mostly do the right thing without 'paste'
- * being set.  The same is true for a terminal where Vim handles the
- * mouse clicks itself.
- * This option is reset when starting the GUI.  Thus if you set it in
- * your .vimrc it will work in a terminal, but not in the GUI.  Setting
- * 'paste' in the GUI has side effects: e.g., the Paste toolbar button
- * will no longer work in Insert mode, because it uses a mapping.
- * When the 'paste' option is switched on (also when it was already on):
- *         - mapping in Insert mode and Command-line mode is disabled
- *         - abbreviations are disabled
- *         - 'autoindent' is reset
- *         - 'expandtab' is reset
- *         - 'hkmap' is reset
- *         - 'revins' is reset
- *         - 'ruler' is reset
- *         - 'showmatch' is reset
- *         - 'smarttab' is reset
- *         - 'softtabstop' is set to 0
- *         - 'textwidth' is set to 0
- *         - 'wrapmargin' is set to 0
- *         - 'varsofttabstop' is made empty
- * These options keep their value, but their effect is disabled:
- *         - 'cindent'
- *         - 'formatoptions' is used like it is empty
- *         - 'indentexpr'
- *         - 'lisp'
- *         - 'smartindent'
- * NOTE: When you start editing another file while the 'paste' option is
- * on, settings from the modelines or autocommands may change the
- * settings again, causing trouble when pasting text.  You might want to
- * set the 'paste' option again.
- * When the 'paste' option is reset the mentioned options are restored to
- * the value before the moment 'paste' was switched from off to on.
- * Resetting 'paste' before ever setting it does not have any effect.
- * Since mapping doesn't work while 'paste' is active, you need to use
- * the 'pastetoggle' option to toggle the 'paste' option with some key.
- *
- * (default off)
- */
-export const paste: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "paste");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "paste", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "paste");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "paste");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "paste", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "paste");
-  },
-};
-
-/**
- * When non-empty, specifies the key sequence that toggles the 'paste'
- * option.  This is like specifying a mapping:
- *
- *     :map {keys} :set invpaste<CR>
- *
- * Where **{keys}** is the value of 'pastetoggle'.
- * The difference is that it will work even when 'paste' is set.
- * 'pastetoggle' works in Insert mode and Normal mode, but not in
- * Command-line mode.
- * Mappings are checked first, thus overrule 'pastetoggle'.  However,
- * when 'paste' is on mappings are ignored in Insert mode, thus you can do
- * this:
- *
- *     :map <F10> :set paste<CR>
- *     :map <F11> :set nopaste<CR>
- *     :imap <F10> <C-O>:set paste<CR>
- *     :imap <F11> <nop>
- *     :set pastetoggle=<F11>
- *
- * This will make `<F10>` start paste mode and `<F11>` stop paste mode.
- * Note that typing `<F10>` in paste mode inserts `"<F10>"`, since in paste
- * mode everything is inserted literally, except the 'pastetoggle' key
- * sequence.
- * When the value has several bytes 'ttimeoutlen' applies.
- *
- * (default "")
- */
-export const pastetoggle: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "pastetoggle");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "pastetoggle", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "pastetoggle");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "pastetoggle");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "pastetoggle", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "pastetoggle");
-  },
-};
-
-/**
  * Expression which is evaluated to apply a patch to a file and generate
  * the resulting new version of the file.  See `diff-patchexpr`.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default "")
  *
@@ -10646,258 +10412,6 @@ export const previewwindow: LocalOption<boolean> = {
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&previewwindow", value);
-  },
-};
-
-/**
- * The name of the printer to be used for `:hardcopy`.
- * See `pdev-option`.
- * This option cannot be set from a `modeline` or in the `sandbox`, for
- * security reasons.
- *
- * (default empty)
- *
- * *only available when compiled with the `+printer` feature*
- */
-export const printdevice: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printdevice");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printdevice", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printdevice");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printdevice");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printdevice", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printdevice");
-  },
-};
-
-/**
- * Sets the character encoding used when printing.
- * See `penc-option`.
- *
- * (default empty, except for some systems)
- *
- * *only available when compiled with the `+printer` and `+postscript` features*
- */
-export const printencoding: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printencoding");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printencoding", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printencoding");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printencoding");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printencoding", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printencoding");
-  },
-};
-
-/**
- * Expression used to print the PostScript produced with `:hardcopy`.
- * See `pexpr-option`.
- * This option cannot be set from a `modeline` or in the `sandbox`, for
- * security reasons.
- *
- * (default: see below)
- *
- * *only available when compiled with the `+printer` and `+postscript` features*
- */
-export const printexpr: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printexpr");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printexpr", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printexpr");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printexpr");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printexpr", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printexpr");
-  },
-};
-
-/**
- * The name of the font that will be used for `:hardcopy`.
- * See `pfn-option`.
- *
- * (default "courier")
- *
- * *only available when compiled with the `+printer` feature*
- */
-export const printfont: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printfont");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printfont", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printfont");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printfont");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printfont", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printfont");
-  },
-};
-
-/**
- * The format of the header produced in `:hardcopy` output.
- * See `pheader-option`.
- *
- * (default `"%<%f%h%m%=Page %N"`)
- *
- * *only available when compiled with the `+printer` feature*
- */
-export const printheader: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printheader");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printheader", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printheader");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printheader");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printheader", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printheader");
-  },
-};
-
-/**
- * The CJK character set to be used for CJK output from `:hardcopy`.
- * See `pmbcs-option`.
- *
- * (default "")
- *
- * *only available when compiled with the `+printer` and `+postscript` features*
- */
-export const printmbcharset: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printmbcharset");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printmbcharset", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printmbcharset");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printmbcharset");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printmbcharset", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printmbcharset");
-  },
-};
-
-/**
- * List of font names to be used for CJK output from `:hardcopy`.
- * See `pmbfn-option`.
- *
- * (default "")
- *
- * *only available when compiled with the `+printer` and `+postscript` features*
- */
-export const printmbfont: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printmbfont");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printmbfont", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printmbfont");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printmbfont");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printmbfont", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printmbfont");
-  },
-};
-
-/**
- * List of items that control the format of the output of `:hardcopy`.
- * See `popt-option`.
- *
- * (default "")
- *
- * *only available when compiled with `+printer` feature*
- */
-export const printoptions: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "printoptions");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "printoptions", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "printoptions");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "printoptions");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "printoptions", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "printoptions");
   },
 };
 
@@ -11705,9 +11219,9 @@ export const scroll: LocalOption<number> = {
 };
 
 /**
- * See also `scroll-binding`.  When this option is set, the current
- * window scrolls as other scrollbind windows (windows that also have
- * this option set) scroll.  This option is useful for viewing the
+ * See also `scroll-binding`.  When this option is set, scrolling the
+ * current window also scrolls other scrollbind windows (windows that
+ * also have this option set).  This option is useful for viewing the
  * differences between two versions of a file, see 'diff'.
  * See `'scrollopt'` for options that determine how this option should be
  * interpreted.
@@ -11933,42 +11447,6 @@ export const sections: GlobalOption<string> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "sections");
-  },
-};
-
-/**
- * When on, ":autocmd", shell and write commands are not allowed in
- * ".vimrc" and ".exrc" in the current directory and map commands are
- * displayed.  Switch it off only if you know that you will not run into
- * problems, or when the 'exrc' option is off.  On Unix this option is
- * only used if the ".vimrc" or ".exrc" is not owned by you.  This can be
- * dangerous if the systems allows users to do a "chown".  You better set
- * 'secure' at the end of your `~/.vimrc` then.
- * This option cannot be set from a `modeline` or in the `sandbox`, for
- * security reasons.
- *
- * (default off)
- */
-export const secure: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "secure");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "secure", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "secure");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "secure");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "secure", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "secure");
   },
 };
 
@@ -12473,6 +11951,8 @@ export const shelltemp: GlobalOption<boolean> = {
  * When 'shellxquote' is set to "(" then the characters listed in this
  * option will be escaped with a '^' character.  This makes it possible
  * to execute most external commands with cmd.exe.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default: "";
  *  for MS-Windows: `"\"&|<>()@^"`)
@@ -12583,7 +12063,7 @@ export const shiftround: GlobalOption<boolean> = {
 /**
  * Number of spaces to use for each step of (auto)indent.  Used for
  * `'cindent'`, `>>`, `<<`, etc.
- * When zero the 'ts' value will be used.  Use the `shiftwidth()`
+ * When zero the 'tabstop' value will be used.  Use the `shiftwidth()`
  * function to get the effective shiftwidth value.
  *
  * (default 8)
@@ -12826,6 +12306,44 @@ export const showcmd: GlobalOption<boolean> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "showcmd");
+  },
+};
+
+/**
+ * This option can be used to display the (partially) entered command in
+ * another location.  Possible values are:
+ *   last          Last line of the screen (default).
+ *   statusline    Status line of the current window.
+ *   tabline       First line of the screen if 'showtabline' is enabled.
+ * Setting this option to "statusline" or "tabline" means that these will
+ * be redrawn whenever the command changes, which can be on every key
+ * pressed.
+ * The %S 'statusline' item can be used in 'statusline' or 'tabline' to
+ * place the text.  Without a custom 'statusline' or 'tabline' it will be
+ * displayed in a convenient location.
+ *
+ * (default "last")
+ */
+export const showcmdloc: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "showcmdloc");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "showcmdloc", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "showcmdloc");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "showcmdloc");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "showcmdloc", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "showcmdloc");
   },
 };
 
@@ -13749,6 +13267,45 @@ export const splitbelow: GlobalOption<boolean> = {
 };
 
 /**
+ * The value of this option determines the scroll behavior when opening,
+ * closing or resizing horizontal splits.
+ *
+ * Possible values are:
+ *   cursor        Keep the same relative cursor position.
+ *   screen        Keep the text on the same screen line.
+ *   topline       Keep the topline the same.
+ *
+ * For the "screen" and "topline" values, the cursor position will be
+ * changed when necessary. In this case, the jumplist will be populated
+ * with the previous cursor position. For "screen", the text cannot always
+ * be kept on the same screen line when 'wrap' is enabled.
+ *
+ * (default "cursor")
+ */
+export const splitkeep: GlobalOption<string> = {
+  async get(denops: Denops): Promise<string> {
+    const result = await options.get(denops, "splitkeep");
+    return (result ?? "") as string;
+  },
+  set(denops: Denops, value: string): Promise<void> {
+    return options.set(denops, "splitkeep", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "splitkeep");
+  },
+  async getGlobal(denops: Denops): Promise<string> {
+    const result = await globalOptions.get(denops, "splitkeep");
+    return (result ?? "") as string;
+  },
+  setGlobal(denops: Denops, value: string): Promise<void> {
+    return globalOptions.set(denops, "splitkeep", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "splitkeep");
+  },
+};
+
+/**
  * When on, splitting a window will put the new window right of the
  * current one. `:vsplit`
  *
@@ -14212,16 +13769,18 @@ export const swapfile: LocalOption<boolean> = {
 
 /**
  * This option controls the behavior when switching between buffers.
- * Mostly for `quickfix` commands some values are also used for other
- * commands, as mentioned below.
+ * This option is checked, when
+ * - jumping to errors with the `quickfix` commands (`:cc`, `:cn`, `:cp`,
+ *   etc.).
+ * - jumping to a tag using the `:stag` command.
+ * - opening a file using the `CTRL-W_f` or `CTRL-W_F` command.
+ * - jumping to a buffer using a buffer split command (e.g.  `:sbuffer`,
+ *   `:sbnext`, or `:sbrewind`).
  * Possible values (comma-separated list):
- *    useopen      If included, jump to the first open window that
- *                 contains the specified buffer (if there is one).
- *                 Otherwise: Do not examine other windows.
- *                 This setting is checked with `quickfix` commands, when
- *                 jumping to errors (":cc", ":cn", "cp", etc.).  It is
- *                 also used in all buffer related split commands, for
- *                 example ":sbuffer", ":sbnext", or ":sbrewind".
+ *    useopen      If included, jump to the first open window in the
+ *                 current tab page that contains the specified buffer
+ *                 (if there is one).  Otherwise: Do not examine other
+ *                 windows.
  *    usetab       Like "useopen", but also consider windows in other tab
  *                 pages.
  *    split        If included, split the current window before loading
@@ -14468,13 +14027,25 @@ export const tabpagemax: GlobalOption<number> = {
  *    (or 3 or whatever you prefer) and use 'noexpandtab'.  Then Vim
  *    will use a mix of tabs and spaces, but typing `<Tab>` and `<BS>` will
  *    behave like a tab appears every 4 (or 3) characters.
- * 2. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use
+ *    This is the recommended way, the file will look the same with other
+ *    tools and when listing it in a terminal.
+ * 2. Set 'softtabstop' and 'shiftwidth' to whatever you prefer and use
+ *    'expandtab'.  This way you will always insert spaces.  The
+ *    formatting will never be messed up when 'tabstop' is changed (leave
+ *    it at 8 just in case).  The file will be a bit larger.
+ *    You do need to check if no Tabs exist in the file.  You can get rid
+ *    of them by first setting 'expandtab' and using `%retab!`, making
+ *    sure the value of 'tabstop' is set correctly.
+ * 3. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use
  *    'expandtab'.  This way you will always insert spaces.  The
  *    formatting will never be messed up when 'tabstop' is changed.
- * 3. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use a
+ *    You do need to check if no Tabs exist in the file, just like in the
+ *    item just above.
+ * 4. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use a
  *    `modeline` to set these values when editing the file again.  Only
- *    works when using Vim to edit the file.
- * 4. Always set 'tabstop' and 'shiftwidth' to the same value, and
+ *    works when using Vim to edit the file, other tools assume a tabstop
+ *    is worth 8 spaces.
+ * 5. Always set 'tabstop' and 'shiftwidth' to the same value, and
  *    'noexpandtab'.  This should then work (for initial indents only)
  *    for any tabstop setting that people use.  It might be nice to have
  *    tabs after the first non-blank inserted as spaces if you do this
@@ -14668,6 +14239,8 @@ export const tagcase: GlobalOrLocalOption<string> = {
  * function and an example.  The value can be the name of a function, a
  * `lambda` or a `Funcref`. See `option-value-function` for more
  * information.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default: empty)
  *
@@ -14771,8 +14344,8 @@ export const tagrelative: GlobalOption<boolean> = {
 
 /**
  * Filenames for the tag command, separated by spaces or commas.  To
- * include a space or comma in a file name, precede it with a backslash
- * (see `option-backslash` about including spaces and backslashes).
+ * include a space or comma in a file name, precede it with backslashes
+ * (see `option-backslash` about including spaces/commas and backslashes).
  * When a file name starts with "./", the '.' is replaced with the path
  * of the current file.  But only when the 'd' flag is not included in
  * 'cpoptions'.  Environment variables are expanded `:set_env`.  Also see
@@ -15945,6 +15518,8 @@ export const verbose: GlobalOption<number> = {
  * Setting 'verbosefile' to a new value is like making it empty first.
  * The difference with `:redir` is that verbose messages are not
  * displayed when 'verbosefile' is set.
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
  *
  * (default empty)
  */
@@ -15976,10 +15551,10 @@ export const verbosefile: GlobalOption<string> = {
  * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
  *
- * (default for Amiga and Win32:
- *  "$VIM/vimfiles/view",
- *  for Unix: `"~/.vim/view"`,
- *  for macOS: "$VIM:vimfiles:view"
+ * (default for Amiga: "home:vimfiles/view",
+ *  for Win32: "$HOME/vimfiles/view",
+ *  for Unix: "$HOME/.vim/view",
+ *  for macOS: "$VIM/vimfiles/view",
  *  for VMS: "sys$login:vimfiles/view")
  *
  * *not available when compiled without the `+mksession` feature*
@@ -16279,6 +15854,8 @@ export const whichwrap: GlobalOption<string> = {
  * The character is not recognized when used inside a macro.  See
  * 'wildcharm' for that.
  * Some keys will not work, such as CTRL-C, `<CR>` and Enter.
+ * `<Esc>` can be used, but hitting it twice in a row will still exit
+ * command-line as a failsafe measure.
  * Although 'wc' is a number option, you can set it to a special key:
  *
  *     :set wc=<Tab>
@@ -16437,31 +16014,34 @@ export const wildignorecase: GlobalOption<boolean> = {
  * as needed.
  * The "wildmenu" mode is abandoned when a key is hit that is not used
  * for selecting a completion.
- * While the "wildmenu" is active, not using the popup menu, the
- * following keys have special meanings:
- *
- * `<Left>` `<Right>`  - select previous/next match (like CTRL-P/CTRL-N)
- * `<Down>`          - in filename/menu name completion: move into a
- *                   subdirectory or submenu.
+ * While the "wildmenu" is active, the following keys have special
+ * meanings:
+ * CTRL-P          - go to the previous entry
+ * CTRL-N          - go to the next entry
  * `<CR>`            - in menu completion, when the cursor is just after a
  *                   dot: move into a submenu.
+ * CTRL-E          - end completion, go back to what was there before
+ *                   selecting a match.
+ * CTRL-Y          - accept the currently selected match and stop
+ *                   completion.
+ *
+ * When not using the popup menu for command line completion, the
+ * following keys have special meanings:
+ * `<Left>` `<Right>`  - select previous/next match (like CTRL-P/CTRL-N)
  * `<Up>`            - in filename/menu name completion: move up into
  *                   parent directory or parent menu.
+ * `<Down>`          - in filename/menu name completion: move into a
+ *                   subdirectory or submenu.
  *
  * When using the popup menu for command line completion, the following
  * keys have special meanings:
- * `<Down>`          - select next match (like CTRL-N)
+ * `<Up>` `<Down>`     - select previous/next match (like CTRL-P/CTRL-N)
+ * `<PageUp>`        - select a match several entries back
+ * `<PageDown>`      - select a match several entries further
  * `<Left>`          - in filename/menu name completion: move up into
  *                   parent directory or parent menu.
  * `<Right>`         - in filename/menu name completion: move into a
  *                   subdirectory or submenu.
- * `<Up>`            - select previous match (like CTRL-P)
- * CTRL-E          - end completion, go back to what was there before
- *                   selecting a match.
- * CTRL-N          - go to the next entry
- * CTRL-P          - go to the previous entry
- * CTRL-Y          - accept the currently selected match and stop
- *                   completion.
  *
  * This makes the menus accessible from the console `console-menus`.
  *
@@ -16705,51 +16285,6 @@ export const window: GlobalOption<number> = {
 };
 
 /**
- * Minimal number of lines for the current window.  This is not a hard
- * minimum, Vim will use fewer lines if there is not enough room.  If the
- * focus goes to a window that is smaller, its size is increased, at the
- * cost of the height of other windows.
- * Set 'winheight' to a small number for normal editing.
- * Set it to 999 to make the current window fill most of the screen.
- * Other windows will be only 'winminheight' high.  This has the drawback
- * that ":all" will create only two windows.  To avoid "vim -o 1 2 3 4"
- * to create only two windows, set the option after startup is done,
- * using the `VimEnter` event:
- *
- *     au VimEnter * set winheight=999
- *
- * Minimum value is 1.
- * The height is not adjusted after one of the commands that change the
- * height of the current window.
- * 'winheight' applies to the current window.  Use 'winminheight' to set
- * the minimal height for other windows.
- *
- * (default 1)
- */
-export const winheight: GlobalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "winheight");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "winheight", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "winheight");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    const result = await globalOptions.get(denops, "winheight");
-    return (result ?? 0) as number;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "winheight", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "winheight");
-  },
-};
-
-/**
  * Keep the window height when windows are opened or closed and
  * 'equalalways' is set.  Also for `CTRL-W_=`.  Set by default for the
  * `preview-window` and `quickfix-window`.
@@ -16835,6 +16370,51 @@ export const winfixwidth: LocalOption<boolean> = {
   },
   setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
     return setwinvar(denops, winnr, "&winfixwidth", value);
+  },
+};
+
+/**
+ * Minimal number of lines for the current window.  This is not a hard
+ * minimum, Vim will use fewer lines if there is not enough room.  If the
+ * focus goes to a window that is smaller, its size is increased, at the
+ * cost of the height of other windows.
+ * Set 'winheight' to a small number for normal editing.
+ * Set it to 999 to make the current window fill most of the screen.
+ * Other windows will be only 'winminheight' high.  This has the drawback
+ * that ":all" will create only two windows.  To avoid "vim -o 1 2 3 4"
+ * to create only two windows, set the option after startup is done,
+ * using the `VimEnter` event:
+ *
+ *     au VimEnter * set winheight=999
+ *
+ * Minimum value is 1.
+ * The height is not adjusted after one of the commands that change the
+ * height of the current window.
+ * 'winheight' applies to the current window.  Use 'winminheight' to set
+ * the minimal height for other windows.
+ *
+ * (default 1)
+ */
+export const winheight: GlobalOption<number> = {
+  async get(denops: Denops): Promise<number> {
+    const result = await options.get(denops, "winheight");
+    return (result ?? 0) as number;
+  },
+  set(denops: Denops, value: number): Promise<void> {
+    return options.set(denops, "winheight", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "winheight");
+  },
+  async getGlobal(denops: Denops): Promise<number> {
+    const result = await globalOptions.get(denops, "winheight");
+    return (result ?? 0) as number;
+  },
+  setGlobal(denops: Denops, value: number): Promise<void> {
+    return globalOptions.set(denops, "winheight", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "winheight");
   },
 };
 

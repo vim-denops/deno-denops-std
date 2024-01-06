@@ -130,13 +130,13 @@ export async function exists(
  * **{feature}** argument is a feature name like "nvim-0.2.1" or
  * "win32", see below.  See also `exists()`.
  *
- * If the code has a syntax error, then Nvim may skip the rest
- * of the line and miss `:endif`.
+ * To get the system name use `vim.loop`.os_uname() in Lua:
  *
- *     if has('feature') | let x = this->breaks->without->the->feature | endif
+ *     :lua print(vim.loop.os_uname().sysname)
  *
- * Put `:if` and `:endif` on separate lines to avoid the
- * syntax error.
+ * If the code has a syntax error then Vimscript may skip the
+ * rest of the line.  Put `:if` and `:endif` on separate lines to
+ * avoid the syntax error:
  *
  *     if has('feature')
  *       let x = this->breaks->without->the->feature
@@ -163,6 +163,7 @@ export async function exists(
  *         clipboard       `clipboard` provider is available.
  *         fname_case      Case in file names matters (for Darwin and MS-Windows
  *                         this is not present).
+ *         gui_running     Nvim has a GUI.
  *         iconv           Can use `iconv()` for conversion.
  *         linux           Linux system.
  *         mac             MacOS system.

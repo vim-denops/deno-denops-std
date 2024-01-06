@@ -36,7 +36,10 @@ import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
  *    Rvc      Virtual Replace mode completion `compl-generic`
  *    Rvx      Virtual Replace mode `i_CTRL-X` completion
  *    c        Command-line editing
+ *    ct       Command-line editing via Terminal-Job mode
+ *    cr       Command-line editing overstrike mode `c_<Insert>`
  *    cv       Vim Ex mode `gQ`
+ *    cvr      Vim Ex mode while in overstrike mode `c_<Insert>`
  *    ce       Normal Ex mode `Q`
  *    r        Hit-enter prompt
  *    rm       The -- more -- prompt

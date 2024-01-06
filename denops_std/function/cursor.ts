@@ -87,9 +87,12 @@ export async function col(
  *             returns the cursor position.  Differs from `'<` in
  *             that it's updated right away.
  *
- * If **{list}** is present and non-zero then virtcol() returns a List
- * with the first and last screen position occupied by the
+ * If **{list}** is present and non-zero then virtcol() returns a
+ * List with the first and last screen position occupied by the
  * character.
+ *
+ * With the optional **{winid}** argument the values are obtained for
+ * that window instead of the current window.
  *
  * Note that only marks in the current file can be used.
  * Examples:
@@ -104,7 +107,7 @@ export async function col(
  *
  *     virtcol("'t")   " returns 6
  *
- * The first column is 1.  0 is returned for an error.
+ * The first column is 1.  0 or [0, 0] is returned for an error.
  * A more advanced example that echoes the maximum length of
  * all lines:
  *
@@ -204,7 +207,7 @@ export async function winline(denops: Denops): Promise<number> {
  * This is like the return value of `getpos()` or `getcurpos()`,
  * but without the first item.
  *
- * To position the cursor using the character count, use
+ * To position the cursor using **{col}** as the character count, use
  * `setcursorcharpos()`.
  *
  * Does not change the jumplist.
