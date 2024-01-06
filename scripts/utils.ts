@@ -1,4 +1,4 @@
-import * as streams from "https://deno.land/std@0.205.0/streams/mod.ts";
+import * as streams from "https://deno.land/std@0.211.0/streams/mod.ts";
 
 /**
  * Downloads a text file and returns the contents.
