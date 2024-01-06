@@ -1,7 +1,7 @@
 import type {
   Context,
   Denops,
-} from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+} from "../mod.ts";
 
 /**
  * Execute multi-lined Vim script directly

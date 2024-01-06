@@ -1,9 +1,4 @@
-import type {
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
-} from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
 
 type VimVoid<T> = T extends void ? 0 : T;
 
