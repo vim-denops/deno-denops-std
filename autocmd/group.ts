@@ -1,7 +1,7 @@
 import type { Denops } from "../mod.ts";
 import { execute } from "../helper/execute.ts";
 import { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
-import { buildDefineExpr, buildRemoveExpr } from "./utils.ts";
+import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
 
 export type GroupDefineOptions = Omit<DefineOptions, "group">;
 export type GroupRemoveOptions = Omit<RemoveOptions, "group">;

@@ -10,7 +10,7 @@ export const bufnameUnusablePattern = /["<>\|\?\*]/g;
  * function like:
  *
  * ```typescript
- * import { encode } from "./utils.ts";
+ * import { encode } from "./_utils.ts";
  *
  * const expr = "%Hello world%";
  * const encoded = encode(expr.replaceAll("%", "%25"));

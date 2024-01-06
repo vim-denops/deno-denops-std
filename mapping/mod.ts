@@ -7,7 +7,7 @@ import type { Denops } from "../mod.ts";
 import * as fn from "../function/mod.ts";
 import * as batch from "../batch/mod.ts";
 import { Mapping, Mode } from "./types.ts";
-import { parse } from "./parser.ts";
+import { parse } from "./_parser.ts";
 
 export interface MapOptions {
   mode?: Mode | Mode[];
@@ -229,3 +229,5 @@ export async function list(
 function forceArray<T>(v: T | T[]): T[] {
   return Array.isArray(v) ? v : [v];
 }
+
+export * from "./types.ts";
