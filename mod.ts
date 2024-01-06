@@ -7,7 +7,7 @@
  * By using this module, developers can write Vim/Neovim denops plugins like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Denops, DenopsOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as batch from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import * as vars from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
@@ -15,7 +15,8 @@
  *
  * import { assert, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * // Use `options?: DenopsOptions` instead to support Denops v5 or earlier.
+ * export async function main(denops: Denops, options: DenopsOptions): Promise<void> {
  *   denops.dispatcher = {
  *     async init(): Promise<void> {
  *       // This is just an example. Developers usually should define commands directly in Vim script.
@@ -63,6 +64,7 @@ export type {
   BatchError,
   Context,
   Denops,
+  DenopsOptions,
   Dispatcher,
   Meta,
-} from "https://deno.land/x/denops_core@v6.0.2/mod.ts";
+} from "https://deno.land/x/denops_core@v6.0.4/mod.ts";
