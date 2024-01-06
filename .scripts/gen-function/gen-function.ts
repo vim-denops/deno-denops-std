@@ -12,13 +12,13 @@ import { downloadString } from "../utils.ts";
 const VIM_VERSION = "9.0.2189";
 const NVIM_VERSION = "0.9.4";
 
-const commonGenerateModule = "../../denops_std/function/_generated.ts";
-const vimGenerateModule = "../../denops_std/function/vim/_generated.ts";
-const nvimGenerateModule = "../../denops_std/function/nvim/_generated.ts";
+const commonGenerateModule = "../../function/_generated.ts";
+const vimGenerateModule = "../../function/vim/_generated.ts";
+const nvimGenerateModule = "../../function/nvim/_generated.ts";
 
-const commonManualModule = "../../denops_std/function/_manual.ts";
-const vimManualModule = "../../denops_std/function/vim/_manual.ts";
-const nvimManualModule = "../../denops_std/function/nvim/_manual.ts";
+const commonManualModule = "../../function/_manual.ts";
+const vimManualModule = "../../function/vim/_manual.ts";
+const nvimManualModule = "../../function/nvim/_manual.ts";
 
 const manualModules = [
   commonManualModule,
