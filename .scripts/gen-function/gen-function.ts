@@ -37,7 +37,6 @@ const vimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/builtin.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/channel.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/eval.txt`,
-  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/sign.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/terminal.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/testing.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/textprop.txt`,
@@ -52,7 +51,6 @@ const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);
 const nvimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/builtin.txt`,
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/eval.txt`,
-  `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/sign.txt`,
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/api.txt`,
 ];
 for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
