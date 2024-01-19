@@ -111,7 +111,7 @@ function parseBlock(name: string, body: string): Option | undefined {
   const reDefinition =
     `^'${name}'${reShortNames}(?:${reType}(?:${reDefaults})?)?(?:${reTags})?$`;
   const m1 = body.match(new RegExp(reDefinition, "dm"));
-  const type = m1?.groups!.type ?? fallbackTypes[name];
+  const type = m1?.groups?.type ?? fallbackTypes[name];
   if (!m1 || !isOptionType(type)) {
     // {name} not found, or {type} is invalid
     return;
@@ -124,12 +124,12 @@ function parseBlock(name: string, body: string): Option | undefined {
   const scope = (
     m2?.[1].split(" or ") ?? ["global"]
   ) as Array<"global" | "local">;
-  body = trimLines(body.substring(m2?.indices![0][1] ?? 0)) + "\n";
+  body = trimLines(body.substring(m2?.indices?.at(0)?.at(1) ?? 0)) + "\n";
 
   // Extract {attention}
   const m3 = body.match(/^\t{3,}(\{(?:Vi[: ]|not|only)[^{}]*\})\s*?\n/d);
   const attention = m3?.[1].replaceAll(/\s+/g, " ").trim();
-  body = trimLines(body.substring(m3?.indices![0][1] ?? 0)) + "\n";
+  body = trimLines(body.substring(m3?.indices?.at(0)?.at(1) ?? 0)) + "\n";
 
   // Append {defaults} and {attention} to {document}
   body += `\n\n${defaults ?? ""}\n\n${attention ?? ""}`;

@@ -1,5 +1,8 @@
 {
   "lock": false,
+  "exclude": [
+    "docs/**"
+  ],
   "tasks": {
     "test": "deno test --unstable -A --doc --parallel --shuffle --coverage=.coverage",
     "check": "deno check --unstable $(find . -name '*.ts')",
