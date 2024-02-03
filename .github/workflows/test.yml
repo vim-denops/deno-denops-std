@@ -121,5 +121,6 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           os: ${{ runner.os }}
-          files: ./repo/coverage.lcov
+          files: ./coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ./repo
