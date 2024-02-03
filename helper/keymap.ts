@@ -8,7 +8,7 @@ import {
 import { batch } from "../batch/mod.ts";
 import { register } from "../lambda/mod.ts";
 import { feedkeys } from "../function/mod.ts";
-import is from "https://deno.land/x/unknownutil@v3.11.0/is.ts";
+import is from "https://deno.land/x/unknownutil@v3.14.1/is.ts";
 
 export type Keys = {
   keys: string | ExprString;
