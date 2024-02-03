@@ -12,7 +12,7 @@ import {
   splitText,
 } from "./fileformat.ts";
 import { tryDecode } from "./fileencoding.ts";
-import { ulid } from "https://deno.land/std@0.211.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.214.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/buffer/buffer.ts@1";
 

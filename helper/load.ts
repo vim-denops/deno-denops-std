@@ -1,6 +1,6 @@
 import type { Denops } from "../mod.ts";
-import * as fs from "https://deno.land/std@0.211.0/fs/mod.ts";
-import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
+import * as fs from "https://deno.land/std@0.214.0/fs/mod.ts";
+import * as path from "https://deno.land/std@0.214.0/path/mod.ts";
 import { execute } from "./execute.ts";
 
 const loaded = new Set<URL>();

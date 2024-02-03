@@ -1,7 +1,7 @@
 import {
   fromFileUrl,
   toFileUrl,
-} from "https://deno.land/std@0.211.0/path/mod.ts";
+} from "https://deno.land/std@0.214.0/path/mod.ts";
 import { intersection } from "https://deno.land/x/set_operations@v1.1.1/mod.ts";
 
 interface ModuleInformation {

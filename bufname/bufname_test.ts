@@ -1,8 +1,8 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.211.0/assert/mod.ts";
-import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
+} from "https://deno.land/std@0.214.0/assert/mod.ts";
+import * as path from "https://deno.land/std@0.214.0/path/mod.ts";
 import { format, parse } from "./bufname.ts";
 
 Deno.test("format throws exception when 'scheme' contains unusable characters", () => {
