@@ -5,13 +5,12 @@ import * as streams from "https://deno.land/std@0.214.0/streams/mod.ts";
  * Throws error if fetch fails.
  */
 export async function downloadString(url: string): Promise<string> {
-  const textDecoder = new TextDecoder();
   const response = await fetch(url);
   if (!response.body) {
     throw new Error(`Failed to read ${url}`);
   }
-  const reader = streams.readerFromStreamReader(response.body.getReader());
-  return textDecoder.decode(await streams.readAll(reader));
+  //const reader = streams.readerFromStreamReader(response.body.getReader());
+  return await streams.toText(response.body);
 }
 
 /**
