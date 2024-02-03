@@ -13,11 +13,11 @@
  * import * as vars from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  * import * as helper from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
  *
- * import { assert, is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
+ * import { assert, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export function main(denops: Denops): void {
  *   denops.dispatcher = {
- *     async init(): Promise<void> {
+ *     async init() {
  *       // This is just an example. Developers usually should define commands directly in Vim script.
  *       await batch.batch(denops, async (denops) => {
  *         await denops.cmd(
@@ -28,7 +28,7 @@
  *         );
  *       });
  *     },
- *     async say(where: unknown): Promise<void> {
+ *     async say(where) {
  *       assert(where, is.String);
  *       const [name, progname] = await batch.collect(denops, (denops) => [
  *         fn.input(denops, "Your name: "),
