@@ -1,4 +1,4 @@
-/.tools
+/.deps
 /.coverage
 /docs
 deno.lock

@@ -1,6 +1,10 @@
 {
   "lock": false,
-  "exclude": ["docs/**"],
+  "exclude": [
+    "docs/**",
+    ".deps/**",
+    ".coverage/**"
+  ],
   "imports": {
     "https://deno.land/x/denops_std@$MODULE_VERSION/": "./"
   },
