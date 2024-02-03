@@ -68,21 +68,13 @@ jobs:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
       - uses: actions/checkout@v4
-        with:
-          path: "./repo"
       - uses: actions/checkout@v4
         with:
           repository: "vim-denops/denops.vim"
-          path: "./denops.vim"
+          path: ".deps/denops.vim"
       - uses: denoland/setup-deno@v1.1.4
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v4
-        with:
-          key: deno-${{ hashFiles('**/*') }}
-          restore-keys: deno-
-          path: |
-            /home/runner/.cache/deno/deps/https/deno.land
       - uses: rhysd/action-setup-vim@v1
         id: vim
         with:
@@ -104,23 +96,17 @@ jobs:
           ${DENOPS_TEST_NVIM} --version
         env:
           DENOPS_TEST_NVIM: ${{ steps.nvim.outputs.executable }}
-      - name: Cache
-        run: deno cache ./**/*.ts
-        working-directory: ./repo
       - name: Test
         run: deno task test:coverage
         env:
-          DENOPS_TEST_DENOPS_PATH: "../denops.vim"
+          DENOPS_TEST_DENOPS_PATH: ".deps/denops.vim"
           DENOPS_TEST_VIM_EXECUTABLE: ${{ steps.vim.outputs.executable }}
           DENOPS_TEST_NVIM_EXECUTABLE: ${{ steps.nvim.outputs.executable }}
-        working-directory: ./repo
-        timeout-minutes: 3
+        timeout-minutes: 5
       - run: |
           deno task coverage --lcov > coverage.lcov
-        working-directory: ./repo
       - uses: codecov/codecov-action@v4
         with:
           os: ${{ runner.os }}
           files: ./coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
-          working-directory: ./repo
