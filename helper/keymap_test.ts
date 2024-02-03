@@ -1,5 +1,5 @@
 import { assertEquals } from "https://deno.land/std@0.214.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.0/mod.ts";
+import { test } from "https://deno.land/x/denops_test@v1.6.1/mod.ts";
 import { is } from "https://deno.land/x/unknownutil@v3.11.0/mod.ts";
 import * as fn from "../function/mod.ts";
 import { exprQuote as q } from "./expr_string.ts";
