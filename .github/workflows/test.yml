@@ -32,11 +32,11 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
         if: runner.os == 'Windows'
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1.1.4
         with:
           deno-version: "${{ matrix.version }}"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: deno-${{ hashFiles('**/*') }}
           restore-keys: deno-
@@ -121,5 +121,6 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           os: ${{ runner.os }}
-          files: ./repo/coverage.lcov
+          files: ./coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ./repo
