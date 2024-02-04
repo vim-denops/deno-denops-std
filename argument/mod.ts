@@ -1,7 +1,7 @@
 /**
  * A module to handle Vim's command arguments like the followings.
  *
- * ```vim
+ * ```
  * :MyCommand ++enc=sjis ++ff=dos -f --foo=foo --bar=bar --bar=baz hello world
  * ```
  *
@@ -10,7 +10,7 @@
  *
  * For example:
  *
- * ```vim
+ * ```
  * command! -nargs=* MyCommand call denops#request("myplugin", "test", [[<f-args>]])
  * ```
  *
@@ -60,6 +60,7 @@
  *   };
  * }
  * ```
+ *
  * @module
  */
 import { Opts, parseOpts } from "./opts.ts";
