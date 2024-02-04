@@ -59,10 +59,10 @@
  */
 
 // Re-export
-export type {
+export {
   BatchError,
-  Context,
-  Denops,
-  Dispatcher,
-  Meta,
+  type Context,
+  type Denops,
+  type Dispatcher,
+  type Meta,
 } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";

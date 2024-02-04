@@ -388,11 +388,6 @@ export interface ReplaceOptions {
 /**
  * Concrete the buffer.
  *
- * - The `buftype` option become "nofile"
- * - The `swapfile` become disabled
- * - The `modifiable` become disabled
- * - The content of the buffer is restored on `BufReadCmd` synchronously
- *
  * Vim will discard the content of a non-file buffer when `:edit` is invoked. Use
  * this function to concrete the content of such buffer to prevent this discard.
  *
