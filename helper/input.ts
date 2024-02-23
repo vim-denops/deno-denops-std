@@ -3,7 +3,7 @@ import { assert, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";
-import { ulid } from "https://deno.land/std@0.214.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/helper/input@1";
 

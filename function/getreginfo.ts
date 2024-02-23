@@ -1,7 +1,7 @@
 import type { Denops } from "../mod.ts";
-import { lt, parse } from "https://deno.land/std@0.214.0/semver/mod.ts";
+import { lt, parse } from "https://deno.land/std@0.217.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
-import { ulid } from "https://deno.land/std@0.214.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/function/getreginfo.ts@1";
 

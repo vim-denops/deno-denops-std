@@ -1,6 +1,6 @@
 import type { Denops } from "../mod.ts";
 import { execute } from "./execute.ts";
-import { ulid } from "https://deno.land/std@0.214.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/helper/echo@1";
 const cacheKeySilent = "denops_std/helper/echo/silent@1";
