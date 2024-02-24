@@ -1,5 +1,5 @@
 import type { Denops } from "../mod.ts";
-import { lt, parse } from "https://deno.land/std@0.217.0/semver/mod.ts";
+import { lessThan, parse } from "https://deno.land/std@0.217.0/semver/mod.ts";
 import { execute } from "../helper/mod.ts";
 import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
@@ -71,7 +71,7 @@ export async function getreginfo(
 ): Promise<unknown> {
   if (
     denops.meta.host === "vim" &&
-    lt(parse(denops.meta.version), parse("9.0.936"))
+    lessThan(parse(denops.meta.version), parse("9.0.936"))
   ) {
     // Vim prior to 9.0.0936 need a workaround
     // https://github.com/vim/vim/issues/11598
