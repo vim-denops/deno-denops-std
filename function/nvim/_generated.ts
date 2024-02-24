@@ -3,846 +3,6 @@
 import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 
 /**
- * Returns Dictionary of `api-metadata`.
- *
- * View it in a nice human-readable format:
- *
- *     :lua print(vim.inspect(vim.fn.api_info()))
- */
-export function api_info(denops: Denops): Promise<Record<string, unknown>>;
-export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("api_info", ...args);
-}
-
-/**
- * Close a channel or a specific stream associated with it.
- * For a job, **{stream}** can be one of "stdin", "stdout",
- * "stderr" or "rpc" (closes stdin/stdout for a job started
- * with `"rpc":v:true`) If **{stream}** is omitted, all streams
- * are closed. If the channel is a pty, this will then close the
- * pty master, sending SIGHUP to the job process.
- * For a socket, there is only one stream, and **{stream}** should be
- * omitted.
- */
-export function chanclose(
-  denops: Denops,
-  id: unknown,
-  stream?: unknown,
-): Promise<number>;
-export function chanclose(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("chanclose", ...args);
-}
-
-/**
- * Send data to channel **{id}**. For a job, it writes it to the
- * stdin of the process. For the stdio channel `channel-stdio`,
- * it writes to Nvim's stdout.  Returns the number of bytes
- * written if the write succeeded, 0 otherwise.
- * See `channel-bytes` for more information.
- *
- * **{data}** may be a string, string convertible, `Blob`, or a list.
- * If **{data}** is a list, the items will be joined by newlines; any
- * newlines in an item will be sent as NUL. To send a final
- * newline, include a final empty string. Example:
- *
- *     :call chansend(id, ["abc", "123\n456", ""])
- *
- * will send `"abc<NL>123<NUL>456<NL>"`.
- *
- * chansend() writes raw data, not RPC messages.  If the channel
- * was created with `"rpc":v:true` then the channel expects RPC
- * messages, use `rpcnotify()` and `rpcrequest()` instead.
- */
-export function chansend(
-  denops: Denops,
-  id: unknown,
-  data: unknown,
-): Promise<number>;
-export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("chansend", ...args);
-}
-
-/**
- * Returns a `Dictionary` representing the `context` at **{index}**
- * from the top of the `context-stack` (see `context-dict`).
- * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
- */
-export function ctxget(
-  denops: Denops,
-  index?: unknown,
-): Promise<Record<string, unknown>>;
-export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("ctxget", ...args);
-}
-
-/**
- * Pops and restores the `context` at the top of the
- * `context-stack`.
- */
-export function ctxpop(denops: Denops): Promise<void>;
-export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("ctxpop", ...args);
-}
-
-/**
- * Pushes the current editor state (`context`) on the
- * `context-stack`.
- * If **{types}** is given and is a `List` of `String`s, it specifies
- * which `context-types` to include in the pushed context.
- * Otherwise, all context types are included.
- */
-export function ctxpush(denops: Denops, types?: unknown): Promise<void>;
-export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("ctxpush", ...args);
-}
-
-/**
- * Sets the `context` at **{index}** from the top of the
- * `context-stack` to that represented by **{context}**.
- * **{context}** is a Dictionary with context data (`context-dict`).
- * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
- */
-export function ctxset(
-  denops: Denops,
-  context: unknown,
-  index?: unknown,
-): Promise<void>;
-export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("ctxset", ...args);
-}
-
-/**
- * Returns the size of the `context-stack`.
- */
-export function ctxsize(denops: Denops): Promise<number>;
-export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("ctxsize", ...args);
-}
-
-/**
- * Adds a watcher to a dictionary. A dictionary watcher is
- * identified by three components:
- *
- * - A dictionary(**{dict}**);
- * - A key pattern(**{pattern}**).
- * - A function(**{callback}**).
- *
- * After this is called, every change on **{dict}** and on keys
- * matching **{pattern}** will result in **{callback}** being invoked.
- *
- * For example, to watch all global variables:
- *
- *     silent! call dictwatcherdel(g:, '*', 'OnDictChanged')
- *     function! OnDictChanged(d,k,z)
- *       echomsg string(a:k) string(a:z)
- *     endfunction
- *     call dictwatcheradd(g:, '*', 'OnDictChanged')
- *
- * For now **{pattern}** only accepts very simple patterns that can
- * contain a "*" at the end of the string, in which case it will
- * match every key that begins with the substring before the "*".
- * That means if "*" is not the last character of **{pattern}**, only
- * keys that are exactly equal as **{pattern}** will be matched.
- *
- * The **{callback}** receives three arguments:
- *
- * - The dictionary being watched.
- * - The key which changed.
- * - A dictionary containing the new and old values for the key.
- *
- * The type of change can be determined by examining the keys
- * present on the third argument:
- *
- * - If contains both `old` and `new`, the key was updated.
- * - If it contains only `new`, the key was added.
- * - If it contains only `old`, the key was deleted.
- *
- * This function can be used by plugins to implement options with
- * validation and parsing logic.
- */
-export function dictwatcheradd(
-  denops: Denops,
-  dict: unknown,
-  pattern: unknown,
-  callback: unknown,
-): Promise<unknown>;
-export function dictwatcheradd(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("dictwatcheradd", ...args);
-}
-
-/**
- * Removes a watcher added  with `dictwatcheradd()`. All three
- * arguments must match the ones passed to `dictwatcheradd()` in
- * order for the watcher to be successfully deleted.
- */
-export function dictwatcherdel(
-  denops: Denops,
-  dict: unknown,
-  pattern: unknown,
-  callback: unknown,
-): Promise<unknown>;
-export function dictwatcherdel(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("dictwatcherdel", ...args);
-}
-
-/**
- * Returns a `String` which is a unique identifier of the
- * container type (`List`, `Dict`, `Blob` and `Partial`). It is
- * guaranteed that for the mentioned types `id(v1) ==# id(v2)`
- * returns true iff `type(v1) == type(v2) && v1 is v2`.
- * Note that `v:_null_string`, `v:_null_list`, `v:_null_dict` and
- * `v:_null_blob` have the same `id()` with different types
- * because they are internally represented as NULL pointers.
- * `id()` returns a hexadecimal representanion of the pointers to
- * the containers (i.e. like `0x994a40`), same as `printf("%p",
- * {expr})`, but it is advised against counting on the exact
- * format of the return value.
- *
- * It is not guaranteed that `id(no_longer_existing_container)`
- * will not be equal to some other `id()`: new containers may
- * reuse identifiers of the garbage-collected ones.
- */
-export function id(denops: Denops, expr: unknown): Promise<string>;
-export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("id", ...args);
-}
-
-/**
- * Return the PID (process id) of `job-id` **{job}**.
- */
-export function jobpid(denops: Denops, job: unknown): Promise<number>;
-export function jobpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("jobpid", ...args);
-}
-
-/**
- * Resize the pseudo terminal window of `job-id` **{job}** to **{width}**
- * columns and **{height}** rows.
- * Fails if the job was not started with `"pty":v:true`.
- */
-export function jobresize(
-  denops: Denops,
-  job: unknown,
-  width: unknown,
-  height: unknown,
-): Promise<number>;
-export function jobresize(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("jobresize", ...args);
-}
-
-/**
- * Spawns **{cmd}** as a job.
- * If **{cmd}** is a List it runs directly (no 'shell').
- * If **{cmd}** is a String it runs in the 'shell', like this:
- *
- *     :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
- *
- * (See `shell-unquoting` for details.)
- *
- * Example:
- *
- *     :call jobstart('nvim -h', {'on_stdout':{j,d,e->append(line('.'),d)}})
- *
- * Returns `job-id` on success, 0 on invalid arguments (or job
- * table is full), -1 if **{cmd}**[0] or 'shell' is not executable.
- * The returned job-id is a valid `channel-id` representing the
- * job's stdio streams. Use `chansend()` (or `rpcnotify()` and
- * `rpcrequest()` if "rpc" was enabled) to send data to stdin and
- * `chanclose()` to close the streams without stopping the job.
- *
- * See `job-control` and `RPC`.
- *
- * NOTE: on Windows if **{cmd}** is a List:
- *   - cmd[0] must be an executable (not a "built-in"). If it is
- *     in $PATH it can be called by name, without an extension:
- *
- *         :call jobstart(['ping', 'neovim.io'])
- *
- *     If it is a full or partial path, extension is required:
- *
- *         :call jobstart(['System32\ping.exe', 'neovim.io'])
- *
- *   - **{cmd}** is collapsed to a string of quoted args as expected
- *     by CommandLineToArgvW https://msdn.microsoft.com/bb776391
- *     unless cmd[0] is some form of "cmd.exe".
- *
- * The job environment is initialized as follows:
- *   $NVIM                is set to `v:servername` of the parent Nvim
- *   $NVIM_LISTEN_ADDRESS is unset
- *   $NVIM_LOG_FILE       is unset
- *   $VIM                 is unset
- *   $VIMRUNTIME          is unset
- * You can set these with the `env` option.
- *
- * **{opts}** is a dictionary with these keys:
- *   clear_env:  (boolean) `env` defines the job environment
- *               exactly, instead of merging current environment.
- *   cwd:        (string, default=`current-directory`) Working
- *               directory of the job.
- *   detach:     (boolean) Detach the job process: it will not be
- *               killed when Nvim exits. If the process exits
- *               before Nvim, `on_exit` will be invoked.
- *   env:        (dict) Map of environment variable name:value
- *               pairs extending (or replace with "clear_env")
- *               the current environment. `jobstart-env`
- *   height:     (number) Height of the `pty` terminal.
- *   `on_exit`:    (function) Callback invoked when the job exits.
- *   `on_stdout`:  (function) Callback invoked when the job emits
- *               stdout data.
- *   `on_stderr`:  (function) Callback invoked when the job emits
- *               stderr data.
- *   overlapped: (boolean) Set FILE_FLAG_OVERLAPPED for the
- *               standard input/output passed to the child process.
- *               Normally you do not need to set this.
- *               (Only available on MS-Windows, On other
- *               platforms, this option is silently ignored.)
- *   pty:        (boolean) Connect the job to a new pseudo
- *               terminal, and its streams to the master file
- *               descriptor. `on_stdout` receives all output,
- *               `on_stderr` is ignored. `terminal-start`
- *   rpc:        (boolean) Use `msgpack-rpc` to communicate with
- *               the job over stdio. Then `on_stdout` is ignored,
- *               but `on_stderr` can still be used.
- *   stderr_buffered: (boolean) Collect data until EOF (stream closed)
- *               before invoking `on_stderr`. `channel-buffered`
- *   stdout_buffered: (boolean) Collect data until EOF (stream
- *               closed) before invoking `on_stdout`. `channel-buffered`
- *   stdin:      (string) Either "pipe" (default) to connect the
- *               job's stdin to a channel or "null" to disconnect
- *               stdin.
- *   width:      (number) Width of the `pty` terminal.
- *
- * **{opts}** is passed as `self` dictionary to the callback; the
- * caller may set other keys to pass application-specific data.
- *
- * Returns:
- *   - `channel-id` on success
- *   - 0 on invalid arguments
- *   - -1 if **{cmd}**[0] is not executable.
- * See also `job-control`, `channel`, `msgpack-rpc`.
- */
-export function jobstart(
-  denops: Denops,
-  cmd: unknown,
-  opts?: unknown,
-): Promise<number>;
-export function jobstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("jobstart", ...args);
-}
-
-/**
- * Stop `job-id` **{id}** by sending SIGTERM to the job process. If
- * the process does not terminate after a timeout then SIGKILL
- * will be sent. When the job terminates its `on_exit` handler
- * (if any) will be invoked.
- * See `job-control`.
- *
- * Returns 1 for valid job id, 0 for invalid id, including jobs have
- * exited or stopped.
- */
-export function jobstop(denops: Denops, id: unknown): Promise<number>;
-export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("jobstop", ...args);
-}
-
-/**
- * Waits for jobs and their `on_exit` handlers to complete.
- *
- * **{jobs}** is a List of `job-id`s to wait for.
- * **{timeout}** is the maximum waiting time in milliseconds. If
- * omitted or -1, wait forever.
- *
- * Timeout of 0 can be used to check the status of a job:
- *
- *     let running = jobwait([{job-id}], 0)[0] == -1
- *
- * During jobwait() callbacks for jobs not in the **{jobs}** list may
- * be invoked. The screen will not redraw unless `:redraw` is
- * invoked by a callback.
- *
- * Returns a list of len(**{jobs}**) integers, where each integer is
- * the status of the corresponding job:
- *         Exit-code, if the job exited
- *         -1 if the timeout was exceeded
- *         -2 if the job was interrupted (by `CTRL-C`)
- *         -3 if the job-id is invalid
- */
-export function jobwait(
-  denops: Denops,
-  jobs: unknown,
-  timeout?: unknown,
-): Promise<number>;
-export function jobwait(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("jobwait", ...args);
-}
-
-/**
- * Returns a `List` of `Dictionaries` describing `menus` (defined
- * by `:menu`, `:amenu`, …), including `hidden-menus`.
- *
- * **{path}** matches a menu by name, or all menus if **{path}** is an
- * empty string.  Example:
- *
- *     :echo menu_get('File','')
- *     :echo menu_get('')
- *
- * **{modes}** is a string of zero or more modes (see `maparg()` or
- * `creating-menus` for the list of modes). "a" means "all".
- *
- * Example:
- *
- *     nnoremenu &Test.Test inormal
- *     inoremenu Test.Test insert
- *     vnoremenu Test.Test x
- *     echo menu_get("")
- *
- * returns something like this:
- *
- *     [ {
- *       "hidden": 0,
- *       "name": "Test",
- *       "priority": 500,
- *       "shortcut": 84,
- *       "submenus": [ {
- *         "hidden": 0,
- *         "mappings": {
- *           i": {
- *             "enabled": 1,
- *             "noremap": 1,
- *             "rhs": "insert",
- *             "sid": 1,
- *             "silent": 0
- *           },
- *           n": { ... },
- *           s": { ... },
- *           v": { ... }
- *         },
- *         "name": "Test",
- *         "priority": 500,
- *         "shortcut": 0
- *       } ]
- *     } ]
- */
-export function menu_get(
-  denops: Denops,
-  path: unknown,
-  modes?: unknown,
-): Promise<unknown[]>;
-export function menu_get(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("menu_get", ...args);
-}
-
-/**
- * Convert a list of VimL objects to msgpack. Returned value is a
- * `readfile()`-style list. When **{type}** contains "B", a `Blob` is
- * returned instead. Example:
- *
- *     call writefile(msgpackdump([{}]), 'fname.mpack', 'b')
- *
- * or, using a `Blob`:
- *
- *     call writefile(msgpackdump([{}], 'B'), 'fname.mpack')
- *
- * This will write the single 0x80 byte to a `fname.mpack` file
- * (dictionary with zero items is represented by 0x80 byte in
- * messagepack).
- *
- * Limitations:
- * 1. `Funcref`s cannot be dumped.
- * 2. Containers that reference themselves cannot be dumped.
- * 3. Dictionary keys are always dumped as STR strings.
- * 4. Other strings and `Blob`s are always dumped as BIN strings.
- * 5. Points 3. and 4. do not apply to `msgpack-special-dict`s.
- */
-export function msgpackdump(
-  denops: Denops,
-  list: unknown,
-  type?: unknown,
-): Promise<unknown[] | unknown>;
-export function msgpackdump(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("msgpackdump", ...args);
-}
-
-/**
- * Convert a `readfile()`-style list or a `Blob` to a list of
- * VimL objects.
- * Example:
- *
- *     let fname = expand('~/.config/nvim/shada/main.shada')
- *     let mpack = readfile(fname, 'b')
- *     let shada_objects = msgpackparse(mpack)
- *
- * This will read `~/.config/nvim/shada/main.shada` file to
- * `shada_objects` list.
- *
- * Limitations:
- * 1. Mapping ordering is not preserved unless messagepack
- *    mapping is dumped using generic mapping
- *    (`msgpack-special-map`).
- * 2. Since the parser aims to preserve all data untouched
- *    (except for 1.) some strings are parsed to
- *    `msgpack-special-dict` format which is not convenient to
- *    use.
- *
- * Some messagepack strings may be parsed to special
- * dictionaries. Special dictionaries are dictionaries which
- *
- * 1. Contain exactly two keys: `_TYPE` and `_VAL`.
- * 2. `_TYPE` key is one of the types found in `v:msgpack_types`
- *    variable.
- * 3. Value for `_VAL` has the following format (Key column
- *    contains name of the key from `v:msgpack_types`):
- *
- * Key     Value
- * nil     Zero, ignored when dumping.  Not returned by
- *         `msgpackparse()` since `v:null` was introduced.
- * boolean One or zero.  When dumping it is only checked that
- *         value is a `Number`.  Not returned by `msgpackparse()`
- *         since `v:true` and `v:false` were introduced.
- * integer `List` with four numbers: sign (-1 or 1), highest two
- *         bits, number with bits from 62nd to 31st, lowest 31
- *         bits. I.e. to get actual number one will need to use
- *         code like
- *
- *             _VAL[0] * ((_VAL[1] << 62)
- *                        & (_VAL[2] << 31)
- *                        & _VAL[3])
- *
- *         Special dictionary with this type will appear in
- *         `msgpackparse()` output under one of the following
- *         circumstances:
- *         1. `Number` is 32-bit and value is either above
- *            INT32_MAX or below INT32_MIN.
- *         2. `Number` is 64-bit and value is above INT64_MAX. It
- *            cannot possibly be below INT64_MIN because msgpack
- *            C parser does not support such values.
- * float   `Float`. This value cannot possibly appear in
- *         `msgpackparse()` output.
- * string  `readfile()`-style list of strings. This value will
- *         appear in `msgpackparse()` output if string contains
- *         zero byte or if string is a mapping key and mapping is
- *         being represented as special dictionary for other
- *         reasons.
- * binary  `String`, or `Blob` if binary string contains zero
- *         byte. This value cannot appear in `msgpackparse()`
- *         output since blobs were introduced.
- * array   `List`. This value cannot appear in `msgpackparse()`
- *         output.
- *
- * map     `List` of `List`s with two items (key and value) each.
- *         This value will appear in `msgpackparse()` output if
- *         parsed mapping contains one of the following keys:
- *         1. Any key that is not a string (including keys which
- *            are binary strings).
- *         2. String with NUL byte inside.
- *         3. Duplicate key.
- *         4. Empty key.
- * ext     `List` with two values: first is a signed integer
- *         representing extension type. Second is
- *         `readfile()`-style list of strings.
- */
-export function msgpackparse(denops: Denops, data: unknown): Promise<unknown[]>;
-export function msgpackparse(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("msgpackparse", ...args);
-}
-
-/**
- * Returns the single letter name of the last recorded register.
- * Returns an empty string when nothing was recorded yet.
- * See `q` and `Q`.
- */
-export function reg_recorded(denops: Denops): Promise<string>;
-export function reg_recorded(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("reg_recorded", ...args);
-}
-
-/**
- * Sends **{event}** to **{channel}** via `RPC` and returns immediately.
- * If **{channel}** is 0, the event is broadcast to all channels.
- * Example:
- *
- *     :au VimLeave call rpcnotify(0, "leaving")
- */
-export function rpcnotify(
-  denops: Denops,
-  channel: unknown,
-  event: unknown,
-  args?: unknown,
-): Promise<unknown>;
-export function rpcnotify(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("rpcnotify", ...args);
-}
-
-/**
- * Sends a request to **{channel}** to invoke **{method}** via
- * `RPC` and blocks until a response is received.
- * Example:
- *
- *     :let result = rpcrequest(rpc_chan, "func", 1, 2, 3)
- */
-export function rpcrequest(
-  denops: Denops,
-  channel: unknown,
-  method: unknown,
-  args?: unknown,
-): Promise<unknown>;
-export function rpcrequest(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("rpcrequest", ...args);
-}
-
-/**
- * Deprecated. Replace
- *
- *     :let id = rpcstart('prog', ['arg1', 'arg2'])
- *
- * with
- *
- *     :let id = jobstart(['prog', 'arg1', 'arg2'], {'rpc': v:true})
- */
-export function rpcstart(
-  denops: Denops,
-  prog: unknown,
-  argv?: unknown,
-): Promise<unknown>;
-export function rpcstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("rpcstart", ...args);
-}
-
-/**
- * Opens a socket or named pipe at **{address}** and listens for
- * `RPC` messages. Clients can send `API` commands to the
- * returned address to control Nvim.
- *
- * Returns the address string (which may differ from the
- * **{address}** argument, see below).
- *
- * - If **{address}** has a colon (":") it is a TCP/IPv4/IPv6 address
- *   where the last ":" separates host and port (empty or zero
- *   assigns a random port).
- * - Else **{address}** is the path to a named pipe (except on Windows).
- *   - If **{address}** has no slashes ("/") it is treated as the
- *     "name" part of a generated path in this format:
- *
- *         stdpath("run").."/{name}.{pid}.{counter}"
- *
- *   - If **{address}** is omitted the name is "nvim".
- *
- *         :echo serverstart()
- *         => /tmp/nvim.bram/oknANW/nvim.15430.5
- *
- * Example bash command to list all Nvim servers:
- *
- *         ls ${XDG_RUNTIME_DIR:-${TMPDIR}nvim.${USER}}/* /nvim.*.0
- *
- * Example named pipe:
- *
- *         if has('win32')
- *           echo serverstart('\\.\pipe\nvim-pipe-1234')
- *         else
- *           echo serverstart('nvim.sock')
- *         endif
- *
- * Example TCP/IP address:
- *
- *     echo serverstart('::1:12345')
- */
-export function serverstart(
-  denops: Denops,
-  address?: unknown,
-): Promise<unknown>;
-export function serverstart(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("serverstart", ...args);
-}
-
-/**
- * Closes the pipe or socket at **{address}**.
- * Returns TRUE if **{address}** is valid, else FALSE.
- * If `v:servername` is stopped it is set to the next available
- * address in `serverlist()`.
- */
-export function serverstop(denops: Denops, address: unknown): Promise<unknown>;
-export function serverstop(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("serverstop", ...args);
-}
-
-/**
- * Connect a socket to an address. If **{mode}** is "pipe" then
- * **{address}** should be the path of a local domain socket (on
- * unix) or named pipe (on Windows). If **{mode}** is "tcp" then
- * **{address}** should be of the form "host:port" where the host
- * should be an ip adderess or host name, and port the port
- * number.
- *
- * For "pipe" mode, see `luv-pipe-handle`. For "tcp" mode, see
- * `luv-tcp-handle`.
- *
- * Returns a `channel` ID. Close the socket with `chanclose()`.
- * Use `chansend()` to send data over a bytes socket, and
- * `rpcrequest()` and `rpcnotify()` to communicate with a RPC
- * socket.
- *
- * **{opts}** is an optional dictionary with these keys:
- *   `on_data` : callback invoked when data was read from socket
- *   data_buffered : read socket data in `channel-buffered` mode.
- *   rpc     : If set, `msgpack-rpc` will be used to communicate
- *             over the socket.
- * Returns:
- *   - The channel ID on success (greater than zero)
- *   - 0 on invalid arguments or connection failure.
- */
-export function sockconnect(
-  denops: Denops,
-  mode: unknown,
-  address: unknown,
-  opts?: unknown,
-): Promise<number>;
-export function sockconnect(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("sockconnect", ...args);
-}
-
-/**
- * With `--headless` this opens stdin and stdout as a `channel`.
- * May be called only once. See `channel-stdio`. stderr is not
- * handled by this function, see `v:stderr`.
- *
- * Close the stdio handles with `chanclose()`. Use `chansend()`
- * to send data to stdout, and `rpcrequest()` and `rpcnotify()`
- * to communicate over RPC.
- *
- * **{opts}** is a dictionary with these keys:
- *   `on_stdin` : callback invoked when stdin is written to.
- *   on_print : callback invoked when Nvim needs to print a
- *              message, with the message (whose type is string)
- *              as sole argument.
- *   stdin_buffered : read stdin in `channel-buffered` mode.
- *   rpc      : If set, `msgpack-rpc` will be used to communicate
- *              over stdio
- * Returns:
- *   - `channel-id` on success (value is always 1)
- *   - 0 on invalid arguments
- */
-export function stdioopen(denops: Denops, opts: unknown): Promise<number>;
-export function stdioopen(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("stdioopen", ...args);
-}
-
-/**
- * Returns `standard-path` locations of various default files and
- * directories.
- *
- * **{what}**       Type    Description
- * cache        String  Cache directory: arbitrary temporary
- *                      storage for plugins, etc.
- * config       String  User configuration directory. `init.vim`
- *                      is stored here.
- * config_dirs  List    Other configuration directories.
- * data         String  User data directory.
- * data_dirs    List    Other data directories.
- * log          String  Logs directory (for use by plugins too).
- * run          String  Run directory: temporary, local storage
- *                      for sockets, named pipes, etc.
- * state        String  Session state directory: storage for file
- *                      drafts, swap, undo, `shada`.
- *
- * Example:
- *
- *     :echo stdpath("config")
- */
-export function stdpath(
-  denops: Denops,
-  what: unknown,
-): Promise<string | unknown[]>;
-export function stdpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("stdpath", ...args);
-}
-
-/**
- * Spawns **{cmd}** in a new pseudo-terminal session connected
- * to the current (unmodified) buffer. Parameters and behavior
- * are the same as `jobstart()` except "pty", "width", "height",
- * and "TERM" are ignored: "height" and "width" are taken from
- * the current window.
- * Returns the same values as `jobstart()`.
- *
- * Terminal environment is initialized as in `jobstart-env`,
- * except $TERM is set to "xterm-256color". Full behavior is
- * described in `terminal`.
- */
-export function termopen(
-  denops: Denops,
-  cmd: unknown,
-  opts?: unknown,
-): Promise<unknown>;
-export function termopen(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("termopen", ...args);
-}
-
-/**
- * Waits until **{condition}** evaluates to `TRUE`, where **{condition}**
- * is a `Funcref` or `string` containing an expression.
- *
- * **{timeout}** is the maximum waiting time in milliseconds, -1
- * means forever.
- *
- * Condition is evaluated on user events, internal events, and
- * every **{interval}** milliseconds (default: 200).
- *
- * Returns a status integer:
- *         0 if the condition was satisfied before timeout
- *         -1 if the timeout was exceeded
- *         -2 if the function was interrupted (by `CTRL-C`)
- *         -3 if an error occurred
- */
-export function wait(
-  denops: Denops,
-  timeout: unknown,
-  condition: unknown,
-  interval?: unknown,
-): Promise<number>;
-export function wait(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("wait", ...args);
-}
-
-/**
  * Find files in runtime directories
  *
  * Attributes:
@@ -5692,4 +4852,844 @@ export function nvim_ui_try_resize_grid(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("nvim_ui_try_resize_grid", ...args);
+}
+
+/**
+ * Returns Dictionary of `api-metadata`.
+ *
+ * View it in a nice human-readable format:
+ *
+ *     :lua print(vim.inspect(vim.fn.api_info()))
+ */
+export function api_info(denops: Denops): Promise<Record<string, unknown>>;
+export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("api_info", ...args);
+}
+
+/**
+ * Close a channel or a specific stream associated with it.
+ * For a job, **{stream}** can be one of "stdin", "stdout",
+ * "stderr" or "rpc" (closes stdin/stdout for a job started
+ * with `"rpc":v:true`) If **{stream}** is omitted, all streams
+ * are closed. If the channel is a pty, this will then close the
+ * pty master, sending SIGHUP to the job process.
+ * For a socket, there is only one stream, and **{stream}** should be
+ * omitted.
+ */
+export function chanclose(
+  denops: Denops,
+  id: unknown,
+  stream?: unknown,
+): Promise<number>;
+export function chanclose(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("chanclose", ...args);
+}
+
+/**
+ * Send data to channel **{id}**. For a job, it writes it to the
+ * stdin of the process. For the stdio channel `channel-stdio`,
+ * it writes to Nvim's stdout.  Returns the number of bytes
+ * written if the write succeeded, 0 otherwise.
+ * See `channel-bytes` for more information.
+ *
+ * **{data}** may be a string, string convertible, `Blob`, or a list.
+ * If **{data}** is a list, the items will be joined by newlines; any
+ * newlines in an item will be sent as NUL. To send a final
+ * newline, include a final empty string. Example:
+ *
+ *     :call chansend(id, ["abc", "123\n456", ""])
+ *
+ * will send `"abc<NL>123<NUL>456<NL>"`.
+ *
+ * chansend() writes raw data, not RPC messages.  If the channel
+ * was created with `"rpc":v:true` then the channel expects RPC
+ * messages, use `rpcnotify()` and `rpcrequest()` instead.
+ */
+export function chansend(
+  denops: Denops,
+  id: unknown,
+  data: unknown,
+): Promise<number>;
+export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("chansend", ...args);
+}
+
+/**
+ * Returns a `Dictionary` representing the `context` at **{index}**
+ * from the top of the `context-stack` (see `context-dict`).
+ * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
+ */
+export function ctxget(
+  denops: Denops,
+  index?: unknown,
+): Promise<Record<string, unknown>>;
+export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ctxget", ...args);
+}
+
+/**
+ * Pops and restores the `context` at the top of the
+ * `context-stack`.
+ */
+export function ctxpop(denops: Denops): Promise<void>;
+export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ctxpop", ...args);
+}
+
+/**
+ * Pushes the current editor state (`context`) on the
+ * `context-stack`.
+ * If **{types}** is given and is a `List` of `String`s, it specifies
+ * which `context-types` to include in the pushed context.
+ * Otherwise, all context types are included.
+ */
+export function ctxpush(denops: Denops, types?: unknown): Promise<void>;
+export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ctxpush", ...args);
+}
+
+/**
+ * Sets the `context` at **{index}** from the top of the
+ * `context-stack` to that represented by **{context}**.
+ * **{context}** is a Dictionary with context data (`context-dict`).
+ * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
+ */
+export function ctxset(
+  denops: Denops,
+  context: unknown,
+  index?: unknown,
+): Promise<void>;
+export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ctxset", ...args);
+}
+
+/**
+ * Returns the size of the `context-stack`.
+ */
+export function ctxsize(denops: Denops): Promise<number>;
+export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("ctxsize", ...args);
+}
+
+/**
+ * Adds a watcher to a dictionary. A dictionary watcher is
+ * identified by three components:
+ *
+ * - A dictionary(**{dict}**);
+ * - A key pattern(**{pattern}**).
+ * - A function(**{callback}**).
+ *
+ * After this is called, every change on **{dict}** and on keys
+ * matching **{pattern}** will result in **{callback}** being invoked.
+ *
+ * For example, to watch all global variables:
+ *
+ *     silent! call dictwatcherdel(g:, '*', 'OnDictChanged')
+ *     function! OnDictChanged(d,k,z)
+ *       echomsg string(a:k) string(a:z)
+ *     endfunction
+ *     call dictwatcheradd(g:, '*', 'OnDictChanged')
+ *
+ * For now **{pattern}** only accepts very simple patterns that can
+ * contain a "*" at the end of the string, in which case it will
+ * match every key that begins with the substring before the "*".
+ * That means if "*" is not the last character of **{pattern}**, only
+ * keys that are exactly equal as **{pattern}** will be matched.
+ *
+ * The **{callback}** receives three arguments:
+ *
+ * - The dictionary being watched.
+ * - The key which changed.
+ * - A dictionary containing the new and old values for the key.
+ *
+ * The type of change can be determined by examining the keys
+ * present on the third argument:
+ *
+ * - If contains both `old` and `new`, the key was updated.
+ * - If it contains only `new`, the key was added.
+ * - If it contains only `old`, the key was deleted.
+ *
+ * This function can be used by plugins to implement options with
+ * validation and parsing logic.
+ */
+export function dictwatcheradd(
+  denops: Denops,
+  dict: unknown,
+  pattern: unknown,
+  callback: unknown,
+): Promise<unknown>;
+export function dictwatcheradd(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("dictwatcheradd", ...args);
+}
+
+/**
+ * Removes a watcher added  with `dictwatcheradd()`. All three
+ * arguments must match the ones passed to `dictwatcheradd()` in
+ * order for the watcher to be successfully deleted.
+ */
+export function dictwatcherdel(
+  denops: Denops,
+  dict: unknown,
+  pattern: unknown,
+  callback: unknown,
+): Promise<unknown>;
+export function dictwatcherdel(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("dictwatcherdel", ...args);
+}
+
+/**
+ * Returns a `String` which is a unique identifier of the
+ * container type (`List`, `Dict`, `Blob` and `Partial`). It is
+ * guaranteed that for the mentioned types `id(v1) ==# id(v2)`
+ * returns true iff `type(v1) == type(v2) && v1 is v2`.
+ * Note that `v:_null_string`, `v:_null_list`, `v:_null_dict` and
+ * `v:_null_blob` have the same `id()` with different types
+ * because they are internally represented as NULL pointers.
+ * `id()` returns a hexadecimal representanion of the pointers to
+ * the containers (i.e. like `0x994a40`), same as `printf("%p",
+ * {expr})`, but it is advised against counting on the exact
+ * format of the return value.
+ *
+ * It is not guaranteed that `id(no_longer_existing_container)`
+ * will not be equal to some other `id()`: new containers may
+ * reuse identifiers of the garbage-collected ones.
+ */
+export function id(denops: Denops, expr: unknown): Promise<string>;
+export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("id", ...args);
+}
+
+/**
+ * Return the PID (process id) of `job-id` **{job}**.
+ */
+export function jobpid(denops: Denops, job: unknown): Promise<number>;
+export function jobpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("jobpid", ...args);
+}
+
+/**
+ * Resize the pseudo terminal window of `job-id` **{job}** to **{width}**
+ * columns and **{height}** rows.
+ * Fails if the job was not started with `"pty":v:true`.
+ */
+export function jobresize(
+  denops: Denops,
+  job: unknown,
+  width: unknown,
+  height: unknown,
+): Promise<number>;
+export function jobresize(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("jobresize", ...args);
+}
+
+/**
+ * Spawns **{cmd}** as a job.
+ * If **{cmd}** is a List it runs directly (no 'shell').
+ * If **{cmd}** is a String it runs in the 'shell', like this:
+ *
+ *     :call jobstart(split(&shell) + split(&shellcmdflag) + ['{cmd}'])
+ *
+ * (See `shell-unquoting` for details.)
+ *
+ * Example:
+ *
+ *     :call jobstart('nvim -h', {'on_stdout':{j,d,e->append(line('.'),d)}})
+ *
+ * Returns `job-id` on success, 0 on invalid arguments (or job
+ * table is full), -1 if **{cmd}**[0] or 'shell' is not executable.
+ * The returned job-id is a valid `channel-id` representing the
+ * job's stdio streams. Use `chansend()` (or `rpcnotify()` and
+ * `rpcrequest()` if "rpc" was enabled) to send data to stdin and
+ * `chanclose()` to close the streams without stopping the job.
+ *
+ * See `job-control` and `RPC`.
+ *
+ * NOTE: on Windows if **{cmd}** is a List:
+ *   - cmd[0] must be an executable (not a "built-in"). If it is
+ *     in $PATH it can be called by name, without an extension:
+ *
+ *         :call jobstart(['ping', 'neovim.io'])
+ *
+ *     If it is a full or partial path, extension is required:
+ *
+ *         :call jobstart(['System32\ping.exe', 'neovim.io'])
+ *
+ *   - **{cmd}** is collapsed to a string of quoted args as expected
+ *     by CommandLineToArgvW https://msdn.microsoft.com/bb776391
+ *     unless cmd[0] is some form of "cmd.exe".
+ *
+ * The job environment is initialized as follows:
+ *   $NVIM                is set to `v:servername` of the parent Nvim
+ *   $NVIM_LISTEN_ADDRESS is unset
+ *   $NVIM_LOG_FILE       is unset
+ *   $VIM                 is unset
+ *   $VIMRUNTIME          is unset
+ * You can set these with the `env` option.
+ *
+ * **{opts}** is a dictionary with these keys:
+ *   clear_env:  (boolean) `env` defines the job environment
+ *               exactly, instead of merging current environment.
+ *   cwd:        (string, default=`current-directory`) Working
+ *               directory of the job.
+ *   detach:     (boolean) Detach the job process: it will not be
+ *               killed when Nvim exits. If the process exits
+ *               before Nvim, `on_exit` will be invoked.
+ *   env:        (dict) Map of environment variable name:value
+ *               pairs extending (or replace with "clear_env")
+ *               the current environment. `jobstart-env`
+ *   height:     (number) Height of the `pty` terminal.
+ *   `on_exit`:    (function) Callback invoked when the job exits.
+ *   `on_stdout`:  (function) Callback invoked when the job emits
+ *               stdout data.
+ *   `on_stderr`:  (function) Callback invoked when the job emits
+ *               stderr data.
+ *   overlapped: (boolean) Set FILE_FLAG_OVERLAPPED for the
+ *               standard input/output passed to the child process.
+ *               Normally you do not need to set this.
+ *               (Only available on MS-Windows, On other
+ *               platforms, this option is silently ignored.)
+ *   pty:        (boolean) Connect the job to a new pseudo
+ *               terminal, and its streams to the master file
+ *               descriptor. `on_stdout` receives all output,
+ *               `on_stderr` is ignored. `terminal-start`
+ *   rpc:        (boolean) Use `msgpack-rpc` to communicate with
+ *               the job over stdio. Then `on_stdout` is ignored,
+ *               but `on_stderr` can still be used.
+ *   stderr_buffered: (boolean) Collect data until EOF (stream closed)
+ *               before invoking `on_stderr`. `channel-buffered`
+ *   stdout_buffered: (boolean) Collect data until EOF (stream
+ *               closed) before invoking `on_stdout`. `channel-buffered`
+ *   stdin:      (string) Either "pipe" (default) to connect the
+ *               job's stdin to a channel or "null" to disconnect
+ *               stdin.
+ *   width:      (number) Width of the `pty` terminal.
+ *
+ * **{opts}** is passed as `self` dictionary to the callback; the
+ * caller may set other keys to pass application-specific data.
+ *
+ * Returns:
+ *   - `channel-id` on success
+ *   - 0 on invalid arguments
+ *   - -1 if **{cmd}**[0] is not executable.
+ * See also `job-control`, `channel`, `msgpack-rpc`.
+ */
+export function jobstart(
+  denops: Denops,
+  cmd: unknown,
+  opts?: unknown,
+): Promise<number>;
+export function jobstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("jobstart", ...args);
+}
+
+/**
+ * Stop `job-id` **{id}** by sending SIGTERM to the job process. If
+ * the process does not terminate after a timeout then SIGKILL
+ * will be sent. When the job terminates its `on_exit` handler
+ * (if any) will be invoked.
+ * See `job-control`.
+ *
+ * Returns 1 for valid job id, 0 for invalid id, including jobs have
+ * exited or stopped.
+ */
+export function jobstop(denops: Denops, id: unknown): Promise<number>;
+export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("jobstop", ...args);
+}
+
+/**
+ * Waits for jobs and their `on_exit` handlers to complete.
+ *
+ * **{jobs}** is a List of `job-id`s to wait for.
+ * **{timeout}** is the maximum waiting time in milliseconds. If
+ * omitted or -1, wait forever.
+ *
+ * Timeout of 0 can be used to check the status of a job:
+ *
+ *     let running = jobwait([{job-id}], 0)[0] == -1
+ *
+ * During jobwait() callbacks for jobs not in the **{jobs}** list may
+ * be invoked. The screen will not redraw unless `:redraw` is
+ * invoked by a callback.
+ *
+ * Returns a list of len(**{jobs}**) integers, where each integer is
+ * the status of the corresponding job:
+ *         Exit-code, if the job exited
+ *         -1 if the timeout was exceeded
+ *         -2 if the job was interrupted (by `CTRL-C`)
+ *         -3 if the job-id is invalid
+ */
+export function jobwait(
+  denops: Denops,
+  jobs: unknown,
+  timeout?: unknown,
+): Promise<number>;
+export function jobwait(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("jobwait", ...args);
+}
+
+/**
+ * Returns a `List` of `Dictionaries` describing `menus` (defined
+ * by `:menu`, `:amenu`, …), including `hidden-menus`.
+ *
+ * **{path}** matches a menu by name, or all menus if **{path}** is an
+ * empty string.  Example:
+ *
+ *     :echo menu_get('File','')
+ *     :echo menu_get('')
+ *
+ * **{modes}** is a string of zero or more modes (see `maparg()` or
+ * `creating-menus` for the list of modes). "a" means "all".
+ *
+ * Example:
+ *
+ *     nnoremenu &Test.Test inormal
+ *     inoremenu Test.Test insert
+ *     vnoremenu Test.Test x
+ *     echo menu_get("")
+ *
+ * returns something like this:
+ *
+ *     [ {
+ *       "hidden": 0,
+ *       "name": "Test",
+ *       "priority": 500,
+ *       "shortcut": 84,
+ *       "submenus": [ {
+ *         "hidden": 0,
+ *         "mappings": {
+ *           i": {
+ *             "enabled": 1,
+ *             "noremap": 1,
+ *             "rhs": "insert",
+ *             "sid": 1,
+ *             "silent": 0
+ *           },
+ *           n": { ... },
+ *           s": { ... },
+ *           v": { ... }
+ *         },
+ *         "name": "Test",
+ *         "priority": 500,
+ *         "shortcut": 0
+ *       } ]
+ *     } ]
+ */
+export function menu_get(
+  denops: Denops,
+  path: unknown,
+  modes?: unknown,
+): Promise<unknown[]>;
+export function menu_get(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("menu_get", ...args);
+}
+
+/**
+ * Convert a list of VimL objects to msgpack. Returned value is a
+ * `readfile()`-style list. When **{type}** contains "B", a `Blob` is
+ * returned instead. Example:
+ *
+ *     call writefile(msgpackdump([{}]), 'fname.mpack', 'b')
+ *
+ * or, using a `Blob`:
+ *
+ *     call writefile(msgpackdump([{}], 'B'), 'fname.mpack')
+ *
+ * This will write the single 0x80 byte to a `fname.mpack` file
+ * (dictionary with zero items is represented by 0x80 byte in
+ * messagepack).
+ *
+ * Limitations:
+ * 1. `Funcref`s cannot be dumped.
+ * 2. Containers that reference themselves cannot be dumped.
+ * 3. Dictionary keys are always dumped as STR strings.
+ * 4. Other strings and `Blob`s are always dumped as BIN strings.
+ * 5. Points 3. and 4. do not apply to `msgpack-special-dict`s.
+ */
+export function msgpackdump(
+  denops: Denops,
+  list: unknown,
+  type?: unknown,
+): Promise<unknown[] | unknown>;
+export function msgpackdump(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("msgpackdump", ...args);
+}
+
+/**
+ * Convert a `readfile()`-style list or a `Blob` to a list of
+ * VimL objects.
+ * Example:
+ *
+ *     let fname = expand('~/.config/nvim/shada/main.shada')
+ *     let mpack = readfile(fname, 'b')
+ *     let shada_objects = msgpackparse(mpack)
+ *
+ * This will read `~/.config/nvim/shada/main.shada` file to
+ * `shada_objects` list.
+ *
+ * Limitations:
+ * 1. Mapping ordering is not preserved unless messagepack
+ *    mapping is dumped using generic mapping
+ *    (`msgpack-special-map`).
+ * 2. Since the parser aims to preserve all data untouched
+ *    (except for 1.) some strings are parsed to
+ *    `msgpack-special-dict` format which is not convenient to
+ *    use.
+ *
+ * Some messagepack strings may be parsed to special
+ * dictionaries. Special dictionaries are dictionaries which
+ *
+ * 1. Contain exactly two keys: `_TYPE` and `_VAL`.
+ * 2. `_TYPE` key is one of the types found in `v:msgpack_types`
+ *    variable.
+ * 3. Value for `_VAL` has the following format (Key column
+ *    contains name of the key from `v:msgpack_types`):
+ *
+ * Key     Value
+ * nil     Zero, ignored when dumping.  Not returned by
+ *         `msgpackparse()` since `v:null` was introduced.
+ * boolean One or zero.  When dumping it is only checked that
+ *         value is a `Number`.  Not returned by `msgpackparse()`
+ *         since `v:true` and `v:false` were introduced.
+ * integer `List` with four numbers: sign (-1 or 1), highest two
+ *         bits, number with bits from 62nd to 31st, lowest 31
+ *         bits. I.e. to get actual number one will need to use
+ *         code like
+ *
+ *             _VAL[0] * ((_VAL[1] << 62)
+ *                        & (_VAL[2] << 31)
+ *                        & _VAL[3])
+ *
+ *         Special dictionary with this type will appear in
+ *         `msgpackparse()` output under one of the following
+ *         circumstances:
+ *         1. `Number` is 32-bit and value is either above
+ *            INT32_MAX or below INT32_MIN.
+ *         2. `Number` is 64-bit and value is above INT64_MAX. It
+ *            cannot possibly be below INT64_MIN because msgpack
+ *            C parser does not support such values.
+ * float   `Float`. This value cannot possibly appear in
+ *         `msgpackparse()` output.
+ * string  `readfile()`-style list of strings. This value will
+ *         appear in `msgpackparse()` output if string contains
+ *         zero byte or if string is a mapping key and mapping is
+ *         being represented as special dictionary for other
+ *         reasons.
+ * binary  `String`, or `Blob` if binary string contains zero
+ *         byte. This value cannot appear in `msgpackparse()`
+ *         output since blobs were introduced.
+ * array   `List`. This value cannot appear in `msgpackparse()`
+ *         output.
+ *
+ * map     `List` of `List`s with two items (key and value) each.
+ *         This value will appear in `msgpackparse()` output if
+ *         parsed mapping contains one of the following keys:
+ *         1. Any key that is not a string (including keys which
+ *            are binary strings).
+ *         2. String with NUL byte inside.
+ *         3. Duplicate key.
+ *         4. Empty key.
+ * ext     `List` with two values: first is a signed integer
+ *         representing extension type. Second is
+ *         `readfile()`-style list of strings.
+ */
+export function msgpackparse(denops: Denops, data: unknown): Promise<unknown[]>;
+export function msgpackparse(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("msgpackparse", ...args);
+}
+
+/**
+ * Returns the single letter name of the last recorded register.
+ * Returns an empty string when nothing was recorded yet.
+ * See `q` and `Q`.
+ */
+export function reg_recorded(denops: Denops): Promise<string>;
+export function reg_recorded(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("reg_recorded", ...args);
+}
+
+/**
+ * Sends **{event}** to **{channel}** via `RPC` and returns immediately.
+ * If **{channel}** is 0, the event is broadcast to all channels.
+ * Example:
+ *
+ *     :au VimLeave call rpcnotify(0, "leaving")
+ */
+export function rpcnotify(
+  denops: Denops,
+  channel: unknown,
+  event: unknown,
+  args?: unknown,
+): Promise<unknown>;
+export function rpcnotify(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("rpcnotify", ...args);
+}
+
+/**
+ * Sends a request to **{channel}** to invoke **{method}** via
+ * `RPC` and blocks until a response is received.
+ * Example:
+ *
+ *     :let result = rpcrequest(rpc_chan, "func", 1, 2, 3)
+ */
+export function rpcrequest(
+  denops: Denops,
+  channel: unknown,
+  method: unknown,
+  args?: unknown,
+): Promise<unknown>;
+export function rpcrequest(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("rpcrequest", ...args);
+}
+
+/**
+ * Deprecated. Replace
+ *
+ *     :let id = rpcstart('prog', ['arg1', 'arg2'])
+ *
+ * with
+ *
+ *     :let id = jobstart(['prog', 'arg1', 'arg2'], {'rpc': v:true})
+ */
+export function rpcstart(
+  denops: Denops,
+  prog: unknown,
+  argv?: unknown,
+): Promise<unknown>;
+export function rpcstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("rpcstart", ...args);
+}
+
+/**
+ * Opens a socket or named pipe at **{address}** and listens for
+ * `RPC` messages. Clients can send `API` commands to the
+ * returned address to control Nvim.
+ *
+ * Returns the address string (which may differ from the
+ * **{address}** argument, see below).
+ *
+ * - If **{address}** has a colon (":") it is a TCP/IPv4/IPv6 address
+ *   where the last ":" separates host and port (empty or zero
+ *   assigns a random port).
+ * - Else **{address}** is the path to a named pipe (except on Windows).
+ *   - If **{address}** has no slashes ("/") it is treated as the
+ *     "name" part of a generated path in this format:
+ *
+ *         stdpath("run").."/{name}.{pid}.{counter}"
+ *
+ *   - If **{address}** is omitted the name is "nvim".
+ *
+ *         :echo serverstart()
+ *         => /tmp/nvim.bram/oknANW/nvim.15430.5
+ *
+ * Example bash command to list all Nvim servers:
+ *
+ *         ls ${XDG_RUNTIME_DIR:-${TMPDIR}nvim.${USER}}/* /nvim.*.0
+ *
+ * Example named pipe:
+ *
+ *         if has('win32')
+ *           echo serverstart('\\.\pipe\nvim-pipe-1234')
+ *         else
+ *           echo serverstart('nvim.sock')
+ *         endif
+ *
+ * Example TCP/IP address:
+ *
+ *     echo serverstart('::1:12345')
+ */
+export function serverstart(
+  denops: Denops,
+  address?: unknown,
+): Promise<unknown>;
+export function serverstart(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("serverstart", ...args);
+}
+
+/**
+ * Closes the pipe or socket at **{address}**.
+ * Returns TRUE if **{address}** is valid, else FALSE.
+ * If `v:servername` is stopped it is set to the next available
+ * address in `serverlist()`.
+ */
+export function serverstop(denops: Denops, address: unknown): Promise<unknown>;
+export function serverstop(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("serverstop", ...args);
+}
+
+/**
+ * Connect a socket to an address. If **{mode}** is "pipe" then
+ * **{address}** should be the path of a local domain socket (on
+ * unix) or named pipe (on Windows). If **{mode}** is "tcp" then
+ * **{address}** should be of the form "host:port" where the host
+ * should be an ip adderess or host name, and port the port
+ * number.
+ *
+ * For "pipe" mode, see `luv-pipe-handle`. For "tcp" mode, see
+ * `luv-tcp-handle`.
+ *
+ * Returns a `channel` ID. Close the socket with `chanclose()`.
+ * Use `chansend()` to send data over a bytes socket, and
+ * `rpcrequest()` and `rpcnotify()` to communicate with a RPC
+ * socket.
+ *
+ * **{opts}** is an optional dictionary with these keys:
+ *   `on_data` : callback invoked when data was read from socket
+ *   data_buffered : read socket data in `channel-buffered` mode.
+ *   rpc     : If set, `msgpack-rpc` will be used to communicate
+ *             over the socket.
+ * Returns:
+ *   - The channel ID on success (greater than zero)
+ *   - 0 on invalid arguments or connection failure.
+ */
+export function sockconnect(
+  denops: Denops,
+  mode: unknown,
+  address: unknown,
+  opts?: unknown,
+): Promise<number>;
+export function sockconnect(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("sockconnect", ...args);
+}
+
+/**
+ * With `--headless` this opens stdin and stdout as a `channel`.
+ * May be called only once. See `channel-stdio`. stderr is not
+ * handled by this function, see `v:stderr`.
+ *
+ * Close the stdio handles with `chanclose()`. Use `chansend()`
+ * to send data to stdout, and `rpcrequest()` and `rpcnotify()`
+ * to communicate over RPC.
+ *
+ * **{opts}** is a dictionary with these keys:
+ *   `on_stdin` : callback invoked when stdin is written to.
+ *   on_print : callback invoked when Nvim needs to print a
+ *              message, with the message (whose type is string)
+ *              as sole argument.
+ *   stdin_buffered : read stdin in `channel-buffered` mode.
+ *   rpc      : If set, `msgpack-rpc` will be used to communicate
+ *              over stdio
+ * Returns:
+ *   - `channel-id` on success (value is always 1)
+ *   - 0 on invalid arguments
+ */
+export function stdioopen(denops: Denops, opts: unknown): Promise<number>;
+export function stdioopen(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("stdioopen", ...args);
+}
+
+/**
+ * Returns `standard-path` locations of various default files and
+ * directories.
+ *
+ * **{what}**       Type    Description
+ * cache        String  Cache directory: arbitrary temporary
+ *                      storage for plugins, etc.
+ * config       String  User configuration directory. `init.vim`
+ *                      is stored here.
+ * config_dirs  List    Other configuration directories.
+ * data         String  User data directory.
+ * data_dirs    List    Other data directories.
+ * log          String  Logs directory (for use by plugins too).
+ * run          String  Run directory: temporary, local storage
+ *                      for sockets, named pipes, etc.
+ * state        String  Session state directory: storage for file
+ *                      drafts, swap, undo, `shada`.
+ *
+ * Example:
+ *
+ *     :echo stdpath("config")
+ */
+export function stdpath(
+  denops: Denops,
+  what: unknown,
+): Promise<string | unknown[]>;
+export function stdpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("stdpath", ...args);
+}
+
+/**
+ * Spawns **{cmd}** in a new pseudo-terminal session connected
+ * to the current (unmodified) buffer. Parameters and behavior
+ * are the same as `jobstart()` except "pty", "width", "height",
+ * and "TERM" are ignored: "height" and "width" are taken from
+ * the current window.
+ * Returns the same values as `jobstart()`.
+ *
+ * Terminal environment is initialized as in `jobstart-env`,
+ * except $TERM is set to "xterm-256color". Full behavior is
+ * described in `terminal`.
+ */
+export function termopen(
+  denops: Denops,
+  cmd: unknown,
+  opts?: unknown,
+): Promise<unknown>;
+export function termopen(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("termopen", ...args);
+}
+
+/**
+ * Waits until **{condition}** evaluates to `TRUE`, where **{condition}**
+ * is a `Funcref` or `string` containing an expression.
+ *
+ * **{timeout}** is the maximum waiting time in milliseconds, -1
+ * means forever.
+ *
+ * Condition is evaluated on user events, internal events, and
+ * every **{interval}** milliseconds (default: 200).
+ *
+ * Returns a status integer:
+ *         0 if the condition was satisfied before timeout
+ *         -1 if the timeout was exceeded
+ *         -2 if the function was interrupted (by `CTRL-C`)
+ *         -3 if an error occurred
+ */
+export function wait(
+  denops: Denops,
+  timeout: unknown,
+  condition: unknown,
+  interval?: unknown,
+): Promise<number>;
+export function wait(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("wait", ...args);
 }

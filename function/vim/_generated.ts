@@ -2279,6 +2279,631 @@ export function job_stop(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Show the **{what}** above the cursor, and close it when the cursor
+ * moves.  This works like:
+ *
+ *     call popup_create({what}, #{
+ *             \ pos: 'botleft',
+ *             \ line: 'cursor-1',
+ *             \ col: 'cursor',
+ *             \ moved: 'WORD',
+ *             \ })
+ *
+ * Use **{options}** to change the properties.
+ * If "pos" is passed as "topleft" then the default for "line"
+ * becomes "cursor+1".
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->popup_atcursor({})
+ */
+export function popup_atcursor(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_atcursor(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_atcursor", ...args);
+}
+
+/**
+ * Show the **{what}** above the position from 'ballooneval' and
+ * close it when the mouse moves.  This works like:
+ *
+ *     let pos = screenpos(v:beval_winnr, v:beval_lnum, v:beval_col)
+ *     call popup_create({what}, #{
+ *           \ pos: 'botleft',
+ *           \ line: pos.row - 1,
+ *           \ col: pos.col,
+ *           \ mousemoved: 'WORD',
+ *           \ })
+ *
+ * Use **{options}** to change the properties.
+ * See `popup_beval_example` for an example.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->popup_beval({})
+ */
+export function popup_beval(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_beval(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_beval", ...args);
+}
+
+/**
+ * Emergency solution to a misbehaving plugin: close all popup
+ * windows for the current tab and global popups.
+ * Close callbacks are not invoked.
+ * When **{force}** is not present this will fail if the current
+ * window is a popup.
+ * When **{force}** is present and `TRUE` the popup is also closed
+ * when it is the current window.  If a terminal is running in a
+ * popup it is killed.
+ */
+export function popup_clear(denops: Denops, force?: unknown): Promise<void>;
+export function popup_clear(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_clear", ...args);
+}
+
+/**
+ * Close popup **{id}**.  The window and the associated buffer will
+ * be deleted.
+ *
+ * If the popup has a callback it will be called just before the
+ * popup window is deleted.  If the optional **{result}** is present
+ * it will be passed as the second argument of the callback.
+ * Otherwise zero is passed to the callback.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_close()
+ */
+export function popup_close(
+  denops: Denops,
+  id: unknown,
+  result?: unknown,
+): Promise<void>;
+export function popup_close(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_close", ...args);
+}
+
+/**
+ * Open a popup window showing **{what}**, which is either:
+ * - a buffer number
+ * - a string
+ * - a list of strings
+ * - a list of text lines with text properties
+ * When **{what}** is not a buffer number, a buffer is created with
+ * 'buftype' set to "popup".  That buffer will be wiped out once
+ * the popup closes.
+ *
+ * if **{what}** is a buffer number and loading the buffer runs into
+ * an existing swap file, it is silently opened read-only, as if
+ * a `SwapExists` autocommand had set `v:swapchoice` to 'o'.
+ * This is because we assume the buffer is only used for viewing.
+ *
+ * **{options}** is a dictionary with many possible entries.
+ * See `popup_create-arguments` for details.
+ *
+ * Returns a window-ID, which can be used with other popup
+ * functions.  Use `winbufnr()` to get the number of the buffer
+ * in the window:
+ *
+ *     let winid = popup_create('hello', {})
+ *     let bufnr = winbufnr(winid)
+ *     call setbufline(bufnr, 2, 'second line')
+ *
+ * In case of failure zero is returned.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->popup_create({})
+ */
+export function popup_create(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_create(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_create", ...args);
+}
+
+/**
+ * Just like `popup_create()` but with these default options:
+ *
+ *     call popup_create({what}, #{
+ *             \ pos: 'center',
+ *             \ zindex: 200,
+ *             \ drag: 1,
+ *             \ border: [],
+ *             \ padding: [],
+ *             \ mapping: 0,
+ *             \})
+ *
+ * Use **{options}** to change the properties. E.g. add a 'filter'
+ * option with value 'popup_filter_yesno'.  Example:
+ *
+ *     call popup_create('do you want to quit (Yes/no)?', #{
+ *             \ filter: 'popup_filter_yesno',
+ *             \ callback: 'QuitCallback',
+ *             \ })
+ *
+ * By default the dialog can be dragged, so that text below it
+ * can be read if needed.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->popup_dialog({})
+ */
+export function popup_dialog(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_dialog(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_dialog", ...args);
+}
+
+/**
+ * Filter that can be used for a popup. These keys can be used:
+ *     j `<Down>` `<C-N>`      select item below
+ *     k `<Up>` `<C-P>`        select item above
+ *     `<Space>` `<Enter>`     accept current selection
+ *     x Esc CTRL-C        cancel the menu
+ * Other keys are ignored.
+ * Always returns `v:true`.
+ *
+ * A match is set on that line to highlight it, see
+ * `popup_menu()`.
+ *
+ * When the current selection is accepted the "callback" of the
+ * popup menu is invoked with the index of the selected line as
+ * the second argument.  The first entry has index one.
+ * Cancelling the menu invokes the callback with -1.
+ *
+ * To add shortcut keys, see the example here:
+ * `popup_menu-shortcut-example`
+ */
+export function popup_filter_menu(
+  denops: Denops,
+  id: unknown,
+  key: unknown,
+): Promise<number>;
+export function popup_filter_menu(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_filter_menu", ...args);
+}
+
+/**
+ * Filter that can be used for a popup. It handles only the keys
+ * 'y', 'Y' and 'n' or 'N'.  Invokes the "callback" of the
+ * popup menu with the 1 for 'y' or 'Y' and zero for 'n' or 'N'
+ * as the second argument.  Pressing Esc and 'x' works like
+ * pressing 'n'.  CTRL-C invokes the callback with -1.  Other
+ * keys are ignored.
+ * See the example here: `popup_dialog-example`
+ */
+export function popup_filter_yesno(
+  denops: Denops,
+  id: unknown,
+  key: unknown,
+): Promise<number>;
+export function popup_filter_yesno(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_filter_yesno", ...args);
+}
+
+/**
+ * Get the `window-ID` for the popup that shows messages for the
+ * `:echowindow` command.  Return zero if there is none.
+ * Mainly useful to hide the popup.
+ */
+export function popup_findecho(denops: Denops): Promise<number>;
+export function popup_findecho(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_findecho", ...args);
+}
+
+/**
+ * Get the `window-ID` for the popup info window, as it used by
+ * the popup menu.  See `complete-popup`.  The info popup is
+ * hidden when not used, it can be deleted with `popup_clear()`
+ * and `popup_close()`.  Use `popup_show()` to reposition it to
+ * the item in the popup menu.
+ * Returns zero if there is none.
+ */
+export function popup_findinfo(denops: Denops): Promise<number>;
+export function popup_findinfo(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_findinfo", ...args);
+}
+
+/**
+ * Get the `window-ID` for the popup preview window.
+ * Return zero if there is none.
+ */
+export function popup_findpreview(denops: Denops): Promise<number>;
+export function popup_findpreview(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_findpreview", ...args);
+}
+
+/**
+ * Return the **{options}** for popup **{id}** in a Dict.
+ * A zero value means the option was not set.  For "zindex" the
+ * default value is returned, not zero.
+ *
+ * The "moved" entry is a list with line number, minimum and
+ * maximum column, [0, 0, 0] when not set.
+ *
+ * The "mousemoved" entry is a list with screen row, minimum and
+ * maximum screen column, [0, 0, 0] when not set.
+ *
+ * "firstline" is the property set on the popup, unlike the
+ * "firstline" obtained with `popup_getpos()` which is the actual
+ * buffer line at the top of the popup window.
+ *
+ * "border" and "padding" are not included when all values are
+ * zero.  When all values are one then an empty list is included.
+ *
+ * "borderhighlight" is not included when all values are empty.
+ * "scrollbarhighlight" and "thumbhighlight" are only included
+ * when set.
+ *
+ * "tabpage" will be -1 for a global popup, zero for a popup on
+ * the current tabpage and a positive number for a popup on
+ * another tabpage.
+ *
+ * "textprop", "textpropid" and "textpropwin" are only present
+ * when "textprop" was set.
+ *
+ * If popup window **{id}** is not found an empty Dict is returned.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_getoptions()
+ */
+export function popup_getoptions(
+  denops: Denops,
+  id: unknown,
+): Promise<Record<string, unknown>>;
+export function popup_getoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_getoptions", ...args);
+}
+
+/**
+ * Return the position and size of popup **{id}**.  Returns a Dict
+ * with these entries:
+ *     col         screen column of the popup, one-based
+ *     line        screen line of the popup, one-based
+ *     width       width of the whole popup in screen cells
+ *     height      height of the whole popup in screen cells
+ *     core_col    screen column of the text box
+ *     core_line   screen line of the text box
+ *     core_width  width of the text box in screen cells
+ *     core_height height of the text box in screen cells
+ *     firstline   line of the buffer at top (1 unless scrolled)
+ *                 (not the value of the "firstline" property)
+ *     lastline    line of the buffer at the bottom (updated when
+ *                 the popup is redrawn)
+ *     scrollbar   non-zero if a scrollbar is displayed
+ *     visible     one if the popup is displayed, zero if hidden
+ * Note that these are the actual screen positions.  They differ
+ * from the values in `popup_getoptions()` for the sizing and
+ * positioning mechanism applied.
+ *
+ * The "core_" values exclude the padding and border.
+ *
+ * If popup window **{id}** is not found an empty Dict is returned.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_getpos()
+ */
+export function popup_getpos(
+  denops: Denops,
+  id: unknown,
+): Promise<Record<string, unknown>>;
+export function popup_getpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_getpos", ...args);
+}
+
+/**
+ * If **{id}** is a displayed popup, hide it now. If the popup has a
+ * filter it will not be invoked for so long as the popup is
+ * hidden.
+ * If window **{id}** does not exist nothing happens.  If window **{id}**
+ * exists but is not a popup window an error is given.
+ * If popup window **{id}** contains a terminal an error is given.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_hide()
+ */
+export function popup_hide(denops: Denops, id: unknown): Promise<void>;
+export function popup_hide(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_hide", ...args);
+}
+
+/**
+ * Return a List with the `window-ID` of all existing popups.
+ */
+export function popup_list(denops: Denops): Promise<unknown[]>;
+export function popup_list(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_list", ...args);
+}
+
+/**
+ * Return the `window-ID` of the popup at screen position **{row}**
+ * and **{col}**.  If there are multiple popups the one with the
+ * highest zindex is returned.  If there are no popups at this
+ * position then zero is returned.
+ */
+export function popup_locate(
+  denops: Denops,
+  row: unknown,
+  col: unknown,
+): Promise<number>;
+export function popup_locate(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_locate", ...args);
+}
+
+/**
+ * Show the **{what}** near the cursor, handle selecting one of the
+ * items with cursorkeys, and close it an item is selected with
+ * Space or Enter. **{what}** should have multiple lines to make this
+ * useful.  This works like:
+ *
+ *     call popup_create({what}, #{
+ *             \ pos: 'center',
+ *             \ zindex: 200,
+ *             \ drag: 1,
+ *             \ wrap: 0,
+ *             \ border: [],
+ *             \ cursorline: 1,
+ *             \ padding: [0,1,0,1],
+ *             \ filter: 'popup_filter_menu',
+ *             \ mapping: 0,
+ *             \ })
+ *
+ * The current line is highlighted with a match using
+ * "PopupSelected", or "PmenuSel" if that is not defined.
+ *
+ * Use **{options}** to change the properties.  Should at least set
+ * "callback" to a function that handles the selected item.
+ * Example:
+ *
+ *     func ColorSelected(id, result)
+ *        " use a:result
+ *     endfunc
+ *     call popup_menu(['red', 'green', 'blue'], #{
+ *             \ callback: 'ColorSelected',
+ *             \ })
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetChoices()->popup_menu({})
+ */
+export function popup_menu(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_menu(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_menu", ...args);
+}
+
+/**
+ * Move popup **{id}** to the position specified with **{options}**.
+ * **{options}** may contain the items from `popup_create()` that
+ * specify the popup position:
+ *         line
+ *         col
+ *         pos
+ *         maxheight
+ *         minheight
+ *         maxwidth
+ *         minwidth
+ *         fixed
+ * For **{id}** see `popup_hide()`.
+ * For other options see `popup_setoptions()`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_move(options)
+ */
+export function popup_move(
+  denops: Denops,
+  id: unknown,
+  options: unknown,
+): Promise<void>;
+export function popup_move(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_move", ...args);
+}
+
+/**
+ * Show the **{what}** for 3 seconds at the top of the Vim window.
+ * This works like:
+ *
+ *     call popup_create({what}, #{
+ *             \ line: 1,
+ *             \ col: 10,
+ *             \ minwidth: 20,
+ *             \ time: 3000,
+ *             \ tabpage: -1,
+ *             \ zindex: 300,
+ *             \ drag: 1,
+ *             \ highlight: 'WarningMsg',
+ *             \ border: [],
+ *             \ close: 'click',
+ *             \ padding: [0,1,0,1],
+ *             \ })
+ *
+ * The PopupNotification highlight group is used instead of
+ * WarningMsg if it is defined.
+ *
+ * Without the `+timers` feature the popup will not disappear
+ * automatically, the user has to click in it.
+ *
+ * The position will be adjusted to avoid overlap with other
+ * notifications.
+ * Use **{options}** to change the properties.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->popup_notification({})
+ */
+export function popup_notification(
+  denops: Denops,
+  what: unknown,
+  options: unknown,
+): Promise<number>;
+export function popup_notification(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_notification", ...args);
+}
+
+/**
+ * Override options in popup **{id}** with entries in **{options}**.
+ * These options can be set:
+ *         border
+ *         borderchars
+ *         borderhighlight
+ *         callback
+ *         close
+ *         cursorline
+ *         drag
+ *         filter
+ *         firstline
+ *         flip
+ *         highlight
+ *         mapping
+ *         mask
+ *         moved
+ *         padding
+ *         resize
+ *         scrollbar
+ *         scrollbarhighlight
+ *         thumbhighlight
+ *         time
+ *         title
+ *         wrap
+ *         zindex
+ * The options from `popup_move()` can also be used.
+ * Generally, setting an option to zero or an empty string resets
+ * it to the default value, but there are exceptions.
+ * For "hidden" use `popup_hide()` and `popup_show()`.
+ * "tabpage" cannot be changed.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_setoptions(options)
+ */
+export function popup_setoptions(
+  denops: Denops,
+  id: unknown,
+  options: unknown,
+): Promise<void>;
+export function popup_setoptions(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_setoptions", ...args);
+}
+
+/**
+ * Set the text of the buffer in popup win **{id}**. **{text}** is the
+ * same as supplied to `popup_create()`, except that a buffer
+ * number is not allowed.
+ * Does not change the window size or position, other than caused
+ * by the different text.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetPopup()->popup_settext('hello')
+ */
+export function popup_settext(
+  denops: Denops,
+  id: unknown,
+  text: unknown,
+): Promise<void>;
+export function popup_settext(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_settext", ...args);
+}
+
+/**
+ * If **{id}** is a hidden popup, show it now.
+ * For **{id}** see `popup_hide()`.
+ * If **{id}** is the info popup it will be positioned next to the
+ * current popup menu item.
+ */
+export function popup_show(denops: Denops, id: unknown): Promise<void>;
+export function popup_show(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("popup_show", ...args);
+}
+
+/**
  * Open a new window displaying the difference between the two
  * files.  The files must have been created with
  * `term_dumpwrite()`.
