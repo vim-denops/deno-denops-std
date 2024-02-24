@@ -1,5 +1,5 @@
-import { assertEquals } from "https://deno.land/std@0.214.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.1/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.217.0/assert/mod.ts";
+import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";

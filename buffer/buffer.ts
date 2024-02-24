@@ -1,5 +1,5 @@
 import type { Denops } from "../mod.ts";
-import { maybe } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+import { maybe } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
@@ -12,7 +12,7 @@ import {
   splitText,
 } from "./fileformat.ts";
 import { tryDecode } from "./fileencoding.ts";
-import { ulid } from "https://deno.land/std@0.214.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/buffer/buffer.ts@1";
 
