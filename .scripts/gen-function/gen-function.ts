@@ -37,6 +37,7 @@ const vimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/builtin.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/channel.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/eval.txt`,
+  `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/popup.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/sign.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/terminal.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/testing.txt`,
