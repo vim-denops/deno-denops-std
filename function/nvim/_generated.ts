@@ -4013,30 +4013,6 @@ export function nvim_win_set_width(
 }
 
 /**
- * Gets window configuration.
- *
- * The returned value may be given to `nvim_open_win()`.
- *
- * `relative` is empty for normal windows.
- *
- * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
- *
- * Return:
- *     Map defining the window configuration, see `nvim_open_win()`
- */
-export function nvim_win_get_config(
-  denops: Denops,
-  window: unknown,
-): Promise<unknown>;
-export function nvim_win_get_config(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_win_get_config", ...args);
-}
-
-/**
  * Configures window layout. Currently only for floating and external windows
  * (including changing a split window to those layouts).
  *
