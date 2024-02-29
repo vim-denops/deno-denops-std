@@ -61,5 +61,77 @@ test({
         );
       },
     });
+
+    await t.step({
+      name: "add() registers a lambda function and returns a Lambda object",
+      fn: async () => {
+        let counter = 0;
+        using lo = lambda.add(
+          denops,
+          () => {
+            counter++;
+            return counter;
+          },
+        );
+        assertEquals(
+          lo.request(),
+          `denops#request('${denops.name}', '${lo.id}', [])`,
+        );
+        assertEquals(
+          lo.notify(),
+          `denops#notify('${denops.name}', '${lo.id}', [])`,
+        );
+        assertEquals(await denops.eval(lo.request()), 1);
+        await denops.eval(lo.notify());
+        assertEquals(counter, 2);
+      },
+    });
+
+    await t.step({
+      name:
+        "add() registers a lambda function with arguments and returns a Lambda object",
+      fn: async () => {
+        using lo = lambda.add(
+          denops,
+          (a: unknown, b: unknown, c: unknown) => {
+            return [a, b, c];
+          },
+        );
+        assertEquals(
+          lo.request(1, "2", [3]),
+          `denops#request('${denops.name}', '${lo.id}', [1,"2",[3]])`,
+        );
+        assertEquals(
+          lo.notify(1, "2", [3]),
+          `denops#notify('${denops.name}', '${lo.id}', [1,"2",[3]])`,
+        );
+        assertEquals(await denops.eval(lo.request(1, "2", [3])), [1, "2", [3]]);
+      },
+    });
+
+    await t.step({
+      name: "add() return a disposable object",
+      fn: async () => {
+        // Unregister all methods
+        denops.dispatcher = {};
+        {
+          let counter = 0;
+          using lo = lambda.add(
+            denops,
+            () => {
+              counter++;
+              return counter;
+            },
+          );
+          assertEquals(await denops.eval(lo.request()), 1);
+          await denops.eval(lo.notify());
+          assertEquals(counter, 2);
+          // Still available
+          assertEquals(Object.keys(denops.dispatcher), [lo.id]);
+        }
+        // Unregistered automatically
+        assertEquals(Object.keys(denops.dispatcher), []);
+      },
+    });
   },
 });
