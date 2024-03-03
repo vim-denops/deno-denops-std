@@ -2384,50 +2384,6 @@ export function popup_close(
 }
 
 /**
- * Open a popup window showing **{what}**, which is either:
- * - a buffer number
- * - a string
- * - a list of strings
- * - a list of text lines with text properties
- * When **{what}** is not a buffer number, a buffer is created with
- * 'buftype' set to "popup".  That buffer will be wiped out once
- * the popup closes.
- *
- * if **{what}** is a buffer number and loading the buffer runs into
- * an existing swap file, it is silently opened read-only, as if
- * a `SwapExists` autocommand had set `v:swapchoice` to 'o'.
- * This is because we assume the buffer is only used for viewing.
- *
- * **{options}** is a dictionary with many possible entries.
- * See `popup_create-arguments` for details.
- *
- * Returns a window-ID, which can be used with other popup
- * functions.  Use `winbufnr()` to get the number of the buffer
- * in the window:
- *
- *     let winid = popup_create('hello', {})
- *     let bufnr = winbufnr(winid)
- *     call setbufline(bufnr, 2, 'second line')
- *
- * In case of failure zero is returned.
- *
- * Can also be used as a `method`:
- *
- *     GetText()->popup_create({})
- */
-export function popup_create(
-  denops: Denops,
-  what: unknown,
-  options: unknown,
-): Promise<number>;
-export function popup_create(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("popup_create", ...args);
-}
-
-/**
  * Just like `popup_create()` but with these default options:
  *
  *     call popup_create({what}, #{
