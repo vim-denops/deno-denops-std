@@ -2775,54 +2775,6 @@ export function popup_notification(
 }
 
 /**
- * Override options in popup **{id}** with entries in **{options}**.
- * These options can be set:
- *         border
- *         borderchars
- *         borderhighlight
- *         callback
- *         close
- *         cursorline
- *         drag
- *         filter
- *         firstline
- *         flip
- *         highlight
- *         mapping
- *         mask
- *         moved
- *         padding
- *         resize
- *         scrollbar
- *         scrollbarhighlight
- *         thumbhighlight
- *         time
- *         title
- *         wrap
- *         zindex
- * The options from `popup_move()` can also be used.
- * Generally, setting an option to zero or an empty string resets
- * it to the default value, but there are exceptions.
- * For "hidden" use `popup_hide()` and `popup_show()`.
- * "tabpage" cannot be changed.
- *
- * Can also be used as a `method`:
- *
- *     GetPopup()->popup_setoptions(options)
- */
-export function popup_setoptions(
-  denops: Denops,
-  id: unknown,
-  options: unknown,
-): Promise<void>;
-export function popup_setoptions(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("popup_setoptions", ...args);
-}
-
-/**
  * Set the text of the buffer in popup win **{id}**. **{text}** is the
  * same as supplied to `popup_create()`, except that a buffer
  * number is not allowed.

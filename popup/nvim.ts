@@ -5,7 +5,7 @@ import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 import type { Border, OpenOptions } from "./types.ts";
 
-const cacheKey = "denops_std/popup/nvim.ts@1";
+const cacheKey = "denops_std/popup/nvim.ts@2";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
   if (typeof denops.context[cacheKey] === "string") {
@@ -20,6 +20,12 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
       call nvim_win_set_option(winid, 'winhighlight', a:winhighlight)
     endif
     return winid
+  endfunction
+  function! DenopsStdPopupNvimWinSetConfig_${suffix}(winid, config, winhighlight) abort
+    call nvim_win_set_config(a:winid, a:config)
+    if a:winhighlight isnot v:null
+      call nvim_win_set_option(winid, 'winhighlight', a:winhighlight)
+    endif
   endfunction
   `;
   await execute(denops, script);
@@ -42,12 +48,36 @@ export async function openPopup(
   ) as number;
 }
 
+export async function configPopup(
+  denops: Denops,
+  winid: number,
+  options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
+): Promise<void> {
+  const suffix = await ensurePrerequisites(denops);
+  const nvimWinSetConfig = toNvimWinSetConfig(options);
+  const winhighlight = toNvimWinhighlight(options.highlight);
+  await denops.call(
+    `DenopsStdPopupNvimWinSetConfig_${suffix}`,
+    winid,
+    nvimWinSetConfig,
+    winhighlight,
+  );
+}
+
 export async function closePopup(denops: Denops, winid: number): Promise<void> {
   await nvimFn.nvim_win_close(denops, winid, true);
 }
 
-function toNvimOpenWinConfig(options: OpenOptions): nvimFn.NvimOpenWinConfig {
-  const v: nvimFn.NvimOpenWinConfig = {
+function toNvimOpenWinConfig(
+  options: Omit<OpenOptions, "bufnr" | "noRedraw">,
+): nvimFn.NvimOpenWinConfig {
+  return toNvimWinSetConfig(options) as nvimFn.NvimOpenWinConfig;
+}
+
+function toNvimWinSetConfig(
+  options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
+): Partial<nvimFn.NvimOpenWinConfig> {
+  const v: Partial<nvimFn.NvimOpenWinConfig> = {
     relative: options.relative,
     anchor: options.anchor,
     width: options.width,
@@ -63,7 +93,7 @@ function toNvimOpenWinConfig(options: OpenOptions): nvimFn.NvimOpenWinConfig {
     Object
       .entries(v)
       .filter(([, v]) => v != undefined),
-  ) as nvimFn.NvimOpenWinConfig;
+  ) as Partial<nvimFn.NvimOpenWinConfig>;
 }
 
 function toNvimBorder(

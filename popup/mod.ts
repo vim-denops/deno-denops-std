@@ -25,6 +25,11 @@
  *     col: 1,
  *   });
  *
+ *   // Config a popup window
+ *   await popup.config(denops, popupWindow.winid, {
+ *     title: "Hello, world!",
+ *   });
+ *
  *   // Wiat 3 seconds
  *   await new Promise((resolve) => setTimeout(resolve, 3000));
  *
@@ -77,10 +82,12 @@ import * as fn from "../function/mod.ts";
 import type { OpenOptions, PopupWindow } from "./types.ts";
 import {
   closePopup as closePopupVim,
+  configPopup as configPopupVim,
   openPopup as openPopupVim,
 } from "./vim.ts";
 import {
   closePopup as closePopupNvim,
+  configPopup as configPopupNvim,
   openPopup as openPopupNvim,
 } from "./nvim.ts";
 
@@ -166,6 +173,44 @@ export async function open(
       }
     },
   };
+}
+
+/**
+ * Config a popup window in Vim/Neovim compatible way.
+ *
+ * ```typescript
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Open a popup window
+ *   await using popupWindow = await popup.open(denops, {
+ *     relative: "editor",
+ *     width: 20,
+ *     height: 20,
+ *     row: 1,
+ *     col: 1,
+ *   });
+ *
+ *   // Config a popup window
+ *   await popup.config(denops, popupWindow.winid, {
+ *     title: "Hello, world!",
+ *   });
+ * }
+ * ```
+ *
+ * Note that this function does NOT work in `batch.collect()`.
+ */
+export async function config(
+  denops: Denops,
+  winid: number,
+  options: Partial<Omit<OpenOptions, "bufnr">>,
+): Promise<void> {
+  const config = denops.meta.host === "vim" ? configPopupVim : configPopupNvim;
+  await config(denops, winid, options);
+  if (!options.noRedraw) {
+    await denops.redraw();
+  }
 }
 
 export type { OpenOptions, PopupWindow } from "./types.ts";
