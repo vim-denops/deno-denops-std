@@ -15,16 +15,35 @@ export function openPopup(
   >;
 }
 
+export function configPopup(
+  denops: Denops,
+  winid: number,
+  options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
+): Promise<void> {
+  const popupSetOptionsOptions = toPopupSetOptionsOptions(options);
+  return vimFn.popup_setoptions(denops, winid, popupSetOptionsOptions);
+}
+
 export async function closePopup(denops: Denops, winid: number): Promise<void> {
   await vimFn.popup_close(denops, winid);
 }
 
-function toPopupCreateOptions(options: OpenOptions): vimFn.PopupCreateOptions {
+function toPopupCreateOptions(
+  options: Omit<OpenOptions, "bufnr" | "noRedraw">,
+): vimFn.PopupCreateOptions {
+  return {
+    ...toPopupSetOptionsOptions(options),
+    posinvert: false, // To keep consistent with the behavior of Neovim's floating window
+  };
+}
+
+function toPopupSetOptionsOptions(
+  options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
+): vimFn.PopupSetOptionsOptions {
   const v: vimFn.PopupCreateOptions = {
     line: options.row,
     col: options.col,
     pos: options.anchor ? posFromAnchor(options.anchor) : undefined,
-    posinvert: false, // To keep consistent with the behavior of Neovim's floating window
     fixed: true, // To keep consistent with the behavior of Neovim's floating window
     flip: false, // To keep consistent with the behavior of Neovim's floating window
     maxheight: options.height,
@@ -48,7 +67,7 @@ function toPopupCreateOptions(options: OpenOptions): vimFn.PopupCreateOptions {
     Object
       .entries(v)
       .filter(([, v]) => v != undefined),
-  ) as vimFn.PopupCreateOptions;
+  ) as vimFn.PopupSetOptionsOptions;
 }
 
 function posFromAnchor(anchor: Anchor): vimFn.PopupCreateOptions["pos"] {
