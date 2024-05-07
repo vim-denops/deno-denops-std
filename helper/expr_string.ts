@@ -43,7 +43,11 @@ export type ExprString = string & {
 };
 
 type Jsonable = {
-  toJSON(key: string | number | undefined): string;
+  /**
+   * Returns a JSON value that can be specified to {@link JSON.stringify}.
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#tojson_behavior|toJSON() behavior}
+   */
+  toJSON(key: string | number | undefined): unknown;
 };
 
 // deno-lint-ignore no-explicit-any
@@ -125,7 +129,7 @@ function isIgnoreRecordValue(x: unknown): boolean {
  */
 export function vimStringify(value: unknown, key?: string | number): string {
   if (isJsonable(value)) {
-    return vimStringify(JSON.parse(value.toJSON(key)));
+    return vimStringify(value.toJSON(key));
   }
   if (isExprString(value)) {
     // Return Vim's expr-string
