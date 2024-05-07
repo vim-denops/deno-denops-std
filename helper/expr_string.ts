@@ -1,3 +1,30 @@
+/**
+ * A module to provide expression string function to represents Vim's string constant.
+ *
+ * ```typescript
+ * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import {
+ *   type ExprString,
+ *   exprQuote as q,
+ *   useExprString,
+ * } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   // Create `ExprString` value with `exprQuote`.
+ *   const vimKeySequence: ExprString = q`\<Cmd>echo 'foo'\<CR>`;
+ *
+ *   // Use `ExprString` value in `useExprString` block.
+ *   await useExprString(denops, async (denops) => {
+ *     await fn.feedkeys(denops, vimKeySequence)
+ *     await denops.cmd('echo value', { value: q`\U0001F680` })
+ *   });
+ * }
+ * ```
+ *
+ * @module
+ */
+
 import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
 import is from "https://deno.land/x/unknownutil@v3.16.3/is.ts";
 import { execute } from "./execute.ts";
