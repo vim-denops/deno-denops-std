@@ -160,7 +160,7 @@ Deno.test({
       fn: () => {
         const actual = vimStringify({
           foo: 42,
-          toJSON: () => JSON.stringify([123, "bar"]),
+          toJSON: () => [123, "bar"],
         });
         assertEquals(actual, "[123,'bar']");
       },
@@ -171,10 +171,18 @@ Deno.test({
         const actual = vimStringify(Object.assign(
           () => {},
           {
-            toJSON: () => JSON.stringify([123, "bar"]),
+            toJSON: () => [123, "bar"],
           },
         ));
         assertEquals(actual, "[123,'bar']");
+      },
+    });
+    await t.step({
+      name: "stringify Date that has native `toJSON()` method.",
+      fn: () => {
+        // NOTE: `Date.prototype.toJSON` returns a string representing date in the same ISO format as `Date.prototype.toISOString()`.
+        const actual = vimStringify(new Date("2007-08-31T12:34:56.000Z"));
+        assertEquals(actual, "'2007-08-31T12:34:56.000Z'");
       },
     });
     await t.step({
@@ -197,7 +205,7 @@ Deno.test({
         });
         try {
           const actual = vimStringify(92382417n);
-          assertEquals(actual, "92382417");
+          assertEquals(actual, "'92382417'");
         } finally {
           // deno-lint-ignore no-explicit-any
           delete (BigInt.prototype as any).toJSON;
@@ -216,8 +224,9 @@ Deno.test({
           Symbol("foo"),
           "bar",
           {
-            toJSON: () => JSON.stringify([123, "baz"]),
+            toJSON: () => [123, "baz"],
           },
+          new Date("2007-08-31T12:34:56.000Z"),
           {
             k0: null,
             k1: undefined,
@@ -232,7 +241,7 @@ Deno.test({
         ]);
         assertEquals(
           actual,
-          `[v:null,v:null,42,v:true,v:null,v:null,'bar',[123,'baz'],{'k0':v:null,'k2':[{'key':234,'expr':"\\U0001F680"}]}]`,
+          `[v:null,v:null,42,v:true,v:null,v:null,'bar',[123,'baz'],'2007-08-31T12:34:56.000Z',{'k0':v:null,'k2':[{'key':234,'expr':"\\U0001F680"}]}]`,
         );
       },
     });
@@ -419,8 +428,9 @@ test({
                 Symbol("foo"),
                 "bar",
                 {
-                  toJSON: () => JSON.stringify([123, "baz"]),
+                  toJSON: () => [123, "baz"],
                 },
+                new Date("2007-08-31T12:34:56.000Z"),
                 {
                   k0: null,
                   k1: undefined,
@@ -448,6 +458,7 @@ test({
               123,
               "baz",
             ],
+            "2007-08-31T12:34:56.000Z",
             {
               k0: null,
               k2: [
