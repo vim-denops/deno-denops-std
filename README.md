@@ -30,10 +30,10 @@ export function main(denops: Denops): void {
       // This is just an example. Developers usually should define commands directly in Vim script.
       await batch.batch(denops, async (denops) => {
         await denops.cmd(
-          `command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`
+          `command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`,
         );
         await denops.cmd(
-          `command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`
+          `command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`,
         );
       });
     },
