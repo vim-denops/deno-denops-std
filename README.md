@@ -1,7 +1,7 @@
 # 🐜 denops_std
 
-[![Vim 9.0.2189 or above](https://img.shields.io/badge/Vim-Support%209.0.2189-yellowgreen.svg?logo=vim)](https://github.com/vim/vim/tree/v9.0.2189)
-[![Neovim 0.9.4 or above](https://img.shields.io/badge/Neovim-Support%200.9.4-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.9.4)
+[![Vim 9.1.0399 or above](https://img.shields.io/badge/Vim-Support%209.1.0399-yellowgreen.svg?logo=vim)](https://github.com/vim/vim/tree/v9.1.0399)
+[![Neovim 0.9.5 or above](https://img.shields.io/badge/Neovim-Support%200.9.5-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.9.5)
 [![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
 [![codecov](https://codecov.io/github/vim-denops/deno-denops-std/branch/main/graph/badge.svg?token=RKAZMUQ3D9)](https://codecov.io/github/vim-denops/deno-denops-std)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)
@@ -30,10 +30,10 @@ export function main(denops: Denops): void {
       // This is just an example. Developers usually should define commands directly in Vim script.
       await batch.batch(denops, async (denops) => {
         await denops.cmd(
-          `command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`,
+          `command! HelloWorld call denops#notify("${denops.name}", "say", ["World"])`
         );
         await denops.cmd(
-          `command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`,
+          `command! HelloDenops call denops#notify("${denops.name}", "say", ["Denops"])`
         );
       });
     },
