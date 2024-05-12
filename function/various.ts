@@ -2,7 +2,7 @@ import type { Denops } from "../mod.ts";
 
 /**
  * Return a string that indicates the current mode.
- * If [expr] is supplied and it evaluates to a non-zero Number or
+ * If **{expr}** is supplied and it evaluates to a non-zero Number or
  * a non-empty String (`non-zero-arg`), then the full mode is
  * returned, otherwise only the first letter is returned.
  * Also see `state()`.
