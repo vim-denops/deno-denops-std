@@ -1139,7 +1139,7 @@ export const guiheadroom: GlobalOption<number> = {
  *
  * (default "")
  *
- * *only for GTK GUI*
+ * *only for GTK and Win32 GUI*
  */
 export const guiligatures: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -1213,6 +1213,7 @@ export const guipty: GlobalOption<boolean> = {
  * `hl-Search`      l  last search pattern highlighting (see 'hlsearch')
  * `hl-MoreMsg`     m  `more-prompt`
  * `hl-ModeMsg`     M  Mode (e.g., "-- INSERT --")
+ * `hl-MsgArea`     g  `Command-line` and message area
  * `hl-LineNr`      n  line number for ":number" and ":#" commands, and
  *                     when 'number' or 'relativenumber' option is set.
  * `hl-LineNrAbove`   a  line number above the cursor for when the
@@ -1295,7 +1296,8 @@ export const guipty: GlobalOption<boolean> = {
  *  x:PmenuSbar,X:PmenuThumb,*:TabLine,
  *  #:TabLineSel,_:TabLineFill,!:CursorColumn,
  *  .:CursorLine,o:ColorColumn,q:QuickFixLine,
- *  z:StatusLineTerm,Z:StatusLineTermNC"`)
+ *  z:StatusLineTerm,Z:StatusLineTermNC,
+ *  g:MsgArea"`)
  */
 export const highlight: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -3101,8 +3103,7 @@ export const shortname: LocalOption<boolean> = {
  * highlighted with `hl-NonText`.
  * You may also want to add "lastline" to the 'display' option to show as
  * much of the last line as possible.
- * NOTE: only partly implemented, currently works with CTRL-E, CTRL-Y
- * and scrolling with the mouse.
+ * NOTE: partly implemented, doesn't work yet for `gj` and `gk`.
  *
  * (default off)
  */
@@ -4204,6 +4205,52 @@ export const wincolor: LocalOption<string> = {
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&wincolor", value);
+  },
+};
+
+/**
+ * If enabled, the window and the buffer it is displaying are paired.
+ * For example, attempting to change the buffer with `:edit` will fail.
+ * Other commands which change a window's buffer such as `:cnext` will
+ * also skip any window with 'winfixbuf' enabled.  However if an Ex
+ * command has a "!" modifier, it can force switching buffers.
+ *
+ * (default off)
+ */
+export const winfixbuf: LocalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "winfixbuf");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "winfixbuf", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "winfixbuf");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "winfixbuf", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "winfixbuf");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&winfixbuf", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&winfixbuf", value);
   },
 };
 
