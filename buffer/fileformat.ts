@@ -3,8 +3,8 @@ import {
   ensure,
   is,
   maybe,
-  PredicateType,
-} from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+  type PredicateType,
+} from "@core/unknownutil";
 
 /**
  * Predicate that the value is FileFormat.

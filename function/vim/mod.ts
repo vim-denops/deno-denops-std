@@ -2,8 +2,8 @@
  * A module to provide functions of Vim native functions.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as vimFn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/vim/mod.ts";
+ * import type { Denops } from "jsr:@denops/std";
+ * import * as vimFn from "jsr:@denops/std/function/vim";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // vimFn holds functions exists only in Vim

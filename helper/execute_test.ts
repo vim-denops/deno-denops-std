@@ -1,9 +1,5 @@
-import {
-  assertEquals,
-  assertInstanceOf,
-  assertRejects,
-} from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
+import { assertEquals, assertInstanceOf, assertRejects } from "@std/assert";
+import { test } from "@denops/test";
 import { execute } from "./execute.ts";
 
 test({
