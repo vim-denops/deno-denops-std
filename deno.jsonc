@@ -1,5 +1,4 @@
 {
-  "exclude": ["docs/**", ".coverage/**"],
   "imports": {
     "https://deno.land/x/denops_std@$MODULE_VERSION/": "./"
   },
