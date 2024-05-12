@@ -1,9 +1,9 @@
-import type { Denops } from "../mod.ts";
-import { assert, is } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+import type { Denops } from "@denops/core";
+import { assert, is } from "@core/unknownutil";
+import { ulid } from "@std/ulid";
 import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";
-import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/helper/input@1";
 
@@ -124,8 +124,8 @@ export interface InputOptions {
  * - It automatically guard input when `inputsave` option is specified
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/input.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { input } from "jsr:@denops/std/helper/input";
  *
  * export const main: Entrypoint = async (denops) => {
  *   console.log(
@@ -145,8 +145,8 @@ export interface InputOptions {
  * completions and Vim script custom completion like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/input.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { input } from "jsr:@denops/std/helper/input";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Built-in completions
@@ -188,8 +188,8 @@ export interface InputOptions {
  * `inputsave` option like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { input } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/input.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { input } from "jsr:@denops/std/helper/input";
  *
  * export const main: Entrypoint = async (denops) => {
  *   denops.dispatcher = {

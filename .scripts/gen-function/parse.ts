@@ -1,4 +1,4 @@
-import { Definition, Variant } from "./types.ts";
+import type { Definition, Variant } from "./types.ts";
 import { createMarkdownFromHelp } from "../markdown.ts";
 import { Counter, regexIndexOf } from "../utils.ts";
 

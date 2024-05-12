@@ -17,7 +17,7 @@
  * Then, developers can use this module to parse, validate, or format the arguments.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
  * import {
  *   builtinOpts,
  *   formatFlags,
@@ -25,7 +25,7 @@
  *   parse,
  *   validateFlags,
  *   validateOpts,
- * } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   denops.dispatcher = {
@@ -63,15 +63,15 @@
  *
  * @module
  */
-import { Opts, parseOpts } from "./opts.ts";
-import { Flags, parseFlags } from "./flags.ts";
+import { type Opts, parseOpts } from "./opts.ts";
+import { type Flags, parseFlags } from "./flags.ts";
 
 /**
  * Parse string array to extract opts, flags.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { parse } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const args = [

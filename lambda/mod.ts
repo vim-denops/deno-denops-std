@@ -5,8 +5,8 @@
  * to create a lambda function of Vim script that is callable from Deno.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
@@ -31,7 +31,7 @@
  * @module
  */
 
-import type { Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
 
 /**
  * Lambda function identifier
@@ -55,8 +55,8 @@ export interface Options {
  * Register a lambda function as a denops API and return the identifier.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
@@ -81,8 +81,8 @@ export interface Options {
  * If you need an one-time lambda function, use `once` option like
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
@@ -150,8 +150,8 @@ export interface Lambda {
    * Create a Vim script expression to notify the lambda function
    *
    * ```typescript
-   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-   * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+   * import type { Entrypoint } from "jsr:@denops/std";
+   * import * as lambda from "jsr:@denops/std/lambda";
    *
    * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
@@ -167,8 +167,8 @@ export interface Lambda {
    * Create a Vim script expression to request the lambda function
    *
    * ```typescript
-   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-   * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+   * import type { Entrypoint } from "jsr:@denops/std";
+   * import * as lambda from "jsr:@denops/std/lambda";
    *
    * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
@@ -184,8 +184,8 @@ export interface Lambda {
    * Dispose the lambda function
    *
    * ```typescript
-   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-   * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+   * import type { Entrypoint } from "jsr:@denops/std";
+   * import * as lambda from "jsr:@denops/std/lambda";
    *
    * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
@@ -205,8 +205,8 @@ export interface Lambda {
  * Add a lambda function to a denops API and return the lambda object
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function

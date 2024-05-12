@@ -16,13 +16,13 @@ assumed to be called in a dedicated worker thread.
 By using this module, developers can write Vim/Neovim denops plugins like:
 
 ```typescript
-import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-import * as batch from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+import type { Denops } from "jsr:@denops/std";
+import * as batch from "jsr:@denops/std/batch";
+import * as fn from "jsr:@denops/std/function";
+import * as vars from "jsr:@denops/std/variable";
+import * as helper from "jsr:@denops/std/helper";
 
-import { assert, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
+import { assert, is } from "jsr:@core/unknownutil";
 
 export function main(denops: Denops): void {
   denops.dispatcher = {

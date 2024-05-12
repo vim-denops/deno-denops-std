@@ -1,4 +1,4 @@
-import { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
+import type { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
 
 export function buildDefineExpr(
   event: AutocmdEvent | AutocmdEvent[],

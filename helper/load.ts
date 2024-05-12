@@ -1,6 +1,6 @@
-import type { Denops } from "../mod.ts";
-import * as fs from "https://deno.land/std@0.217.0/fs/mod.ts";
-import * as path from "https://deno.land/std@0.217.0/path/mod.ts";
+import type { Denops } from "@denops/core";
+import * as fs from "@std/fs";
+import * as path from "@std/path";
 import { execute } from "./execute.ts";
 
 const loaded = new Set<URL>();
@@ -16,8 +16,8 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false`.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { load } from "jsr:@denops/std/helper/load";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Load '../../foo.vim' from this file
@@ -32,8 +32,8 @@ export type LoadOptions = {
  * specified like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { load } from "jsr:@denops/std/helper/load";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const url = new URL("../../foo.vim", import.meta.url);
@@ -52,8 +52,8 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false` like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { load } from "jsr:@denops/std/helper/load";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const url = new URL("../../foo.vim", import.meta.url);

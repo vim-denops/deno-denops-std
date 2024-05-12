@@ -1,5 +1,5 @@
-import type { Denops } from "../mod.ts";
-import {
+import type { Denops } from "@denops/core";
+import type {
   AutocmdEvent,
   DefineOptions,
   EmitOptions,
@@ -12,8 +12,8 @@ import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
  * Define an autocmd
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as autocmd from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Define new autocmd for BufEnter
@@ -54,8 +54,8 @@ export async function define(
  * Remove an autocmd
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as autocmd from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Remove BufEnter autocmd
@@ -88,8 +88,8 @@ export async function remove(
  * List defined autocmds
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as autocmd from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // List all autocmd
@@ -138,8 +138,8 @@ export async function list(
  * Emit an autocmd in a buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as autocmd from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Emit an autocmd in a current buffer
@@ -182,8 +182,8 @@ export async function emit(
  * Emit an autocmd in all buffers
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as autocmd from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Emit an autocmd in all buffers

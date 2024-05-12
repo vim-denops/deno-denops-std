@@ -2,8 +2,8 @@
  * A module to provide accessors of Vim and Neovim native options.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as op from "https://deno.land/x/denops_std@$MODULE_VERSION/option/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as op from "jsr:@denops/std/option";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Get value of the option.

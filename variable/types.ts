@@ -1,4 +1,4 @@
-import type { Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
 
 /**
  * Represents a getter method for retrieving property value.

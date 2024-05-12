@@ -1,11 +1,7 @@
-import { assertEquals } from "https://deno.land/std@0.217.0/assert/mod.ts";
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  spy,
-} from "https://deno.land/std@0.217.0/testing/mock.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
-import { batch, BatchHelper } from "./batch.ts";
+import { assertEquals } from "@std/assert";
+import { assertSpyCall, assertSpyCalls, spy } from "@std/testing/mock";
+import { test } from "@denops/test";
+import { batch, type BatchHelper } from "./batch.ts";
 
 test({
   mode: "all",

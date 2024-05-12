@@ -3,7 +3,7 @@ import {
   assertEquals,
   assertFalse as assertFalsy,
 } from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
+import { test } from "@denops/test";
 import * as _generated from "./_generated.ts";
 
 test({

@@ -1,11 +1,11 @@
-import type { Context, Denops } from "../mod.ts";
+import type { Context, Denops } from "@denops/core";
 
 /**
  * Execute multi-lined Vim script directly
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { execute } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/execute.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { execute } from "jsr:@denops/std/helper/execute";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await execute(

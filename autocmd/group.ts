@@ -1,6 +1,6 @@
-import type { Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
 import { execute } from "../helper/execute.ts";
-import { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
+import type { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
 import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
 
 export type GroupDefineOptions = Omit<DefineOptions, "group">;
@@ -10,8 +10,8 @@ export type GroupRemoveOptions = Omit<RemoveOptions, "group">;
  * Create an autocmd group and define/remove autocmds in that group.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { group } from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { group } from "jsr:@denops/std/autocmd";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await group(denops, "my-autocmd", (helper) => {
