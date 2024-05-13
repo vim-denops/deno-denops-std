@@ -1,7 +1,7 @@
 import type { Denops } from "../mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
 import { execute } from "../helper/execute.ts";
-import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
+import { ulid } from "https://deno.land/std@0.224.0/ulid/mod.ts";
 
 import type { Border, OpenOptions } from "./types.ts";
 
