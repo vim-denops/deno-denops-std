@@ -3,7 +3,7 @@ import * as batch from "../batch/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
 import * as itertools from "https://deno.land/x/itertools@v1.1.2/mod.ts";
-import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
+import { unreachable } from "https://deno.land/x/unreachable@v1.0.1/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
