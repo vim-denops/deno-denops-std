@@ -1,6 +1,6 @@
 import type { Denops } from "../mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
-import { unreachable } from "https://deno.land/x/errorutil@v0.1.1/mod.ts";
+import { unreachable } from "https://deno.land/x/errorutil@v1.0.0/mod.ts";
 
 import type { Anchor, Border, OpenOptions } from "./types.ts";
 
