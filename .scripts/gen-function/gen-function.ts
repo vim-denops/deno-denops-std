@@ -1,7 +1,7 @@
 import {
   difference,
   intersection,
-} from "https://deno.land/x/set_operations@v1.1.1/mod.ts";
+} from "https://deno.land/x/set_operations@v1.2.0/mod.ts";
 import * as path from "https://deno.land/std@0.224.0/path/mod.ts";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
