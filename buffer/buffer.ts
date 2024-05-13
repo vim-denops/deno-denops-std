@@ -1,5 +1,5 @@
 import type { Denops } from "../mod.ts";
-import { maybe } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+import { maybe } from "https://deno.land/x/unknownutil@v3.18.0/mod.ts";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
