@@ -65,4 +65,4 @@ export {
   type Denops,
   type Dispatcher,
   type Meta,
-} from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+} from "https://deno.land/x/denops_core@v6.0.6/mod.ts";
