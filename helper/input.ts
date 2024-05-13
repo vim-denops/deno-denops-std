@@ -5,7 +5,7 @@ import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";
 
-const cacheKey = "denops_std/helper/input@1";
+const cacheKey = "denops_std/helper/input@2";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
   if (typeof denops.context[cacheKey] === "string") {
@@ -67,8 +67,10 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
     endfunction
   else
     function! s:input_${suffix}(prompt, text, completion) abort
-      let original = maparg('<Esc>', 'n')
+      let originalEsc = maparg('<Esc>', 'c', 0, 1)
+      let originalInt = maparg('<C-c>', 'c', 0, 1)
       execute printf('cnoremap <nowait><buffer> <Esc> <C-u>%s<CR>', s:escape_token_${suffix})
+      execute printf('cnoremap <nowait><buffer> <C-c> <C-u>%s<CR>', s:escape_token_${suffix})
       try
         let result = a:completion is# v:null
               \\ ? input(a:prompt, a:text)
@@ -81,10 +83,15 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
       catch /^Vim:Interrupt$/
         return v:null
       finally
-        if empty(original)
-          cunmap <buffer> <Esc>
+        if get(originalEsc, 'buffer')
+          call mapset(originalEsc)
         else
-          execute printf('cmap <buffer> %s', original)
+          cunmap <buffer> <Esc>
+        endif
+        if get(originalInt, 'buffer')
+          call mapset(originalInt)
+        else
+          cunmap <buffer> <C-c>
         endif
       endtry
     endfunction
