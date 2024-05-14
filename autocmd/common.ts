@@ -131,7 +131,7 @@ export async function list(
     }
   }
   const expr = terms.join(" ");
-  return await denops.call("execute", expr);
+  return await denops.call("execute", `0verbose ${expr}`);
 }
 
 /**

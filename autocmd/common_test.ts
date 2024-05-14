@@ -163,12 +163,27 @@ test({
       });
     });
 
+    const verboseSaved = await denops.eval("&verbose");
     await t.step({
       name: "list() lists autocmds",
       fn: async () => {
         await define(denops, "User", "DenopsTestList", "echo '1'");
         await define(denops, "User", "DenopsTestList", "echo '2'");
         await define(denops, "User", "DenopsTestList", "echo '3'");
+        await denops.cmd(`set verbose=0`);
+        assertEquals(
+          await list(denops, "User", "DenopsTestList"),
+          [
+            "",
+            "--- Autocommands ---",
+            "User",
+            "    DenopsTestList",
+            "              echo '1'",
+            "              echo '2'",
+            "              echo '3'",
+          ].join("\n"),
+        );
+        await denops.cmd(`set verbose=1`);
         assertEquals(
           await list(denops, "User", "DenopsTestList"),
           [
@@ -183,6 +198,7 @@ test({
         );
       },
     });
+    await denops.cmd(`set verbose=${verboseSaved}`);
 
     await t.step({
       name: "emit() emits an autocmd",
