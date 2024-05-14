@@ -216,7 +216,10 @@ export async function list(
   options: ListOptions = {},
 ): Promise<Mapping[]> {
   const mode = options.mode ?? "";
-  const result = await fn.execute(denops, `${mode}map ${lhs}`) as string;
+  const result = await fn.execute(
+    denops,
+    `0verbose ${mode}map ${lhs}`,
+  ) as string;
   return result.split(/\r?\n/).flatMap((v) => {
     try {
       return [parse(v)];
