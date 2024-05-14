@@ -2,11 +2,11 @@
  * A module to provide Vim buffer utility functions
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import * as buffer from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Open `README.md`
  *   // Same as `:edit README.md`
  *   await buffer.open(denops, "README.md");

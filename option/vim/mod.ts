@@ -2,10 +2,10 @@
  * A module to provide accessors of Vim native options.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as vimOp from "https://deno.land/x/denops_std@$MODULE_VERSION/option/vim/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // vimOp has options only exist in Vim
  *   console.log(await vimOp.compatible.get(denops));
  * }

@@ -2,10 +2,10 @@
  * A module to provide `denops.batch()` helper functions
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch, collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Call multiple denops functions sequentially in a signle RPC call
  *   await batch(denops, async (denops) => {
  *     await denops.cmd("setlocal modifiable");

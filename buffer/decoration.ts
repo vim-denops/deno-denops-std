@@ -30,11 +30,11 @@ export interface Decoration {
  * Decorate the specified buffer with decorations
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import { decorate, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
  *   const bufnr = (await fn.bufnr(denops)) as number;
  *   // ...
@@ -77,11 +77,11 @@ export function decorate(
  * Undecorate the specified buffer
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import { decorate, open, undecorate } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
  *   const bufnr = (await fn.bufnr(denops)) as number;
  *   // ...

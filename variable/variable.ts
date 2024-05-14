@@ -43,10 +43,10 @@ async function removeVar(
  * Global variables (`globals` or `g`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { globals } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set global variable
  *   await globals.set(denops, "hello", "world");
  *
@@ -91,10 +91,10 @@ export const g = globals;
  * Buffer local variables (`buffers` or `b`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { buffers } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set buffer variable
  *   await buffers.set(denops, "hello", "world");
  *
@@ -139,10 +139,10 @@ export const b = buffers;
  * Window local variables (`windows` or `w`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { windows } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set window variable
  *   await windows.set(denops, "hello", "world");
  *
@@ -187,10 +187,10 @@ export const w = windows;
  * Tabpage local variables (`tabpages` or `t`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { tabpages } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set tabpage variable
  *   await tabpages.set(denops, "hello", "world");
  *
@@ -235,10 +235,10 @@ export const t = tabpages;
  * Vim variables (`vim` or `v`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { vim } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set vim variable
  *   await vim.set(denops, "version", "world");
  *

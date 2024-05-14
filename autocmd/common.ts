@@ -12,10 +12,10 @@ import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
  * Define an autocmd
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Define new autocmd for BufEnter
  *   await autocmd.define(denops, "BufEnter", "*", "echo 'BufEnter'");
  *
@@ -54,10 +54,10 @@ export async function define(
  * Remove an autocmd
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Remove BufEnter autocmd
  *   await autocmd.remove(denops, "BufEnter", "*");
  *
@@ -88,10 +88,10 @@ export async function remove(
  * List defined autocmds
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // List all autocmd
  *   console.log(await autocmd.list(denops));
  *
@@ -138,10 +138,10 @@ export async function list(
  * Emit an autocmd in a buffer
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Emit an autocmd in a current buffer
  *   await autocmd.emit(denops, "BufEnter");
  *
@@ -182,10 +182,10 @@ export async function emit(
  * Emit an autocmd in all buffers
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as autocmd from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Emit an autocmd in all buffers
  *   await autocmd.emitAll(denops, "BufEnter");
  *

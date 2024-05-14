@@ -86,10 +86,10 @@ class CollectHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead and return values
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   const results = await collect(denops, (denops) => [
  *     denops.eval("&modifiable"),
  *     denops.eval("&modified"),
@@ -105,10 +105,10 @@ class CollectHelper implements Denops {
  * `collect()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   const results = await collect(denops, (denops) => {
  *     // !!! DON'T DO THIS !!!
  *     (async () => {

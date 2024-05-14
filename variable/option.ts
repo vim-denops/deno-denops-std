@@ -40,10 +40,10 @@ async function removeOption(
  * Options (`options` or `o`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { options } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set option
  *   await options.set(denops, "filetype", "world");
  *
@@ -94,10 +94,10 @@ export const o = options;
  * Local options (`localOptions` or `lo`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { localOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set option
  *   await localOptions.set(denops, "filetype", "world");
  *
@@ -148,10 +148,10 @@ export const lo = localOptions;
  * Global options (`globalOptions` or `go`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { globalOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set option
  *   await globalOptions.set(denops, "filetype", "world");
  *

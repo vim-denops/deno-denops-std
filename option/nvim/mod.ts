@@ -2,10 +2,10 @@
  * A module to provide accessors of Neovim native options.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as nvimOp from "https://deno.land/x/denops_std@$MODULE_VERSION/option/nvim/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // nvimOp has options only exist in Neovim
  *   console.log(await nvimOp.shada.get(denops));
  * }

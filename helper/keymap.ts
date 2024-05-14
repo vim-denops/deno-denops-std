@@ -33,12 +33,12 @@ function toKeys(keys: KeysSpecifier): Keys {
  * `denops#request` blocks, so note that it can only be used within `denops#notify`.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import { exprQuote as q } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  * import { send } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/keymap.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   denops.dispatcher = {
  *     send: async (): Promise<void> => {
  *       // Let's say the current buffer is "foo".

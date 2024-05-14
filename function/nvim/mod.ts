@@ -2,10 +2,10 @@
  * A module to provide functions of Neovim native functions.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as nvimFn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/nvim/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // nvimFn holds functions exists only in Neovim
  *   console.log(nvimFn.api_info(denops));
  * }
