@@ -1,6 +1,6 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 // deno-lint-ignore-file camelcase
-import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import type { Denops } from "@denops/core";
 
 /**
  * Return the absolute value of **{expr}**.  When **{expr}** evaluates to
@@ -866,7 +866,7 @@ export function complete_info(
  * made.  It returns the number of the choice.  For the first
  * choice this is 1.
  * Note: confirm() is only supported when compiled with dialog
- * support, see `+dialog_con` and `+dialog_gui`.
+ * support, see `+dialog_con` `+dialog_con_gui` and `+dialog_gui`.
  *
  * **{msg}** is displayed in a `dialog` with **{choices}** as the
  * alternatives.  When **{choices}** is missing or empty, "&OK" is
@@ -1329,6 +1329,8 @@ export function digraph_setlist(
  * - A `Job` is empty when it failed to start.
  * - A `Channel` is empty when it is closed.
  * - A `Blob` is empty when its length is zero.
+ * - An `Object` is empty, when the empty() method in the object
+ *   (if present) returns true. `object-empty()`
  *
  * For a long `List` this is much faster than comparing the
  * length with zero.
@@ -1388,7 +1390,8 @@ export function escape(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * turn the result of `string()` back into the original value.
  * This works for Numbers, Floats, Strings, Blobs and composites
  * of them.  Also works for `Funcref`s that refer to existing
- * functions.
+ * functions.  In `Vim9` script, it can be used to obtain `enum`
+ * values from their fully qualified names.
  *
  * Can also be used as a `method`:
  *
@@ -1554,6 +1557,9 @@ export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If the expansion fails, the result is an empty string.  A name
  * for a non-existing file is not included, unless **{string}** does
  * not start with '%', '#' or `'<'`, see below.
+ *
+ * For a `:terminal` window '%' expands to a '!' followed by
+ * the command or shell that is run.  `terminal-bufname`
  *
  * When **{string}** starts with '%', '#' or `'<'`, the expansion is
  * done like for the `cmdline-special` variables with their
@@ -2601,14 +2607,14 @@ export function getcellwidths(
 
 /**
  * Get a single character from the user or input stream.
- * If [expr] is omitted, wait until a character is available.
- * If [expr] is 0, only get a character when one is available.
+ * If **{expr}** is omitted, wait until a character is available.
+ * If **{expr}** is 0, only get a character when one is available.
  *         Return zero otherwise.
- * If [expr] is 1, only check if a character is available, it is
+ * If **{expr}** is 1, only check if a character is available, it is
  *         not consumed.  Return zero if no character available.
  * If you prefer always getting a string use `getcharstr()`.
  *
- * Without [expr] and when [expr] is 0 a whole character or
+ * Without **{expr}** and when **{expr}** is 0 a whole character or
  * special key is returned.  If it is a single character, the
  * result is a Number.  Use `nr2char()` to convert it to a String.
  * Otherwise a String is returned with the encoded character.
@@ -2618,11 +2624,11 @@ export function getcellwidths(
  * also a String when a modifier (shift, control, alt) was used
  * that is not included in the character.
  *
- * When [expr] is 0 and Esc is typed, there will be a short delay
+ * When **{expr}** is 0 and Esc is typed, there will be a short delay
  * while Vim waits to see if this is the start of an escape
  * sequence.
  *
- * When [expr] is 1 only the first byte is returned.  For a
+ * When **{expr}** is 1 only the first byte is returned.  For a
  * one-byte character it is the character itself as a number.
  * Use nr2char() to convert it to a String.
  *
@@ -2703,7 +2709,7 @@ export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         32      mouse double click
  *         64      mouse triple click
  *         96      mouse quadruple click (== 32 + 64)
- *         128     command (Macintosh only)
+ *         128     command (Mac) or super (GTK)
  * Only the modifiers that have not been included in the
  * character itself are obtained.  Thus Shift-a results in "A"
  * without a modifier.  Returns 0 if no modifiers are used.
@@ -2775,10 +2781,10 @@ export function getcharsearch(
 /**
  * Get a single character from the user or input stream as a
  * string.
- * If [expr] is omitted, wait until a character is available.
- * If [expr] is 0 or false, only get a character when one is
+ * If **{expr}** is omitted, wait until a character is available.
+ * If **{expr}** is 0 or false, only get a character when one is
  *         available.  Return an empty string otherwise.
- * If [expr] is 1 or true, only check if a character is
+ * If **{expr}** is 1 or true, only check if a character is
  *         available, it is not consumed.  Return an empty string
  *         if no character is available.
  * Otherwise this works like `getchar()`, except that a number
@@ -2930,6 +2936,7 @@ export function getcmdwintype(
  * help            help subjects
  * highlight       highlight groups
  * history         `:history` suboptions
+ * keymap          keyboard mappings
  * locale          locale names (as output of locale -a)
  * mapclear        buffer argument
  * mapping         mapping name
@@ -3586,7 +3593,7 @@ export function getregtype(
  * Examples:
  *
  *     :echo getscriptinfo({'name': 'myscript'})
- *     :echo getscriptinfo({'sid': 15}).variables
+ *     :echo getscriptinfo({'sid': 15})[0].variables
  */
 export function getscriptinfo(
   denops: Denops,
@@ -3844,7 +3851,8 @@ export function getwinpos(
  * The result is a Number, which is the X coordinate in pixels of
  * the left hand side of the GUI Vim window. Also works for an
  * xterm (uses a timeout of 100 msec).
- * The result will be -1 if the information is not available.
+ * The result will be -1 if the information is not available
+ * (e.g. on the Wayland backend).
  * The value can be used with `:winpos`.
  */
 export function getwinposx(denops: Denops): Promise<number>;
@@ -3859,7 +3867,8 @@ export function getwinposx(
  * The result is a Number, which is the Y coordinate in pixels of
  * the top of the GUI Vim window.  Also works for an xterm (uses
  * a timeout of 100 msec).
- * The result will be -1 if the information is not available.
+ * The result will be -1 if the information is not available
+ * (e.g. on the Wayland backend).
  * The value can be used with `:winpos`.
  */
 export function getwinposy(denops: Denops): Promise<number>;
@@ -4808,7 +4817,9 @@ export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * When **{expr}** is a `Blob` the number of bytes is returned.
  * When **{expr}** is a `Dictionary` the number of entries in the
  * `Dictionary` is returned.
- * Otherwise an error is given and returns zero.
+ * When **{expr}** is an `Object`, invokes the len() method in the
+ * object (if present) to get the length (`object-len()`).
+ * Otherwise returns zero.
  *
  * Can also be used as a `method`:
  *
@@ -6536,6 +6547,9 @@ export function prevnonblank(
  *
  *       1.41
  *
+ * You will get an overflow error `E1510`, when the field-width
+ * or precision will result in a string longer than 6400 chars.
+ *
  * You cannot mix positional and non-positional arguments:
  *
  *     echo printf("%s%1$s", "One", "Two")
@@ -7125,9 +7139,9 @@ export function reg_recording(
  *     echo startTime->reltime()->reltimestr()
  *
  * Without an argument reltime() returns the current time (the
- * representation is system-dependent, it can not be used as the
+ * representation is system-dependent, it cannot be used as the
  * wall-clock time, see `localtime()` for that).
- * With one argument is returns the time passed since the time
+ * With one argument it returns the time passed since the time
  * specified in the argument.
  * With two arguments it returns the time passed between **{start}**
  * and **{end}**.
@@ -7532,6 +7546,7 @@ export function screenstring(
  * When a match has been found its line number is returned.
  * If there is no match a 0 is returned and the cursor doesn't
  * move.  No error message is given.
+ * To get the matched string, use `matchbufline()`.
  *
  * **{flags}** is a String, which can contain these character flags:
  * 'b'     search Backward instead of forward
@@ -9260,8 +9275,8 @@ export function strcharlen(
  * of byte index and length.
  * When **{skipcc}** is omitted or zero, composing characters are
  * counted separately.
- * When **{skipcc}** set to 1, Composing characters are ignored,
- * similar to  `slice()`.
+ * When **{skipcc}** set to 1, composing characters are treated as a
+ * part of the preceding base character, similar to `slice()`.
  * When a character index is used where a character does not
  * exist it is omitted and counted as one character.  For
  * example:
@@ -9295,7 +9310,7 @@ export function strcharpart(
  * in String **{string}**.
  * When **{skipcc}** is omitted or zero, composing characters are
  * counted separately.
- * When **{skipcc}** set to 1, Composing characters are ignored.
+ * When **{skipcc}** set to 1, composing characters are ignored.
  * `strcharlen()` always does this.
  *
  * Returns zero on error.
@@ -9472,10 +9487,16 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Dictionary      {key: value, key: value}
  *         Class           class SomeName
  *         Object          object of SomeName {lnum: 1, col: 3}
+ *         Enum            enum EnumName
+ *         EnumValue       enum name.value {name: str, ordinal: nr}
  *
  * When a `List` or `Dictionary` has a recursive reference it is
  * replaced by "[...]" or "**{...}**".  Using eval() on the result
  * will then fail.
+ *
+ * For an object, invokes the string() method to get a textual
+ * representation of the object.  If the method is not present,
+ * then the default representation is used. `object-string()`
  *
  * Can also be used as a `method`:
  *
@@ -9950,6 +9971,10 @@ export function synIDtrans(
  *         synconcealed(lnum, 4)   [1, 'X', 2]
  *         synconcealed(lnum, 5)   [1, 'X', 2]
  *         synconcealed(lnum, 6)   [0, '', 0]
+ *
+ * Note: Doesn't consider `matchadd()` highlighting items,
+ * since syntax and matching highlighting are two different
+ * mechanisms `syntax-vs-match`.
  */
 export function synconcealed(
   denops: Denops,
@@ -10625,6 +10650,8 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Class:     12  `v:t_class`
  *         Object:    13  `v:t_object`
  *         Typealias: 14  `v:t_typealias`
+ *         Enum:      15  `v:t_enum`
+ *         EnumValue: 16  `v:t_enumvalue`
  * For backward compatibility, this method can be used:
  *
  *     :if type(myvar) == type(0)
@@ -11073,8 +11100,7 @@ export function win_move_statusline(
  * [1, 1], unless there is a tabline, then it is [2, 1].
  * **{nr}** can be the window number or the `window-ID`.  Use zero
  * for the current window.
- * Returns [0, 0] if the window cannot be found in the current
- * tabpage.
+ * Returns [0, 0] if the window cannot be found.
  *
  * Can also be used as a `method`:
  *
@@ -11089,10 +11115,10 @@ export function win_screenpos(
 }
 
 /**
- * Move the window **{nr}** to a new split of the window **{target}**.
- * This is similar to moving to **{target}**, creating a new window
- * using `:split` but having the same contents as window **{nr}**, and
- * then closing **{nr}**.
+ * Temporarily switch to window **{target}**, then move window **{nr}**
+ * to a new split adjacent to **{target}**.
+ * Unlike commands such as `:split`, no new windows are created
+ * (the `window-ID` of window **{nr}** is unchanged after the move).
  *
  * Both **{nr}** and **{target}** can be window numbers or `window-ID`s.
  * Both must be in the current tab page.
@@ -11236,7 +11262,9 @@ export function winlayout(
  *         `#`       the number of the last accessed window (where
  *                 `CTRL-W_p` goes to).  If there is no previous
  *                 window or it is in another tab page 0 is
- *                 returned.
+ *                 returned.  May refer to the current window in
+ *                 some cases (e.g. when evaluating 'statusline'
+ *                 expressions).
  *         **{N}**j    the number of the Nth window below the
  *                 current window (where `CTRL-W_j` goes to).
  *         **{N}**k    the number of the Nth window above the current

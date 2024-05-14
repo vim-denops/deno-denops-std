@@ -1,16 +1,13 @@
-import {
-  difference,
-  intersection,
-} from "https://deno.land/x/set_operations@v1.1.1/mod.ts";
-import * as path from "https://deno.land/std@0.217.0/path/mod.ts";
+import { difference, intersection } from "@lambdalisue/set-operations";
+import * as path from "@std/path";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
-const VIM_VERSION = "9.0.2189";
-const NVIM_VERSION = "0.9.4";
+const VIM_VERSION = "9.1.0399";
+const NVIM_VERSION = "0.9.5";
 
 const commonGenerateModule = "../../option/_generated.ts";
 const vimGenerateModule = "../../option/vim/_generated.ts";

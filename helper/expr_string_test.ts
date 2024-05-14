@@ -4,8 +4,8 @@ import {
   assertObjectMatch,
   assertRejects,
   assertThrows,
-} from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
+} from "@std/assert";
+import { test } from "@denops/test";
 import {
   exprQuote,
   isExprString,

@@ -2,8 +2,8 @@
  * A module to provide `denops.batch()` helper functions
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch, collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Denops } from "jsr:@denops/std";
+ * import { batch, collect } from "jsr:@denops/std/batch";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Call multiple denops functions sequentially in a signle RPC call

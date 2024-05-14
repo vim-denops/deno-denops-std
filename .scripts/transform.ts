@@ -1,8 +1,5 @@
-import {
-  fromFileUrl,
-  toFileUrl,
-} from "https://deno.land/std@0.217.0/path/mod.ts";
-import { intersection } from "https://deno.land/x/set_operations@v1.1.1/mod.ts";
+import { fromFileUrl, toFileUrl } from "@std/path";
+import { intersection } from "@lambdalisue/set-operations";
 
 interface ModuleInformation {
   sourcePath: string;

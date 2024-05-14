@@ -2,9 +2,9 @@
  * A module to provide Vim buffer utility functions
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import * as buffer from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Denops } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import * as buffer from "jsr:@denops/std/buffer";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   // Open `README.md`

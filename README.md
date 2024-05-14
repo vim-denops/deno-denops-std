@@ -1,7 +1,7 @@
 # 🐜 denops_std
 
-[![Vim 9.0.2189 or above](https://img.shields.io/badge/Vim-Support%209.0.2189-yellowgreen.svg?logo=vim)](https://github.com/vim/vim/tree/v9.0.2189)
-[![Neovim 0.9.4 or above](https://img.shields.io/badge/Neovim-Support%200.9.4-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.9.4)
+[![Vim 9.1.0399 or above](https://img.shields.io/badge/Vim-Support%209.1.0399-yellowgreen.svg?logo=vim)](https://github.com/vim/vim/tree/v9.1.0399)
+[![Neovim 0.9.5 or above](https://img.shields.io/badge/Neovim-Support%200.9.5-yellowgreen.svg?logo=neovim&logoColor=white)](https://github.com/neovim/neovim/tree/v0.9.5)
 [![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
 [![codecov](https://codecov.io/github/vim-denops/deno-denops-std/branch/main/graph/badge.svg?token=RKAZMUQ3D9)](https://codecov.io/github/vim-denops/deno-denops-std)
 [![deno doc](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/denops_std/mod.ts)
@@ -16,11 +16,11 @@ assumed to be called in a dedicated worker thread.
 By using this module, developers can write Vim/Neovim denops plugins like:
 
 ```typescript
-import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-import * as batch from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
-import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
-import * as vars from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
-import * as helper from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/mod.ts";
+import type { Denops } from "jsr:@denops/std";
+import * as batch from "jsr:@denops/std/batch";
+import * as fn from "jsr:@denops/std/function";
+import * as vars from "jsr:@denops/std/variable";
+import * as helper from "jsr:@denops/std/helper";
 
 import { assert, is } from "https://deno.land/x/unknownutil@v3.14.1/mod.ts";
 

@@ -1,9 +1,6 @@
-import {
-  assertEquals,
-  assertRejects,
-} from "https://deno.land/std@0.217.0/assert/mod.ts";
-import { test } from "https://deno.land/x/denops_test@v1.6.2/mod.ts";
-import { default as Encoding } from "https://cdn.skypack.dev/encoding-japanese@2.0.0/";
+import { assertEquals, assertRejects } from "@std/assert";
+import { default as Encoding } from "encoding-japanese";
+import { test } from "@denops/test";
 import * as fn from "../function/mod.ts";
 import {
   append,
