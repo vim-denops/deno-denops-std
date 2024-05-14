@@ -16,10 +16,10 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false`.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Load '../../foo.vim' from this file
  *   await load(denops, new URL("../../foo.vim", import.meta.url));
  *
@@ -32,10 +32,10 @@ export type LoadOptions = {
  * specified like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   const url = new URL("../../foo.vim", import.meta.url);
  *
  *   // Line below loads a script
@@ -52,10 +52,10 @@ export type LoadOptions = {
  * It returns `true` when the script is loaded. Otherwise, it returns `false` like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { load } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/load.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   const url = new URL("../../foo.vim", import.meta.url);
  *
  *   console.log(await load(denops, url));

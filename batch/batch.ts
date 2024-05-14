@@ -93,10 +93,10 @@ class BatchHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
  *     await denops.cmd("setlocal modifiable");
  *     await denops.cmd("setlocal noswap");
@@ -109,7 +109,7 @@ class BatchHelper implements Denops {
  * `batch()` like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Denops, Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
  * async function replace(denops: Denops, content: string): Promise<void> {
@@ -122,7 +122,7 @@ class BatchHelper implements Denops {
  *   });
  * }
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
  *     await denops.cmd("edit Hello");
  *     await replace(denops, "Hello Darkness My Old Friend");
@@ -134,10 +134,10 @@ class BatchHelper implements Denops {
  * falsy value in `batch()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
  *     // !!! DON'T DO THIS !!!
  *     if (await denops.eval("&verbose")) {
@@ -153,11 +153,11 @@ class BatchHelper implements Denops {
  * like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
  *     const id = lambda.register(denops, async () => {
  *       // This code is called outside of 'batch' block

@@ -5,10 +5,10 @@ import { Getter, Setter } from "./types.ts";
  * Register (`register` or `r`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { register } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set register
  *   await register.set(denops, "a", "world");
  *

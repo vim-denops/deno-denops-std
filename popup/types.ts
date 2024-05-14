@@ -74,10 +74,10 @@ export type OpenOptions = {
    * In vim, manual redraw is required after creating a popup window if this option is set to true.
    *
    * ```typescript
-   * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
    * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
    *
-   * export async function main(denops: Denops): Promise<void> {
+   * export const main: Entrypoint = async (denops) => {
    *   const popupWindow = await popup.open(denops, {
    *     relative: "editor",
    *     width: 20,

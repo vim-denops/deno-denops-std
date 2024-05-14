@@ -2,7 +2,7 @@
  * A module to provide expression string function to represents Vim's string constant.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import {
  *   type ExprString,
@@ -10,7 +10,7 @@
  *   useExprString,
  * } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Create `ExprString` value with `exprQuote`.
  *   const vimKeySequence: ExprString = q`\<Cmd>echo 'foo'\<CR>`;
  *
@@ -243,11 +243,11 @@ class ExprStringHelper implements Denops {
  * Call the denops function using Vim's string constant format.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import { exprQuote as q, useExprString } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await useExprString(denops, async (denops) => {
  *     await fn.feedkeys(denops, q`\<Cmd>echo 'foo'\<CR>`)
  *     await denops.cmd('echo value', { value: q`\U0001F680` })

@@ -10,10 +10,10 @@ export type GroupRemoveOptions = Omit<RemoveOptions, "group">;
  * Create an autocmd group and define/remove autocmds in that group.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { group } from "https://deno.land/x/denops_std@$MODULE_VERSION/autocmd/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await group(denops, "my-autocmd", (helper) => {
  *     // Define new autocmd for BufEnter
  *     helper.define("BufEnter", "*", "echo 'BufEnter'");

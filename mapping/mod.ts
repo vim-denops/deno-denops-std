@@ -24,10 +24,10 @@ export interface MapOptions {
  * Register a mapping for `lhs` to `rhs` with given options.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello");
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
  *     mode: "i",
@@ -38,10 +38,10 @@ export interface MapOptions {
  * Users can specify multiple `mode` value like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
  *     mode: ["n", "i", "x"],
  *   });
@@ -80,10 +80,10 @@ export interface UnmapOptions {
  * Remove a mapping for `lhs`.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello");
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
  *     mode: "i",
@@ -99,10 +99,10 @@ export interface UnmapOptions {
  * Users can specify multiple `mode` value like:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await mapping.map(denops, "<Plug>(test-denops-std)", "Hello", {
  *     mode: ["n", "i", "x"],
  *   });
@@ -135,10 +135,10 @@ export interface ReadOptions {
  * Read a mapping and return a `Mapping` instance.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await denops.cmd(`map <Plug>(test-denops-std) Hello`);
  *
  *   console.log(await mapping.read(denops, "<Plug>(test-denops-std)"));
@@ -193,10 +193,10 @@ export interface ListOptions {
  * List mappings which starts from `lhs`.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as mapping from "https://deno.land/x/denops_std@$MODULE_VERSION/mapping/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   const result = await mapping.list(denops, "<Plug>");
  *   console.log(result);
  *   // [

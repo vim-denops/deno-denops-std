@@ -5,10 +5,10 @@ import { Getter, Remover, Setter } from "./types.ts";
  * Environment variables (`environment` or `e`)
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { environment } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Set environment variable
  *   await environment.set(denops, "DENOPS_HELLO", "world");
  *

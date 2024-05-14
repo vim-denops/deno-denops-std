@@ -4,10 +4,10 @@ import type { Context, Denops } from "../mod.ts";
  * Execute multi-lined Vim script directly
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import { execute } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/execute.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   await execute(
  *     denops,
  *     `

@@ -2,12 +2,12 @@
  * A module to provide compatibility layer for popup window in Vim and Neovim.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as buffer from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Create a new buffer
  *   const bufnr = await fn.bufadd(denops, "");
  *   await fn.bufload(denops, bufnr);
@@ -41,12 +41,12 @@
  * Or with `await using` statement:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as buffer from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
  * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
  * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Create a new buffer
  *   const bufnr = await fn.bufadd(denops, "");
  *   await fn.bufload(denops, bufnr);
@@ -95,10 +95,10 @@ import {
  * Open a popup window showing the buffer in Vim/Neovim compatible way.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Open a popup window
  *   const popupWindow = await popup.open(denops, {
  *     relative: "editor",
@@ -118,10 +118,10 @@ import {
  * Or with `await using` statement:
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Open a popup window with `await using` statement
  *   await using popupWindow = await popup.open(denops, {
  *     relative: "editor",
@@ -179,10 +179,10 @@ export async function open(
  * Config a popup window in Vim/Neovim compatible way.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as popup from "https://deno.land/x/denops_std@$MODULE_VERSION/popup/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Open a popup window
  *   await using popupWindow = await popup.open(denops, {
  *     relative: "editor",

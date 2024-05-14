@@ -5,10 +5,10 @@
  * to create a lambda function of Vim script that is callable from Deno.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
  *   const lo = lambda.add(
  *     denops,
@@ -55,10 +55,10 @@ export interface Options {
  * Register a lambda function as a denops API and return the identifier.
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
  *   const id = lambda.register(
  *     denops,
@@ -81,10 +81,10 @@ export interface Options {
  * If you need an one-time lambda function, use `once` option like
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
  *   const id = lambda.register(
  *     denops,
@@ -150,10 +150,10 @@ export interface Lambda {
    * Create a Vim script expression to notify the lambda function
    *
    * ```typescript
-   * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
    * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
    *
-   * export async function main(denops: Denops): Promise<void> {
+   * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
    *     // Do what ever you want.
    *   });
@@ -167,10 +167,10 @@ export interface Lambda {
    * Create a Vim script expression to request the lambda function
    *
    * ```typescript
-   * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
    * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
    *
-   * export async function main(denops: Denops): Promise<void> {
+   * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
    *     // Do what ever you want.
    *   });
@@ -184,10 +184,10 @@ export interface Lambda {
    * Dispose the lambda function
    *
    * ```typescript
-   * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+   * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
    * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
    *
-   * export async function main(denops: Denops): Promise<void> {
+   * export const main: Entrypoint = async (denops) => {
    *   const a = lambda.add(denops, () => {
    *     // Do what ever you want.
    *   });
@@ -205,10 +205,10 @@ export interface Lambda {
  * Add a lambda function to a denops API and return the lambda object
  *
  * ```typescript
- * import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
+ * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
  * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
  *
- * export async function main(denops: Denops): Promise<void> {
+ * export const main: Entrypoint = async (denops) => {
  *   // Add lambda function
  *   const lo = lambda.add(
  *     denops,
