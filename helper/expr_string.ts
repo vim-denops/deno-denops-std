@@ -26,7 +26,7 @@
  */
 
 import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
-import is from "https://deno.land/x/unknownutil@v3.16.3/is.ts";
+import { is } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
 import { execute } from "./execute.ts";
 import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
