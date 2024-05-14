@@ -567,6 +567,7 @@ test({
       },
     });
 
+    const verboseSaved = await denops.eval("&verbose");
     for (const mode of modes) {
       await t.step({
         name: `list() lists mappings starts from {lhs} (${mode}map)`,
@@ -579,14 +580,33 @@ test({
               mode,
             },
           );
-          const result = await mapping.list(
+          await denops.cmd(`set verbose=0`);
+          const result1 = await mapping.list(
             denops,
             `<Plug>(test-denops-std-list-${mode}map)`,
             {
               mode,
             },
           );
-          assertEquals(result, [
+          assertEquals(result1, [
+            {
+              mode,
+              lhs: `<Plug>(test-denops-std-list-${mode}map)`,
+              rhs: "Hello",
+              noremap: false,
+              script: false,
+              buffer: false,
+            },
+          ]);
+          await denops.cmd(`set verbose=1`);
+          const result2 = await mapping.list(
+            denops,
+            `<Plug>(test-denops-std-list-${mode}map)`,
+            {
+              mode,
+            },
+          );
+          assertEquals(result2, [
             {
               mode,
               lhs: `<Plug>(test-denops-std-list-${mode}map)`,
@@ -599,5 +619,6 @@ test({
         },
       });
     }
+    await denops.cmd(`set verbose=${verboseSaved}`);
   },
 });
