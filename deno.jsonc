@@ -2,11 +2,34 @@
   "name": "@denops/std",
   "version": "0.0.0",
   "exports": {
-    ".": "./mod.ts"
+    ".": "./mod.ts",
+    "./argument": "./argument/mod.ts",
+    "./autocmd": "./autocmd/mod.ts",
+    "./batch": "./batch/mod.ts",
+    "./buffer": "./buffer/mod.ts",
+    "./bufname": "./bufname/mod.ts",
+    "./function": "./function/mod.ts",
+    "./function/vim": "./function/vim/mod.ts",
+    "./function/nvim": "./function/nvim/mod.ts",
+    "./helper": "./helper/mod.ts",
+    "./helper/execute": "./helper/execute.ts",
+    "./helper/expr_string": "./helper/expr_string.ts",
+    "./helper/keymap": "./helper/keymap.ts",
+    "./helper/input": "./helper/input.ts",
+    "./helper/load": "./helper/load.ts",
+    "./helper/echo": "./helper/echo.ts",
+    "./lambda": "./lambda/mod.ts",
+    "./mapping": "./mapping/mod.ts",
+    "./option": "./option/mod.ts",
+    "./option/vim": "./option/vim/mod.ts",
+    "./option/nvim": "./option/nvim/mod.ts",
+    "./popup": "./popup/mod.ts",
+    "./variable": "./variable/mod.ts"
   },
   "exclude": [
     "docs/**",
-    ".coverage/**"
+    ".coverage/**",
+    ".scripts/**"
   ],
   "imports": {
     "@core/unknownutil": "jsr:@core/unknownutil@^3.18.0",

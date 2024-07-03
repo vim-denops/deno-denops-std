@@ -38,7 +38,7 @@ export type ExprString = string & {
   /**
    * @internal
    */
-  readonly [EXPR_STRING_MARK]: 1;
+  readonly __denops_expr_string: 1;
 };
 
 type Jsonable = {
