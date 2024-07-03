@@ -1,4 +1,3 @@
-import { difference, intersection } from "@lambdalisue/set-operations";
 import * as path from "@std/path";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
@@ -45,7 +44,7 @@ for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
 }
 const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
 const vimDefs = parse(vimHelps.join("\n"));
-const vimFnSet = difference(new Set(vimDefs.map((def) => def.fn)), manualFnSet);
+const vimFnSet = new Set(vimDefs.map((def) => def.fn)).difference(manualFnSet);
 
 const nvimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/api.txt`,
@@ -58,8 +57,7 @@ for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
 }
 const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
 const nvimDefs = parse(nvimHelps.join("\n"));
-const nvimFnSet = difference(
-  new Set(nvimDefs.map((def) => def.fn)),
+const nvimFnSet = new Set(nvimDefs.map((def) => def.fn)).difference(
   manualFnSet,
 );
 
@@ -71,9 +69,9 @@ const commonDefs = vimDefs
       : vimDef
   );
 
-const commonFnSet = intersection(vimFnSet, nvimFnSet);
-const vimOnlyFnSet = difference(vimFnSet, nvimFnSet);
-const nvimOnlyFnSet = difference(nvimFnSet, vimFnSet);
+const commonFnSet = vimFnSet.intersection(nvimFnSet);
+const vimOnlyFnSet = vimFnSet.difference(nvimFnSet);
+const nvimOnlyFnSet = nvimFnSet.difference(vimFnSet);
 
 const commonCode = format(
   commonDefs.filter((def) => commonFnSet.has(def.fn)),

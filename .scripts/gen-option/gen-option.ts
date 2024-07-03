@@ -1,4 +1,3 @@
-import { difference, intersection } from "@lambdalisue/set-operations";
 import * as path from "@std/path";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
@@ -38,8 +37,7 @@ for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
 }
 const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
 const vimDefs = vimHelps.map(parse).flat();
-const vimOptionSet = difference(
-  new Set(vimDefs.map((def) => def.name)),
+const vimOptionSet = new Set(vimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
 
@@ -51,8 +49,7 @@ for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
 }
 const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
 const nvimDefs = nvimHelps.map(parse).flat();
-const nvimOptionSet = difference(
-  new Set(nvimDefs.map((def) => def.name)),
+const nvimOptionSet = new Set(nvimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
 
@@ -64,9 +61,9 @@ const commonDefs = vimDefs
       : vimDef
   );
 
-const commonOptionSet = intersection(vimOptionSet, nvimOptionSet);
-const vimOnlyOptionSet = difference(vimOptionSet, nvimOptionSet);
-const nvimOnlyOptionSet = difference(nvimOptionSet, vimOptionSet);
+const commonOptionSet = vimOptionSet.intersection(nvimOptionSet);
+const vimOnlyOptionSet = vimOptionSet.difference(nvimOptionSet);
+const nvimOnlyOptionSet = nvimOptionSet.difference(vimOptionSet);
 
 const commonCode = format(
   commonDefs.filter((def) => commonOptionSet.has(def.name)),

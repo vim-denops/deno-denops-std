@@ -1,5 +1,4 @@
 import { fromFileUrl, toFileUrl } from "@std/path";
-import { intersection } from "@lambdalisue/set-operations";
 
 interface ModuleInformation {
   sourcePath: string;
@@ -76,7 +75,7 @@ export async function transform(
   const fnNames = new Set(fnJSDocs.keys());
   const informations = await findExportModules(rootSourcePath);
   for (const { sourcePath, sourceText, functions } of informations) {
-    if (intersection(functions, fnNames).size > 0) {
+    if (functions.intersection(fnNames).size > 0) {
       const transformed = replaceFunctionDocs(sourceText, fnJSDocs);
       await Deno.writeTextFile(sourcePath, transformed);
     }
