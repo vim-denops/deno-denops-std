@@ -33,8 +33,8 @@
   ],
   "imports": {
     "@core/unknownutil": "jsr:@core/unknownutil@^3.18.0",
-    "@denops/core": "jsr:@denops/core@^6.0.6",
-    "@denops/test": "jsr:@denops/test@^2.0.0",
+    "@denops/core": "jsr:@denops/core@^7.0.0-pre0",
+    "@denops/test": "jsr:@denops/test@^3.0.0-pre0",
     "@lambdalisue/errorutil": "jsr:@lambdalisue/errorutil@^1.0.0",
     "@lambdalisue/itertools": "jsr:@lambdalisue/itertools@^1.1.2",
     "@lambdalisue/unreachable": "jsr:@lambdalisue/unreachable@^1.0.1",

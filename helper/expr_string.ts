@@ -188,6 +188,10 @@ class ExprStringHelper implements Denops {
     return this.#denops.meta;
   }
 
+  get interrupted(): AbortSignal {
+    return this.#denops.interrupted;
+  }
+
   get context(): Record<string | number | symbol, unknown> {
     return this.#denops.context;
   }
