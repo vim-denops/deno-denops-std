@@ -45,7 +45,7 @@
  * Developers can use `format` and `parse` functions like below:
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
+ * import { assertEquals } from "jsr:@std/assert";
  * import { format, parse } from "jsr:@denops/std/bufname";
  *
  * // Format
