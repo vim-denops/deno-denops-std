@@ -34,7 +34,7 @@ class BatchHelper implements Denops {
     return this.#denops.meta;
   }
 
-  get interrupted(): AbortSignal {
+  get interrupted(): AbortSignal | undefined {
     return this.#denops.interrupted;
   }
 
