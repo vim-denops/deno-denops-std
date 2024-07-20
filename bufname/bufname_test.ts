@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import * as path from "@std/path";
+import * as pathWin from "@std/path/windows";
 import { format, parse } from "./bufname.ts";
 
 Deno.test("format throws exception when 'scheme' contains unusable characters", () => {
@@ -188,7 +188,7 @@ Deno.test("format pass example in README.md", () => {
     "denops:///Users/John Titor/test.git;foo=foo&bar=bar1&bar=bar2#README.md",
   );
 
-  const fileUrl = path.win32.toFileUrl("C:\\Users\\John Titor\\test.git");
+  const fileUrl = pathWin.toFileUrl("C:\\Users\\John Titor\\test.git");
   assertEquals(
     fileUrl.pathname,
     "/C:/Users/John%20Titor/test.git",
@@ -407,7 +407,7 @@ Deno.test("parse pass example in README.md", () => {
     },
   );
   assertEquals(
-    path.win32.fromFileUrl(`file://${bufname.expr}`),
+    pathWin.fromFileUrl(`file://${bufname.expr}`),
     "C:\\Users\\John Titor\\test.git",
   );
 });
