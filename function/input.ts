@@ -1,5 +1,5 @@
 import type { Denops } from "../mod.ts";
-import { BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
+import { type BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
 
 /**
  * The result is a String, which is whatever the user typed on

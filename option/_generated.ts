@@ -1,5 +1,5 @@
 // NOTE: This file is generated. Do NOT modify it manually.
-import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import type { Denops } from "@denops/core";
 import {
   getbufvar,
   getwinvar,
@@ -442,11 +442,11 @@ export const autowriteall: GlobalOption<boolean> = {
  * what the background color looks like.  For changing the background
  * color, see `:hi-normal`.
  *
- * When 'background' is set Vim will adjust the default color groups for
- * the new value.  But the colors used for syntax highlighting will not
- * change.
+ * When 'background' is changed Vim will adjust the default color groups
+ * for the new value.  But the colors used for syntax highlighting will
+ * not change.
  * When a color scheme is loaded (the "g:colors_name" variable is set)
- * setting 'background' will cause the color scheme to be reloaded.  If
+ * changing 'background' will cause the color scheme to be reloaded.  If
  * the color scheme adjusts to the value of 'background' this will work.
  * However, if the color scheme sets 'background' itself the effect may
  * be undone.  First delete the "g:colors_name" variable when needed.
@@ -4919,7 +4919,7 @@ export const filetype: LocalOption<string> = {
  * Characters to fill the statuslines, vertical separators and special
  * lines in the window.
  * It is a comma-separated list of items.  Each item has a name, a colon
- * and the value of that item:
+ * and the value of that item: `E1511`
  *
  *   item name     default         Used for
  *   stl           ' '             statusline of the current window
@@ -4941,7 +4941,7 @@ export const filetype: LocalOption<string> = {
  *
  * For the "stl", "stlnc", "foldopen", "foldclose" and "foldsep" items
  * single-byte and multibyte characters are supported.  But double-width
- * characters are not supported.
+ * characters are not supported. `E1512`
  *
  * The highlighting used for these items:
  *   item name     highlight group
@@ -4954,8 +4954,6 @@ export const filetype: LocalOption<string> = {
  *   lastline      NonText                 `hl-NonText`
  *
  * (default `"vert:|,fold:-,eob:~"`)
- *
- * *not available when compiled without the `+folding` feature*
  */
 export const fillchars: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -11077,6 +11075,8 @@ export const rulerformat: GlobalOption<string> = {
  *
  * And any other file searched for with the `:runtime` command.
  *
+ * For $XDG_CONFIG_HOME see `xdg-base-dir`.
+ *
  * The defaults for most systems are setup to search five locations:
  * 1. In your home directory, for your personal preferences.
  * 2. In a system-wide Vim directory, for preferences from the system
@@ -11118,7 +11118,8 @@ export const rulerformat: GlobalOption<string> = {
  * security reasons.
  *
  * (default:
- *  Unix:  "$HOME/.vim,
+ *  Unix:  "$HOME/.vim or
+ *  $XDG_CONFIG_HOME/vim,
  *  $VIM/vimfiles,
  *  $VIMRUNTIME,
  *  $VIM/vimfiles/after,
@@ -12151,7 +12152,7 @@ export const shiftwidth: LocalOption<number> = {
  *   q     use "recording" instead of "recording @a"
  *   F     don't give the file info when editing a file, like
  *         `:silent` was used for the command; note that this also
- *         affects messages from autocommands
+ *         affects messages from autocommands and 'autoread' reloading
  *   S     do not show search count message when searching, e.g.
  *         "[1/5]"
  *
@@ -13793,6 +13794,8 @@ export const swapfile: LocalOption<boolean> = {
  *                 "split" when both are present.
  *    uselast      If included, jump to the previously used window when
  *                 jumping to errors with `quickfix` commands.
+ * If a window has 'winfixbuf' enabled, 'switchbuf' is currently not
+ * applied to the split window.
  *
  * (default "")
  */
@@ -14022,7 +14025,7 @@ export const tabpagemax: GlobalOption<number> = {
  * appear wrong in many places, e.g., when printing it.
  * The value must be more than 0 and less than 10000.
  *
- * There are four main ways to use tabs in Vim:
+ * There are five main ways to use tabs in Vim:
  * 1. Always keep 'tabstop' at 8, set 'softtabstop' and 'shiftwidth' to 4
  *    (or 3 or whatever you prefer) and use 'noexpandtab'.  Then Vim
  *    will use a mix of tabs and spaces, but typing `<Tab>` and `<BS>` will
@@ -14920,7 +14923,10 @@ export const ttimeoutlen: GlobalOption<number> = {
  * If the title cannot be restored, it is set to the value of 'titleold'.
  * You might want to restore the title outside of Vim then.
  * When using an xterm from a remote machine you can use this command:
+ *
  *     rsh machine_name xterm -display $DISPLAY &
+ *     ssh -X machine_name xterm &
+ *
  * then the WINDOWID environment variable should be inherited and the
  * title of the window should change back to what it should be after
  * exiting Vim.
@@ -15548,12 +15554,14 @@ export const verbosefile: GlobalOption<string> = {
 
 /**
  * Name of the directory where to store files for `:mkview`.
+ * For $XDG_CONFIG_HOME see `xdg-base-dir`.
  * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
  *
  * (default for Amiga: "home:vimfiles/view",
  *  for Win32: "$HOME/vimfiles/view",
- *  for Unix: "$HOME/.vim/view",
+ *  for Unix: "$HOME/.vim/view" or
+ *  "$XDG_CONFIG_HOME/vim/view"
  *  for macOS: "$VIM/vimfiles/view",
  *  for VMS: "sys$login:vimfiles/view")
  *
@@ -16254,8 +16262,8 @@ export const winaltkeys: GlobalOption<string> = {
  * will scroll 'window' minus two lines, with a minimum of one.
  * When 'window' is equal to 'lines' minus one CTRL-F and CTRL-B scroll
  * in a much smarter way, taking care of wrapping lines.
- * When resizing the Vim window, the value is smaller than 1 or more than
- * or equal to 'lines' it will be set to 'lines' minus 1.
+ * When resizing the Vim window, and the value is smaller than 1 or more
+ * than or equal to 'lines' it will be set to 'lines' minus 1.
  * Note: Do not confuse this with the height of the Vim window, use
  * 'lines' for that.
  *

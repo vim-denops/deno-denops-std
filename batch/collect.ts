@@ -1,4 +1,4 @@
-import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 
 type VimVoid<T> = T extends void ? 0 : T;
 
@@ -31,6 +31,10 @@ class CollectHelper implements Denops {
 
   get meta(): Meta {
     return this.#denops.meta;
+  }
+
+  get interrupted(): AbortSignal | undefined {
+    return this.#denops.interrupted;
   }
 
   get context(): Record<string | number | symbol, unknown> {
@@ -86,8 +90,8 @@ class CollectHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead and return values
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { collect } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const results = await collect(denops, (denops) => [
@@ -105,8 +109,8 @@ class CollectHelper implements Denops {
  * `collect()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { collect } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { collect } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const results = await collect(denops, (denops) => {

@@ -1,5 +1,5 @@
-import type { Denops } from "../mod.ts";
-import { Getter, Remover, Setter } from "./types.ts";
+import type { Denops } from "@denops/core";
+import type { Getter, Remover, Setter } from "./types.ts";
 
 type VariableGroup = "g" | "b" | "w" | "t" | "v";
 
@@ -43,8 +43,8 @@ async function removeVar(
  * Global variables (`globals` or `g`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { globals } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { globals } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set global variable
@@ -91,8 +91,8 @@ export const g = globals;
  * Buffer local variables (`buffers` or `b`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { buffers } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { buffers } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set buffer variable
@@ -139,8 +139,8 @@ export const b = buffers;
  * Window local variables (`windows` or `w`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { windows } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { windows } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set window variable
@@ -187,8 +187,8 @@ export const w = windows;
  * Tabpage local variables (`tabpages` or `t`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { tabpages } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { tabpages } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set tabpage variable
@@ -235,8 +235,8 @@ export const t = tabpages;
  * Vim variables (`vim` or `v`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { vim } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { vim } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set vim variable

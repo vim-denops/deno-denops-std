@@ -1,9 +1,9 @@
-import type { Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
+import * as itertools from "@lambdalisue/itertools";
+import { unreachable } from "@lambdalisue/unreachable";
 import * as batch from "../batch/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
-import * as itertools from "https://deno.land/x/itertools@v1.1.1/mod.ts";
-import { unreachable } from "https://deno.land/x/unreachable@v0.1.0/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
@@ -30,9 +30,9 @@ export interface Decoration {
  * Decorate the specified buffer with decorations
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { decorate, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { decorate, open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -77,9 +77,9 @@ export function decorate(
  * Undecorate the specified buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { decorate, open, undecorate } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { decorate, open, undecorate } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");

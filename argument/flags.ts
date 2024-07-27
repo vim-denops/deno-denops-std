@@ -9,8 +9,8 @@ const shortPattern = /^-([a-zA-Z0-9])(.*)/;
  * Parse string array to extract flags (-f/--flag).
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { parseFlags } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { parseFlags } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const args = [
@@ -66,8 +66,8 @@ export function parseFlags(args: string[]): [Flags, string[]] {
  * Validate if `flags` has unknown attributes.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { parse, validateFlags } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { parse, validateFlags } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const args = [
@@ -102,8 +102,8 @@ export function validateFlags(flags: Flags, knownAttributes: string[]): void {
  * Format `key` and `value` to construct string array.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { formatFlag } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { formatFlag } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   console.log(formatFlag("f", ""));
@@ -133,8 +133,8 @@ export function formatFlag(
  * Format `flags` to construct string array.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { formatFlags, parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/argument/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { formatFlags, parse } from "jsr:@denops/std/argument";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const args = [

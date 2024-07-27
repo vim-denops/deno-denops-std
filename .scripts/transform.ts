@@ -1,8 +1,4 @@
-import {
-  fromFileUrl,
-  toFileUrl,
-} from "https://deno.land/std@0.217.0/path/mod.ts";
-import { intersection } from "https://deno.land/x/set_operations@v1.1.1/mod.ts";
+import { fromFileUrl, toFileUrl } from "@std/path";
 
 interface ModuleInformation {
   sourcePath: string;
@@ -79,7 +75,7 @@ export async function transform(
   const fnNames = new Set(fnJSDocs.keys());
   const informations = await findExportModules(rootSourcePath);
   for (const { sourcePath, sourceText, functions } of informations) {
-    if (intersection(functions, fnNames).size > 0) {
+    if (functions.intersection(fnNames).size > 0) {
       const transformed = replaceFunctionDocs(sourceText, fnJSDocs);
       await Deno.writeTextFile(sourcePath, transformed);
     }

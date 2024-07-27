@@ -1,6 +1,6 @@
-import type { Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
+import { ulid } from "@std/ulid";
 import { execute } from "./execute.ts";
-import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/helper/echo@1";
 const cacheKeySilent = "denops_std/helper/echo/silent@1";
@@ -46,8 +46,8 @@ export function getSilent(denops: Denops): Silent {
  * `silent!` messages as follows.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo, echoerr, setSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { echo, echoerr, setSilent } from "jsr:@denops/std/helper/echo";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
@@ -78,8 +78,8 @@ export function setSilent(denops: Denops, silent: Silent): void {
  * function, use this function as follows
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo, echoerr, ensureSilent } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { echo, echoerr, ensureSilent } from "jsr:@denops/std/helper/echo";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Because silent is "silent!", `echo` and `echoerr` doesn't show messages.
@@ -128,8 +128,8 @@ export async function ensureSilent<T>(
  * running as 'test' mode to avoid unwilling test failures.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echo } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { echo } from "jsr:@denops/std/helper/echo";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await echo(denops, "Hello\nWorld!");
@@ -171,8 +171,8 @@ export function echo(
  * equivalent to `echoerr` command in Vim/Neovim.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { echoerr } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { echoerr } from "jsr:@denops/std/helper/echo";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await echoerr(denops, "This is error message");
@@ -213,8 +213,8 @@ export async function echoerr(
  * Print a stack trace when denops is running in debug mode.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { friendlyCall } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/echo.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { friendlyCall } from "jsr:@denops/std/helper/echo";
  *
  * export const main: Entrypoint = async (denops) => {
  *   denops.dispatcher = {

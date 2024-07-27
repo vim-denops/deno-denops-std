@@ -1,4 +1,4 @@
-import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 
 type Redraw = undefined | boolean;
 
@@ -32,6 +32,10 @@ class BatchHelper implements Denops {
 
   get meta(): Meta {
     return this.#denops.meta;
+  }
+
+  get interrupted(): AbortSignal | undefined {
+    return this.#denops.interrupted;
   }
 
   get context(): Record<string | number | symbol, unknown> {
@@ -93,8 +97,8 @@ class BatchHelper implements Denops {
  * Call multiple denops functions sequentially without RPC overhead
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { batch } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
@@ -109,8 +113,8 @@ class BatchHelper implements Denops {
  * `batch()` like:
  *
  * ```typescript
- * import type { Denops, Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Denops, Entrypoint } from "jsr:@denops/std";
+ * import { batch } from "jsr:@denops/std/batch";
  *
  * async function replace(denops: Denops, content: string): Promise<void> {
  *   await batch(denops, async (denops) => {
@@ -134,8 +138,8 @@ class BatchHelper implements Denops {
  * falsy value in `batch()`, indicating that you **cannot** write code like below:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { batch } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {
@@ -153,9 +157,9 @@ class BatchHelper implements Denops {
  * like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as lambda from "https://deno.land/x/denops_std@$MODULE_VERSION/lambda/mod.ts";
- * import { batch } from "https://deno.land/x/denops_std@$MODULE_VERSION/batch/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
+ * import { batch } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await batch(denops, async (denops) => {

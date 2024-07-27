@@ -14,8 +14,8 @@ When a Boolean option was specified in Getter, 0 or 1 was returned instead of
 Boolean, but since v5, Boolean has been returned.
 
 ```ts
-import type { Denops } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
-import * as op from "https://deno.land/x/denops_std@$MODULE_VERSION/option/mod.ts";
+import type { Denops } from "jsr:@denops/std";
+import * as op from "jsr:@denops/std/option";
 
 export async function test(denops: Denops) {
   await denops.cmd("setglobal autoread");

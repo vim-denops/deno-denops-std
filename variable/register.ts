@@ -1,12 +1,12 @@
-import type { Denops } from "../mod.ts";
-import { Getter, Setter } from "./types.ts";
+import type { Denops } from "@denops/core";
+import type { Getter, Setter } from "./types.ts";
 
 /**
  * Register (`register` or `r`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { register } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { register } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set register

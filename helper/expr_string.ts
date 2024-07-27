@@ -2,13 +2,13 @@
  * A module to provide expression string function to represents Vim's string constant.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
  * import {
  *   type ExprString,
  *   exprQuote as q,
  *   useExprString,
- * } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ * } from "jsr:@denops/std/helper/expr_string";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Create `ExprString` value with `exprQuote`.
@@ -24,11 +24,10 @@
  *
  * @module
  */
-
-import type { Context, Denops, Dispatcher, Meta } from "../mod.ts";
-import { is } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
+import { is } from "@core/unknownutil";
+import { ulid } from "@std/ulid";
 import { execute } from "./execute.ts";
-import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const EXPR_STRING_MARK = "__denops_expr_string";
 
@@ -39,7 +38,7 @@ export type ExprString = string & {
   /**
    * @internal
    */
-  readonly [EXPR_STRING_MARK]: 1;
+  readonly __denops_expr_string: 1;
 };
 
 type Jsonable = {
@@ -77,7 +76,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * Returns a `String` wrapper object instead of a primitive string.
  *
  * ```typescript
- * import { exprQuote } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ * import { exprQuote } from "jsr:@denops/std/helper/expr_string";
  *
  * console.log(exprQuote`foo` == "foo"); // outputs: true
  * console.log(exprQuote`foo` === "foo"); // outputs: false
@@ -104,7 +103,7 @@ const isInstanceOfString = is.InstanceOf(String);
  * Returns `true` if the value is a string marked as Vim's string constant format.
  *
  * ```typescript
- * import { exprQuote, isExprString } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ * import { exprQuote, isExprString } from "jsr:@denops/std/helper/expr_string";
  *
  * console.log(isExprString(exprQuote`foo`)); // outputs: true
  * console.log(isExprString("foo")); // outputs: false
@@ -189,6 +188,10 @@ class ExprStringHelper implements Denops {
     return this.#denops.meta;
   }
 
+  get interrupted(): AbortSignal | undefined {
+    return this.#denops.interrupted;
+  }
+
   get context(): Record<string | number | symbol, unknown> {
     return this.#denops.context;
   }
@@ -243,9 +246,9 @@ class ExprStringHelper implements Denops {
  * Call the denops function using Vim's string constant format.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { exprQuote as q, useExprString } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { exprQuote as q, useExprString } from "jsr:@denops/std/helper/expr_string";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await useExprString(denops, async (denops) => {

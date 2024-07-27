@@ -1,4 +1,4 @@
-import { DocsType } from "./types.ts";
+import type { DocsType } from "./types.ts";
 
 /**
  * Mapping between function name to `DocsType`.

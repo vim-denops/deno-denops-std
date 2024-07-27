@@ -1,18 +1,18 @@
-import type { Denops } from "../mod.ts";
-import { maybe } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+import type { Denops } from "@denops/core";
+import { maybe } from "@core/unknownutil";
+import { ulid } from "@std/ulid";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as op from "../option/mod.ts";
 import { execute } from "../helper/mod.ts";
 import {
-  FileFormat,
+  type FileFormat,
   findFileFormat,
   isFileFormat,
   splitText,
 } from "./fileformat.ts";
 import { tryDecode } from "./fileencoding.ts";
-import { ulid } from "https://deno.land/std@0.217.0/ulid/mod.ts";
 
 const cacheKey = "denops_std/buffer/buffer.ts@1";
 
@@ -134,8 +134,8 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * Open a `bufname` buffer with given options on the current window
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Open `README.md`
@@ -155,8 +155,8 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * the option like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md", { opener: "split" });
@@ -167,8 +167,8 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * tabpage number like:
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   const info = await open(denops, "README.md");
@@ -217,9 +217,9 @@ export interface OpenResult {
  * Reload the content of the `bufnr` buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { open, reload } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { open, reload } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -245,9 +245,9 @@ export async function reload(denops: Denops, bufnr: number): Promise<void> {
  * Decode raw binary content for string array for the `bufnr` buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { decode, open, replace } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { decode, open, replace } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -309,9 +309,9 @@ export interface DecodeResult {
  * Append content under the current cursor position or given lnum of the buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { append, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { append, open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -349,9 +349,9 @@ export interface AppendOptions {
  * Replace the content of the `bufnr` buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { open, replace } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { open, replace } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -392,9 +392,9 @@ export interface ReplaceOptions {
  * this function to concrete the content of such buffer to prevent this discard.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { concrete, open, replace } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { concrete, open, replace } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -442,10 +442,10 @@ export async function concrete(
  * Ensure the executor is executed under the specified buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as option from "https://deno.land/x/denops_std@$MODULE_VERSION/option/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { ensure, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as option from "jsr:@denops/std/option";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { ensure, open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");
@@ -499,9 +499,9 @@ export async function ensure<T>(
  * Ensure the executor is executed under a modifiable buffer
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { modifiable, open } from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { modifiable, open } from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   await open(denops, "README.md");

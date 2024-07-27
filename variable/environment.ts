@@ -1,12 +1,12 @@
-import type { Denops } from "../mod.ts";
-import { Getter, Remover, Setter } from "./types.ts";
+import type { Denops } from "@denops/core";
+import type { Getter, Remover, Setter } from "./types.ts";
 
 /**
  * Environment variables (`environment` or `e`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { environment } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { environment } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set environment variable

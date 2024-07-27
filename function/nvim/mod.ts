@@ -2,8 +2,8 @@
  * A module to provide functions of Neovim native functions.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as nvimFn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/nvim/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as nvimFn from "jsr:@denops/std/function/nvim";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // nvimFn holds functions exists only in Neovim

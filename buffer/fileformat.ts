@@ -1,17 +1,13 @@
-import {
-  assert,
-  ensure,
-  is,
-  maybe,
-  PredicateType,
-} from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
+import { assert, ensure, is, maybe, type Predicate } from "@core/unknownutil";
+
+export type FileFormat = "unix" | "dos" | "mac";
 
 /**
  * Predicate that the value is FileFormat.
  */
-export const isFileFormat = is.LiteralOneOf(["unix", "dos", "mac"] as const);
-
-export type FileFormat = PredicateType<typeof isFileFormat>;
+export const isFileFormat: Predicate<FileFormat> = is.LiteralOneOf(
+  ["unix", "dos", "mac"] as const,
+);
 
 /**
  * Assert that the value is FileFormat.

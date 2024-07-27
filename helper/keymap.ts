@@ -1,14 +1,14 @@
-import { type Denops } from "../mod.ts";
+import type { Denops } from "@denops/core";
+import { is } from "@core/unknownutil";
 import {
   exprQuote as q,
-  ExprString,
+  type ExprString,
   isExprString,
   useExprString,
 } from "./expr_string.ts";
 import { batch } from "../batch/mod.ts";
 import { register } from "../lambda/mod.ts";
 import { feedkeys } from "../function/mod.ts";
-import { is } from "https://deno.land/x/unknownutil@v3.16.3/mod.ts";
 
 export type Keys = {
   keys: string | ExprString;
@@ -33,10 +33,10 @@ function toKeys(keys: KeysSpecifier): Keys {
  * `denops#request` blocks, so note that it can only be used within `denops#notify`.
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import { exprQuote as q } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/expr_string.ts";
- * import { send } from "https://deno.land/x/denops_std@$MODULE_VERSION/helper/keymap.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import { exprQuote as q } from "jsr:@denops/std/helper/expr_string";
+ * import { send } from "jsr:@denops/std/helper/keymap";
  *
  * export const main: Entrypoint = async (denops) => {
  *   denops.dispatcher = {

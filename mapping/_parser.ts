@@ -1,4 +1,4 @@
-import { Mapping, Mode } from "./types.ts";
+import type { Mapping, Mode } from "./types.ts";
 
 /**
  * Parse record displayed by Vim's `map` command and return a `Mapping` instance.

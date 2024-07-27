@@ -1,6 +1,6 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 // deno-lint-ignore-file camelcase
-import type { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
+import type { Denops } from "@denops/core";
 
 /**
  * Adds a List of autocmds and autocmd groups.
@@ -317,6 +317,83 @@ export function cscope_connection(
 }
 
 /**
+ * Returns a String or a List containing the diff between the
+ * strings in **{fromlist}** and **{tolist}**.  Uses the Vim internal
+ * diff library to compute the diff.
+ *
+ * The optional "output" item in **{options}** specifies the returned
+ * diff format.  The following values are supported:
+ *     indices     Return a List of the starting and ending
+ *                 indices and a count of the strings in each
+ *                 diff hunk.
+ *     unified     Return the unified diff output as a String.
+ *                 This is the default.
+ *
+ * If the "output" item in **{options}** is "indices", then a List is
+ * returned.  Each List item contains a Dict with the following
+ * items for each diff hunk:
+ *     from_idx    start index in **{fromlist}** for this diff hunk.
+ *     from_count  number of strings in **{fromlist}** that are
+ *                 added/removed/modified in this diff hunk.
+ *     to_idx      start index in **{tolist}** for this diff hunk.
+ *     to_count    number of strings in **{tolist}** that are
+ *                 added/removed/modified in this diff hunk.
+ *
+ * The **{options}** Dict argument also specifies diff options
+ * (similar to 'diffopt') and supports the following items:
+ *     algorithm           Dict specifying the diff algorithm to
+ *                         use.  Supported boolean items are
+ *                         "myers", "minimal", "patience" and
+ *                         "histogram".
+ *     context             diff context length.  Default is 0.
+ *     iblank              ignore changes where lines are all
+ *                         blank.
+ *     icase               ignore changes in case of text.
+ *     indent-heuristic    use the indent heuristic for the
+ *                         internal diff library.
+ *     iwhite              ignore changes in amount of white
+ *                         space.
+ *     iwhiteall           ignore all white space changes.
+ *     iwhiteeol           ignore white space changes at end of
+ *                         line.
+ * For more information about these options, refer to 'diffopt'.
+ *
+ * To compute the unified diff, all the items in **{fromlist}** are
+ * concatenated into a string using a newline separator and the
+ * same for **{tolist}**.  The unified diff output uses line numbers.
+ *
+ * Returns an empty List or String if **{fromlist}** and **{tolist}** are
+ * identical.
+ *
+ * Examples:
+ *
+ *     :echo diff(['abc'], ['xxx'])
+ *      @@ -1 +1 @@
+ *      -abc
+ *      +xxx
+ *
+ *     :echo diff(['abc'], ['xxx'], {'output': 'indices'})
+ *      [{'from_idx': 0, 'from_count': 1, 'to_idx': 0, 'to_count': 1}]
+ *     :echo diff(readfile('oldfile'), readfile('newfile'))
+ *     :echo diff(getbufline(5, 1, '$'), getbufline(6, 1, '$'))
+ *
+ * For more examples, refer to `diff-func-examples`
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetFromList->diff(to_list)
+ */
+export function diff(
+  denops: Denops,
+  fromlist: unknown,
+  tolist: unknown,
+  options?: unknown,
+): Promise<unknown[]>;
+export function diff(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("diff", ...args);
+}
+
+/**
  * Output **{string}** as-is, including unprintable characters.
  * This can be used to output a terminal code. For example, to
  * disable modifyOtherKeys:
@@ -374,6 +451,57 @@ export function exists_compiled(
 }
 
 /**
+ * **{expr1}** must be a `List`, `String`, `Blob` or `Dictionary`.
+ * For each item in **{expr1}** execute **{expr2}**. **{expr1}** is not
+ * modified; its values may be, as with `:lockvar` 1. `E741`
+ * See `map()` and `filter()` to modify **{expr1}**.
+ *
+ * **{expr2}** must be a `string` or `Funcref`.
+ *
+ * If **{expr2}** is a `string`, inside **{expr2}** `v:val` has the value
+ * of the current item.  For a `Dictionary` `v:key` has the key
+ * of the current item and for a `List` `v:key` has the index of
+ * the current item.  For a `Blob` `v:key` has the index of the
+ * current byte. For a `String` `v:key` has the index of the
+ * current character.
+ * Examples:
+ *
+ *     call foreach(mylist, 'used[v:val] = true')
+ *
+ * This records the items that are in the **{expr1}** list.
+ *
+ * Note that **{expr2}** is the result of expression and is then used
+ * as a command.  Often it is good to use a `literal-string` to
+ * avoid having to double backslashes.
+ *
+ * If **{expr2}** is a `Funcref` it must take two arguments:
+ *         1. the key or the index of the current item.
+ *         2. the value of the current item.
+ * With a legacy script lambda you don't get an error if it only
+ * accepts one argument, but with a Vim9 lambda you get "E1106:
+ * One argument too many", the number of arguments must match.
+ * If the function returns a value, it is ignored.
+ *
+ * Returns **{expr1}** in all cases.
+ * When an error is encountered while executing **{expr2}** no
+ * further items in **{expr1}** are processed.
+ * When **{expr2}** is a Funcref errors inside a function are ignored,
+ * unless it was defined with the "abort" flag.
+ *
+ * Can also be used as a `method`:
+ *
+ *     mylist->foreach(expr2)
+ */
+export function foreach(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
+export function foreach(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("foreach", ...args);
+}
+
+/**
  * Move the Vim window to the foreground.  Useful when sent from
  * a client to a Vim server. `remote_send()`
  * On Win32 systems this might not work, the OS does not always
@@ -415,6 +543,108 @@ export function getmouseshape(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getmouseshape", ...args);
+}
+
+/**
+ * Returns the list of strings from **{pos1}** to **{pos2}** from a
+ * buffer.
+ *
+ * **{pos1}** and **{pos2}** must both be `List`s with four numbers.
+ * See `getpos()` for the format of the list.  It's possible
+ * to specify positions from a different buffer, but please
+ * note the limitations at `getregion-notes`.
+ *
+ * The optional argument **{opts}** is a Dict and supports the
+ * following items:
+ *
+ *         type            Specify the region's selection type
+ *                         (default: "v"):
+ *             "v"         for `characterwise` mode
+ *             "V"         for `linewise` mode
+ *             `"<CTRL-V>"`  for `blockwise-visual` mode
+ *
+ *         exclusive       If `TRUE`, use exclusive selection
+ *                         for the end position
+ *                         (default: follow 'selection')
+ *
+ * You can get the last selection type by `visualmode()`.
+ * If Visual mode is active, use `mode()` to get the Visual mode
+ * (e.g., in a `:vmap`).
+ * This function is useful to get text starting and ending in
+ * different columns, such as a `characterwise-visual` selection.
+ *
+ * Note that:
+ * - Order of **{pos1}** and **{pos2}** doesn't matter, it will always
+ *   return content from the upper left position to the lower
+ *   right position.
+ * - If 'virtualedit' is enabled and the region is past the end
+ *   of the lines, resulting lines are padded with spaces.
+ * - If the region is blockwise and it starts or ends in the
+ *   middle of a multi-cell character, it is not included but
+ *   its selected part is substituted with spaces.
+ * - If **{pos1}** and **{pos2}** are not in the same buffer, an empty
+ *   list is returned.
+ * - **{pos1}** and **{pos2}** must belong to a `bufloaded()` buffer.
+ * - It is evaluated in current window context, which makes a
+ *   difference if the buffer is displayed in a window with
+ *   different 'virtualedit' or 'list' values.
+ *
+ * Examples:
+ *
+ *     :xnoremap <CR>
+ *     \ <Cmd>echow getregion(
+ *     \ getpos('v'), getpos('.'), #{ type: mode() })<CR>
+ *
+ * Can also be used as a `method`:
+ *
+ *     getpos('.')->getregion(getpos("'a"))
+ */
+export function getregion(
+  denops: Denops,
+  pos1: unknown,
+  pos2: unknown,
+  opts?: unknown,
+): Promise<unknown[]>;
+export function getregion(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getregion", ...args);
+}
+
+/**
+ * Same as `getregion()`, but returns a list of positions
+ * describing the buffer text segments bound by **{pos1}** and
+ * **{pos2}**.
+ * The segments are a pair of positions for every line:
+ *
+ *     [[{start_pos}, {end_pos}], ...]
+ *
+ * The position is a `List` with four numbers:
+ *     [bufnum, lnum, col, off]
+ * "bufnum" is the buffer number.
+ * "lnum" and "col" are the position in the buffer.  The first
+ * column is 1.
+ * The "off" number is zero, unless 'virtualedit' is used.  Then
+ * it is the offset in screen columns from the start of the
+ * character.  E.g., a position within a `<Tab>` or after the last
+ * character.
+ *
+ * Can also be used as a `method`:
+ *
+ *     getpos('.')->getregionpos(getpos("'a"))
+ */
+export function getregionpos(
+  denops: Denops,
+  pos1: unknown,
+  pos2: unknown,
+  opts?: unknown,
+): Promise<unknown[]>;
+export function getregionpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getregionpos", ...args);
 }
 
 /**
@@ -883,6 +1113,125 @@ export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Returns the `List` of matches in lines from **{lnum}** to **{end}** in
+ * buffer **{buf}** where **{pat}** matches.
+ *
+ * **{lnum}** and **{end}** can either be a line number or the string "$"
+ * to refer to the last line in **{buf}**.
+ *
+ * The **{dict}** argument supports following items:
+ *     submatches  include submatch information (`/\(`)
+ *
+ * For each match, a `Dict` with the following items is returned:
+ *     byteidx     starting byte index of the match
+ *     lnum        line number where there is a match
+ *     text        matched string
+ * Note that there can be multiple matches in a single line.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * See `match-pattern` for information about the effect of some
+ * option settings on the pattern.
+ *
+ * When **{buf}** is not a valid buffer, the buffer is not loaded or
+ * **{lnum}** or **{end}** is not valid then an error is given and an
+ * empty `List` is returned.
+ *
+ * Examples:
+ *
+ *     " Assuming line 3 in buffer 5 contains "a"
+ *     :echo matchbufline(5, '\<\k\+\>', 3, 3)
+ *     [{'lnum': 3, 'byteidx': 0, 'text': 'a'}]
+ *     " Assuming line 4 in buffer 10 contains "tik tok"
+ *     :echo matchbufline(10, '\<\k\+\>', 1, 4)
+ *     [{'lnum': 4, 'byteidx': 0, 'text': 'tik'}, {'lnum': 4, 'byteidx': 4, 'text': 'tok'}]
+ *
+ * If **{submatch}** is present and is v:true, then submatches like
+ * "\1", "\2", etc. are also returned.  Example:
+ *
+ *     " Assuming line 2 in buffer 2 contains "acd"
+ *     :echo matchbufline(2, '\(a\)\?\(b\)\?\(c\)\?\(.*\)', 2, 2
+ *                                 \ {'submatches': v:true})
+ *     [{'lnum': 2, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *
+ * The "submatches" List always contains 9 items.  If a submatch
+ * is not found, then an empty string is returned for that
+ * submatch.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBuffer()->matchbufline('mypat', 1, '$')
+ */
+export function matchbufline(
+  denops: Denops,
+  buf: unknown,
+  pat: unknown,
+  lnum: unknown,
+  end: unknown,
+  dict?: unknown,
+): Promise<unknown[]>;
+export function matchbufline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchbufline", ...args);
+}
+
+/**
+ * Returns the `List` of matches in **{list}** where **{pat}** matches.
+ * **{list}** is a `List` of strings.  **{pat}** is matched against each
+ * string in **{list}**.
+ *
+ * The **{dict}** argument supports following items:
+ *     submatches  include submatch information (`/\(`)
+ *
+ * For each match, a `Dict` with the following items is returned:
+ *     byteidx     starting byte index of the match.
+ *     idx         index in **{list}** of the match.
+ *     text        matched string
+ *     submatches  a List of submatches.  Present only if
+ *                 "submatches" is set to v:true in **{dict}**.
+ *
+ * See `match-pattern` for information about the effect of some
+ * option settings on the pattern.
+ *
+ * Example:
+ *
+ *     :echo matchstrlist(['tik tok'], '\<\k\+\>')
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'tik'}, {'idx': 0, 'byteidx': 4, 'text': 'tok'}]
+ *     :echo matchstrlist(['a', 'b'], '\<\k\+\>')
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'a'}, {'idx': 1, 'byteidx': 0, 'text': 'b'}]
+ *
+ * If "submatches" is present and is v:true, then submatches like
+ * "\1", "\2", etc. are also returned.  Example:
+ *
+ *     :echo matchstrlist(['acd'], '\(a\)\?\(b\)\?\(c\)\?\(.*\)',
+ *                                 \ #{submatches: v:true})
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *
+ * The "submatches" List always contains 9 items.  If a submatch
+ * is not found, then an empty string is returned for that
+ * submatch.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetListOfStrings()->matchstrlist('mypat')
+ */
+export function matchstrlist(
+  denops: Denops,
+  list: unknown,
+  pat: unknown,
+  dict?: unknown,
+): Promise<unknown[]>;
+export function matchstrlist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchstrlist", ...args);
+}
+
+/**
  * Evaluate MzScheme expression **{expr}** and return its result
  * converted to Vim data structures.
  * Numbers and strings are returned as they are.
@@ -1230,7 +1579,8 @@ export function server2client(
  * Similar to using a `slice` "expr[start : end]", but "end" is
  * used exclusive.  And for a string the indexes are used as
  * character indexes instead of byte indexes, like in
- * `vim9script`.  Also, composing characters are not counted.
+ * `vim9script`.  Also, composing characters are treated as a
+ * part of the preceding base character.
  * When **{end}** is omitted the slice continues to the last item.
  * When **{end}** is -1 the last item is omitted.
  * Returns an empty value if **{start}** or **{end}** are invalid.
@@ -3804,6 +4154,8 @@ export function test_ignore_error(
  * **{event}** is a String and the supported values are:
  *     "mouse"     mouse event.
  *     "key"       keyboard event.
+ *     "set_keycode_trans_strategy"
+ *                 Change the key translation method.
  *
  * "mouse":
  *   Inject either a mouse button click, or a mouse move, event.
@@ -3859,6 +4211,15 @@ export function test_ignore_error(
  *                 (non-zero) then Vim will process any buffered
  *                 unprocessed key events.  All other **{args}**
  *                 items are optional when this is set and true.
+ *
+ * "set_keycode_trans_strategy":
+ *   `w32-experimental-keycode-trans-strategy`
+ *   Switch the keycode translation method. The supported methods
+ *   are:
+ *     experimental:   The method used after Patch v8.2.4807
+ *                     using ToUnicode() Win API call.
+ *     classic:        The method used pre Patch v8.2.4807
+ *                     using the TranslateMessage() Win API call.
  *
  * Returns TRUE if the event is successfully added or executed,
  * FALSE if there is a failure.
@@ -4007,29 +4368,32 @@ export function test_option_not_set(
  * **{name}**       effect when **{val}** is non-zero
  * alloc_lines  make a copy of every buffer line into allocated
  *              memory, so that memory access errors can be found
- *              by valgrind
+ *              by valgrind.
  * autoload     `import autoload` will load the script right
- *              away, not postponed until an item is used
- * char_avail   disable the char_avail() function
+ *              away, not postponed until an item is used.
+ * char_avail   disable the char_avail() function.
+ * defcompile   all the `:def` functions in a sourced script are
+ *              compiled when defined.  This is similar to using
+ *              the `:defcompile` command in a script.
  * nfa_fail     makes the NFA regexp engine fail to force a
- *              fallback to the old engine
+ *              fallback to the old engine.
  * no_query_mouse  do not query the mouse position for "dec"
- *                 terminals
+ *                 terminals.
  * no_wait_return  set the "no_wait_return" flag.  Not restored
  *                 with "ALL".
- * redraw       disable the redrawing() function
- * redraw_flag  ignore the RedrawingDisabled flag
- * starting     reset the "starting" variable, see below
+ * redraw       disable the redrawing() function.
+ * redraw_flag  ignore the RedrawingDisabled flag.
+ * starting     reset the "starting" variable, see below.
  * term_props   reset all terminal properties when the version
- *              string is detected
+ *              string is detected.
  * ui_delay     time in msec to use in ui_delay(); overrules a
- *              wait time of up to 3 seconds for messages
- * unreachable  no error for code after `:throw` and `:return`
- * uptime       overrules sysinfo.uptime
+ *              wait time of up to 3 seconds for messages.
+ * unreachable  no error for code after `:throw` and `:return`.
+ * uptime       overrules sysinfo.uptime.
  * vterm_title  setting the window title by a job running in a
- *              terminal window
+ *              terminal window.
  * ALL          clear all overrides, except alloc_lines (**{val}** is
- *              not used)
+ *              not used).
  *
  * "starting" is to be used when a test should behave like
  * startup was done.  Since the tests are run by sourcing a
@@ -4125,7 +4489,7 @@ export function test_settime(
 }
 
 /**
- * When [seed] is given this sets the seed value used by
+ * When **{seed}** is given this sets the seed value used by
  * `srand()`.  When omitted the test seed is removed.
  */
 export function test_srand_seed(denops: Denops, seed?: unknown): Promise<void>;

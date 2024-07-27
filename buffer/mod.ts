@@ -2,9 +2,9 @@
  * A module to provide Vim buffer utility functions
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import * as fn from "https://deno.land/x/denops_std@$MODULE_VERSION/function/mod.ts";
- * import * as buffer from "https://deno.land/x/denops_std@$MODULE_VERSION/buffer/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as fn from "jsr:@denops/std/function";
+ * import * as buffer from "jsr:@denops/std/buffer";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Open `README.md`

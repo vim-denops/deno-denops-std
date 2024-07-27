@@ -15,11 +15,11 @@ import type { Denops } from "../mod.ts";
  *         varname         internal variable (see
  *         dict.key        `internal-variables`).  Also works
  *         list[i]         for `curly-braces-names`, `Dictionary`
- *         import.Func     entries, `List` items, imported
- *                         items, etc.
- *                         Does not work for local variables in a
- *                         compiled `:def` function.
- *                         Also works for a function in `Vim9`
+ *         import.Func     entries, `List` items, class and
+ *         class.Func      object methods, imported items, etc.
+ *         object.Func     Does not work for local variables in a
+ *         class.varname   compiled `:def` function.
+ *         object.varname  Also works for a function in `Vim9`
  *                         script, since it can be used as a
  *                         function reference.
  *                         Beware that evaluating an index may

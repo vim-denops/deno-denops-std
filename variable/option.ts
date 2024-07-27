@@ -1,5 +1,5 @@
-import type { Denops } from "../mod.ts";
-import { Getter, Remover, Setter } from "./types.ts";
+import type { Denops } from "@denops/core";
+import type { Getter, Remover, Setter } from "./types.ts";
 
 type OptionGroup = "" | "l" | "g";
 
@@ -40,8 +40,8 @@ async function removeOption(
  * Options (`options` or `o`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { options } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { options } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set option
@@ -94,8 +94,8 @@ export const o = options;
  * Local options (`localOptions` or `lo`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { localOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { localOptions } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set option
@@ -148,8 +148,8 @@ export const lo = localOptions;
  * Global options (`globalOptions` or `go`)
  *
  * ```typescript
- * import type { Entrypoint } from "https://deno.land/x/denops_std@$MODULE_VERSION/mod.ts";
- * import { globalOptions } from "https://deno.land/x/denops_std@$MODULE_VERSION/variable/mod.ts";
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import { globalOptions } from "jsr:@denops/std/variable";
  *
  * export const main: Entrypoint = async (denops) => {
  *   // Set option

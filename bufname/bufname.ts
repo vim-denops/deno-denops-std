@@ -86,8 +86,8 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * percent-encoded characters. It's required to distinguish `params` and or `fragment`.
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
- * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
+ * import { assertEquals } from "jsr:@std/assert";
+ * import { format } from "jsr:@denops/std/bufname";
  *
  * assertEquals(
  *   format({
@@ -134,13 +134,13 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  *
  * This function does not handle path separator differences among platforms (Unix
  * uses `/` but Windows uses `\`). That's why it's recommended to normalize the
- * `expr` with [`toFileUrl`](https://deno.land/std/path#tofileurl) before when
+ * `expr` with [`toFileUrl`](https://jsr.io/@std/path/doc/posix/to-file-url/~/toFileUrl) before when
  * constructing a buffer name from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
- * import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
- * import { format } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
+ * import { assertEquals } from "jsr:@std/assert";
+ * import * as path from "jsr:@std/path";
+ * import { format } from "jsr:@denops/std/bufname";
  *
  * // NOTE:
  * // Works only on Windows (Use path.win32.toFileUrl instead on other platforms)
@@ -178,8 +178,8 @@ export function format(
  * For example, if it contains unusable characters ("<>|?*).
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
- * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
+ * import { assertEquals } from "jsr:@std/assert";
+ * import { parse } from "jsr:@denops/std/bufname";
  *
  * assertEquals(
  *   parse("denops:///Users/John Titor/test.git"),
@@ -228,13 +228,13 @@ export function format(
  *
  * This function does not handle path separator differences among platforms. That's
  * why it's recommended to restore the `expr` with
- * [`fromFileUrl`](https://deno.land/std/path#fromfileurl) after if a buffer name
+ * [`fromFileUrl`](https://jsr.io/@std/path/doc/from-file-url/~/fromFileUrl) after if a buffer name
  * was constructed from a real path. For example
  *
  * ```typescript
- * import { assertEquals } from "https://deno.land/std@0.211.0/assert/mod.ts";
- * import * as path from "https://deno.land/std@0.211.0/path/mod.ts";
- * import { parse } from "https://deno.land/x/denops_std@$MODULE_VERSION/bufname/mod.ts";
+ * import { assertEquals } from "jsr:@std/assert";
+ * import * as path from "jsr:@std/path";
+ * import { parse } from "jsr:@denops/std/bufname";
  *
  * const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
  * assertEquals(bufname, {
