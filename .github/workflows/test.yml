@@ -75,6 +75,11 @@ jobs:
           git clone https://github.com/vim-denops/denops.vim /tmp/denops.vim
           echo "DENOPS_TEST_DENOPS_PATH=/tmp/denops.vim" >> "$GITHUB_ENV"
 
+      - name: Try switching denops branch
+        run: |
+          git -C /tmp/denops.vim switch ${{ github.head_ref || github.ref_name }} || true
+          git -C /tmp/denops.vim branch
+
       - uses: rhysd/action-setup-vim@v1
         id: vim
         with:
