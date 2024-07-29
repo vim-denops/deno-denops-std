@@ -6,7 +6,7 @@ import * as streams from "@std/streams";
  */
 export async function downloadString(url: string): Promise<string> {
   const response = await fetch(url);
-  if (!response.body) {
+  if (response.status >= 400 || !response.body) {
     throw new Error(`Failed to read ${url}`);
   }
   //const reader = streams.readerFromStreamReader(response.body.getReader());
