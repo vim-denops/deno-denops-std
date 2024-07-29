@@ -3097,54 +3097,6 @@ export const shortname: LocalOption<boolean> = {
 };
 
 /**
- * Scrolling works with screen lines.  When 'wrap' is set and the first
- * line in the window wraps part of it may not be visible, as if it is
- * above the window. `"<<<"` is displayed at the start of the first line,
- * highlighted with `hl-NonText`.
- * You may also want to add "lastline" to the 'display' option to show as
- * much of the last line as possible.
- * NOTE: partly implemented, doesn't work yet for `gj` and `gk`.
- *
- * (default off)
- */
-export const smoothscroll: LocalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "smoothscroll");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "smoothscroll", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "smoothscroll");
-  },
-  async getLocal(denops: Denops): Promise<boolean> {
-    const result = await localOptions.get(denops, "smoothscroll");
-    return Boolean(result ?? false);
-  },
-  setLocal(denops: Denops, value: boolean): Promise<void> {
-    return localOptions.set(denops, "smoothscroll", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "smoothscroll");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
-    const result = await getbufvar(denops, bufnr, "&smoothscroll");
-    return Boolean(result ?? false);
-  },
-  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
-    return setbufvar(denops, bufnr, "&smoothscroll", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
-    const result = await getwinvar(denops, winnr, "&smoothscroll");
-    return Boolean(result ?? false);
-  },
-  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
-    return setwinvar(denops, winnr, "&smoothscroll", value);
-  },
-};
-
-/**
  * When this option is not empty a swap file is synced to disk after
  * writing to it.  This takes some time, especially on busy unix systems.
  * When this option is empty parts of the swap file may be in memory and
@@ -4205,52 +4157,6 @@ export const wincolor: LocalOption<string> = {
   },
   setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
     return setwinvar(denops, winnr, "&wincolor", value);
-  },
-};
-
-/**
- * If enabled, the window and the buffer it is displaying are paired.
- * For example, attempting to change the buffer with `:edit` will fail.
- * Other commands which change a window's buffer such as `:cnext` will
- * also skip any window with 'winfixbuf' enabled.  However if an Ex
- * command has a "!" modifier, it can force switching buffers.
- *
- * (default off)
- */
-export const winfixbuf: LocalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "winfixbuf");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "winfixbuf", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "winfixbuf");
-  },
-  async getLocal(denops: Denops): Promise<boolean> {
-    const result = await localOptions.get(denops, "winfixbuf");
-    return Boolean(result ?? false);
-  },
-  setLocal(denops: Denops, value: boolean): Promise<void> {
-    return localOptions.set(denops, "winfixbuf", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "winfixbuf");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
-    const result = await getbufvar(denops, bufnr, "&winfixbuf");
-    return Boolean(result ?? false);
-  },
-  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
-    return setbufvar(denops, bufnr, "&winfixbuf", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
-    const result = await getwinvar(denops, winnr, "&winfixbuf");
-    return Boolean(result ?? false);
-  },
-  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
-    return setwinvar(denops, winnr, "&winfixbuf", value);
   },
 };
 

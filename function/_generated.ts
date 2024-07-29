@@ -2358,6 +2358,57 @@ export function foldtextresult(
 }
 
 /**
+ * **{expr1}** must be a `List`, `String`, `Blob` or `Dictionary`.
+ * For each item in **{expr1}** execute **{expr2}**. **{expr1}** is not
+ * modified; its values may be, as with `:lockvar` 1. `E741`
+ * See `map()` and `filter()` to modify **{expr1}**.
+ *
+ * **{expr2}** must be a `string` or `Funcref`.
+ *
+ * If **{expr2}** is a `string`, inside **{expr2}** `v:val` has the value
+ * of the current item.  For a `Dictionary` `v:key` has the key
+ * of the current item and for a `List` `v:key` has the index of
+ * the current item.  For a `Blob` `v:key` has the index of the
+ * current byte. For a `String` `v:key` has the index of the
+ * current character.
+ * Examples:
+ *
+ *     call foreach(mylist, 'used[v:val] = true')
+ *
+ * This records the items that are in the **{expr1}** list.
+ *
+ * Note that **{expr2}** is the result of expression and is then used
+ * as a command.  Often it is good to use a `literal-string` to
+ * avoid having to double backslashes.
+ *
+ * If **{expr2}** is a `Funcref` it must take two arguments:
+ *         1. the key or the index of the current item.
+ *         2. the value of the current item.
+ * With a legacy script lambda you don't get an error if it only
+ * accepts one argument, but with a Vim9 lambda you get "E1106:
+ * One argument too many", the number of arguments must match.
+ * If the function returns a value, it is ignored.
+ *
+ * Returns **{expr1}** in all cases.
+ * When an error is encountered while executing **{expr2}** no
+ * further items in **{expr1}** are processed.
+ * When **{expr2}** is a Funcref errors inside a function are ignored,
+ * unless it was defined with the "abort" flag.
+ *
+ * Can also be used as a `method`:
+ *
+ *     mylist->foreach(expr2)
+ */
+export function foreach(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
+export function foreach(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("foreach", ...args);
+}
+
+/**
  * Get the full command name from a short abbreviated command
  * name; see `20.2` for details on command abbreviations.
  *
@@ -3526,6 +3577,73 @@ export function getreg(
 ): Promise<string | unknown[]>;
 export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getreg", ...args);
+}
+
+/**
+ * Returns the list of strings from **{pos1}** to **{pos2}** from a
+ * buffer.
+ *
+ * **{pos1}** and **{pos2}** must both be `List`s with four numbers.
+ * See `getpos()` for the format of the list.  It's possible
+ * to specify positions from a different buffer, but please
+ * note the limitations at `getregion-notes`.
+ *
+ * The optional argument **{opts}** is a Dict and supports the
+ * following items:
+ *
+ *         type            Specify the region's selection type.
+ *                         See `getregtype()` for possible values,
+ *                         except that the width can be omitted
+ *                         and an empty string cannot be used.
+ *                         (default: "v")
+ *
+ *         exclusive       If `TRUE`, use exclusive selection
+ *                         for the end position.
+ *                         (default: follow 'selection')
+ *
+ * You can get the last selection type by `visualmode()`.
+ * If Visual mode is active, use `mode()` to get the Visual mode
+ * (e.g., in a `:vmap`).
+ * This function is useful to get text starting and ending in
+ * different columns, such as a `characterwise-visual` selection.
+ *
+ * Note that:
+ * - Order of **{pos1}** and **{pos2}** doesn't matter, it will always
+ *   return content from the upper left position to the lower
+ *   right position.
+ * - If 'virtualedit' is enabled and the region is past the end
+ *   of the lines, resulting lines are padded with spaces.
+ * - If the region is blockwise and it starts or ends in the
+ *   middle of a multi-cell character, it is not included but
+ *   its selected part is substituted with spaces.
+ * - If **{pos1}** and **{pos2}** are not in the same buffer, an empty
+ *   list is returned.
+ * - **{pos1}** and **{pos2}** must belong to a `bufloaded()` buffer.
+ * - It is evaluated in current window context, which makes a
+ *   difference if the buffer is displayed in a window with
+ *   different 'virtualedit' or 'list' values.
+ *
+ * Examples:
+ *
+ *     :xnoremap <CR>
+ *     \ <Cmd>echow getregion(
+ *     \ getpos('v'), getpos('.'), #{ type: mode() })<CR>
+ *
+ * Can also be used as a `method`:
+ *
+ *     getpos('.')->getregion(getpos("'a"))
+ */
+export function getregion(
+  denops: Denops,
+  pos1: unknown,
+  pos2: unknown,
+  opts?: unknown,
+): Promise<unknown[]>;
+export function getregion(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getregion", ...args);
 }
 
 /**
@@ -5058,6 +5176,35 @@ export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Evaluate Lua expression **{expr}** and return its result converted
+ * to Vim data structures. Second **{expr}** may hold additional
+ * argument accessible as _A inside first **{expr}**.
+ * Strings are returned as they are.
+ * Boolean objects are converted to numbers.
+ * Numbers are converted to `Float` values.
+ * Dictionaries and lists obtained by vim.eval() are returned
+ * as-is.
+ * Other objects are returned as zero without any errors.
+ * See `lua-luaeval` for more details.
+ * Note that in a `:def` function local variables are not visible
+ * to **{expr}**.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetExpr()->luaeval()
+ *
+ * *only available when compiled with the `+lua` feature*
+ */
+export function luaeval(
+  denops: Denops,
+  expr1: unknown,
+  expr2?: unknown,
+): Promise<unknown>;
+export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("luaeval", ...args);
+}
+
+/**
  * **{expr1}** must be a `List`, `String`, `Blob` or `Dictionary`.
  * When **{expr1}** is a `List` or `Dictionary`, replace each
  * item in **{expr1}** with the result of evaluating **{expr2}**.
@@ -5274,6 +5421,64 @@ export function mapcheck(
 ): Promise<string>;
 export function mapcheck(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("mapcheck", ...args);
+}
+
+/**
+ * Returns a `List` of all mappings.  Each List item is a `Dict`,
+ * the same as what is returned by `maparg()`, see
+ * `mapping-dict`.  When **{abbr}** is there and it is `TRUE` use
+ * abbreviations instead of mappings.
+ *
+ * Example to show all mappings with 'MultiMatch' in rhs:
+ *
+ *     vim9script
+ *     echo maplist()->filter(
+ *             (_, m) => match(m.rhs, 'MultiMatch') >= 0)
+ *
+ * It can be tricky to find mappings for particular `:map-modes`.
+ * `mapping-dict`'s "mode_bits" can simplify this. For example,
+ * the mode_bits for Normal, Insert or Command-line modes are
+ * 0x19. To find all the mappings available in those modes you
+ * can do:
+ *
+ *     vim9script
+ *     var saved_maps = []
+ *     for m in maplist()
+ *         if and(m.mode_bits, 0x19) != 0
+ *             saved_maps->add(m)
+ *         endif
+ *     endfor
+ *     echo saved_maps->mapnew((_, m) => m.lhs)
+ *
+ * The values of the mode_bits are defined in Vim's src/vim.h
+ * file and they can be discovered at runtime using
+ * `:map-commands` and "maplist()". Example:
+ *
+ *     vim9script
+ *     omap xyzzy <Nop>
+ *     var op_bit = maplist()->filter(
+ *         (_, m) => m.lhs == 'xyzzy')[0].mode_bits
+ *     ounmap xyzzy
+ *     echo printf("Operator-pending mode bit: 0x%x", op_bit)
+ */
+export function maplist(denops: Denops, abbr?: unknown): Promise<unknown[]>;
+export function maplist(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("maplist", ...args);
+}
+
+/**
+ * Like `map()` but instead of replacing items in **{expr1}** a new
+ * List or Dictionary is created and returned.  **{expr1}** remains
+ * unchanged.  Items can still be changed by **{expr2}**, if you
+ * don't want that use `deepcopy()` first.
+ */
+export function mapnew(
+  denops: Denops,
+  expr1: unknown,
+  expr2: unknown,
+): Promise<unknown[] | Record<string, unknown> | unknown | string>;
+export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("mapnew", ...args);
 }
 
 /**
@@ -5571,6 +5776,72 @@ export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * Returns the `List` of matches in lines from **{lnum}** to **{end}** in
+ * buffer **{buf}** where **{pat}** matches.
+ *
+ * **{lnum}** and **{end}** can either be a line number or the string "$"
+ * to refer to the last line in **{buf}**.
+ *
+ * The **{dict}** argument supports following items:
+ *     submatches  include submatch information (`/\(`)
+ *
+ * For each match, a `Dict` with the following items is returned:
+ *     byteidx     starting byte index of the match
+ *     lnum        line number where there is a match
+ *     text        matched string
+ * Note that there can be multiple matches in a single line.
+ *
+ * This function works only for loaded buffers. First call
+ * `bufload()` if needed.
+ *
+ * See `match-pattern` for information about the effect of some
+ * option settings on the pattern.
+ *
+ * When **{buf}** is not a valid buffer, the buffer is not loaded or
+ * **{lnum}** or **{end}** is not valid then an error is given and an
+ * empty `List` is returned.
+ *
+ * Examples:
+ *
+ *     " Assuming line 3 in buffer 5 contains "a"
+ *     :echo matchbufline(5, '\<\k\+\>', 3, 3)
+ *     [{'lnum': 3, 'byteidx': 0, 'text': 'a'}]
+ *     " Assuming line 4 in buffer 10 contains "tik tok"
+ *     :echo matchbufline(10, '\<\k\+\>', 1, 4)
+ *     [{'lnum': 4, 'byteidx': 0, 'text': 'tik'}, {'lnum': 4, 'byteidx': 4, 'text': 'tok'}]
+ *
+ * If **{submatch}** is present and is v:true, then submatches like
+ * "\1", "\2", etc. are also returned.  Example:
+ *
+ *     " Assuming line 2 in buffer 2 contains "acd"
+ *     :echo matchbufline(2, '\(a\)\?\(b\)\?\(c\)\?\(.*\)', 2, 2
+ *                                 \ {'submatches': v:true})
+ *     [{'lnum': 2, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *
+ * The "submatches" List always contains 9 items.  If a submatch
+ * is not found, then an empty string is returned for that
+ * submatch.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetBuffer()->matchbufline('mypat', 1, '$')
+ */
+export function matchbufline(
+  denops: Denops,
+  buf: unknown,
+  pat: unknown,
+  lnum: unknown,
+  end: unknown,
+  dict?: unknown,
+): Promise<unknown[]>;
+export function matchbufline(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchbufline", ...args);
+}
+
+/**
  * Deletes a match with ID **{id}** previously defined by `matchadd()`
  * or one of the `:match` commands.  Returns 0 if successful,
  * otherwise -1.  See example for `matchadd()`.  All matches can
@@ -5798,6 +6069,59 @@ export function matchlist(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("matchlist", ...args);
+}
+
+/**
+ * Returns the `List` of matches in **{list}** where **{pat}** matches.
+ * **{list}** is a `List` of strings.  **{pat}** is matched against each
+ * string in **{list}**.
+ *
+ * The **{dict}** argument supports following items:
+ *     submatches  include submatch information (`/\(`)
+ *
+ * For each match, a `Dict` with the following items is returned:
+ *     byteidx     starting byte index of the match.
+ *     idx         index in **{list}** of the match.
+ *     text        matched string
+ *     submatches  a List of submatches.  Present only if
+ *                 "submatches" is set to v:true in **{dict}**.
+ *
+ * See `match-pattern` for information about the effect of some
+ * option settings on the pattern.
+ *
+ * Example:
+ *
+ *     :echo matchstrlist(['tik tok'], '\<\k\+\>')
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'tik'}, {'idx': 0, 'byteidx': 4, 'text': 'tok'}]
+ *     :echo matchstrlist(['a', 'b'], '\<\k\+\>')
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'a'}, {'idx': 1, 'byteidx': 0, 'text': 'b'}]
+ *
+ * If "submatches" is present and is v:true, then submatches like
+ * "\1", "\2", etc. are also returned.  Example:
+ *
+ *     :echo matchstrlist(['acd'], '\(a\)\?\(b\)\?\(c\)\?\(.*\)',
+ *                                 \ #{submatches: v:true})
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *
+ * The "submatches" List always contains 9 items.  If a submatch
+ * is not found, then an empty string is returned for that
+ * submatch.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetListOfStrings()->matchstrlist('mypat')
+ */
+export function matchstrlist(
+  denops: Denops,
+  list: unknown,
+  pat: unknown,
+  dict?: unknown,
+): Promise<unknown[]>;
+export function matchstrlist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("matchstrlist", ...args);
 }
 
 /**
@@ -8717,11 +9041,12 @@ export function sha256(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Otherwise it will enclose **{string}** in single quotes and
  * replace all "'" with "'\''".
  *
- * When the **{special}** argument is present and it's a non-zero
- * Number or a non-empty String (`non-zero-arg`), then special
- * items such as "!", "%", "#" and `"<cword>"` will be preceded by
- * a backslash.  This backslash will be removed again by the `:!`
- * command.
+ * The **{special}** argument adds additional escaping of keywords
+ * used in Vim commands. When it is not omitted and a non-zero
+ * number or a non-empty String (`non-zero-arg`), then special
+ * items such as "!", "%", "#" and `"<cword>"` (as listed in
+ * `expand()`) will be preceded by a backslash.
+ * This backslash will be removed again by the `:!` command.
  *
  * The "!" character will be escaped (again with a `non-zero-arg`
  * **{special}**) when 'shell' contains "csh" in the tail.  That is
@@ -8860,6 +9185,30 @@ export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function sinh(denops: Denops, expr: unknown): Promise<number>;
 export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("sinh", ...args);
+}
+
+/**
+ * Similar to using a `slice` "expr[start : end]", but "end" is
+ * used exclusive.  And for a string the indexes are used as
+ * character indexes instead of byte indexes, like in
+ * `vim9script`.  Also, composing characters are treated as a
+ * part of the preceding base character.
+ * When **{end}** is omitted the slice continues to the last item.
+ * When **{end}** is -1 the last item is omitted.
+ * Returns an empty value if **{start}** or **{end}** are invalid.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetList()->slice(offset)
+ */
+export function slice(
+  denops: Denops,
+  expr: unknown,
+  start: unknown,
+  end?: unknown,
+): Promise<string | unknown[] | unknown>;
+export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("slice", ...args);
 }
 
 /**
@@ -9147,6 +9496,48 @@ export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
 export function srand(denops: Denops, expr?: unknown): Promise<unknown[]>;
 export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("srand", ...args);
+}
+
+/**
+ * Return a string which contains characters indicating the
+ * current state.  Mostly useful in callbacks that want to do
+ * work that may not always be safe.  Roughly this works like:
+ * - callback uses state() to check if work is safe to do.
+ *   Yes: then do it right away.
+ *   No:  add to work queue and add a `SafeState` and/or
+ *        `SafeStateAgain` autocommand (`SafeState` triggers at
+ *        toplevel, `SafeStateAgain` triggers after handling
+ *        messages and callbacks).
+ * - When SafeState or SafeStateAgain is triggered and executes
+ *   your autocommand, check with `state()` if the work can be
+ *   done now, and if yes remove it from the queue and execute.
+ *   Remove the autocommand if the queue is now empty.
+ * Also see `mode()`.
+ *
+ * When **{what}** is given only characters in this string will be
+ * added.  E.g, this checks if the screen has scrolled:
+ *
+ *     if state('s') == ''
+ *        " screen has not scrolled
+ *
+ * These characters indicate the state, generally indicating that
+ * something is busy:
+ *     m   halfway a mapping, :normal command, feedkeys() or
+ *         stuffed command
+ *     o   operator pending, e.g. after `d`
+ *     a   Insert mode autocomplete active
+ *     x   executing an autocommand
+ *     w   blocked on waiting, e.g. ch_evalexpr(), ch_read() and
+ *         ch_readraw() when reading json
+ *     S   not triggering SafeState or SafeStateAgain, e.g. after
+ *         `f` or a count
+ *     c   callback invoked, including timer (repeats for
+ *         recursiveness up to "ccc")
+ *     s   screen has scrolled for messages
+ */
+export function state(denops: Denops, what?: unknown): Promise<string>;
+export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("state", ...args);
 }
 
 /**
@@ -9673,6 +10064,42 @@ export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
+ * The result is a Number, which is the number of UTF-16 code
+ * units in String **{string}** (after converting it to UTF-16).
+ *
+ * When **{countcc}** is TRUE, composing characters are counted
+ * separately.
+ * When **{countcc}** is omitted or FALSE, composing characters are
+ * ignored.
+ *
+ * Returns zero on error.
+ *
+ * Also see `strlen()` and `strcharlen()`.
+ * Examples:
+ *
+ *     echo strutf16len('a')               returns 1
+ *     echo strutf16len('©')               returns 1
+ *     echo strutf16len('😊')               returns 2
+ *     echo strutf16len('ą́')             returns 1
+ *     echo strutf16len('ą́', v:true)     returns 3
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetText()->strutf16len()
+ */
+export function strutf16len(
+  denops: Denops,
+  string: unknown,
+  countcc?: unknown,
+): Promise<number>;
+export function strutf16len(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("strutf16len", ...args);
+}
+
+/**
  * The result is a Number, which is the number of display cells
  * String **{string}** occupies.  A Tab character is counted as one
  * cell, alternatively use `strdisplaywidth()`.
@@ -9800,6 +10227,26 @@ export function substitute(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("substitute", ...args);
+}
+
+/**
+ * Returns a list of swap file names, like what "vim -r" shows.
+ * See the `-r` command argument.  The 'directory' option is used
+ * for the directories to inspect.  If you only want to get a
+ * list of swap files in the current directory then temporarily
+ * set 'directory' to a dot:
+ *
+ *     let save_dir = &directory
+ *     let &directory = '.'
+ *     let swapfiles = swapfilelist()
+ *     let &directory = save_dir
+ */
+export function swapfilelist(denops: Denops): Promise<unknown[]>;
+export function swapfilelist(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("swapfilelist", ...args);
 }
 
 /**
@@ -10328,7 +10775,9 @@ export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let tmpfile = tempname()
  *     :exe "redir > " .. tmpfile
  *
- * For Unix, the file will be in a private directory `tempfile`.
+ * For Unix, the file will be in a private directory `tempfile`
+ * that is recursively deleted when Vim exits, on other systems
+ * temporary files are not cleaned up automatically on exit.
  * For MS-Windows forward slashes are used when the 'shellslash'
  * option is set, or when 'shellcmdflag' starts with '-' and
  * 'shell' does not contain powershell or pwsh.
@@ -10771,6 +11220,49 @@ export function uniq(
 ): Promise<unknown[]>;
 export function uniq(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("uniq", ...args);
+}
+
+/**
+ * Same as `charidx()` but returns the UTF-16 code unit index of
+ * the byte at **{idx}** in **{string}** (after converting it to UTF-16).
+ *
+ * When **{charidx}** is present and TRUE, **{idx}** is used as the
+ * character index in the String **{string}** instead of as the byte
+ * index.
+ * An **{idx}** in the middle of a UTF-8 sequence is rounded
+ * downwards to the beginning of that sequence.
+ *
+ * Returns -1 if the arguments are invalid or if there are less
+ * than **{idx}** bytes in **{string}**. If there are exactly **{idx}** bytes
+ * the length of the string in UTF-16 code units is returned.
+ *
+ * See `byteidx()` and `byteidxcomp()` for getting the byte index
+ * from the UTF-16 index and `charidx()` for getting the
+ * character index from the UTF-16 index.
+ * Refer to `string-offset-encoding` for more information.
+ * Examples:
+ *
+ *     echo utf16idx('a😊😊', 3) returns 2
+ *     echo utf16idx('a😊😊', 7) returns 4
+ *     echo utf16idx('a😊😊', 1, 0, 1)   returns 2
+ *     echo utf16idx('a😊😊', 2, 0, 1)   returns 4
+ *     echo utf16idx('aą́c', 6)               returns 2
+ *     echo utf16idx('aą́c', 6, 1)    returns 4
+ *     echo utf16idx('a😊😊', 9) returns -1
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetName()->utf16idx(idx)
+ */
+export function utf16idx(
+  denops: Denops,
+  string: unknown,
+  idx: unknown,
+  countcc?: unknown,
+  charidx?: unknown,
+): Promise<number>;
+export function utf16idx(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("utf16idx", ...args);
 }
 
 /**
@@ -12026,4 +12518,372 @@ export function sign_unplacelist(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("sign_unplacelist", ...args);
+}
+
+/**
+ * Like garbagecollect(), but executed right away.  This must
+ * only be called directly to avoid any structure to exist
+ * internally, and `v:testing` must have been set before calling
+ * any function.
+ * This will not work when called from a :def function, because
+ * variables on the stack will be freed.
+ */
+export function test_garbagecollect_now(denops: Denops): Promise<void>;
+export function test_garbagecollect_now(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("test_garbagecollect_now", ...args);
+}
+
+/**
+ * Run **{cmd}** and add an error message to `v:errors` if it does
+ * NOT produce a beep or visual bell.
+ * Also see `assert_fails()`, `assert_nobeep()` and
+ * `assert-return`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetCmd()->assert_beeps()
+ */
+export function assert_beeps(denops: Denops, cmd: unknown): Promise<number>;
+export function assert_beeps(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_beeps", ...args);
+}
+
+/**
+ * When **{expected}** and **{actual}** are not equal an error message is
+ * added to `v:errors` and 1 is returned.  Otherwise zero is
+ * returned. `assert-return`
+ * The error is in the form "Expected **{expected}** but got
+ * **{actual}**".  When **{msg}** is present it is prefixed to that.
+ *
+ * There is no automatic conversion, the String "4" is different
+ * from the Number 4.  And the number 4 is different from the
+ * Float 4.0.  The value of 'ignorecase' is not used here, case
+ * always matters.
+ * Example:
+ *
+ *     assert_equal('foo', 'bar')
+ *
+ * Will result in a string to be added to `v:errors`:
+ *         test.vim line 12: Expected 'foo' but got 'bar'
+ *
+ * Can also be used as a `method`, the base is passed as the
+ * second argument:
+ *
+ *     mylist->assert_equal([1, 2, 3])
+ */
+export function assert_equal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_equal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equal", ...args);
+}
+
+/**
+ * When the files **{fname-one}** and **{fname-two}** do not contain
+ * exactly the same text an error message is added to `v:errors`.
+ * Also see `assert-return`.
+ * When **{fname-one}** or **{fname-two}** does not exist the error will
+ * mention that.
+ * Mainly useful with `terminal-diff`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetLog()->assert_equalfile('expected.log')
+ */
+export function assert_equalfile(
+  denops: Denops,
+  fname_one: unknown,
+  fname_two: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_equalfile(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_equalfile", ...args);
+}
+
+/**
+ * When v:exception does not contain the string **{error}** an error
+ * message is added to `v:errors`.  Also see `assert-return`.
+ * This can be used to assert that a command throws an exception.
+ * Using the error number, followed by a colon, avoids problems
+ * with translations:
+ *
+ *     try
+ *       commandthatfails
+ *       call assert_false(1, 'command should have failed')
+ *     catch
+ *       call assert_exception('E492:')
+ *     endtry
+ */
+export function assert_exception(
+  denops: Denops,
+  error: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_exception(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_exception", ...args);
+}
+
+/**
+ * Run **{cmd}** and add an error message to `v:errors` if it does
+ * NOT produce an error or when **{error}** is not found in the
+ * error message.  Also see `assert-return`.
+ *
+ * When **{error}** is a string it must be found literally in the
+ * first reported error. Most often this will be the error code,
+ * including the colon, e.g. "E123:".
+ *
+ *     assert_fails('bad cmd', 'E987:')
+ *
+ * When **{error}** is a `List` with one or two strings, these are
+ * used as patterns.  The first pattern is matched against the
+ * first reported error:
+ *
+ *     assert_fails('cmd', ['E987:.*expected bool'])
+ *
+ * The second pattern, if present, is matched against the last
+ * reported error.
+ * If there is only one error then both patterns must match. This
+ * can be used to check that there is only one error.
+ * To only match the last error use an empty string for the first
+ * error:
+ *
+ *     assert_fails('cmd', ['', 'E987:'])
+ *
+ * If **{msg}** is empty then it is not used.  Do this to get the
+ * default message when passing the **{lnum}** argument.
+ *
+ * When **{lnum}** is present and not negative, and the **{error}**
+ * argument is present and matches, then this is compared with
+ * the line number at which the error was reported. That can be
+ * the line number in a function or in a script.
+ *
+ * When **{context}** is present it is used as a pattern and matched
+ * against the context (script name or function name) where
+ * **{lnum}** is located in.
+ *
+ * Note that beeping is not considered an error, and some failing
+ * commands only beep.  Use `assert_beeps()` for those.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetCmd()->assert_fails('E99:')
+ */
+export function assert_fails(
+  denops: Denops,
+  cmd: unknown,
+  error?: unknown,
+  msg?: unknown,
+  lnum?: unknown,
+  context?: unknown,
+): Promise<number>;
+export function assert_fails(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_fails", ...args);
+}
+
+/**
+ * When **{actual}** is not false an error message is added to
+ * `v:errors`, like with `assert_equal()`.
+ * The error is in the form "Expected False but got **{actual}**".
+ * When **{msg}** is present it is prepended to that.
+ * Also see `assert-return`.
+ *
+ * A value is false when it is zero. When **{actual}** is not a
+ * number the assert fails.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetResult()->assert_false()
+ */
+export function assert_false(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_false(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_false", ...args);
+}
+
+/**
+ * This asserts number and `Float` values.  When **{actual}**  is lower
+ * than **{lower}** or higher than **{upper}** an error message is added
+ * to `v:errors`.  Also see `assert-return`.
+ * The error is in the form "Expected range **{lower}** - **{upper}**,
+ * but got **{actual}**".  When **{msg}** is present it is prefixed to
+ * that.
+ */
+export function assert_inrange(
+  denops: Denops,
+  lower: unknown,
+  upper: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_inrange(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_inrange", ...args);
+}
+
+/**
+ * When **{pattern}** does not match **{actual}** an error message is
+ * added to `v:errors`.  Also see `assert-return`.
+ * The error is in the form "Pattern **{pattern}** does not match
+ * **{actual}**".  When **{msg}** is present it is prefixed to that.
+ *
+ * **{pattern}** is used as with `=~`: The matching is always done
+ * like 'magic' was set and 'cpoptions' is empty, no matter what
+ * the actual value of 'magic' or 'cpoptions' is.
+ *
+ * **{actual}** is used as a string, automatic conversion applies.
+ * Use "^" and "$" to match with the start and end of the text.
+ * Use both to match the whole text.
+ *
+ * Example:
+ *
+ *     assert_match('^f.*o$', 'foobar')
+ *
+ * Will result in a string to be added to `v:errors`:
+ *         test.vim line 12: Pattern '^f.*o$' does not match 'foobar'
+ *
+ * Can also be used as a `method`:
+ *
+ *     getFile()->assert_match('foo.*')
+ */
+export function assert_match(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_match(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_match", ...args);
+}
+
+/**
+ * Run **{cmd}** and add an error message to `v:errors` if it
+ * produces a beep or visual bell.
+ * Also see `assert_beeps()`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetCmd()->assert_nobeep()
+ */
+export function assert_nobeep(denops: Denops, cmd: unknown): Promise<number>;
+export function assert_nobeep(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_nobeep", ...args);
+}
+
+/**
+ * The opposite of `assert_equal()`: add an error message to
+ * `v:errors` when **{expected}** and **{actual}** are equal.
+ * Also see `assert-return`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     mylist->assert_notequal([1, 2, 3])
+ */
+export function assert_notequal(
+  denops: Denops,
+  expected: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_notequal(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notequal", ...args);
+}
+
+/**
+ * The opposite of `assert_match()`: add an error message to
+ * `v:errors` when **{pattern}** matches **{actual}**.
+ * Also see `assert-return`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     getFile()->assert_notmatch('bar.*')
+ */
+export function assert_notmatch(
+  denops: Denops,
+  pattern: unknown,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_notmatch(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_notmatch", ...args);
+}
+
+/**
+ * Report a test failure directly, using String **{msg}**.
+ * Always returns one.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetMessage()->assert_report()
+ */
+export function assert_report(denops: Denops, msg: unknown): Promise<number>;
+export function assert_report(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_report", ...args);
+}
+
+/**
+ * When **{actual}** is not true an error message is added to
+ * `v:errors`, like with `assert_equal()`.
+ * Also see `assert-return`.
+ * A value is TRUE when it is a non-zero number.  When **{actual}**
+ * is not a number the assert fails.
+ * When **{msg}** is given it precedes the default message.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetResult()->assert_true()
+ */
+export function assert_true(
+  denops: Denops,
+  actual: unknown,
+  msg?: unknown,
+): Promise<number>;
+export function assert_true(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("assert_true", ...args);
 }

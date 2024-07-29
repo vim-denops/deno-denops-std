@@ -18,7 +18,7 @@ import type {
  * In a `:terminal` buffer this is the terminal channel.
  * Read-only.
  *
- * (default: 0)
+ * (default 0)
  */
 export const channel: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
@@ -99,8 +99,9 @@ export const inccommand: GlobalOption<string> = {
 
 /**
  * This option controls the number of lines / columns to scroll by when
- * scrolling with a mouse. The option is a comma separated list of parts.
- * Each part consists of a direction and a count as follows:
+ * scrolling with a mouse wheel (`scroll-mouse-wheel`). The option is
+ * a comma-separated list. Each part consists of a direction and a count
+ * as follows:
  *         direction:count,direction:count
  * Direction is one of either "hor" or "ver". "hor" controls horizontal
  * scrolling and "ver" controls vertical scrolling. Count sets the amount
@@ -112,7 +113,7 @@ export const inccommand: GlobalOption<string> = {
  *
  * Example:
  *
- *     :set mousescroll=ver:5,hor:2
+ *     set mousescroll=ver:5,hor:2
  *
  * Will make Nvim scroll 5 lines at a time when scrolling vertically, and
  * scroll 2 columns at a time when scrolling horizontally.
@@ -151,8 +152,8 @@ export const mousescroll: GlobalOption<string> = {
  * the popupmenu using `highlight-blend`. For instance, to enable
  * transparency but force the current selected element to be fully opaque:
  *
- *     :set pumblend=15
- *     :hi PmenuSel blend=0
+ *     set pumblend=15
+ *     hi PmenuSel blend=0
  *
  * UI-dependent. Works best with RGB colors. 'termguicolors'
  *
@@ -213,7 +214,7 @@ export const pumblend: GlobalOption<number> = {
  *     nodelta     Send all internally redrawn cells to the UI, even if
  *                 they are unchanged from the already displayed state.
  *
- * (default '')
+ * (default "")
  */
 export const redrawdebug: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -244,7 +245,7 @@ export const redrawdebug: GlobalOption<string> = {
  * Minimum is 1, maximum is 100000.
  * Only in `terminal` buffers.
  *
- * (default: 10000)
+ * (default 10000)
  */
 export const scrollback: LocalOption<number> = {
   async get(denops: Denops): Promise<number> {
@@ -374,7 +375,7 @@ export const scrollback: LocalOption<number> = {
  *
  * Example:
  *
- *     :set shada='50,<1000,s100,:0,n~/nvim/shada
+ *     set shada='50,<1000,s100,:0,n~/nvim/shada
  *
  * '50             Marks will be remembered for the last 50 files you
  *                 edited.
@@ -431,7 +432,7 @@ export const shada: GlobalOption<string> = {
  * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
  *
- * (default: "")
+ * (default "")
  */
 export const shadafile: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -470,9 +471,13 @@ export const shadafile: GlobalOption<string> = {
  * %s      sign column for currently drawn line
  * %C      fold column for currently drawn line
  *
- * NOTE: To draw the sign and fold columns, their items must be included in
- * 'statuscolumn'. Even when they are not included, the status column width
- * will adapt to the 'signcolumn' and 'foldcolumn' width.
+ * The 'statuscolumn' width follows that of the default columns and
+ * adapts to the `'numberwidth'`, `'signcolumn'` and `'foldcolumn'` option
+ * values (regardless of whether the sign and fold items are present).
+ * Additionally, the 'statuscolumn' grows with the size of the evaluated
+ * format string, up to a point (following the maximum size of the default
+ * fold, sign and number columns). Shrinking only happens when the number
+ * of lines in a buffer changes, or the 'statuscolumn' option is set.
  *
  * The `v:lnum`    variable holds the line number to be drawn.
  * The `v:relnum`  variable holds the relative line number to be drawn.
@@ -480,35 +485,39 @@ export const shadafile: GlobalOption<string> = {
  *               when drawing the actual buffer line, and positive when
  *               drawing the wrapped part of a buffer line.
  *
+ * When using `v:relnum`, keep in mind that cursor movement by itself will
+ * not cause the 'statuscolumn' to update unless `'relativenumber'` is set.
+ *
  * NOTE: The %@ click execute function item is supported as well but the
  * specified function will be the same for each row in the same column.
  * It cannot be switched out through a dynamic 'statuscolumn' format, the
  * handler should be written with this in mind.
  *
- * Examples: >vim
- *         " Relative number with bar separator and click handlers:
- *         :set statuscolumn=%@SignCb@%s%=%T%@NumCb@%r│%T
+ * Examples:
  *
- *         " Right aligned relative cursor line number:
- *         :let &stc='%=%{v:relnum?v:relnum:v:lnum} '
+ *     " Relative number with bar separator and click handlers:
+ *     set statuscolumn=%@SignCb@%s%=%T%@NumCb@%r│%T
  *
- *         " Line numbers in hexadecimal for non wrapped part of lines:
- *         :let &stc='%=%{v:virtnum>0?"":printf("%x",v:lnum)} '
+ *     " Right aligned relative cursor line number:
+ *     let &stc='%=%{v:relnum?v:relnum:v:lnum} '
  *
- *         " Human readable line numbers with thousands separator:
- *         :let &stc='%{substitute(v:lnum,"\\d\\zs\\ze\\'
- *                    . '%(\\d\\d\\d\\)\\+$",",","g")}'
+ *     " Line numbers in hexadecimal for non wrapped part of lines:
+ *     let &stc='%=%{v:virtnum>0?"":printf("%x",v:lnum)} '
  *
- *         " Both relative and absolute line numbers with different
- *         " highlighting for odd and even relative numbers:
- *         :let &stc='%#NonText#%{&nu?v:lnum:""}' .
- *          '%=%{&rnu&&(v:lnum%2)?"\ ".v:relnum:""}' .
- *          '%#LineNr#%{&rnu&&!(v:lnum%2)?"\ ".v:relnum:""}'
+ *     " Human readable line numbers with thousands separator:
+ *     let &stc='%{substitute(v:lnum,"\\d\\zs\\ze\\'
+ *                . '%(\\d\\d\\d\\)\\+$",",","g")}'
  *
- * <       WARNING: this expression is evaluated for each screen line so defining
+ *     " Both relative and absolute line numbers with different
+ *     " highlighting for odd and even relative numbers:
+ *     let &stc='%#NonText#%{&nu?v:lnum:""}' .
+ *      '%=%{&rnu&&(v:lnum%2)?"\ ".v:relnum:""}' .
+ *      '%#LineNr#%{&rnu&&!(v:lnum%2)?"\ ".v:relnum:""}'
+ *
+ * WARNING: this expression is evaluated for each screen line so defining
  * an expensive expression can negatively affect render performance.
  *
- * (default: empty)
+ * (default "")
  */
 export const statuscolumn: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -567,7 +576,7 @@ export const statuscolumn: LocalOption<string> = {
  *
  *    C1       Control characters 0x80...0x9F
  *
- * (default: "BS,HT,ESC,DEL")
+ * (default "BS,HT,ESC,DEL")
  */
 export const termpastefilter: GlobalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -593,6 +602,37 @@ export const termpastefilter: GlobalOption<string> = {
 };
 
 /**
+ * If the host terminal supports it, buffer all screen updates
+ * made during a redraw cycle so that each screen is displayed in
+ * the terminal all at once. This can prevent tearing or flickering
+ * when the terminal updates faster than Nvim can redraw.
+ *
+ * (default on)
+ */
+export const termsync: GlobalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "termsync");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "termsync", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "termsync");
+  },
+  async getGlobal(denops: Denops): Promise<boolean> {
+    const result = await globalOptions.get(denops, "termsync");
+    return Boolean(result ?? false);
+  },
+  setGlobal(denops: Denops, value: boolean): Promise<void> {
+    return globalOptions.set(denops, "termsync", value);
+  },
+  resetGlobal(denops: Denops): Promise<void> {
+    return globalOptions.remove(denops, "termsync");
+  },
+};
+
+/**
  * When non-empty, this option enables the window bar and determines its
  * contents. The window bar is a bar that's shown at the top of every
  * window with it enabled. The value of 'winbar' is evaluated like with
@@ -607,7 +647,7 @@ export const termpastefilter: GlobalOption<string> = {
  *
  * This option cannot be set in a modeline when 'modelineexpr' is off.
  *
- * (default empty)
+ * (default "")
  */
 export const winbar: GlobalOrLocalOption<string> = {
   async get(denops: Denops): Promise<string> {
@@ -721,7 +761,7 @@ export const winblend: LocalOption<number> = {
  *
  *     set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC
  *
- * (default empty)
+ * (default "")
  */
 export const winhighlight: LocalOption<string> = {
   async get(denops: Denops): Promise<string> {

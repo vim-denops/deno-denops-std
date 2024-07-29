@@ -3,11 +3,11 @@ import type { Denops } from "@denops/core";
 import type { NvimOpenWinConfig } from "./nvim_open_win.ts";
 
 /**
- * Configures window layout. Currently only for floating and external windows
- * (including changing a split window to those layouts).
+ * Configures window layout. Cannot be used to move the last window in a
+ * tabpage to a different one.
  *
- * When reconfiguring a floating window, absent option keys will not be
- * changed. `row`/`col` and `relative` must be reconfigured together.
+ * When reconfiguring a window, absent option keys will not be changed.
+ * `row`/`col` and `relative` must be reconfigured together.
  *
  * Parameters:
  *   - **{window}**  Window handle, or 0 for current window
