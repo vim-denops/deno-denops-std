@@ -58,8 +58,11 @@ export function parse(content: string): Definition[] {
     } else {
       const line = content.substring(0, start + 1).split("\n").length;
       console.error(
-        `Failed to parse function definition for ${fn} at line ${line}`,
+        `Failed to parse function definition for '${fn}' at line ${line}:`,
       );
+      console.error("----- block start -----");
+      console.error(block);
+      console.error("----- block end -----");
     }
   }
   return definitions;
