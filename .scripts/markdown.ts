@@ -12,8 +12,8 @@ export function createMarkdownFromHelp(body: string): string {
   const codeBlockIndent = "    ";
   let lastIndent = firstlineIndent;
   body = body.replaceAll(
-    /(?<normal>.*?)[\n ]>\n(?<code>.*?)(?:\n(?=<)|$)|(?<rest>.*)/gs,
-    (_, normal: string, code: string, rest: string) => {
+    /(?<normal>.*?)[\n ]>(?<ft>\w*)\n(?<code>.*?)(?:\n(?=<)|$)|(?<rest>.*)/gs,
+    (_, normal: string, _ft: string, code: string, rest: string) => {
       if (rest !== undefined) {
         return formatNormalBlock(rest);
       }
