@@ -36,7 +36,7 @@ for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
   console.log(`Download from ${vimHelpDownloadUrl}`);
 }
 const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
-const vimDefs = vimHelps.map(parse).flat();
+const vimDefs = parse(vimHelps.join("\n"));
 const vimOptionSet = new Set(vimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
@@ -48,7 +48,7 @@ for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
   console.log(`Download from ${nvimHelpDownloadUrl}`);
 }
 const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
-const nvimDefs = nvimHelps.map(parse).flat();
+const nvimDefs = parse(nvimHelps.join("\n"));
 const nvimOptionSet = new Set(nvimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
