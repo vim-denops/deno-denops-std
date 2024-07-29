@@ -110,7 +110,8 @@ function parseBlock(name: string, body: string): Option | undefined {
   const reTags = /(?:[ \t]+\*[^*\s]+\*)+[ \t]*$/.source;
   const reShortNames = /(?:[ \t]+'\w+')*/.source;
   const reType = /[ \t]+(?<type>\w+)/.source;
-  const reDefaults = /[ \t]+(?<defaults>\(.*?(?:\n\t{3,}[ \t].*?)*?\))/.source;
+  const reDefaults =
+    /[ \t]+(?<defaults>\(.*?(?:\n(?:\t{3,}| {24,})[ \t].*?)*?\))/.source;
   const reDefinition =
     `^'${name}'${reShortNames}(?:${reType}(?:${reDefaults})?)?(?:${reTags})?$`;
   const m1 = body.match(new RegExp(reDefinition, "dm"));
