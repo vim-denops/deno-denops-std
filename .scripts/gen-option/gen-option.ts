@@ -5,8 +5,8 @@ import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
-const VIM_VERSION = "9.1.0399";
-const NVIM_VERSION = "0.9.5";
+const VIM_VERSION = "9.1.0448";
+const NVIM_VERSION = "0.10.0";
 
 const commonGenerateModule = "../../option/_generated.ts";
 const vimGenerateModule = "../../option/vim/_generated.ts";
