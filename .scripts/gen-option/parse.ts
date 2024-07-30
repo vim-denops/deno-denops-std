@@ -29,7 +29,7 @@ export function parse(content: string) {
 
   const options: Option[] = [];
   const succeeds = new Set<number>();
-  const errors: Array<{ name: string; start: number }> = [];
+  const errors: Array<{ name: string; start: number; block: string }> = [];
   let last = -1;
   for (const match of content.matchAll(/\*'(\w+)'\*/g)) {
     const name = match[1];
@@ -45,17 +45,20 @@ export function parse(content: string) {
       succeeds.add(start);
       last = end;
     } else {
-      errors.push({ name, start });
+      errors.push({ name, start, block });
     }
   }
 
   if (errors.length) {
-    for (const { name, start } of errors) {
+    for (const { name, start, block } of errors) {
       if (!succeeds.has(start)) {
         const line = content.substring(0, start + 1).split("\n").length;
         console.error(
-          `Failed to parse option definition for ${name} at line ${line}`,
+          `Failed to parse option definition for '${name}' at line ${line}:`,
         );
+        console.error("----- block start -----");
+        console.error(block);
+        console.error("----- block end -----");
       }
     }
   }
@@ -107,7 +110,8 @@ function parseBlock(name: string, body: string): Option | undefined {
   const reTags = /(?:[ \t]+\*[^*\s]+\*)+[ \t]*$/.source;
   const reShortNames = /(?:[ \t]+'\w+')*/.source;
   const reType = /[ \t]+(?<type>\w+)/.source;
-  const reDefaults = /[ \t]+(?<defaults>\(.*?(?:\n\t{3,}[ \t].*?)*?\))/.source;
+  const reDefaults =
+    /[ \t]+(?<defaults>\(.*?(?:\n(?:\t{3,}| {24,})[ \t].*?)*?\))/.source;
   const reDefinition =
     `^'${name}'${reShortNames}(?:${reType}(?:${reDefaults})?)?(?:${reTags})?$`;
   const m1 = body.match(new RegExp(reDefinition, "dm"));

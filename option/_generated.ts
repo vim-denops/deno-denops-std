@@ -2279,7 +2279,7 @@ export const comments: LocalOption<string> = {
 /**
  * A template for a comment.  The "%s" in the value is replaced with the
  * comment text.  Currently only used to add markers for folding, see
- * `fold-marker`.
+ * `fold-marker`.  Also used by comment plugins `comment-install`.
  *
  * (default "/*%s* /")
  *
@@ -12790,6 +12790,54 @@ export const smarttab: GlobalOption<boolean> = {
 };
 
 /**
+ * Scrolling works with screen lines.  When 'wrap' is set and the first
+ * line in the window wraps part of it may not be visible, as if it is
+ * above the window. `"<<<"` is displayed at the start of the first line,
+ * highlighted with `hl-NonText`.
+ * You may also want to add "lastline" to the 'display' option to show as
+ * much of the last line as possible.
+ * NOTE: partly implemented, doesn't work yet for `gj` and `gk`.
+ *
+ * (default off)
+ */
+export const smoothscroll: LocalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "smoothscroll");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "smoothscroll", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "smoothscroll");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "smoothscroll");
+    return Boolean(result ?? false);
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "smoothscroll", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "smoothscroll");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&smoothscroll");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&smoothscroll", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&smoothscroll");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&smoothscroll", value);
+  },
+};
+
+/**
  * Number of spaces that a `<Tab>` counts for while performing editing
  * operations, like inserting a `<Tab>` or using `<BS>`.  It "feels" like
  * `<Tab>`s are being inserted, while in fact a mix of spaces and `<Tab>`s is
@@ -16289,6 +16337,52 @@ export const window: GlobalOption<number> = {
   },
   resetGlobal(denops: Denops): Promise<void> {
     return globalOptions.remove(denops, "window");
+  },
+};
+
+/**
+ * If enabled, the window and the buffer it is displaying are paired.
+ * For example, attempting to change the buffer with `:edit` will fail.
+ * Other commands which change a window's buffer such as `:cnext` will
+ * also skip any window with 'winfixbuf' enabled.  However if an Ex
+ * command has a "!" modifier, it can force switching buffers.
+ *
+ * (default off)
+ */
+export const winfixbuf: LocalOption<boolean> = {
+  async get(denops: Denops): Promise<boolean> {
+    const result = await options.get(denops, "winfixbuf");
+    return Boolean(result ?? false);
+  },
+  set(denops: Denops, value: boolean): Promise<void> {
+    return options.set(denops, "winfixbuf", value);
+  },
+  reset(denops: Denops): Promise<void> {
+    return options.remove(denops, "winfixbuf");
+  },
+  async getLocal(denops: Denops): Promise<boolean> {
+    const result = await localOptions.get(denops, "winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setLocal(denops: Denops, value: boolean): Promise<void> {
+    return localOptions.set(denops, "winfixbuf", value);
+  },
+  resetLocal(denops: Denops): Promise<void> {
+    return localOptions.remove(denops, "winfixbuf");
+  },
+  async getBuffer(denops: Denops, bufnr: number): Promise<boolean> {
+    const result = await getbufvar(denops, bufnr, "&winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setBuffer(denops: Denops, bufnr: number, value: boolean): Promise<void> {
+    return setbufvar(denops, bufnr, "&winfixbuf", value);
+  },
+  async getWindow(denops: Denops, winnr: number): Promise<boolean> {
+    const result = await getwinvar(denops, winnr, "&winfixbuf");
+    return Boolean(result ?? false);
+  },
+  setWindow(denops: Denops, winnr: number, value: boolean): Promise<void> {
+    return setwinvar(denops, winnr, "&winfixbuf", value);
   },
 };
 

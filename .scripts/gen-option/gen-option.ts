@@ -5,8 +5,8 @@ import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
 
-const VIM_VERSION = "9.1.0399";
-const NVIM_VERSION = "0.9.5";
+const VIM_VERSION = "9.1.0448";
+const NVIM_VERSION = "0.10.0";
 
 const commonGenerateModule = "../../option/_generated.ts";
 const vimGenerateModule = "../../option/vim/_generated.ts";
@@ -36,7 +36,7 @@ for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
   console.log(`Download from ${vimHelpDownloadUrl}`);
 }
 const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
-const vimDefs = vimHelps.map(parse).flat();
+const vimDefs = parse(vimHelps.join("\n"));
 const vimOptionSet = new Set(vimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
@@ -48,7 +48,7 @@ for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
   console.log(`Download from ${nvimHelpDownloadUrl}`);
 }
 const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
-const nvimDefs = nvimHelps.map(parse).flat();
+const nvimDefs = parse(nvimHelps.join("\n"));
 const nvimOptionSet = new Set(nvimDefs.map((def) => def.name)).difference(
   manualOptionSet,
 );
