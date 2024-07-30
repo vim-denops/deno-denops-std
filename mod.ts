@@ -59,11 +59,4 @@
  */
 
 // Re-export
-export {
-  BatchError,
-  type Context,
-  type Denops,
-  type Dispatcher,
-  type Entrypoint,
-  type Meta,
-} from "@denops/core";
+export * from "@denops/core";
