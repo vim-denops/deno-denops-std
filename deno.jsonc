@@ -27,10 +27,19 @@
     "./variable": "./variable/mod.ts"
   },
   "exclude": [
-    "docs/**",
-    ".coverage/**",
-    ".scripts/**"
+    ".coverage/**"
   ],
+  "publish": {
+    "include": [
+      "**/*.ts",
+      "README.md",
+      "LICENSE"
+    ],
+    "exclude": [
+      "**/*_test.ts",
+      ".*"
+    ]
+  },
   "imports": {
     "@core/unknownutil": "jsr:@core/unknownutil@^3.18.0",
     "@denops/core": "jsr:@denops/core@^7.0.0",
