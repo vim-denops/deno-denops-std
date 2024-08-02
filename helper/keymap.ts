@@ -1,5 +1,6 @@
 import type { Denops } from "@denops/core";
-import { is } from "@core/unknownutil";
+import { isArray } from "@core/unknownutil/is/array";
+import { isString } from "@core/unknownutil/is/string";
 import {
   exprQuote as q,
   type ExprString,
@@ -18,11 +19,11 @@ export type Keys = {
 export type KeysSpecifier = Keys | Keys["keys"];
 
 function toArray<T>(x: T | T[]): T[] {
-  return is.Array(x) ? x : [x];
+  return isArray(x) ? x : [x];
 }
 
 function toKeys(keys: KeysSpecifier): Keys {
-  if (is.String(keys) || isExprString(keys)) {
+  if (isString(keys) || isExprString(keys)) {
     return { keys, remap: false };
   }
   return keys;

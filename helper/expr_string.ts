@@ -25,7 +25,18 @@
  * @module
  */
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
-import { is } from "@core/unknownutil";
+import { isArray } from "@core/unknownutil/is/array";
+import { isBoolean } from "@core/unknownutil/is/boolean";
+import { isFunction } from "@core/unknownutil/is/function";
+import { isInstanceOf } from "@core/unknownutil/is/instance-of";
+import { isLiteralOf } from "@core/unknownutil/is/literal-of";
+import { isNullish } from "@core/unknownutil/is/nullish";
+import { isNumber } from "@core/unknownutil/is/number";
+import { isObjectOf } from "@core/unknownutil/is/object-of";
+import { isRecord } from "@core/unknownutil/is/record";
+import { isString } from "@core/unknownutil/is/string";
+import { isSymbol } from "@core/unknownutil/is/symbol";
+import { isUndefined } from "@core/unknownutil/is/undefined";
 import { ulid } from "@std/ulid";
 import { execute } from "./execute.ts";
 
@@ -55,7 +66,7 @@ type TemplateSubstitutions = any[];
 const cacheKey = "denops_std/helper/expr_string@1";
 
 async function ensurePrerequisites(denops: Denops): Promise<string> {
-  if (is.String(denops.context[cacheKey])) {
+  if (isString(denops.context[cacheKey])) {
     return denops.context[cacheKey];
   }
   const suffix = ulid();
@@ -95,9 +106,9 @@ export function exprQuote(
   });
 }
 
-const isInstanceOfBoolean = is.InstanceOf(Boolean);
-const isInstanceOfNumber = is.InstanceOf(Number);
-const isInstanceOfString = is.InstanceOf(String);
+const isInstanceOfBoolean = isInstanceOf(Boolean);
+const isInstanceOfNumber = isInstanceOf(Number);
+const isInstanceOfString = isInstanceOf(String);
 
 /**
  * Returns `true` if the value is a string marked as Vim's string constant format.
@@ -110,17 +121,17 @@ const isInstanceOfString = is.InstanceOf(String);
  * ```
  */
 export function isExprString(x: unknown): x is ExprString {
-  return is.ObjectOf({
-    [EXPR_STRING_MARK]: is.LiteralOf(1),
+  return isObjectOf({
+    [EXPR_STRING_MARK]: isLiteralOf(1),
   })(x);
 }
 
 function isJsonable(x: unknown): x is Jsonable {
-  return x != null && is.Function((x as Jsonable).toJSON);
+  return x != null && isFunction((x as Jsonable).toJSON);
 }
 
 function isIgnoreRecordValue(x: unknown): boolean {
-  return is.Undefined(x) || is.Function(x) || is.Symbol(x);
+  return isUndefined(x) || isFunction(x) || isSymbol(x);
 }
 
 /**
@@ -134,26 +145,26 @@ export function vimStringify(value: unknown, key?: string | number): string {
     // Return Vim's expr-string
     return `"${value.replaceAll('"', '\\"')}"`;
   }
-  if ((is.Nullish(value) || is.Function(value) || is.Symbol(value))) {
+  if ((isNullish(value) || isFunction(value) || isSymbol(value))) {
     return "v:null";
   }
-  if (is.Boolean(value) || isInstanceOfBoolean(value)) {
+  if (isBoolean(value) || isInstanceOfBoolean(value)) {
     // Return v:true or v:false
     return `v:${value}`;
   }
-  if (is.Number(value) || isInstanceOfNumber(value)) {
+  if (isNumber(value) || isInstanceOfNumber(value)) {
     // Replace `5e-10` to `5.0e-10`
     return `${value}`.replace(/^(\d+)e/, "$1.0e");
   }
-  if (is.String(value) || isInstanceOfString(value)) {
+  if (isString(value) || isInstanceOfString(value)) {
     // Returns Vim's literal-string
     return `'${value.replaceAll("'", "''")}'`;
   }
-  if (is.Array(value)) {
+  if (isArray(value)) {
     // Returns Vim's list
     return `[${value.map(vimStringify).join(",")}]`;
   }
-  if (is.Record(value)) {
+  if (isRecord(value)) {
     // Returns Vim's dict
     return `{${
       Object.entries(value)
@@ -169,7 +180,7 @@ export function vimStringify(value: unknown, key?: string | number): string {
 }
 
 function trimEndOfArgs(args: unknown[]): unknown[] {
-  const last = args.findIndex(is.Undefined);
+  const last = args.findIndex(isUndefined);
   return last < 0 ? args : args.slice(0, last);
 }
 

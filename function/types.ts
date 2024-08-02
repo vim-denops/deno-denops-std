@@ -1,4 +1,8 @@
-import { assert, is } from "@core/unknownutil";
+import { assert } from "@core/unknownutil/assert";
+import { isNumber } from "@core/unknownutil/is/number";
+import { isObjectOf } from "@core/unknownutil/is/object-of";
+import { isTupleOf } from "@core/unknownutil/is/tuple-of";
+import { isUnionOf } from "@core/unknownutil/is/union-of";
 
 /**
  * Type of `screenpos()` result.
@@ -15,12 +19,12 @@ export type ScreenPos = {
  */
 export function isScreenPos(x: unknown): x is ScreenPos {
   const predObj = {
-    row: is.Number,
-    col: is.Number,
-    endcol: is.Number,
-    curscol: is.Number,
+    row: isNumber,
+    col: isNumber,
+    endcol: isNumber,
+    curscol: isNumber,
   };
-  return is.ObjectOf(predObj)(x);
+  return isObjectOf(predObj)(x);
 }
 
 /**
@@ -45,9 +49,9 @@ export type Position = [
  * Return true if the value is Position.
  */
 export function isPosition(x: unknown): x is Position {
-  const pred = is.OneOf([
-    is.TupleOf([is.Number, is.Number, is.Number, is.Number]),
-    is.TupleOf([is.Number, is.Number, is.Number, is.Number, is.Number]),
+  const pred = isUnionOf([
+    isTupleOf([isNumber, isNumber, isNumber, isNumber]),
+    isTupleOf([isNumber, isNumber, isNumber, isNumber, isNumber]),
   ]);
   return pred(x);
 }

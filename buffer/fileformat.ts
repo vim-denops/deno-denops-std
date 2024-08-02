@@ -1,11 +1,12 @@
-import { assert, ensure, is, maybe, type Predicate } from "@core/unknownutil";
+import type { Predicate } from "@core/unknownutil/type";
+import { isLiteralOneOf } from "@core/unknownutil/is/literal-one-of";
 
 export type FileFormat = "unix" | "dos" | "mac";
 
 /**
  * Predicate that the value is FileFormat.
  */
-export const isFileFormat: Predicate<FileFormat> = is.LiteralOneOf(
+export const isFileFormat: Predicate<FileFormat> = isLiteralOneOf(
   ["unix", "dos", "mac"] as const,
 );
 
