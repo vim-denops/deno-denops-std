@@ -9,30 +9,6 @@ export const isFileFormat: Predicate<FileFormat> = is.LiteralOneOf(
   ["unix", "dos", "mac"] as const,
 );
 
-/**
- * Assert that the value is FileFormat.
- *
- * @deprecated Use `assert` function of `unknownutil` instead.
- */
-export const assertFileFormat = (v: unknown): asserts v is FileFormat =>
-  assert(v, isFileFormat);
-
-/**
- * Ensure that the value is FileFormat.
- *
- * @deprecated Use `ensure` function of `unknownutil` instead.
- */
-export const ensureFileFormat = (v: unknown): FileFormat =>
-  ensure(v, isFileFormat);
-
-/**
- * Maybe that the value is FileFormat.
- *
- * @deprecated Use `maybe` function of `unknownutil` instead.
- */
-export const maybeFileFormat = (v: unknown): FileFormat | undefined =>
-  maybe(v, isFileFormat);
-
 const fileFormatDelimiters = {
   unix: "\n",
   dos: "\r\n",
