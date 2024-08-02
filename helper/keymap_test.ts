@@ -16,7 +16,7 @@ type Spec = {
 };
 
 test({
-  mode: "nvim",
+  mode: "all",
   name: "send()",
   fn: async (denops, t) => {
     const specs: Spec[] = [

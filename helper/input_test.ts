@@ -16,7 +16,7 @@ test({
           helper.define(
             "CmdlineEnter",
             "*",
-            `call feedkeys("Hello world!\\<CR>", "t")`,
+            `call feedkeys("Hello world!\\<CR>", "it")`,
           );
         });
         const result = await input(denops);
@@ -28,7 +28,7 @@ test({
       fn: async () => {
         await autocmd.group(denops, "denops_std_helper_input", (helper) => {
           helper.remove("*");
-          helper.define("CmdlineEnter", "*", `call feedkeys("\\<CR>", "t")`);
+          helper.define("CmdlineEnter", "*", `call feedkeys("\\<CR>", "it")`);
         });
         const result = await input(denops, {
           text: "Hello world!",
@@ -44,7 +44,7 @@ test({
           helper.define(
             "CmdlineEnter",
             "*",
-            `call feedkeys("\\<Tab>\\<CR>", "t")`,
+            `call feedkeys("\\<Tab>\\<CR>", "it")`,
           );
         });
         const result = await input(denops, {
@@ -61,7 +61,7 @@ test({
           helper.define(
             "CmdlineEnter",
             "*",
-            `call feedkeys("\\<Tab>\\<CR>", "t")`,
+            `call feedkeys("\\<Tab>\\<CR>", "it")`,
           );
         });
         const result = await input(denops, {
@@ -88,7 +88,7 @@ test({
           helper.define(
             "CmdlineEnter",
             "*",
-            `call feedkeys("\\<Tab>\\<CR>", "t")`,
+            `call feedkeys("\\<Tab>\\<CR>", "it")`,
           );
         });
         const result = await input(denops, {
@@ -105,7 +105,7 @@ test({
           helper.define(
             "CmdlineEnter",
             "*",
-            `call feedkeys("\\<Tab>\\<CR>", "t")`,
+            `call feedkeys("\\<Tab>\\<CR>", "it")`,
           );
         });
         const result = await input(denops, {
@@ -127,41 +127,113 @@ test({
         );
       },
     });
-  },
-});
-
-test({
-  // XXX: This test does not work properly on Vim
-  mode: "nvim",
-  name: "returns `null` when <Esc> is pressed",
-  fn: async (denops) => {
-    await autocmd.group(denops, "denops_std_helper_input", (helper) => {
-      helper.remove("*");
-      helper.define(
-        "CmdlineEnter",
-        "*",
-        `call timer_start(0, { -> feedkeys("Hello world!\\<Esc>", "t") })`,
-      );
+    await t.step({
+      name: "returns `null` when <Esc> is pressed",
+      fn: async () => {
+        await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+          helper.remove("*");
+          helper.define(
+            "CmdlineEnter",
+            "*",
+            `call feedkeys("Hello world!\\<Esc>", "it")`,
+          );
+        });
+        const result = await input(denops);
+        assertEquals(result, null);
+      },
     });
-    const result = await input(denops);
-    assertEquals(result, null);
-  },
-});
-
-test({
-  // XXX: This test does not work properly on Vim
-  mode: "nvim",
-  name: "returns `null` when <C-c> is pressed",
-  fn: async (denops) => {
-    await autocmd.group(denops, "denops_std_helper_input", (helper) => {
-      helper.remove("*");
-      helper.define(
-        "CmdlineEnter",
-        "*",
-        `call feedkeys("Hello world!\\<C-c>", "t")`,
-      );
+    await t.step({
+      name: "returns `null` when <C-c> is pressed",
+      fn: async () => {
+        await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+          helper.remove("*");
+          helper.define(
+            "CmdlineEnter",
+            "*",
+            `call feedkeys("Hello world!\\<C-c>", "it")`,
+          );
+        });
+        const result = await input(denops);
+        assertEquals(result, null);
+      },
     });
-    const result = await input(denops);
-    assertEquals(result, null);
+    await t.step({
+      name: "should have global mapping restored",
+      fn: async () => {
+        await denops.cmd("cnoremap <Esc> foo");
+        await denops.cmd("cmap <silent> <C-c> bar");
+        const globalEsc = await denops.call("maparg", "<Esc>", "c", 0, 1);
+        const globalInt = await denops.call("maparg", "<C-c>", "c", 0, 1);
+        try {
+          await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+            helper.remove("*");
+            helper.define(
+              "CmdlineEnter",
+              "*",
+              `call feedkeys("Hello world!\\<CR>", "it")`,
+            );
+          });
+          await input(denops);
+          assertEquals(
+            await denops.call("maparg", "<Esc>", "c", 0, 1),
+            globalEsc,
+          );
+          assertEquals(
+            await denops.call("maparg", "<C-c>", "c", 0, 1),
+            globalInt,
+          );
+        } finally {
+          await denops.cmd("silent! cunmap <Esc>");
+          await denops.cmd("silent! cunmap <C-c>");
+        }
+      },
+    });
+    await t.step({
+      name: "should have buffer local mapping restored",
+      fn: async () => {
+        await denops.cmd("cnoremap <Esc> foo");
+        await denops.cmd("cmap <silent> <C-c> bar");
+        const globalEsc = await denops.call("maparg", "<Esc>", "c", 0, 1);
+        const globalInt = await denops.call("maparg", "<C-c>", "c", 0, 1);
+        await denops.cmd("cnoremap <expr><buffer> <Esc> eval('')");
+        await denops.cmd("cnoremap <nowait><buffer> <C-c> baz");
+        const bufferEsc = await denops.call("maparg", "<Esc>", "c", 0, 1);
+        const bufferInt = await denops.call("maparg", "<C-c>", "c", 0, 1);
+        try {
+          await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+            helper.remove("*");
+            helper.define(
+              "CmdlineEnter",
+              "*",
+              `call feedkeys("Hello world!\\<CR>", "it")`,
+            );
+          });
+          await input(denops);
+          assertEquals(
+            await denops.call("maparg", "<Esc>", "c", 0, 1),
+            bufferEsc,
+          );
+          assertEquals(
+            await denops.call("maparg", "<C-c>", "c", 0, 1),
+            bufferInt,
+          );
+          await denops.cmd("cunmap <buffer> <Esc>");
+          await denops.cmd("cunmap <buffer> <C-c>");
+          assertEquals(
+            await denops.call("maparg", "<Esc>", "c", 0, 1),
+            globalEsc,
+          );
+          assertEquals(
+            await denops.call("maparg", "<C-c>", "c", 0, 1),
+            globalInt,
+          );
+        } finally {
+          await denops.cmd("silent! cunmap <buffer> <Esc>");
+          await denops.cmd("silent! cunmap <buffer> <C-c>");
+          await denops.cmd("silent! cunmap <Esc>");
+          await denops.cmd("silent! cunmap <C-c>");
+        }
+      },
+    });
   },
 });
