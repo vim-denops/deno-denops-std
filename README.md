@@ -1,4 +1,4 @@
-# 🐜 denops_std
+# 🐜 @denops/std
 
 [![JSR](https://jsr.io/badges/@denops/std)](https://jsr.io/@denops/std)
 [![Test](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml/badge.svg)](https://github.com/vim-denops/deno-denops-std/actions/workflows/test.yml)
