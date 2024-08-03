@@ -1,5 +1,5 @@
 import type { Denops } from "@denops/core";
-import { maybe } from "@core/unknownutil";
+import { maybe } from "@core/unknownutil/maybe";
 import { ulid } from "@std/ulid";
 import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
