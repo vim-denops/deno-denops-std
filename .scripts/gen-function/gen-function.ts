@@ -4,9 +4,11 @@ import { format } from "./format.ts";
 import { DOCS_OVERRIDES } from "./override.ts";
 import { transform } from "./transform.ts";
 import { downloadString } from "../utils.ts";
+import { loadSupportedVersions } from "../supported_versions.ts";
 
-const VIM_VERSION = "9.1.0448";
-const NVIM_VERSION = "0.10.0";
+const supportedVersions = await loadSupportedVersions();
+const VIM_VERSION = supportedVersions.vim;
+const NVIM_VERSION = supportedVersions.neovim;
 
 const commonGenerateModule = "../../function/_generated.ts";
 const vimGenerateModule = "../../function/vim/_generated.ts";
