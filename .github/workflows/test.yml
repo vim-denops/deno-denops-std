@@ -11,10 +11,18 @@ on:
       - "deno.jsonc"
       - ".github/workflows/test.yml"
   workflow_dispatch:
+    inputs:
+      denops_branch:
+        description: 'Denops revision to test'
+        required: false
+        default: 'main'
 
 defaults:
   run:
     shell: bash --noprofile --norc -eo pipefail {0}
+
+env:
+  DENOPS_BRANCH: ${{ github.event.inputs.denops_branch || 'main' }}
 
 jobs:
   check:
@@ -44,6 +52,14 @@ jobs:
         run: deno fmt --check
       - name: Type check
         run: deno task check
+      - name: Gen check
+        run: |
+          deno task gen
+          git diff --exit-code
+      - name: Supported version inconsistency check
+        run: |
+          deno task apply:supported-versions
+          git diff --exit-code
 
   test:
     strategy:
@@ -53,7 +69,7 @@ jobs:
           - macos-latest
           - ubuntu-latest
         deno_version:
-          - "1.45.x"
+          - "1.45.0"
           - "1.x"
         host_version:
           - vim: "v9.1.0448"
@@ -77,7 +93,7 @@ jobs:
 
       - name: Try switching denops branch
         run: |
-          git -C /tmp/denops.vim switch ${{ github.head_ref || github.ref_name }} || true
+          git -C /tmp/denops.vim switch ${{ env.DENOPS_BRANCH }} || true
           git -C /tmp/denops.vim branch
 
       - uses: rhysd/action-setup-vim@v1

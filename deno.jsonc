@@ -89,6 +89,7 @@
     "update:commit": "deno task -q update --commit --prefix :package: --pre-commit=fmt,lint",
     "gen:function": "deno run -A ./.scripts/gen-function/gen-function.ts",
     "gen:option": "deno run -A ./.scripts/gen-option/gen-option.ts",
-    "gen": "deno task gen:function && deno task gen:option && deno fmt"
+    "gen": "deno task gen:function && deno task gen:option && deno fmt",
+    "apply:supported-versions": "deno run --allow-net --allow-read --allow-write .scripts/apply-supported-versions.ts"
   }
 }
