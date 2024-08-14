@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { test } from "@denops/test";
 import { AsyncDisposableStack } from "@nick/dispose";
 import * as fn from "../function/mod.ts";
+import { rawString } from "../eval/string.ts";
 import { exprQuote } from "./expr_string.ts";
 import { send } from "./keymap.ts";
 
@@ -20,6 +21,20 @@ test({
       await fn.setline(denops, 1, "foobar");
       await send(denops, ["gg0lll", "hh", "lll"]);
       assertEquals(await fn.getpos(denops, "."), [0, 1, 5, 0]);
+    });
+    await t.step("sends special keys with RawString", async () => {
+      await fn.deletebufline(denops, "%", 1, "$");
+      await send(denops, rawString`\<Cmd>call setline(1, 'foo')\<CR>`);
+      assertEquals(await fn.getline(denops, 1), "foo");
+    });
+    await t.step("sends special keys with RawString[]", async () => {
+      await fn.deletebufline(denops, "%", 1, "$");
+      await send(denops, [
+        rawString`\<Cmd>call setline(1, 'foo')\<CR>`,
+        rawString`\<Cmd>call append(0, 'bar')\<CR>`,
+        rawString`\<Cmd>call append(0, 'baz')\<CR>`,
+      ]);
+      assertEquals(await fn.getline(denops, 1, "$"), ["baz", "bar", "foo"]);
     });
     await t.step("sends special keys with ExprString", async () => {
       await fn.deletebufline(denops, "%", 1, "$");
@@ -60,7 +75,7 @@ test({
       await fn.deletebufline(denops, "%", 1, "$");
       await fn.setline(denops, 1, ["foo", "bar", "baz"]);
       await send(denops, [
-        { keys: exprQuote`gg0\<Down>lk`, remap: false },
+        { keys: rawString`gg0\<Down>lk`, remap: false },
         { keys: "k", remap: true },
         { keys: "k", remap: false },
       ]);
