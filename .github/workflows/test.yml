@@ -52,6 +52,8 @@ jobs:
         run: deno fmt --check
       - name: Type check
         run: deno task check
+      - name: Doc check
+        run: deno task check:doc
       - name: Gen check
         run: |
           deno task gen
