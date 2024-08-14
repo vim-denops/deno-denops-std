@@ -3,6 +3,8 @@ import { assertSpyCallArgs, assertSpyCalls, spy } from "@std/testing/mock";
 import { test } from "@denops/test";
 import { expr } from "./expression.ts";
 import { rawString } from "./string.ts";
+import { type VimEvaluatable, vimExpressionOf } from "./vim_evaluatable.ts";
+import { exprQuote } from "../helper/expr_string.ts";
 
 import { stringify } from "./stringify.ts";
 
@@ -86,6 +88,10 @@ Deno.test("stringify()", async (t) => {
     const actual = stringify(rawString`\<Cmd>call Foo("bar")\<CR>`);
     assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
   });
+  await t.step("stringify ExprString to Vim's expr-string", () => {
+    const actual = stringify(exprQuote`\<Cmd>call Foo("bar")\<CR>`);
+    assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
+  });
   await t.step("stringify array to Vim's list", () => {
     const actual = stringify(["foo", 42, null, undefined]);
     assertEquals(actual, "['foo',42,v:null,v:null]");
@@ -152,6 +158,27 @@ Deno.test("stringify()", async (t) => {
     assertSpyCalls(s1, 1);
     assertSpyCallArgs(s1, 0, ["a"]);
     assertSpyCalls(s2, 0);
+  });
+  await t.step("stringify Expression that returns from `toJSON`", () => {
+    const x = {
+      toJSON: () => expr`feedkeys("\<Cmd>call Foo(\"bar\")\<CR>")`,
+    };
+    const actual = stringify(x);
+    assertEquals(actual, 'feedkeys("\\<Cmd>call Foo(\\"bar\\")\\<CR>")');
+  });
+  await t.step("stringify RawString that returns from `toJSON`", () => {
+    const x = {
+      toJSON: () => rawString`\<Cmd>call Foo("bar")\<CR>`,
+    };
+    const actual = stringify(x);
+    assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
+  });
+  await t.step("stringify ExprString that returns from `toJSON`", () => {
+    const x = {
+      toJSON: () => exprQuote`\<Cmd>call Foo("bar")\<CR>`,
+    };
+    const actual = stringify(x);
+    assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
   });
   await t.step("stringify object that has `toJSON` method", () => {
     const actual = stringify({
@@ -232,6 +259,19 @@ Deno.test("stringify()", async (t) => {
     assertEquals(
       actual,
       `[v:null,v:null,42,v:true,v:null,v:null,'bar',[123,'baz'],'2007-08-31T12:34:56.000Z',{'k0':v:null,'k2':[{'key':234,'expr':foo#bar(),'rstr':"\\U0001F680"}],'k3':0z01ff007f}]`,
+    );
+  });
+  await t.step("throws if @@vimExpressionOf() returns not a string", () => {
+    const invalid: VimEvaluatable = {
+      [vimExpressionOf](): string {
+        return 123 as unknown as string;
+      },
+    };
+    const x = { invalid };
+    assertThrows(
+      () => stringify(x),
+      TypeError,
+      "@@vimExpressionOf() returns not a string",
     );
   });
   await t.step("throws if value contains circular structure array", () => {
