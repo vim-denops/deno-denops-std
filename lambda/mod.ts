@@ -143,7 +143,7 @@ export function unregister(
   return false;
 }
 
-export interface Lambda {
+export interface Lambda extends Disposable {
   readonly id: Identifier;
 
   /**
@@ -197,8 +197,6 @@ export interface Lambda {
    * ```
    */
   dispose(): void;
-
-  [Symbol.dispose](): void;
 }
 
 /**
@@ -239,6 +237,6 @@ export function add(denops: Denops, fn: Fn): Lambda {
       return `denops#request('${name}', '${id}', [${args}])`;
     },
     dispose: () => unregister(denops, id),
-    [Symbol.dispose]: () => unregister(denops, id),
+    [Symbol.dispose]: () => void unregister(denops, id),
   };
 }
