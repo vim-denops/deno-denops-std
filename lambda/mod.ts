@@ -38,10 +38,9 @@ import { isLiteralOf } from "@core/unknownutil/is/literal-of";
 import { isLiteralOneOf } from "@core/unknownutil/is/literal-one-of";
 import { isTupleOf } from "@core/unknownutil/is/tuple-of";
 import { stringify } from "../eval/stringify.ts";
+import { expr, type Expression } from "../eval/expression.ts";
 
 // Note: Imports only types and is used only in tsdoc.
-// deno-lint-ignore no-unused-vars
-import type { Expression } from "../eval/expression.ts";
 // deno-lint-ignore no-unused-vars
 import type { RawString } from "../eval/string.ts";
 
@@ -173,7 +172,7 @@ export interface Lambda extends Disposable {
    * }
    * ```
    */
-  notify(...args: unknown[]): string;
+  notify(...args: unknown[]): Expression;
 
   /**
    * Create a Vim script expression to request the lambda function
@@ -190,7 +189,7 @@ export interface Lambda extends Disposable {
    * }
    * ```
    */
-  request(...args: unknown[]): string;
+  request(...args: unknown[]): Expression;
 
   /**
    * Dispose the lambda function
@@ -273,16 +272,12 @@ export function add(denops: Denops, fn: Fn): Lambda {
   return {
     id,
     notify: (...args: unknown[]) => {
-      const argsExpr = stringify(
-        [VIM_REQUEST_FLAG, "notify", args] satisfies FnWrapperArgs,
-      );
-      return `denops#notify('${name}', '${id}', ${argsExpr})`;
+      const fnArgs: FnWrapperArgs = [VIM_REQUEST_FLAG, "notify", args];
+      return expr`denops#notify(${name}, ${id}, ${fnArgs})`;
     },
     request: (...args: unknown[]) => {
-      const argsExpr = stringify(
-        [VIM_REQUEST_FLAG, "request", args] satisfies FnWrapperArgs,
-      );
-      return `eval(denops#request('${name}', '${id}', ${argsExpr}))`;
+      const fnArgs: FnWrapperArgs = [VIM_REQUEST_FLAG, "request", args];
+      return expr`eval(denops#request(${name}, ${id}, ${fnArgs}))`;
     },
     dispose: () => unregister(denops, id),
     [Symbol.dispose]: () => void unregister(denops, id),
