@@ -122,6 +122,7 @@ const isInstanceOfString = isInstanceOf(String);
  * ```
  */
 export const isExprString: Predicate<ExprString> = isObjectOf({
+  // NOTE: `ExprString` has a different type in definition (primitive `string`) and implementation (`String`). Only checks `EXPR_STRING_MARK` existence.
   [EXPR_STRING_MARK]: isLiteralOf(1),
 }) as unknown as Predicate<ExprString>;
 
