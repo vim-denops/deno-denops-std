@@ -136,10 +136,6 @@ class RawStringImpl extends String implements RawStringProps {
 
   #cached?: string;
 
-  constructor(raw: string) {
-    super(raw);
-  }
-
   [vimExpressionOf](): string {
     this.#cached ??= `"${
       this.valueOf().replaceAll(/\\.|(")/g, (m, q: string) => q ? `\\${q}` : m)

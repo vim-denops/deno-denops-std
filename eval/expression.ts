@@ -101,10 +101,6 @@ class ExpressionImpl extends String implements ExpressionProps {
     this.prototype[Symbol.toStringTag] = "Expression";
   }
 
-  constructor(raw: string) {
-    super(raw);
-  }
-
   [vimExpressionOf](): string {
     return this.valueOf();
   }

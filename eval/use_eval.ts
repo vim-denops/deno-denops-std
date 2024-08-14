@@ -28,7 +28,7 @@ import type { RawString } from "./string.ts";
  * }
  * ```
  */
-export async function useEval<T extends unknown>(
+export async function useEval<T>(
   denops: Denops,
   executor: (helper: UseEvalHelper) => Promise<T>,
 ): Promise<T> {
