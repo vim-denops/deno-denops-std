@@ -23,6 +23,7 @@
  * ```
  *
  * @module
+ * @deprecated Use {@linkcode rawString}
  */
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 import { isArray } from "@core/unknownutil/is/array";
@@ -40,10 +41,16 @@ import { isUndefined } from "@core/unknownutil/is/undefined";
 import { ulid } from "@std/ulid";
 import { execute } from "./execute.ts";
 
+// Note: Imports only types and is used only in tsdoc.
+// deno-lint-ignore no-unused-vars
+import type { isRawString, RawString, rawString } from "../eval/string.ts";
+
 const EXPR_STRING_MARK = "__denops_expr_string";
 
 /**
  * String that marked as Vim's string constant format.
+ *
+ * @deprecated Use {@linkcode rawString} and {@linkcode RawString}
  */
 export type ExprString = string & {
   /**
@@ -95,6 +102,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * ```
  *
  * @see useExprString for usage
+ * @deprecated Use {@linkcode rawString}
  */
 export function exprQuote(
   template: TemplateStringsArray,
@@ -119,6 +127,8 @@ const isInstanceOfString = isInstanceOf(String);
  * console.log(isExprString(exprQuote`foo`)); // outputs: true
  * console.log(isExprString("foo")); // outputs: false
  * ```
+ *
+ * @deprecated Use {@linkcode rawString} and {@linkcode isRawString}
  */
 export function isExprString(x: unknown): x is ExprString {
   return isObjectOf({
