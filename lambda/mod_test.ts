@@ -8,6 +8,7 @@ import {
 } from "@std/testing/mock";
 import { assert, is } from "@core/unknownutil";
 import { test } from "@denops/test";
+import { expr, rawString } from "../eval/mod.ts";
 import * as lambda from "./mod.ts";
 
 const NOOP = () => {};
@@ -201,11 +202,11 @@ test({
             ["no", [], []],
             ["string", ["foo", "bar"], ["foo", "bar"]],
             ["number", [123, 456], [123, 456]],
-            ["undefined", [undefined], []],
-            // ["null", [null], [null]], // throws
-            // ["boolean", [true, false, false], [true, false, false]], // throws
-            // ["Function", [() => 0, () => 1], [null, null]], // throws
-            // ["symbol", [Symbol("foo"), Symbol("bar")], [null, null]], // throws
+            ["undefined", [undefined], [null]],
+            ["null", [null], [null]],
+            ["boolean", [true, false, false], [true, false, false]],
+            ["Function", [() => 0, () => 1], [null, null]],
+            ["symbol", [Symbol("foo"), Symbol("bar")], [null, null]],
             ["Array", [["a", 0], ["b", 1]], [["a", 0], ["b", 1]]],
             [
               "Object",
@@ -217,6 +218,8 @@ test({
               [{ [Symbol("foo")]: "a" }, { [Symbol("bar")]: "b" }],
               [{}, {}],
             ],
+            ["Expression", [expr`100 + 23`], [123]],
+            ["RawString", [rawString`\U0001F41C`], ["\u{0001F41C}"]],
           ];
           for (const [name, args, expected] of tests) {
             await t.step(`with ${name} arguments`, async () => {
@@ -240,10 +243,12 @@ test({
             ["true", true],
             ["false", false],
             ["Function", () => 0],
-            // ["symbol", Symbol("foo")], // throws in messagepack
+            ["symbol", Symbol("foo")],
             ["Array", [0, 1]],
             ["Object", { foo: "a" }],
             ["Object with symbol keys", { [Symbol("foo")]: "a" }],
+            ["Expression", expr`100 + 23`],
+            ["RawString", rawString`\U0001F41C`],
           ];
           for (const [name, returned] of tests) {
             await t.step(`which returns ${name}`, async () => {
@@ -263,11 +268,11 @@ test({
             ["no", [], []],
             ["string", ["foo", "bar"], ["foo", "bar"]],
             ["number", [123, 456], [123, 456]],
-            ["undefined", [undefined], []],
-            // ["null", [null], [null]], // throws
-            // ["boolean", [true, false, false], [true, false, false]], // throws
-            // ["Function", [() => 0, () => 1], [null, null]], // throws
-            // ["symbol", [Symbol("foo"), Symbol("bar")], [null, null]], // throws
+            ["undefined", [undefined], [null]],
+            ["null", [null], [null]],
+            ["boolean", [true, false, false], [true, false, false]],
+            ["Function", [() => 0, () => 1], [null, null]],
+            ["symbol", [Symbol("foo"), Symbol("bar")], [null, null]],
             ["Array", [["a", 0], ["b", 1]], [["a", 0], ["b", 1]]],
             [
               "Object",
@@ -279,6 +284,8 @@ test({
               [{ [Symbol("foo")]: "a" }, { [Symbol("bar")]: "b" }],
               [{}, {}],
             ],
+            ["Expression", [expr`100 + 23`], [123]],
+            ["RawString", [rawString`\U0001F41C`], ["\u{0001F41C}"]],
           ];
           for (const [name, args, expected] of tests) {
             await t.step(`with ${name} arguments`, async () => {
@@ -297,17 +304,17 @@ test({
           )[] = [
             ["string", "foo", "foo"],
             ["number", 123, 123],
-            // ["undefined", undefined, null], // (vim)
-            // ["undefined", undefined, 0], // (nvim)
+            ["undefined", undefined, null],
             ["null", null, null],
             ["true", true, true],
             ["false", false, false],
-            // ["Function", () => 0, null], // (vim)
-            // ["Function", () => 0, 0], // (nvim)
-            // ["symbol", Symbol("foo"), null], // throws in messagepack
-            ["Array", ["a", 0], ["a", 0]],
+            ["Function", () => 0, null],
+            ["symbol", Symbol("foo"), null],
+            ["Array", [0, 1], [0, 1]],
             ["Object", { foo: "a" }, { foo: "a" }],
             ["Object with symbol keys", { [Symbol("foo")]: "a" }, {}],
+            ["Expression", expr`100 + 23`, 123],
+            ["RawString", rawString`\U0001F41C`, "\u{0001F41C}"],
           ];
           for (const [name, returned, expected] of tests) {
             await t.step(`which returns ${name}`, async () => {
