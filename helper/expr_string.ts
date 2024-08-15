@@ -25,6 +25,7 @@
  * @module
  */
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
+import type { Predicate } from "@core/unknownutil/type";
 import { isArray } from "@core/unknownutil/is/array";
 import { isBoolean } from "@core/unknownutil/is/boolean";
 import { isFunction } from "@core/unknownutil/is/function";
@@ -120,11 +121,10 @@ const isInstanceOfString = isInstanceOf(String);
  * console.log(isExprString("foo")); // outputs: false
  * ```
  */
-export function isExprString(x: unknown): x is ExprString {
-  return isObjectOf({
-    [EXPR_STRING_MARK]: isLiteralOf(1),
-  })(x);
-}
+export const isExprString: Predicate<ExprString> = isObjectOf({
+  // NOTE: `ExprString` has a different type in definition (primitive `string`) and implementation (`String`). Only checks `EXPR_STRING_MARK` existence.
+  [EXPR_STRING_MARK]: isLiteralOf(1),
+}) as unknown as Predicate<ExprString>;
 
 function isJsonable(x: unknown): x is Jsonable {
   return x != null && isFunction((x as Jsonable).toJSON);

@@ -1,8 +1,9 @@
+import type { Predicate } from "@core/unknownutil/type";
 import { assert } from "@core/unknownutil/assert";
+import { asOptional } from "@core/unknownutil/as/optional";
 import { isNumber } from "@core/unknownutil/is/number";
 import { isObjectOf } from "@core/unknownutil/is/object-of";
-import { isTupleOf } from "@core/unknownutil/is/tuple-of";
-import { isUnionOf } from "@core/unknownutil/is/union-of";
+import { isParametersOf } from "@core/unknownutil/is/parameters-of";
 
 /**
  * Type of `screenpos()` result.
@@ -17,15 +18,12 @@ export type ScreenPos = {
 /**
  * Return true if the value is ScreenPos.
  */
-export function isScreenPos(x: unknown): x is ScreenPos {
-  const predObj = {
-    row: isNumber,
-    col: isNumber,
-    endcol: isNumber,
-    curscol: isNumber,
-  };
-  return isObjectOf(predObj)(x);
-}
+export const isScreenPos: Predicate<ScreenPos> = isObjectOf({
+  row: isNumber,
+  col: isNumber,
+  endcol: isNumber,
+  curscol: isNumber,
+});
 
 /**
  * Assert if `x` is ScreenPos by raising an `AssertError` when it's not.
@@ -48,13 +46,9 @@ export type Position = [
 /**
  * Return true if the value is Position.
  */
-export function isPosition(x: unknown): x is Position {
-  const pred = isUnionOf([
-    isTupleOf([isNumber, isNumber, isNumber, isNumber]),
-    isTupleOf([isNumber, isNumber, isNumber, isNumber, isNumber]),
-  ]);
-  return pred(x);
-}
+export const isPosition: Predicate<Position> = isParametersOf(
+  [isNumber, isNumber, isNumber, isNumber, asOptional(isNumber)] as const,
+);
 
 /**
  * Assert if `x` is Position by raising an `AssertError` when it's not.
