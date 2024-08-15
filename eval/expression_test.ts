@@ -31,7 +31,7 @@ test({
       assertEquals(actual, expected);
     });
     await t.step(".toString() returns same as @@vimExpressionOf()", () => {
-      const actual = expression.toJSON();
+      const actual = expression.toString();
       const expected = expression[vimExpressionOf]();
       assertEquals(actual, expected);
     });
