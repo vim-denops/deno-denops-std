@@ -16,6 +16,11 @@ on:
         description: 'Denops revision to test'
         required: false
         default: 'main'
+      verbose:
+        type: boolean
+        required: false
+        description: 'Enable verbose output'
+        default: false
 
 defaults:
   run:
@@ -23,6 +28,7 @@ defaults:
 
 env:
   DENOPS_BRANCH: ${{ github.event.inputs.denops_branch || 'main' }}
+  DENOPS_TEST_VERBOSE: ${{ github.event.inputs.verbose }}
 
 jobs:
   check:
