@@ -136,6 +136,7 @@ export function isExprString(x: unknown): x is ExprString {
   })(x);
 }
 
+// NOTE: Do not use [@core/unknownutil@4.3.0/is/custom-jsonable], it's changes behaviour.
 function isJsonable(x: unknown): x is Jsonable {
   return x != null && isFunction((x as Jsonable).toJSON);
 }

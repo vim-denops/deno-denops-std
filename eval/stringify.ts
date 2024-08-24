@@ -1,5 +1,6 @@
 import { isArray } from "@core/unknownutil/is/array";
 import { isBoolean } from "@core/unknownutil/is/boolean";
+import { isCustomJsonable } from "@core/unknownutil/is/custom-jsonable";
 import { isFunction } from "@core/unknownutil/is/function";
 import { isInstanceOf } from "@core/unknownutil/is/instance-of";
 import { isNullish } from "@core/unknownutil/is/nullish";
@@ -81,7 +82,7 @@ export function stringify(value: unknown): string {
     if (isExprString(value)) {
       return `"${value.replaceAll('"', '\\"')}"`;
     }
-    if (isJsonable(value)) {
+    if (isCustomJsonable(value)) {
       value = value.toJSON(key);
       if (isVimEvaluatable(value)) {
         return toVimExpression(value);
@@ -134,19 +135,6 @@ export function stringify(value: unknown): string {
     throw new TypeError(`${type} value can't be serialized`);
   };
   return reduce(value, "");
-}
-
-type Jsonable = {
-  /**
-   * Returns a JSON value that can be specified to {@linkcode JSON.stringify}.
-   *
-   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#tojson_behavior|toJSON() behavior}
-   */
-  toJSON(key: string | number): unknown;
-};
-
-function isJsonable(x: unknown): x is Jsonable {
-  return x != null && isFunction((x as Jsonable).toJSON);
 }
 
 function isIgnoreRecordValue(x: unknown): boolean {
