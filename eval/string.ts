@@ -1,3 +1,9 @@
+/**
+ * This module provides utilities for creating Vim string in TypeScript.
+ *
+ * @module
+ */
+
 import type { Predicate } from "@core/unknownutil/type";
 import { isIntersectionOf } from "@core/unknownutil/is/intersection-of";
 import { isLiteralOf } from "@core/unknownutil/is/literal-of";
@@ -21,7 +27,7 @@ import {
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert/equals";
- * import { rawString } from "jsr:@denops/std/eval";
+ * import { rawString } from "jsr:@denops/std/eval/string";
  *
  * const s: string = rawString`foo`;
  * assertEquals(s.toString(), "foo");
@@ -76,7 +82,7 @@ interface RawStringProps extends VimEvaluatable {
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert/equals";
- * import { rawString } from "jsr:@denops/std/eval";
+ * import { rawString } from "jsr:@denops/std/eval/string";
  *
  * assertEquals(
  *   rawString`foo`.toString(),
@@ -108,7 +114,7 @@ export function rawString(
  * Returns `true` if the value is a {@linkcode RawString}.
  *
  * ```typescript
- * import { isRawString, rawString } from "jsr:@denops/std/eval";
+ * import { isRawString, rawString } from "jsr:@denops/std/eval/string";
  *
  * isRawString(rawString`foo`);
  * // true

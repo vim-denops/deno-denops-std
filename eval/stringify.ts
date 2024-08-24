@@ -1,3 +1,9 @@
+/**
+ * This module provides the function to serialize JavaScript values into Vim values.
+ *
+ * @module
+ */
+
 import { isArray } from "@core/unknownutil/is/array";
 import { isBoolean } from "@core/unknownutil/is/boolean";
 import { isCustomJsonable } from "@core/unknownutil/is/custom-jsonable";
@@ -48,7 +54,8 @@ import {
  *
  * ```typescript
  * import type { Denops } from "jsr:@denops/std";
- * import { expr, stringify } from "jsr:@denops/std/eval";
+ * import { expr } from "jsr:@denops/std/eval/expression";
+ * import { stringify } from "jsr:@denops/std/eval/stringify";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   const value = {

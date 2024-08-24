@@ -1,3 +1,9 @@
+/**
+ * This module provides the function to use Vim expressions within blocks.
+ *
+ * @module
+ */
+
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 import { isString } from "@core/unknownutil/is/string";
 import { isUndefined } from "@core/unknownutil/is/undefined";
@@ -6,13 +12,14 @@ import { execute } from "../helper/execute.ts";
 import { stringify } from "./stringify.ts";
 
 /**
- * Allows to use {@linkcode [eval].Expression|Expression} and {@linkcode [eval].RawString|RawString} transparently
- * within blocks.
+ * Allows to use {@linkcode [eval].Expression|Expression} and {@linkcode [eval].RawString|RawString} transparently within blocks.
  *
  * ```typescript
  * import type { Denops } from "jsr:@denops/std";
  * import * as fn from "jsr:@denops/std/function";
- * import { expr, rawString, useEval } from "jsr:@denops/std/eval";
+ * import { expr } from "jsr:@denops/std/eval/expression";
+ * import { rawString } from "jsr:@denops/std/eval/string";
+ * import { useEval } from "jsr:@denops/std/eval/use-eval";
  *
  * export async function main(denops: Denops): Promise<void> {
  *   await useEval(denops, async (denops) => {

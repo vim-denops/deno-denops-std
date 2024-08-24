@@ -1,3 +1,9 @@
+/**
+ * This module provides utilities for creating Vim expressions in TypeScript.
+ *
+ * @module
+ */
+
 import type { Predicate } from "@core/unknownutil/type";
 import { isIntersectionOf } from "@core/unknownutil/is/intersection-of";
 import { isLiteralOf } from "@core/unknownutil/is/literal-of";
@@ -17,7 +23,7 @@ import { stringify } from "./stringify.ts";
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert/equals";
- * import { expr } from "jsr:@denops/std/eval";
+ * import { expr } from "jsr:@denops/std/eval/expression";
  *
  * const s: string = expr`foo`;
  * assertEquals(typeof s, "object"); // is not "string"
@@ -49,7 +55,7 @@ interface ExpressionProps extends VimEvaluatable {
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert/equals";
- * import { expr } from "jsr:@denops/std/eval";
+ * import { expr } from "jsr:@denops/std/eval/expression";
  *
  * assertEquals(
  *   expr`raw_vim_expression`.toString(),
@@ -77,7 +83,7 @@ export function expr(
  *
  * ```typescript
  * import { assert, assertFalse } from "jsr:@std/assert";
- * import { isExpression, expr } from "jsr:@denops/std/eval";
+ * import { isExpression, expr } from "jsr:@denops/std/eval/expression";
  *
  * assert(isExpression(expr`123`));
  *
