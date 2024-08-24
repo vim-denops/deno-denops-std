@@ -41,16 +41,12 @@ import { isUndefined } from "@core/unknownutil/is/undefined";
 import { ulid } from "@std/ulid";
 import { execute } from "./execute.ts";
 
-// Note: Imports only types and is used only in tsdoc.
-// deno-lint-ignore no-unused-vars
-import type { isRawString, RawString, rawString } from "../eval/string.ts";
-
 const EXPR_STRING_MARK = "__denops_expr_string";
 
 /**
  * String that marked as Vim's string constant format.
  *
- * @deprecated Use {@linkcode rawString} and {@linkcode RawString}
+ * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].RawString|RawString}
  */
 export type ExprString = string & {
   /**
@@ -128,7 +124,7 @@ const isInstanceOfString = isInstanceOf(String);
  * console.log(isExprString("foo")); // outputs: false
  * ```
  *
- * @deprecated Use {@linkcode rawString} and {@linkcode isRawString}
+ * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].isRawString:isRawString}
  */
 export function isExprString(x: unknown): x is ExprString {
   return isObjectOf({

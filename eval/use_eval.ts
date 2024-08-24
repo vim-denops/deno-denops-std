@@ -5,14 +5,8 @@ import { ulid } from "@std/ulid";
 import { execute } from "../helper/execute.ts";
 import { stringify } from "./stringify.ts";
 
-// Note: Imports only types and is used only in tsdoc.
-// deno-lint-ignore no-unused-vars
-import type { Expression } from "./expression.ts";
-// deno-lint-ignore no-unused-vars
-import type { RawString } from "./string.ts";
-
 /**
- * Allows to use {@linkcode Expression} and {@linkcode RawString} transparently
+ * Allows to use {@linkcode [eval].Expression|Expression} and {@linkcode [eval].RawString|RawString} transparently
  * within blocks.
  *
  * ```typescript

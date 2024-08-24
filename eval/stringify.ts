@@ -16,12 +16,6 @@ import {
   vimExpressionOf,
 } from "./vim_evaluatable.ts";
 
-// Note: Imports only types and is used only in tsdoc.
-// deno-lint-ignore no-unused-vars
-import type { Expression } from "./expression.ts";
-// deno-lint-ignore no-unused-vars
-import type { RawString } from "./string.ts";
-
 /**
  * Converts a JavaScript value to a string that can be parsed with Vim `eval()`.
  *
@@ -47,7 +41,7 @@ import type { RawString } from "./string.ts";
  * - `Boolean`, `Number`, `String`, and `BigInt` (obtainable via `Object()`) objects are converted to the corresponding primitive values. `Symbol` objects (obtainable via `Object()`) are treated as plain objects.
  * - `undefined`, `Function`, and `Symbol` values are either omitted (when found in an object) or changed to null (when found in an array or a single value).
  * - `Infinity` and `NaN` numbers are converted to the corresponding Vim formula. Note that if they are included in the value returned from Vim, they will be converted to `null`.
- * - The special {@linkcode Expression} or {@linkcode RawString} objects are serialized to Vim's expression.
+ * - The special {@linkcode [eval].Expression|Expression} or {@linkcode [eval].RawString|RawString} objects are serialized to Vim's expression.
  * - If `Object` has a `toJSON()` method, it will be invoked and the result will be serialized again. But if the return value of `toJSON()` has a `toJSON()` method, it will **NOT** be invoked again.
  *
  * When a `Array` or `Object` has a circular reference, a `TypeError` will be thrown.

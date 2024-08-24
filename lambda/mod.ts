@@ -40,10 +40,6 @@ import { isTupleOf } from "@core/unknownutil/is/tuple-of";
 import { stringify } from "../eval/stringify.ts";
 import { expr, type Expression } from "../eval/expression.ts";
 
-// Note: Imports only types and is used only in tsdoc.
-// deno-lint-ignore no-unused-vars
-import type { RawString } from "../eval/string.ts";
-
 /**
  * Lambda function identifier
  */
@@ -235,7 +231,7 @@ export interface Lambda extends Disposable {
  * ```
  *
  * You can pass JSON serializable values, {@linkcode Expression} or
- * {@linkcode RawString} for the {@linkcode Lambda#notify} or
+ * {@linkcode [eval].RawString|RawString} for the {@linkcode Lambda#notify} or
  * {@linkcode Lambda#request} arguments.
  *
  * ```typescript
