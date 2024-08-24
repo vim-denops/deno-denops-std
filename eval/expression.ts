@@ -96,9 +96,8 @@ export const isExpression: Predicate<Expression> = isIntersectionOf([
 type TemplateSubstitutions = any[];
 
 class ExpressionImpl extends String implements ExpressionProps {
-  declare [Symbol.toStringTag]: "Expression";
-  static {
-    this.prototype[Symbol.toStringTag] = "Expression";
+  get [Symbol.toStringTag]() {
+    return "Expression" as const;
   }
 
   [vimExpressionOf](): string {

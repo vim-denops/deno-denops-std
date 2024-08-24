@@ -129,9 +129,8 @@ export const isRawString: Predicate<RawString> = isIntersectionOf([
 type TemplateSubstitutions = any[];
 
 class RawStringImpl extends String implements RawStringProps {
-  declare [Symbol.toStringTag]: "RawString";
-  static {
-    this.prototype[Symbol.toStringTag] = "RawString";
+  get [Symbol.toStringTag]() {
+    return "RawString" as const;
   }
 
   #cached?: string;
