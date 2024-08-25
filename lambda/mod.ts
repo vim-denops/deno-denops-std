@@ -231,8 +231,8 @@ export interface Lambda extends Disposable {
  * ```
  *
  * You can pass JSON serializable values, {@linkcode Expression} or
- * {@linkcode [eval].RawString|RawString} for the {@linkcode Lambda#notify} or
- * {@linkcode Lambda#request} arguments.
+ * {@linkcode [eval].RawString|RawString} for {@linkcode [lambda].notify|notify}
+ * or {@linkcode [lambda].request|request} arguments.
  *
  * ```typescript
  * import type { Denops } from "jsr:@denops/std";
