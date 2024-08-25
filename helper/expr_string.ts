@@ -124,7 +124,7 @@ const isInstanceOfString = isInstanceOf(String);
  * console.log(isExprString("foo")); // outputs: false
  * ```
  *
- * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].isRawString:isRawString}
+ * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].isRawString|isRawString}
  */
 export function isExprString(x: unknown): x is ExprString {
   return isObjectOf({
