@@ -23,7 +23,7 @@
  * ```
  *
  * @module
- * @deprecated Use {@linkcode rawString}
+ * @deprecated Use {@linkcode [eval].rawString|rawString}
  */
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 import { isArray } from "@core/unknownutil/is/array";
@@ -98,7 +98,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * ```
  *
  * @see useExprString for usage
- * @deprecated Use {@linkcode rawString}
+ * @deprecated Use {@linkcode [eval].rawString|rawString}
  */
 export function exprQuote(
   template: TemplateStringsArray,
