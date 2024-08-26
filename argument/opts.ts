@@ -48,7 +48,7 @@ const optPattern = /^\+\+([a-zA-Z0-9-]+)(?:=(.*))?/;
  * }
  * ```
  */
-export function parseOpts(args: string[]): [Opts, string[]] {
+export function parseOpts(args: readonly string[]): [Opts, string[]] {
   const opts: Opts = {};
   const residue: string[] = [];
   for (let i = 0; i < args.length; i++) {
@@ -100,7 +100,10 @@ export function parseOpts(args: string[]): [Opts, string[]] {
  * }
  * ```
  */
-export function validateOpts(opts: Opts, knownAttributes: string[]): void {
+export function validateOpts(
+  opts: Opts,
+  knownAttributes: readonly string[],
+): void {
   Object.keys(opts).forEach((v) => {
     if (!knownAttributes.includes(v)) {
       throw new Error(`Unknown option '++${v}' is specified.`);
@@ -153,7 +156,7 @@ export function formatOpt(key: string, value: string | undefined): string[] {
  * }
  * ```
  */
-export function formatOpts(opts: Opts, includes?: string[]): string[] {
+export function formatOpts(opts: Opts, includes?: readonly string[]): string[] {
   let entries = Object.entries(opts);
   if (includes != undefined) {
     entries = entries.filter(([k, _]) => includes.includes(k));
