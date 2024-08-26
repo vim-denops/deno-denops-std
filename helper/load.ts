@@ -1,6 +1,8 @@
 import type { Denops } from "@denops/core";
-import * as fs from "@std/fs";
-import * as path from "@std/path";
+import { exists } from "@std/fs/exists";
+import { basename } from "@std/path/basename";
+import { fromFileUrl } from "@std/path/from-file-url";
+import { join } from "@std/path/join";
 import { execute } from "./execute.ts";
 
 const loaded = new Set<URL>();
@@ -101,12 +103,12 @@ export async function load(
 
 async function ensureLocalFile(url: URL): Promise<string> {
   if (url.protocol === "file:") {
-    return path.fromFileUrl(url);
+    return fromFileUrl(url);
   }
   const cacheDir = await getOrCreateCacheDir();
   const filename = await getLocalFilename(url);
-  const filepath = path.join(cacheDir, filename);
-  if (await fs.exists(filepath)) {
+  const filepath = join(cacheDir, filename);
+  if (await exists(filepath)) {
     return filepath;
   }
   const response = await fetch(url);
@@ -131,8 +133,7 @@ async function getLocalFilename(url: URL): Promise<string> {
   const h = Array.from(new Uint8Array(buf))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
-  const basename = path.basename(url.pathname);
-  return `${h}-${basename}`;
+  return `${h}-${basename(url.pathname)}`;
 }
 
 async function getOrCreateCacheDir(): Promise<string> {
@@ -148,7 +149,7 @@ function getCacheDirUnix(): string {
   if (!root) {
     throw new Error("`HOME` environment variable is not defined.");
   }
-  return path.join(root, ".cache", "denops_std", "load");
+  return join(root, ".cache", "denops_std", "load");
 }
 
 function getCacheDirWindows(): string {
@@ -156,5 +157,5 @@ function getCacheDirWindows(): string {
   if (!root) {
     throw new Error("`LOCALAPPDATA` environment variable is not defined.");
   }
-  return path.join(root, "denops_std", "load");
+  return join(root, "denops_std", "load");
 }

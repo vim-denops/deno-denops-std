@@ -38,7 +38,7 @@ import { isRecord } from "@core/unknownutil/is/record";
 import { isString } from "@core/unknownutil/is/string";
 import { isSymbol } from "@core/unknownutil/is/symbol";
 import { isUndefined } from "@core/unknownutil/is/undefined";
-import { ulid } from "@std/ulid";
+import { ulid } from "@std/ulid/ulid";
 import { execute } from "./execute.ts";
 
 const EXPR_STRING_MARK = "__denops_expr_string";

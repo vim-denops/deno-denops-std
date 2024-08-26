@@ -1,5 +1,5 @@
 import type { Denops } from "@denops/core";
-import { ulid } from "@std/ulid";
+import { ulid } from "@std/ulid/ulid";
 import * as nvimFn from "../function/nvim/mod.ts";
 import { execute } from "../helper/execute.ts";
 

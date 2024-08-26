@@ -1,4 +1,5 @@
-import { fromFileUrl, toFileUrl } from "@std/path";
+import { fromFileUrl } from "@std/path/from-file-url";
+import { toFileUrl } from "@std/path/to-file-url";
 
 interface ModuleInformation {
   sourcePath: string;

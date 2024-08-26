@@ -2,7 +2,7 @@ import type { Denops } from "@denops/core";
 import { assert } from "@core/unknownutil/assert";
 import { isNumber } from "@core/unknownutil/is/number";
 import { isString } from "@core/unknownutil/is/string";
-import { ulid } from "@std/ulid";
+import { ulid } from "@std/ulid/ulid";
 import * as fn from "../function/mod.ts";
 import * as lambda from "../lambda/mod.ts";
 import { execute } from "./execute.ts";

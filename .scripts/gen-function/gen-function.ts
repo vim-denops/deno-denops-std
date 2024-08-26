@@ -1,4 +1,4 @@
-import * as path from "@std/path";
+import { fromFileUrl } from "@std/path/from-file-url";
 import { parse } from "./parse.ts";
 import { format } from "./format.ts";
 import { DOCS_OVERRIDES } from "./override.ts";
@@ -103,5 +103,5 @@ await transform(resolvePath(vimManualModule), vimDefs);
 await transform(resolvePath(nvimManualModule), nvimDefs);
 
 function resolvePath(p: string): string {
-  return path.fromFileUrl(new URL(p, import.meta.url));
+  return fromFileUrl(new URL(p, import.meta.url));
 }
