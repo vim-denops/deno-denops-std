@@ -58,7 +58,7 @@
     "@std/path": "jsr:@std/path@^1.0.2",
     "@std/semver": "jsr:@std/semver@^1.0.0",
     "@std/streams": "jsr:@std/streams@^1.0.0",
-    "@std/testing": "jsr:@std/testing@^1.0.0-rc.5",
+    "@std/testing": "jsr:@std/testing@^1.0.1",
     "@std/ulid": "jsr:@std/ulid@^1.0.0",
     "encoding-japanese": "npm:encoding-japanese@^2.1.0",
     "jsr:@denops/std": "./mod.ts",

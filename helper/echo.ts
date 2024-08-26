@@ -1,5 +1,5 @@
 import type { Denops } from "@denops/core";
-import { ulid } from "@std/ulid";
+import { ulid } from "@std/ulid/ulid";
 import { execute } from "./execute.ts";
 
 const cacheKey = "denops_std/helper/echo@1";

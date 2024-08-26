@@ -139,7 +139,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert";
- * import * as path from "jsr:@std/path";
+ * import { toFileUrl } from "jsr:@std/path/to-file-url";
  * import { format } from "jsr:@denops/std/bufname";
  *
  * // NOTE:
@@ -147,7 +147,7 @@ const exprPattern = /^(.*?)(?:;(.*?))?(?:#(.*))?$/;
  * assertEquals(
  *   format({
  *     scheme: "denops",
- *     expr: path.toFileUrl("C:\\Users\John Titor\test.git").pathname,
+ *     expr:toFileUrl("C:\\Users\John Titor\test.git").pathname,
  *   }),
  *   "denops:///C:/Users/John%2520Titor/test.git",
  * );
@@ -233,7 +233,7 @@ export function format(
  *
  * ```typescript
  * import { assertEquals } from "jsr:@std/assert";
- * import * as path from "jsr:@std/path";
+ * import { fromFileUrl } from "jsr:@std/path/from-file-url";
  * import { parse } from "jsr:@denops/std/bufname";
  *
  * const bufname = parse("denops:///C:/Users/John%2520Titor/test.git");
@@ -244,7 +244,7 @@ export function format(
  * // NOTE:
  * // Works only on Windows (Use path.win32.fromFileUrl instead on other platforms)
  * assertEquals(
- *   path.fromFileUrl(`file://${bufname.expr}`),
+ *   fromFileUrl(`file://${bufname.expr}`),
  *   "C:\\Users\\John Titor\\test.git",
  * );
  * ```

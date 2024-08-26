@@ -1,4 +1,4 @@
-import * as streams from "@std/streams";
+import { toText } from "@std/streams/to-text";
 
 /**
  * Downloads a text file and returns the contents.
@@ -9,8 +9,7 @@ export async function downloadString(url: string): Promise<string> {
   if (response.status >= 400 || !response.body) {
     throw new Error(`Failed to read ${url}`);
   }
-  //const reader = streams.readerFromStreamReader(response.body.getReader());
-  return await streams.toText(response.body);
+  return await toText(response.body);
 }
 
 /**
