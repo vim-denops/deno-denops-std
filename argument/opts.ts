@@ -16,7 +16,7 @@ export const builtinOpts = [
   "nobinary",
   "bad",
   "edit",
-];
+] as const;
 
 const optPattern = /^\+\+([a-zA-Z0-9-]+)(?:=(.*))?/;
 
