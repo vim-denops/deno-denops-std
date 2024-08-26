@@ -1,18 +1,15 @@
 import type { Denops } from "@denops/core";
 import { isArray } from "@core/unknownutil/is/array";
 import { isString } from "@core/unknownutil/is/string";
-import {
-  exprQuote as q,
-  type ExprString,
-  isExprString,
-  useExprString,
-} from "./expr_string.ts";
 import { batch } from "../batch/mod.ts";
-import { register } from "../lambda/mod.ts";
+import { isRawString, type RawString, rawString } from "../eval/string.ts";
+import { useEval } from "../eval/use_eval.ts";
 import { feedkeys } from "../function/mod.ts";
+import { type ExprString, isExprString } from "../helper/expr_string.ts";
+import { add } from "../lambda/mod.ts";
 
 export type Keys = {
-  keys: string | ExprString;
+  keys: string | RawString | ExprString;
   remap: boolean;
 };
 
@@ -23,7 +20,7 @@ function toArray<T>(x: T | T[]): T[] {
 }
 
 function toKeys(keys: KeysSpecifier): Keys {
-  if (isString(keys) || isExprString(keys)) {
+  if (isString(keys) || isRawString(keys) || isExprString(keys)) {
     return { keys, remap: false };
   }
   return keys;
@@ -36,7 +33,7 @@ function toKeys(keys: KeysSpecifier): Keys {
  * ```typescript
  * import type { Entrypoint } from "jsr:@denops/std";
  * import * as fn from "jsr:@denops/std/function";
- * import { exprQuote as q } from "jsr:@denops/std/helper/expr_string";
+ * import { rawString } from "jsr:@denops/std/eval";
  * import { send } from "jsr:@denops/std/helper/keymap";
  *
  * export const main: Entrypoint = async (denops) => {
@@ -50,14 +47,14 @@ function toKeys(keys: KeysSpecifier): Keys {
  *
  *       // Send special keys.
  *       await send(denops, [
- *         q`${"\\<BS>".repeat(6)}`,
+ *         rawString`${"\\<BS>".repeat(6)}`,
  *         "baz",
  *       ]);
  *       // "baz"
  *       console.log(await fn.getline(denops, "."));
  *
  *       // Send remaped keys.
- *       await send(denops, { keys: q`\<C-l>`, remap: true });
+ *       await send(denops, { keys: rawString`\<C-l>`, remap: true });
  *       // "bazsend"
  *       console.log(await fn.getline(denops, "."));
  *     },
@@ -72,19 +69,15 @@ export async function send(
   keys: KeysSpecifier | KeysSpecifier[],
 ): Promise<void> {
   const { promise: waiter, resolve } = Promise.withResolvers<void>();
-  const id = register(denops, () => resolve(), { once: true });
+  using lo = add(denops, () => resolve());
   await Promise.all([
-    useExprString(denops, async (denops) => {
+    useEval(denops, async (denops) => {
       await batch(denops, async (denops) => {
         const normKeys = toArray(keys).map(toKeys);
         for (const key of normKeys) {
           await feedkeys(denops, key.keys, key.remap ? "m" : "n");
         }
-        await feedkeys(
-          denops,
-          q`\<Cmd>call denops#notify('${denops.name}', '${id}', [])\<CR>`,
-          "n",
-        );
+        await feedkeys(denops, rawString`\<Cmd>call ${lo.notify(1)}\<CR>`, "n");
       });
     }),
     waiter,

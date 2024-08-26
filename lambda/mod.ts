@@ -32,6 +32,13 @@
  */
 
 import type { Denops } from "@denops/core";
+import type { Predicate } from "@core/unknownutil/type";
+import { isArray } from "@core/unknownutil/is/array";
+import { isLiteralOf } from "@core/unknownutil/is/literal-of";
+import { isLiteralOneOf } from "@core/unknownutil/is/literal-one-of";
+import { isTupleOf } from "@core/unknownutil/is/tuple-of";
+import { stringify } from "../eval/stringify.ts";
+import { expr, type Expression } from "../eval/expression.ts";
 
 /**
  * Lambda function identifier
@@ -143,7 +150,7 @@ export function unregister(
   return false;
 }
 
-export interface Lambda {
+export interface Lambda extends Disposable {
   readonly id: Identifier;
 
   /**
@@ -161,7 +168,7 @@ export interface Lambda {
    * }
    * ```
    */
-  notify(...args: unknown[]): string;
+  notify(...args: unknown[]): Expression;
 
   /**
    * Create a Vim script expression to request the lambda function
@@ -178,7 +185,7 @@ export interface Lambda {
    * }
    * ```
    */
-  request(...args: unknown[]): string;
+  request(...args: unknown[]): Expression;
 
   /**
    * Dispose the lambda function
@@ -197,8 +204,6 @@ export interface Lambda {
    * ```
    */
   dispose(): void;
-
-  [Symbol.dispose](): void;
 }
 
 /**
@@ -224,21 +229,67 @@ export interface Lambda {
  *   lo.dispose();
  * }
  * ```
+ *
+ * You can pass JSON serializable values, {@linkcode Expression} or
+ * {@linkcode [eval].RawString|RawString} for {@linkcode [lambda].notify|notify}
+ * or {@linkcode [lambda].request|request} arguments.
+ *
+ * ```typescript
+ * import type { Denops } from "jsr:@denops/std";
+ * import * as lambda from "jsr:@denops/std/lambda";
+ * import { expr, rawString } from "jsr:@denops/std/eval";
+ *
+ * export async function main(denops: Denops): Promise<void> {
+ *   const a = lambda.add(denops, (cword: unknown) => {
+ *     // Do what ever you want.
+ *     return rawString`\<CR>`;
+ *   });
+ *   await denops.cmd(`nmap <expr> <Space> ${
+ *     a.request(expr`expand("<cword>")`)
+ *   }`);
+ * }
+ * ```
  */
 export function add(denops: Denops, fn: Fn): Lambda {
-  const id = register(denops, fn);
-  const name = denops.name;
+  const fnWrapper = async (...args: unknown[]) => {
+    if (isFnWrapperArgs(args)) {
+      const [, type, fnArgs] = args;
+      if (type === "notify") {
+        await fn(...fnArgs);
+      } else {
+        return stringify(await fn(...fnArgs));
+      }
+    } else {
+      return await fn(...args);
+    }
+  };
+  const id = register(denops, fnWrapper);
+  const { name } = denops;
   return {
     id,
     notify: (...args: unknown[]) => {
-      args = args.map((v) => JSON.stringify(v));
-      return `denops#notify('${name}', '${id}', [${args}])`;
+      const fnArgs: FnWrapperArgs = [VIM_REQUEST_FLAG, "notify", args];
+      return expr`denops#notify(${name}, ${id}, ${fnArgs})`;
     },
     request: (...args: unknown[]) => {
-      args = args.map((v) => JSON.stringify(v));
-      return `denops#request('${name}', '${id}', [${args}])`;
+      const fnArgs: FnWrapperArgs = [VIM_REQUEST_FLAG, "request", args];
+      return expr`eval(denops#request(${name}, ${id}, ${fnArgs}))`;
     },
     dispose: () => unregister(denops, id),
-    [Symbol.dispose]: () => unregister(denops, id),
+    [Symbol.dispose]: () => void unregister(denops, id),
   };
 }
+
+const VIM_REQUEST_FLAG = "__denops_std__lambda__vim_request@1";
+
+type FnWrapperArgs = [
+  flag: typeof VIM_REQUEST_FLAG,
+  type: "notify" | "request",
+  fnArgs: unknown[],
+];
+
+const isFnWrapperArgs = isTupleOf([
+  isLiteralOf(VIM_REQUEST_FLAG),
+  isLiteralOneOf(["notify", "request"] as const),
+  isArray,
+]) satisfies Predicate<FnWrapperArgs>;

@@ -23,6 +23,7 @@
  * ```
  *
  * @module
+ * @deprecated Use {@linkcode [eval].rawString|rawString}
  */
 import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
 import type { Predicate } from "@core/unknownutil/type";
@@ -45,6 +46,8 @@ const EXPR_STRING_MARK = "__denops_expr_string";
 
 /**
  * String that marked as Vim's string constant format.
+ *
+ * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].RawString|RawString}
  */
 export type ExprString = string & {
   /**
@@ -96,6 +99,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
  * ```
  *
  * @see useExprString for usage
+ * @deprecated Use {@linkcode [eval].rawString|rawString}
  */
 export function exprQuote(
   template: TemplateStringsArray,
@@ -120,12 +124,15 @@ const isInstanceOfString = isInstanceOf(String);
  * console.log(isExprString(exprQuote`foo`)); // outputs: true
  * console.log(isExprString("foo")); // outputs: false
  * ```
+ *
+ * @deprecated Use {@linkcode [eval].rawString|rawString} and {@linkcode [eval].isRawString|isRawString}
  */
 export const isExprString: Predicate<ExprString> = isObjectOf({
   // NOTE: `ExprString` has a different type in definition (primitive `string`) and implementation (`String`). Only checks `EXPR_STRING_MARK` existence.
   [EXPR_STRING_MARK]: isLiteralOf(1),
 }) as unknown as Predicate<ExprString>;
 
+// NOTE: Do not use [@core/unknownutil@4.3.0/is/custom-jsonable], it's changes behaviour.
 function isJsonable(x: unknown): x is Jsonable {
   return x != null && isFunction((x as Jsonable).toJSON);
 }
