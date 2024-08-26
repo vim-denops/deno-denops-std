@@ -33,7 +33,7 @@ const shortPattern = /^-([a-zA-Z0-9])(.*)/;
  * }
  * ```
  */
-export function parseFlags(args: string[]): [Flags, string[]] {
+export function parseFlags(args: readonly string[]): [Flags, string[]] {
   const patterns = [longPattern, shortPattern];
   const flags: Flags = {};
   const residue: string[] = [];
@@ -86,7 +86,10 @@ export function parseFlags(args: string[]): [Flags, string[]] {
  * }
  * ```
  */
-export function validateFlags(flags: Flags, knownAttributes: string[]): void {
+export function validateFlags(
+  flags: Flags,
+  knownAttributes: readonly string[],
+): void {
   Object.keys(flags).forEach((v) => {
     if (!knownAttributes.includes(v)) {
       if (v.length === 1) {
@@ -116,7 +119,7 @@ export function validateFlags(flags: Flags, knownAttributes: string[]): void {
  */
 export function formatFlag(
   key: string,
-  value: string | string[] | undefined,
+  value: string | readonly string[] | undefined,
 ): string[] {
   if (value == undefined) {
     return [];
@@ -154,7 +157,10 @@ export function formatFlag(
  * }
  * ```
  */
-export function formatFlags(flags: Flags, includes?: string[]): string[] {
+export function formatFlags(
+  flags: Flags,
+  includes?: readonly string[],
+): string[] {
   let entries = Object.entries(flags);
   if (includes != undefined) {
     entries = entries.filter(([k, _]) => includes.includes(k));

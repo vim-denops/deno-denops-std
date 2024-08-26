@@ -97,7 +97,7 @@ import { type Flags, parseFlags } from "./flags.ts";
  * }
  * ```
  */
-export function parse(args: string[]): [Opts, Flags, string[]] {
+export function parse(args: readonly string[]): [Opts, Flags, string[]] {
   const [opts, intermediate] = parseOpts(args);
   const [flags, residue] = parseFlags(intermediate);
   return [opts, flags, residue];
