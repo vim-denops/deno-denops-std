@@ -119,6 +119,12 @@ export type AutocmdEvent =
   | "WinNew"
   | "WinScrolled";
 
+export type AutocmdPattern =
+  | AnyString
+  | "<buffer>"
+  | "<buffer=abuf>"
+  | `<buffer=${number}>`;
+
 interface CommonOptions {
   group?: string;
 }

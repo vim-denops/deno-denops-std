@@ -1,8 +1,13 @@
-import type { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
+import type {
+  AutocmdEvent,
+  AutocmdPattern,
+  DefineOptions,
+  RemoveOptions,
+} from "./types.ts";
 
 export function buildDefineExpr(
   event: AutocmdEvent | readonly AutocmdEvent[],
-  pat: string | readonly string[],
+  pat: AutocmdPattern | readonly AutocmdPattern[],
   cmd: string,
   options: DefineOptions = {},
 ): string {
@@ -32,7 +37,7 @@ export function buildDefineExpr(
 
 export function buildRemoveExpr(
   event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
-  pat?: string | readonly string[],
+  pat?: AutocmdPattern | readonly AutocmdPattern[],
   options: RemoveOptions = {},
 ): string {
   const terms = ["au!"];

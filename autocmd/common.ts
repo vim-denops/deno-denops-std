@@ -1,6 +1,7 @@
 import type { Denops } from "@denops/core";
 import type {
   AutocmdEvent,
+  AutocmdPattern,
   DefineOptions,
   EmitOptions,
   ListOptions,
@@ -42,7 +43,7 @@ import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
 export async function define(
   denops: Denops,
   event: AutocmdEvent | readonly AutocmdEvent[],
-  pat: string | readonly string[],
+  pat: AutocmdPattern | readonly AutocmdPattern[],
   cmd: string,
   options: DefineOptions = {},
 ): Promise<void> {
@@ -77,7 +78,7 @@ export async function define(
 export async function remove(
   denops: Denops,
   event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
-  pat?: string | readonly string[],
+  pat?: AutocmdPattern | readonly AutocmdPattern[],
   options: RemoveOptions = {},
 ): Promise<void> {
   const expr = buildRemoveExpr(event, pat, options);
@@ -109,7 +110,7 @@ export async function remove(
 export async function list(
   denops: Denops,
   event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
-  pat?: string | readonly string[],
+  pat?: AutocmdPattern | readonly AutocmdPattern[],
   options: ListOptions = {},
 ): Promise<unknown> {
   const terms = ["au"];
@@ -126,7 +127,7 @@ export async function list(
       if (Array.isArray(pat)) {
         terms.push(pat.join(","));
       } else {
-        terms.push(pat as string);
+        terms.push(pat as AutocmdPattern);
       }
     }
   }

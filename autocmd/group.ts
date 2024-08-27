@@ -1,6 +1,11 @@
 import type { Denops } from "@denops/core";
 import { execute } from "../helper/execute.ts";
-import type { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
+import type {
+  AutocmdEvent,
+  AutocmdPattern,
+  DefineOptions,
+  RemoveOptions,
+} from "./types.ts";
 import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
 
 export type GroupDefineOptions = Omit<DefineOptions, "group">;
@@ -73,7 +78,7 @@ class GroupHelper {
    */
   define(
     event: AutocmdEvent | readonly AutocmdEvent[],
-    pat: string | readonly string[],
+    pat: AutocmdPattern | readonly AutocmdPattern[],
     cmd: string,
     options: GroupDefineOptions = {},
   ): void {
@@ -85,7 +90,7 @@ class GroupHelper {
    */
   remove(
     event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
-    pat?: string | readonly string[],
+    pat?: AutocmdPattern | readonly AutocmdPattern[],
     options: GroupRemoveOptions = {},
   ): void {
     this.#commands.push(buildRemoveExpr(event, pat, options));
