@@ -72,8 +72,8 @@ class GroupHelper {
    * Define an autocmd
    */
   define(
-    event: AutocmdEvent | AutocmdEvent[],
-    pat: string | string[],
+    event: AutocmdEvent | readonly AutocmdEvent[],
+    pat: string | readonly string[],
     cmd: string,
     options: GroupDefineOptions = {},
   ): void {
@@ -84,8 +84,8 @@ class GroupHelper {
    * Remove an autocmd
    */
   remove(
-    event?: "*" | AutocmdEvent | AutocmdEvent[],
-    pat?: string | string[],
+    event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
+    pat?: string | readonly string[],
     options: GroupRemoveOptions = {},
   ): void {
     this.#commands.push(buildRemoveExpr(event, pat, options));

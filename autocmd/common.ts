@@ -41,8 +41,8 @@ import { buildDefineExpr, buildRemoveExpr } from "./_utils.ts";
  */
 export async function define(
   denops: Denops,
-  event: AutocmdEvent | AutocmdEvent[],
-  pat: string | string[],
+  event: AutocmdEvent | readonly AutocmdEvent[],
+  pat: string | readonly string[],
   cmd: string,
   options: DefineOptions = {},
 ): Promise<void> {
@@ -76,8 +76,8 @@ export async function define(
  */
 export async function remove(
   denops: Denops,
-  event?: "*" | AutocmdEvent | AutocmdEvent[],
-  pat?: string | string[],
+  event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
+  pat?: string | readonly string[],
   options: RemoveOptions = {},
 ): Promise<void> {
   const expr = buildRemoveExpr(event, pat, options);
@@ -108,8 +108,8 @@ export async function remove(
  */
 export async function list(
   denops: Denops,
-  event?: "*" | AutocmdEvent | AutocmdEvent[],
-  pat?: string | string[],
+  event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
+  pat?: string | readonly string[],
   options: ListOptions = {},
 ): Promise<unknown> {
   const terms = ["au"];
@@ -120,13 +120,13 @@ export async function list(
     if (Array.isArray(event)) {
       terms.push(event.join(","));
     } else {
-      terms.push(event);
+      terms.push(event as AutocmdEvent);
     }
     if (pat) {
       if (Array.isArray(pat)) {
         terms.push(pat.join(","));
       } else {
-        terms.push(pat);
+        terms.push(pat as string);
       }
     }
   }
@@ -155,7 +155,7 @@ export async function list(
  */
 export async function emit(
   denops: Denops,
-  event: AutocmdEvent | AutocmdEvent[],
+  event: AutocmdEvent | readonly AutocmdEvent[],
   fname?: string,
   options: EmitOptions = {},
 ): Promise<unknown> {
@@ -169,7 +169,7 @@ export async function emit(
   if (Array.isArray(event)) {
     terms.push(event.join(","));
   } else {
-    terms.push(event);
+    terms.push(event as AutocmdEvent);
   }
   if (fname) {
     terms.push(fname);
@@ -199,7 +199,7 @@ export async function emit(
  */
 export async function emitAll(
   denops: Denops,
-  event: AutocmdEvent | AutocmdEvent[],
+  event: AutocmdEvent | readonly AutocmdEvent[],
   fname?: string,
   options: EmitOptions = {},
 ): Promise<unknown> {
@@ -213,7 +213,7 @@ export async function emitAll(
   if (Array.isArray(event)) {
     terms.push(event.join(","));
   } else {
-    terms.push(event);
+    terms.push(event as AutocmdEvent);
   }
   if (fname) {
     terms.push(fname);
