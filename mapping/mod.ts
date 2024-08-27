@@ -5,7 +5,7 @@
  */
 import type { Denops } from "@denops/core";
 import * as fn from "../function/mod.ts";
-import * as batch from "../batch/mod.ts";
+import { batch } from "../batch/batch.ts";
 import type { Mapping, Mode } from "./types.ts";
 import { parse } from "./_parser.ts";
 
@@ -64,7 +64,7 @@ export async function map(
     options.expr ? "<expr>" : "",
     options.unique ? "<unique>" : "",
   ].filter((v) => v).join("");
-  await batch.batch(denops, async (denops) => {
+  await batch(denops, async (denops) => {
     for (const mode of modes) {
       await denops.cmd(`${mode}${prefix}map ${arg} ${lhs} ${rhs}`);
     }
@@ -120,7 +120,7 @@ export async function unmap(
 ): Promise<void> {
   const buffer = options.buffer ? "<buffer>" : "";
   const modes = forceArray(options.mode ?? "");
-  await batch.batch(denops, async (denops) => {
+  await batch(denops, async (denops) => {
     for (const mode of modes) {
       await denops.cmd(`${mode}unmap ${buffer} ${lhs}`);
     }
