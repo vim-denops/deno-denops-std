@@ -1,8 +1,13 @@
-import type { AutocmdEvent, DefineOptions, RemoveOptions } from "./types.ts";
+import type {
+  AutocmdEvent,
+  AutocmdPattern,
+  DefineOptions,
+  RemoveOptions,
+} from "./types.ts";
 
 export function buildDefineExpr(
-  event: AutocmdEvent | AutocmdEvent[],
-  pat: string | string[],
+  event: AutocmdEvent | readonly AutocmdEvent[],
+  pat: AutocmdPattern | readonly AutocmdPattern[],
   cmd: string,
   options: DefineOptions = {},
 ): string {
@@ -13,12 +18,12 @@ export function buildDefineExpr(
   if (Array.isArray(event)) {
     terms.push(event.join(","));
   } else {
-    terms.push(event);
+    terms.push(event as AutocmdEvent);
   }
   if (Array.isArray(pat)) {
     terms.push(pat.join(","));
   } else {
-    terms.push(pat);
+    terms.push(pat as string);
   }
   if (options.once) {
     terms.push("++once");
@@ -31,8 +36,8 @@ export function buildDefineExpr(
 }
 
 export function buildRemoveExpr(
-  event?: "*" | AutocmdEvent | AutocmdEvent[],
-  pat?: string | string[],
+  event?: "*" | AutocmdEvent | readonly AutocmdEvent[],
+  pat?: AutocmdPattern | readonly AutocmdPattern[],
   options: RemoveOptions = {},
 ): string {
   const terms = ["au!"];
@@ -43,13 +48,13 @@ export function buildRemoveExpr(
     if (Array.isArray(event)) {
       terms.push(event.join(","));
     } else {
-      terms.push(event);
+      terms.push(event as AutocmdEvent);
     }
     if (pat) {
       if (Array.isArray(pat)) {
         terms.push(pat.join(","));
       } else {
-        terms.push(pat);
+        terms.push(pat as string);
       }
     }
   }
