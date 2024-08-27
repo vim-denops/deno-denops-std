@@ -1,7 +1,7 @@
 import type { Denops } from "@denops/core";
 import { isArray } from "@core/unknownutil/is/array";
 import { isString } from "@core/unknownutil/is/string";
-import { batch } from "../batch/mod.ts";
+import { batch } from "../batch/batch.ts";
 import { isRawString, type RawString, rawString } from "../eval/string.ts";
 import { useEval } from "../eval/use_eval.ts";
 import { feedkeys } from "../function/mod.ts";

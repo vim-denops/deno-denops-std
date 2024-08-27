@@ -1,7 +1,7 @@
 import type { Denops } from "@denops/core";
 import * as itertools from "@lambdalisue/itertools";
 import { unreachable } from "@lambdalisue/unreachable";
-import * as batch from "../batch/mod.ts";
+import { batch } from "../batch/batch.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
 
@@ -154,7 +154,7 @@ async function vimDecorate(
     props.add([deco.line, deco.column, deco.line, deco.column + deco.length]);
     decoMap.set(propType, props);
   }
-  await batch.batch(denops, async (denops) => {
+  await batch(denops, async (denops) => {
     for (const highlight of hs) {
       const propType = toPropType(highlight);
       await vimFn.prop_type_add(denops, propType, {
@@ -184,7 +184,7 @@ async function vimUndecorate(
       p.type.startsWith("denops_std:buffer:decoration:decorate:")
     ).map((p) => p.id),
   );
-  await batch.batch(denops, async (denops) => {
+  await batch(denops, async (denops) => {
     for (const propId of propIds) {
       await vimFn.prop_remove(denops, { id: propId, bufnr, all: true });
     }
@@ -201,7 +201,7 @@ async function nvimDecorate(
     "denops_std:buffer:decoration:decorate",
   );
   for (const chunk of itertools.chunked(decorations, 1000)) {
-    await batch.batch(denops, async (denops) => {
+    await batch(denops, async (denops) => {
       for (const deco of chunk) {
         await nvimFn.nvim_buf_add_highlight(
           denops,

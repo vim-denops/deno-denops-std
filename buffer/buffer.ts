@@ -5,7 +5,7 @@ import * as autocmd from "../autocmd/mod.ts";
 import * as batch from "../batch/mod.ts";
 import * as fn from "../function/mod.ts";
 import * as op from "../option/mod.ts";
-import { execute } from "../helper/mod.ts";
+import { execute } from "../helper/execute.ts";
 import {
   type FileFormat,
   findFileFormat,
