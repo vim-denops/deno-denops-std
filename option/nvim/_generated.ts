@@ -1,17 +1,10 @@
 // NOTE: This file is generated. Do NOT modify it manually.
-import type { Denops } from "@denops/core";
-import {
-  getbufvar,
-  getwinvar,
-  setbufvar,
-  setwinvar,
-} from "../../function/mod.ts";
-import { globalOptions, localOptions, options } from "../../variable/mod.ts";
 import type {
   GlobalOption,
   GlobalOrLocalOption,
   LocalOption,
 } from "../types.ts";
+import { BooleanOption, NumberOption, StringOption } from "../_utils.ts";
 
 /**
  * `channel` connected to the buffer, or 0 if no channel is connected.
@@ -20,42 +13,7 @@ import type {
  *
  * (default 0)
  */
-export const channel: LocalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "channel");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "channel", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "channel");
-  },
-  async getLocal(denops: Denops): Promise<number> {
-    const result = await localOptions.get(denops, "channel");
-    return (result ?? 0) as number;
-  },
-  setLocal(denops: Denops, value: number): Promise<void> {
-    return localOptions.set(denops, "channel", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "channel");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
-    const result = await getbufvar(denops, bufnr, "&channel");
-    return (result ?? 0) as number;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
-    return setbufvar(denops, bufnr, "&channel", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<number> {
-    const result = await getwinvar(denops, winnr, "&channel");
-    return (result ?? 0) as number;
-  },
-  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
-    return setwinvar(denops, winnr, "&channel", value);
-  },
-};
+export const channel: LocalOption<number> = new NumberOption("channel");
 
 /**
  * When nonempty, shows the effects of `:substitute`, `:smagic`,
@@ -74,28 +32,7 @@ export const channel: LocalOption<number> = {
  *
  * (default "nosplit")
  */
-export const inccommand: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "inccommand");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "inccommand", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "inccommand");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "inccommand");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "inccommand", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "inccommand");
-  },
-};
+export const inccommand: GlobalOption<string> = new StringOption("inccommand");
 
 /**
  * This option controls the number of lines / columns to scroll by when
@@ -120,28 +57,9 @@ export const inccommand: GlobalOption<string> = {
  *
  * (default "ver:3,hor:6")
  */
-export const mousescroll: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "mousescroll");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "mousescroll", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "mousescroll");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "mousescroll");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "mousescroll", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "mousescroll");
-  },
-};
+export const mousescroll: GlobalOption<string> = new StringOption(
+  "mousescroll",
+);
 
 /**
  * Enables pseudo-transparency for the `popup-menu`. Valid values are in
@@ -159,28 +77,7 @@ export const mousescroll: GlobalOption<string> = {
  *
  * (default 0)
  */
-export const pumblend: GlobalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "pumblend");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "pumblend", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "pumblend");
-  },
-  async getGlobal(denops: Denops): Promise<number> {
-    const result = await globalOptions.get(denops, "pumblend");
-    return (result ?? 0) as number;
-  },
-  setGlobal(denops: Denops, value: number): Promise<void> {
-    return globalOptions.set(denops, "pumblend", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "pumblend");
-  },
-};
+export const pumblend: GlobalOption<number> = new NumberOption("pumblend");
 
 /**
  * Flags to change the way redrawing works, for debugging purposes.
@@ -216,28 +113,9 @@ export const pumblend: GlobalOption<number> = {
  *
  * (default "")
  */
-export const redrawdebug: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "redrawdebug");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "redrawdebug", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "redrawdebug");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "redrawdebug");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "redrawdebug", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "redrawdebug");
-  },
-};
+export const redrawdebug: GlobalOption<string> = new StringOption(
+  "redrawdebug",
+);
 
 /**
  * Maximum number of lines kept beyond the visible screen. Lines at the
@@ -247,42 +125,7 @@ export const redrawdebug: GlobalOption<string> = {
  *
  * (default 10000)
  */
-export const scrollback: LocalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "scrollback");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "scrollback", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "scrollback");
-  },
-  async getLocal(denops: Denops): Promise<number> {
-    const result = await localOptions.get(denops, "scrollback");
-    return (result ?? 0) as number;
-  },
-  setLocal(denops: Denops, value: number): Promise<void> {
-    return localOptions.set(denops, "scrollback", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "scrollback");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
-    const result = await getbufvar(denops, bufnr, "&scrollback");
-    return (result ?? 0) as number;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
-    return setbufvar(denops, bufnr, "&scrollback", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<number> {
-    const result = await getwinvar(denops, winnr, "&scrollback");
-    return (result ?? 0) as number;
-  },
-  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
-    return setwinvar(denops, winnr, "&scrollback", value);
-  },
-};
+export const scrollback: LocalOption<number> = new NumberOption("scrollback");
 
 /**
  * When non-empty, the shada file is read upon startup and written
@@ -401,28 +244,7 @@ export const scrollback: LocalOption<number> = {
  *  Win32:  !,'100,<50,s10,h,rA:,rB:
  *  others: !,'100,<50,s10,h)
  */
-export const shada: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "shada");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "shada", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "shada");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "shada");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "shada", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "shada");
-  },
-};
+export const shada: GlobalOption<string> = new StringOption("shada");
 
 /**
  * When non-empty, overrides the file name used for `shada` (viminfo).
@@ -434,28 +256,7 @@ export const shada: GlobalOption<string> = {
  *
  * (default "")
  */
-export const shadafile: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "shadafile");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "shadafile", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "shadafile");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "shadafile");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "shadafile", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "shadafile");
-  },
-};
+export const shadafile: GlobalOption<string> = new StringOption("shadafile");
 
 /**
  * EXPERIMENTAL
@@ -519,42 +320,9 @@ export const shadafile: GlobalOption<string> = {
  *
  * (default "")
  */
-export const statuscolumn: LocalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "statuscolumn");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "statuscolumn", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "statuscolumn");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    const result = await localOptions.get(denops, "statuscolumn");
-    return (result ?? "") as string;
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "statuscolumn", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "statuscolumn");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
-    const result = await getbufvar(denops, bufnr, "&statuscolumn");
-    return (result ?? "") as string;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "&statuscolumn", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<string> {
-    const result = await getwinvar(denops, winnr, "&statuscolumn");
-    return (result ?? "") as string;
-  },
-  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "&statuscolumn", value);
-  },
-};
+export const statuscolumn: LocalOption<string> = new StringOption(
+  "statuscolumn",
+);
 
 /**
  * A comma-separated list of options for specifying control characters
@@ -578,28 +346,9 @@ export const statuscolumn: LocalOption<string> = {
  *
  * (default "BS,HT,ESC,DEL")
  */
-export const termpastefilter: GlobalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "termpastefilter");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "termpastefilter", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "termpastefilter");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "termpastefilter");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "termpastefilter", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "termpastefilter");
-  },
-};
+export const termpastefilter: GlobalOption<string> = new StringOption(
+  "termpastefilter",
+);
 
 /**
  * If the host terminal supports it, buffer all screen updates
@@ -609,28 +358,7 @@ export const termpastefilter: GlobalOption<string> = {
  *
  * (default on)
  */
-export const termsync: GlobalOption<boolean> = {
-  async get(denops: Denops): Promise<boolean> {
-    const result = await options.get(denops, "termsync");
-    return Boolean(result ?? false);
-  },
-  set(denops: Denops, value: boolean): Promise<void> {
-    return options.set(denops, "termsync", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "termsync");
-  },
-  async getGlobal(denops: Denops): Promise<boolean> {
-    const result = await globalOptions.get(denops, "termsync");
-    return Boolean(result ?? false);
-  },
-  setGlobal(denops: Denops, value: boolean): Promise<void> {
-    return globalOptions.set(denops, "termsync", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "termsync");
-  },
-};
+export const termsync: GlobalOption<boolean> = new BooleanOption("termsync");
 
 /**
  * When non-empty, this option enables the window bar and determines its
@@ -649,52 +377,7 @@ export const termsync: GlobalOption<boolean> = {
  *
  * (default "")
  */
-export const winbar: GlobalOrLocalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "winbar");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "winbar", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "winbar");
-  },
-  async getGlobal(denops: Denops): Promise<string> {
-    const result = await globalOptions.get(denops, "winbar");
-    return (result ?? "") as string;
-  },
-  setGlobal(denops: Denops, value: string): Promise<void> {
-    return globalOptions.set(denops, "winbar", value);
-  },
-  resetGlobal(denops: Denops): Promise<void> {
-    return globalOptions.remove(denops, "winbar");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    const result = await localOptions.get(denops, "winbar");
-    return (result ?? "") as string;
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "winbar", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "winbar");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
-    const result = await getbufvar(denops, bufnr, "&winbar");
-    return (result ?? "") as string;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "&winbar", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<string> {
-    const result = await getwinvar(denops, winnr, "&winbar");
-    return (result ?? "") as string;
-  },
-  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "&winbar", value);
-  },
-};
+export const winbar: GlobalOrLocalOption<string> = new StringOption("winbar");
 
 /**
  * Enables pseudo-transparency for a floating window. Valid values are in
@@ -705,42 +388,7 @@ export const winbar: GlobalOrLocalOption<string> = {
  *
  * (default 0)
  */
-export const winblend: LocalOption<number> = {
-  async get(denops: Denops): Promise<number> {
-    const result = await options.get(denops, "winblend");
-    return (result ?? 0) as number;
-  },
-  set(denops: Denops, value: number): Promise<void> {
-    return options.set(denops, "winblend", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "winblend");
-  },
-  async getLocal(denops: Denops): Promise<number> {
-    const result = await localOptions.get(denops, "winblend");
-    return (result ?? 0) as number;
-  },
-  setLocal(denops: Denops, value: number): Promise<void> {
-    return localOptions.set(denops, "winblend", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "winblend");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<number> {
-    const result = await getbufvar(denops, bufnr, "&winblend");
-    return (result ?? 0) as number;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: number): Promise<void> {
-    return setbufvar(denops, bufnr, "&winblend", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<number> {
-    const result = await getwinvar(denops, winnr, "&winblend");
-    return (result ?? 0) as number;
-  },
-  setWindow(denops: Denops, winnr: number, value: number): Promise<void> {
-    return setwinvar(denops, winnr, "&winblend", value);
-  },
-};
+export const winblend: LocalOption<number> = new NumberOption("winblend");
 
 /**
  * Window-local highlights.  Comma-delimited list of highlight
@@ -763,39 +411,6 @@ export const winblend: LocalOption<number> = {
  *
  * (default "")
  */
-export const winhighlight: LocalOption<string> = {
-  async get(denops: Denops): Promise<string> {
-    const result = await options.get(denops, "winhighlight");
-    return (result ?? "") as string;
-  },
-  set(denops: Denops, value: string): Promise<void> {
-    return options.set(denops, "winhighlight", value);
-  },
-  reset(denops: Denops): Promise<void> {
-    return options.remove(denops, "winhighlight");
-  },
-  async getLocal(denops: Denops): Promise<string> {
-    const result = await localOptions.get(denops, "winhighlight");
-    return (result ?? "") as string;
-  },
-  setLocal(denops: Denops, value: string): Promise<void> {
-    return localOptions.set(denops, "winhighlight", value);
-  },
-  resetLocal(denops: Denops): Promise<void> {
-    return localOptions.remove(denops, "winhighlight");
-  },
-  async getBuffer(denops: Denops, bufnr: number): Promise<string> {
-    const result = await getbufvar(denops, bufnr, "&winhighlight");
-    return (result ?? "") as string;
-  },
-  setBuffer(denops: Denops, bufnr: number, value: string): Promise<void> {
-    return setbufvar(denops, bufnr, "&winhighlight", value);
-  },
-  async getWindow(denops: Denops, winnr: number): Promise<string> {
-    const result = await getwinvar(denops, winnr, "&winhighlight");
-    return (result ?? "") as string;
-  },
-  setWindow(denops: Denops, winnr: number, value: string): Promise<void> {
-    return setwinvar(denops, winnr, "&winhighlight", value);
-  },
-};
+export const winhighlight: LocalOption<string> = new StringOption(
+  "winhighlight",
+);
