@@ -17,8 +17,8 @@ class OptionImpl<T> implements GlobalOrLocalOption<T> {
   }
 
   async get(denops: Denops): Promise<T> {
-    const result = await options.get(denops, this.#name);
-    return this.#coerce(result ?? this.#defaultValue);
+    const result = await options.get(denops, this.#name, this.#defaultValue);
+    return this.#coerce(result);
   }
 
   set(denops: Denops, value: T): Promise<void> {
@@ -30,8 +30,12 @@ class OptionImpl<T> implements GlobalOrLocalOption<T> {
   }
 
   async getGlobal(denops: Denops): Promise<T> {
-    const result = await globalOptions.get(denops, this.#name);
-    return this.#coerce(result ?? this.#defaultValue);
+    const result = await globalOptions.get(
+      denops,
+      this.#name,
+      this.#defaultValue,
+    );
+    return this.#coerce(result);
   }
 
   setGlobal(denops: Denops, value: T): Promise<void> {
@@ -43,8 +47,12 @@ class OptionImpl<T> implements GlobalOrLocalOption<T> {
   }
 
   async getLocal(denops: Denops): Promise<T> {
-    const result = await localOptions.get(denops, this.#name);
-    return this.#coerce(result ?? this.#defaultValue);
+    const result = await localOptions.get(
+      denops,
+      this.#name,
+      this.#defaultValue,
+    );
+    return this.#coerce(result);
   }
 
   setLocal(denops: Denops, value: T): Promise<void> {
@@ -56,8 +64,13 @@ class OptionImpl<T> implements GlobalOrLocalOption<T> {
   }
 
   async getBuffer(denops: Denops, bufnr: number): Promise<T> {
-    const result = await getbufvar(denops, bufnr, `&${this.#name}`);
-    return this.#coerce(result ?? this.#defaultValue);
+    const result = await getbufvar(
+      denops,
+      bufnr,
+      `&${this.#name}`,
+      this.#defaultValue,
+    );
+    return this.#coerce(result);
   }
 
   setBuffer(denops: Denops, bufnr: number, value: T): Promise<void> {
@@ -65,8 +78,13 @@ class OptionImpl<T> implements GlobalOrLocalOption<T> {
   }
 
   async getWindow(denops: Denops, winnr: number): Promise<T> {
-    const result = await getwinvar(denops, winnr, `&${this.#name}`);
-    return this.#coerce(result ?? this.#defaultValue);
+    const result = await getwinvar(
+      denops,
+      winnr,
+      `&${this.#name}`,
+      this.#defaultValue,
+    );
+    return this.#coerce(result);
   }
 
   setWindow(denops: Denops, winnr: number, value: T): Promise<void> {
