@@ -1,8 +1,9 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 import type {
+  BufferLocalOption,
   GlobalOption,
-  GlobalOrLocalOption,
-  LocalOption,
+  GlobalOrWindowLocalOption,
+  WindowLocalOption,
 } from "../types.ts";
 import { BooleanOption, NumberOption, StringOption } from "../_utils.ts";
 
@@ -13,7 +14,7 @@ import { BooleanOption, NumberOption, StringOption } from "../_utils.ts";
  *
  * (default 0)
  */
-export const channel: LocalOption<number> = new NumberOption("channel");
+export const channel: BufferLocalOption<number> = new NumberOption("channel");
 
 /**
  * When nonempty, shows the effects of `:substitute`, `:smagic`,
@@ -125,7 +126,9 @@ export const redrawdebug: GlobalOption<string> = new StringOption(
  *
  * (default 10000)
  */
-export const scrollback: LocalOption<number> = new NumberOption("scrollback");
+export const scrollback: BufferLocalOption<number> = new NumberOption(
+  "scrollback",
+);
 
 /**
  * When non-empty, the shada file is read upon startup and written
@@ -320,7 +323,7 @@ export const shadafile: GlobalOption<string> = new StringOption("shadafile");
  *
  * (default "")
  */
-export const statuscolumn: LocalOption<string> = new StringOption(
+export const statuscolumn: WindowLocalOption<string> = new StringOption(
   "statuscolumn",
 );
 
@@ -377,7 +380,9 @@ export const termsync: GlobalOption<boolean> = new BooleanOption("termsync");
  *
  * (default "")
  */
-export const winbar: GlobalOrLocalOption<string> = new StringOption("winbar");
+export const winbar: GlobalOrWindowLocalOption<string> = new StringOption(
+  "winbar",
+);
 
 /**
  * Enables pseudo-transparency for a floating window. Valid values are in
@@ -388,7 +393,7 @@ export const winbar: GlobalOrLocalOption<string> = new StringOption("winbar");
  *
  * (default 0)
  */
-export const winblend: LocalOption<number> = new NumberOption("winblend");
+export const winblend: WindowLocalOption<number> = new NumberOption("winblend");
 
 /**
  * Window-local highlights.  Comma-delimited list of highlight
@@ -411,6 +416,6 @@ export const winblend: LocalOption<number> = new NumberOption("winblend");
  *
  * (default "")
  */
-export const winhighlight: LocalOption<string> = new StringOption(
+export const winhighlight: WindowLocalOption<string> = new StringOption(
   "winhighlight",
 );

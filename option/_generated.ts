@@ -1,8 +1,11 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 import type {
+  BufferLocalOption,
   GlobalOption,
-  GlobalOrLocalOption,
-  LocalOption,
+  GlobalOrBufferLocalOption,
+  GlobalOrTabPageLocalOption,
+  GlobalOrWindowLocalOption,
+  WindowLocalOption,
 } from "./types.ts";
 import { BooleanOption, NumberOption, StringOption } from "./_utils.ts";
 
@@ -85,7 +88,7 @@ export const ambiwidth: GlobalOption<string> = new StringOption("ambiwidth");
  *
  * *only available when compiled with the `+arabic` feature*
  */
-export const arabic: LocalOption<boolean> = new BooleanOption("arabic");
+export const arabic: WindowLocalOption<boolean> = new BooleanOption("arabic");
 
 /**
  * When on and 'termbidi' is off, the required visual character
@@ -141,7 +144,9 @@ export const autochdir: GlobalOption<boolean> = new BooleanOption("autochdir");
  *
  * (default off)
  */
-export const autoindent: LocalOption<boolean> = new BooleanOption("autoindent");
+export const autoindent: BufferLocalOption<boolean> = new BooleanOption(
+  "autoindent",
+);
 
 /**
  * When a file has been detected to have been changed outside of Vim and
@@ -156,7 +161,7 @@ export const autoindent: LocalOption<boolean> = new BooleanOption("autoindent");
  *
  * (default off)
  */
-export const autoread: GlobalOrLocalOption<boolean> = new BooleanOption(
+export const autoread: GlobalOrBufferLocalOption<boolean> = new BooleanOption(
   "autoread",
 );
 
@@ -379,7 +384,7 @@ export const backup: GlobalOption<boolean> = new BooleanOption("backup");
  *
  * (Vi default for Unix: "yes", otherwise: "auto")
  */
-export const backupcopy: GlobalOrLocalOption<string> = new StringOption(
+export const backupcopy: GlobalOrBufferLocalOption<string> = new StringOption(
   "backupcopy",
 );
 
@@ -559,7 +564,7 @@ export const belloff: GlobalOption<string> = new StringOption("belloff");
  *
  * (default off)
  */
-export const binary: LocalOption<boolean> = new BooleanOption("binary");
+export const binary: BufferLocalOption<boolean> = new BooleanOption("binary");
 
 /**
  * When writing a file and the following conditions are met, a BOM (Byte
@@ -580,7 +585,7 @@ export const binary: LocalOption<boolean> = new BooleanOption("binary");
  *
  * (default off)
  */
-export const bomb: LocalOption<boolean> = new BooleanOption("bomb");
+export const bomb: BufferLocalOption<boolean> = new BooleanOption("bomb");
 
 /**
  * This option lets you choose which characters might cause a line
@@ -603,7 +608,7 @@ export const breakat: GlobalOption<string> = new StringOption("breakat");
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const breakindent: LocalOption<boolean> = new BooleanOption(
+export const breakindent: WindowLocalOption<boolean> = new BooleanOption(
   "breakindent",
 );
 
@@ -640,7 +645,7 @@ export const breakindent: LocalOption<boolean> = new BooleanOption(
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const breakindentopt: LocalOption<string> = new StringOption(
+export const breakindentopt: WindowLocalOption<string> = new StringOption(
   "breakindentopt",
 );
 
@@ -681,7 +686,9 @@ export const browsedir: GlobalOption<string> = new StringOption("browsedir");
  *
  * (default: "")
  */
-export const bufhidden: LocalOption<string> = new StringOption("bufhidden");
+export const bufhidden: BufferLocalOption<string> = new StringOption(
+  "bufhidden",
+);
 
 /**
  * When this option is set, the buffer shows up in the buffer list.  If
@@ -692,7 +699,9 @@ export const bufhidden: LocalOption<string> = new StringOption("bufhidden");
  *
  * (default: on)
  */
-export const buflisted: LocalOption<boolean> = new BooleanOption("buflisted");
+export const buflisted: BufferLocalOption<boolean> = new BooleanOption(
+  "buflisted",
+);
 
 /**
  * The value of this option specifies the type of a buffer:
@@ -750,7 +759,7 @@ export const buflisted: LocalOption<boolean> = new BooleanOption("buflisted");
  *
  * (default: "")
  */
-export const buftype: LocalOption<string> = new StringOption("buftype");
+export const buftype: BufferLocalOption<string> = new StringOption("buftype");
 
 /**
  * Specifies details about changing the case of letters.  It may contain
@@ -904,7 +913,7 @@ export const charconvert: GlobalOption<string> = new StringOption(
  *
  * (default off)
  */
-export const cindent: LocalOption<boolean> = new BooleanOption("cindent");
+export const cindent: BufferLocalOption<boolean> = new BooleanOption("cindent");
 
 /**
  * A list of keys that, when typed in Insert mode, cause reindenting of
@@ -915,7 +924,7 @@ export const cindent: LocalOption<boolean> = new BooleanOption("cindent");
  *
  * (default "0**{,0}**,0),0],:,0#,!^F,o,O,e")
  */
-export const cinkeys: LocalOption<string> = new StringOption("cinkeys");
+export const cinkeys: BufferLocalOption<string> = new StringOption("cinkeys");
 
 /**
  * The 'cinoptions' affect the way 'cindent' reindents lines in a C
@@ -924,7 +933,9 @@ export const cinkeys: LocalOption<string> = new StringOption("cinkeys");
  *
  * (default "")
  */
-export const cinoptions: LocalOption<string> = new StringOption("cinoptions");
+export const cinoptions: BufferLocalOption<string> = new StringOption(
+  "cinoptions",
+);
 
 /**
  * Keywords that are interpreted as a C++ scope declaration by `cino-g`.
@@ -935,7 +946,7 @@ export const cinoptions: LocalOption<string> = new StringOption("cinoptions");
  *
  * (default "public,protected,private")
  */
-export const cinscopedecls: LocalOption<string> = new StringOption(
+export const cinscopedecls: BufferLocalOption<string> = new StringOption(
   "cinscopedecls",
 );
 
@@ -949,7 +960,7 @@ export const cinscopedecls: LocalOption<string> = new StringOption(
  *
  * (default "if,else,while,do,for,switch")
  */
-export const cinwords: LocalOption<string> = new StringOption("cinwords");
+export const cinwords: BufferLocalOption<string> = new StringOption("cinwords");
 
 /**
  * This option is a list of comma-separated names.
@@ -1049,7 +1060,7 @@ export const clipboard: GlobalOption<string> = new StringOption("clipboard");
  *
  * (default 1)
  */
-export const cmdheight: GlobalOrLocalOption<number> = new NumberOption(
+export const cmdheight: GlobalOrTabPageLocalOption<number> = new NumberOption(
   "cmdheight",
 );
 
@@ -1080,7 +1091,9 @@ export const cmdwinheight: GlobalOption<number> = new NumberOption(
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const colorcolumn: LocalOption<string> = new StringOption("colorcolumn");
+export const colorcolumn: WindowLocalOption<string> = new StringOption(
+  "colorcolumn",
+);
 
 /**
  * Number of columns of the screen.  Normally this is set by the terminal
@@ -1111,7 +1124,7 @@ export const columns: GlobalOption<number> = new NumberOption("columns");
  * (default
  *  "s1:/*,mb:*,ex:* /,://,b:#,:%,:XCOMM,n:>,fb:-")
  */
-export const comments: LocalOption<string> = new StringOption("comments");
+export const comments: BufferLocalOption<string> = new StringOption("comments");
 
 /**
  * A template for a comment.  The "%s" in the value is replaced with the
@@ -1122,7 +1135,7 @@ export const comments: LocalOption<string> = new StringOption("comments");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const commentstring: LocalOption<string> = new StringOption(
+export const commentstring: BufferLocalOption<string> = new StringOption(
   "commentstring",
 );
 
@@ -1171,7 +1184,7 @@ export const commentstring: LocalOption<string> = new StringOption(
  *
  * (default: ".,w,b,u,t,i")
  */
-export const complete: LocalOption<string> = new StringOption("complete");
+export const complete: BufferLocalOption<string> = new StringOption("complete");
 
 /**
  * This option specifies a function to be used for Insert mode completion
@@ -1187,7 +1200,7 @@ export const complete: LocalOption<string> = new StringOption("complete");
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const completefunc: LocalOption<string> = new StringOption(
+export const completefunc: BufferLocalOption<string> = new StringOption(
   "completefunc",
 );
 
@@ -1256,7 +1269,7 @@ export const completeopt: GlobalOption<string> = new StringOption(
  *
  * *only for MS-Windows*
  */
-export const completeslash: LocalOption<string> = new StringOption(
+export const completeslash: BufferLocalOption<string> = new StringOption(
   "completeslash",
 );
 
@@ -1281,7 +1294,7 @@ export const completeslash: LocalOption<string> = new StringOption(
  *
  * *not available when compiled without the `+conceal` feature*
  */
-export const concealcursor: LocalOption<string> = new StringOption(
+export const concealcursor: WindowLocalOption<string> = new StringOption(
   "concealcursor",
 );
 
@@ -1310,7 +1323,7 @@ export const concealcursor: LocalOption<string> = new StringOption(
  *
  * *not available when compiled without the `+conceal` feature*
  */
-export const conceallevel: LocalOption<number> = new NumberOption(
+export const conceallevel: WindowLocalOption<number> = new NumberOption(
   "conceallevel",
 );
 
@@ -1342,7 +1355,9 @@ export const confirm: GlobalOption<boolean> = new BooleanOption("confirm");
  *
  * (default off)
  */
-export const copyindent: LocalOption<boolean> = new BooleanOption("copyindent");
+export const copyindent: BufferLocalOption<boolean> = new BooleanOption(
+  "copyindent",
+);
 
 /**
  * A sequence of single character flags.  When a character is present
@@ -1678,7 +1693,9 @@ export const cpoptions: GlobalOption<string> = new StringOption("cpoptions");
  *
  * (default off)
  */
-export const cursorbind: LocalOption<boolean> = new BooleanOption("cursorbind");
+export const cursorbind: WindowLocalOption<boolean> = new BooleanOption(
+  "cursorbind",
+);
 
 /**
  * Highlight the screen column of the cursor with CursorColumn
@@ -1694,7 +1711,7 @@ export const cursorbind: LocalOption<boolean> = new BooleanOption("cursorbind");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorcolumn: LocalOption<boolean> = new BooleanOption(
+export const cursorcolumn: WindowLocalOption<boolean> = new BooleanOption(
   "cursorcolumn",
 );
 
@@ -1708,7 +1725,9 @@ export const cursorcolumn: LocalOption<boolean> = new BooleanOption(
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorline: LocalOption<boolean> = new BooleanOption("cursorline");
+export const cursorline: WindowLocalOption<boolean> = new BooleanOption(
+  "cursorline",
+);
 
 /**
  * Comma-separated list of settings for how 'cursorline' is displayed.
@@ -1729,7 +1748,7 @@ export const cursorline: LocalOption<boolean> = new BooleanOption("cursorline");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const cursorlineopt: LocalOption<string> = new StringOption(
+export const cursorlineopt: WindowLocalOption<string> = new StringOption(
   "cursorlineopt",
 );
 
@@ -1779,7 +1798,9 @@ export const debug: GlobalOption<string> = new StringOption("debug");
  *
  * (default "^\s*#\s*define")
  */
-export const define: GlobalOrLocalOption<string> = new StringOption("define");
+export const define: GlobalOrBufferLocalOption<string> = new StringOption(
+  "define",
+);
 
 /**
  * If editing Unicode and this option is set, backspace and Normal mode
@@ -1825,7 +1846,7 @@ export const delcombine: GlobalOption<boolean> = new BooleanOption(
  *
  * (default "")
  */
-export const dictionary: GlobalOrLocalOption<string> = new StringOption(
+export const dictionary: GlobalOrBufferLocalOption<string> = new StringOption(
   "dictionary",
 );
 
@@ -1837,7 +1858,7 @@ export const dictionary: GlobalOrLocalOption<string> = new StringOption(
  *
  * *not available when compiled without the `+diff` feature*
  */
-export const diff: LocalOption<boolean> = new BooleanOption("diff");
+export const diff: WindowLocalOption<boolean> = new BooleanOption("diff");
 
 /**
  * Expression which is evaluated to obtain a diff file (either ed-style
@@ -2148,7 +2169,9 @@ export const encoding: GlobalOption<string> = new StringOption("encoding");
  *
  * (default off)
  */
-export const endoffile: LocalOption<boolean> = new BooleanOption("endoffile");
+export const endoffile: BufferLocalOption<boolean> = new BooleanOption(
+  "endoffile",
+);
 
 /**
  * When writing a file and this option is off and the 'binary' option
@@ -2166,7 +2189,9 @@ export const endoffile: LocalOption<boolean> = new BooleanOption("endoffile");
  *
  * (default on)
  */
-export const endofline: LocalOption<boolean> = new BooleanOption("endofline");
+export const endofline: BufferLocalOption<boolean> = new BooleanOption(
+  "endofline",
+);
 
 /**
  * When on, all the windows are automatically made the same size after
@@ -2202,7 +2227,7 @@ export const equalalways: GlobalOption<boolean> = new BooleanOption(
  *
  * (default "")
  */
-export const equalprg: GlobalOrLocalOption<string> = new StringOption(
+export const equalprg: GlobalOrBufferLocalOption<string> = new StringOption(
   "equalprg",
 );
 
@@ -2245,7 +2270,7 @@ export const errorfile: GlobalOption<string> = new StringOption("errorfile");
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const errorformat: GlobalOrLocalOption<string> = new StringOption(
+export const errorformat: GlobalOrBufferLocalOption<string> = new StringOption(
   "errorformat",
 );
 
@@ -2274,7 +2299,9 @@ export const eventignore: GlobalOption<string> = new StringOption(
  *
  * (default off)
  */
-export const expandtab: LocalOption<boolean> = new BooleanOption("expandtab");
+export const expandtab: BufferLocalOption<boolean> = new BooleanOption(
+  "expandtab",
+);
 
 /**
  * Enables the reading of .vimrc, .exrc and .gvimrc in the current
@@ -2347,7 +2374,7 @@ export const exrc: GlobalOption<boolean> = new BooleanOption("exrc");
  *
  * (default: "")
  */
-export const fileencoding: LocalOption<string> = new StringOption(
+export const fileencoding: BufferLocalOption<string> = new StringOption(
   "fileencoding",
 );
 
@@ -2439,7 +2466,9 @@ export const fileencodings: GlobalOption<string> = new StringOption(
  * (MS-Windows default: "dos",
  *  Unix, macOS default: "unix")
  */
-export const fileformat: LocalOption<string> = new StringOption("fileformat");
+export const fileformat: BufferLocalOption<string> = new StringOption(
+  "fileformat",
+);
 
 /**
  * This gives the end-of-line (`<EOL>`) formats that will be tried when
@@ -2539,7 +2568,7 @@ export const fileignorecase: GlobalOption<boolean> = new BooleanOption(
  *
  * (default: "")
  */
-export const filetype: LocalOption<string> = new StringOption("filetype");
+export const filetype: BufferLocalOption<string> = new StringOption("filetype");
 
 /**
  * Characters to fill the statuslines, vertical separators and special
@@ -2581,7 +2610,7 @@ export const filetype: LocalOption<string> = new StringOption("filetype");
  *
  * (default `"vert:|,fold:-,eob:~"`)
  */
-export const fillchars: GlobalOrLocalOption<string> = new StringOption(
+export const fillchars: GlobalOrWindowLocalOption<string> = new StringOption(
   "fillchars",
 );
 
@@ -2596,7 +2625,7 @@ export const fillchars: GlobalOrLocalOption<string> = new StringOption(
  *
  * (default on)
  */
-export const fixendofline: LocalOption<boolean> = new BooleanOption(
+export const fixendofline: BufferLocalOption<boolean> = new BooleanOption(
   "fixendofline",
 );
 
@@ -2621,7 +2650,9 @@ export const foldclose: GlobalOption<string> = new StringOption("foldclose");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldcolumn: LocalOption<number> = new NumberOption("foldcolumn");
+export const foldcolumn: WindowLocalOption<number> = new NumberOption(
+  "foldcolumn",
+);
 
 /**
  * When off, all folds are open.  This option can be used to quickly
@@ -2636,7 +2667,9 @@ export const foldcolumn: LocalOption<number> = new NumberOption("foldcolumn");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldenable: LocalOption<boolean> = new BooleanOption("foldenable");
+export const foldenable: WindowLocalOption<boolean> = new BooleanOption(
+  "foldenable",
+);
 
 /**
  * The expression used for when 'foldmethod' is "expr".  It is evaluated
@@ -2656,7 +2689,7 @@ export const foldenable: LocalOption<boolean> = new BooleanOption("foldenable");
  *
  * *not available when compiled without the `+folding` or `+eval` features*
  */
-export const foldexpr: LocalOption<string> = new StringOption("foldexpr");
+export const foldexpr: WindowLocalOption<string> = new StringOption("foldexpr");
 
 /**
  * Used only when 'foldmethod' is "indent".  Lines starting with
@@ -2668,7 +2701,9 @@ export const foldexpr: LocalOption<string> = new StringOption("foldexpr");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldignore: LocalOption<string> = new StringOption("foldignore");
+export const foldignore: WindowLocalOption<string> = new StringOption(
+  "foldignore",
+);
 
 /**
  * Sets the fold level: Folds with a higher level will be closed.
@@ -2681,7 +2716,9 @@ export const foldignore: LocalOption<string> = new StringOption("foldignore");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldlevel: LocalOption<number> = new NumberOption("foldlevel");
+export const foldlevel: WindowLocalOption<number> = new NumberOption(
+  "foldlevel",
+);
 
 /**
  * Sets 'foldlevel' when starting to edit another buffer in a window.
@@ -2712,7 +2749,9 @@ export const foldlevelstart: GlobalOption<number> = new NumberOption(
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldmarker: LocalOption<string> = new StringOption("foldmarker");
+export const foldmarker: WindowLocalOption<string> = new StringOption(
+  "foldmarker",
+);
 
 /**
  * The kind of folding used for the current window.  Possible values:
@@ -2727,7 +2766,9 @@ export const foldmarker: LocalOption<string> = new StringOption("foldmarker");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldmethod: LocalOption<string> = new StringOption("foldmethod");
+export const foldmethod: WindowLocalOption<string> = new StringOption(
+  "foldmethod",
+);
 
 /**
  * Sets the number of screen lines above which a fold can be displayed
@@ -2742,7 +2783,7 @@ export const foldmethod: LocalOption<string> = new StringOption("foldmethod");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldminlines: LocalOption<number> = new NumberOption(
+export const foldminlines: WindowLocalOption<number> = new NumberOption(
   "foldminlines",
 );
 
@@ -2755,7 +2796,9 @@ export const foldminlines: LocalOption<number> = new NumberOption(
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldnestmax: LocalOption<number> = new NumberOption("foldnestmax");
+export const foldnestmax: WindowLocalOption<number> = new NumberOption(
+  "foldnestmax",
+);
 
 /**
  * Specifies for which type of commands folds will be opened, if the
@@ -2813,7 +2856,7 @@ export const foldopen: GlobalOption<string> = new StringOption("foldopen");
  *
  * *not available when compiled without the `+folding` feature*
  */
-export const foldtext: LocalOption<string> = new StringOption("foldtext");
+export const foldtext: WindowLocalOption<string> = new StringOption("foldtext");
 
 /**
  * Expression which is evaluated to format a range of lines for the `gq`
@@ -2865,7 +2908,9 @@ export const foldtext: LocalOption<string> = new StringOption("foldtext");
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const formatexpr: LocalOption<string> = new StringOption("formatexpr");
+export const formatexpr: BufferLocalOption<string> = new StringOption(
+  "formatexpr",
+);
 
 /**
  * A pattern that is used to recognize a list header.  This is used for
@@ -2880,7 +2925,7 @@ export const formatexpr: LocalOption<string> = new StringOption("formatexpr");
  *
  * (default: "^\s*\d\+[\]:.)}\t ]\s*")
  */
-export const formatlistpat: LocalOption<string> = new StringOption(
+export const formatlistpat: BufferLocalOption<string> = new StringOption(
   "formatlistpat",
 );
 
@@ -2897,7 +2942,7 @@ export const formatlistpat: LocalOption<string> = new StringOption(
  *
  * (Vim default: "tcq", Vi default: "vt")
  */
-export const formatoptions: LocalOption<string> = new StringOption(
+export const formatoptions: BufferLocalOption<string> = new StringOption(
   "formatoptions",
 );
 
@@ -2916,7 +2961,7 @@ export const formatoptions: LocalOption<string> = new StringOption(
  *
  * (default "")
  */
-export const formatprg: GlobalOrLocalOption<string> = new StringOption(
+export const formatprg: GlobalOrBufferLocalOption<string> = new StringOption(
   "formatprg",
 );
 
@@ -2995,7 +3040,9 @@ export const grepformat: GlobalOption<string> = new StringOption("grepformat");
  *  Win32: "findstr /n" or "grep -n",
  *  VMS: "SEARCH/NUMBERS ")
  */
-export const grepprg: GlobalOrLocalOption<string> = new StringOption("grepprg");
+export const grepprg: GlobalOrBufferLocalOption<string> = new StringOption(
+  "grepprg",
+);
 
 /**
  * This option tells Vim what the cursor should look like in different
@@ -3488,7 +3535,7 @@ export const imdisable: GlobalOption<boolean> = new BooleanOption("imdisable");
  *
  * (default 0)
  */
-export const iminsert: LocalOption<number> = new NumberOption("iminsert");
+export const iminsert: BufferLocalOption<number> = new NumberOption("iminsert");
 
 /**
  * Specifies whether :lmap or an Input Method (IM) is to be used when
@@ -3507,7 +3554,7 @@ export const iminsert: LocalOption<number> = new NumberOption("iminsert");
  *
  * (default -1)
  */
-export const imsearch: LocalOption<number> = new NumberOption("imsearch");
+export const imsearch: BufferLocalOption<number> = new NumberOption("imsearch");
 
 /**
  * Pattern to be used to find an include command.  It is a search
@@ -3526,7 +3573,9 @@ export const imsearch: LocalOption<number> = new NumberOption("imsearch");
  *
  * *not available when compiled without the `+find_in_path` feature*
  */
-export const include: GlobalOrLocalOption<string> = new StringOption("include");
+export const include: GlobalOrBufferLocalOption<string> = new StringOption(
+  "include",
+);
 
 /**
  * Expression to be used to transform the string found with the 'include'
@@ -3568,7 +3617,9 @@ export const include: GlobalOrLocalOption<string> = new StringOption("include");
  *
  * *not available when compiled without the `+find_in_path` or `+eval` features*
  */
-export const includeexpr: LocalOption<string> = new StringOption("includeexpr");
+export const includeexpr: BufferLocalOption<string> = new StringOption(
+  "includeexpr",
+);
 
 /**
  * While typing a search command, show where the pattern, as it was typed
@@ -3678,7 +3729,9 @@ export const incsearch: GlobalOption<boolean> = new BooleanOption("incsearch");
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const indentexpr: LocalOption<string> = new StringOption("indentexpr");
+export const indentexpr: BufferLocalOption<string> = new StringOption(
+  "indentexpr",
+);
 
 /**
  * A list of keys that, when typed in Insert mode, cause reindenting of
@@ -3688,7 +3741,9 @@ export const indentexpr: LocalOption<string> = new StringOption("indentexpr");
  *
  * (default "0**{,0}**,0),0],:,0#,!^F,o,O,e")
  */
-export const indentkeys: LocalOption<string> = new StringOption("indentkeys");
+export const indentkeys: BufferLocalOption<string> = new StringOption(
+  "indentkeys",
+);
 
 /**
  * When doing keyword completion in insert mode `ins-completion`, and
@@ -3702,7 +3757,9 @@ export const indentkeys: LocalOption<string> = new StringOption("indentkeys");
  *
  * (default off)
  */
-export const infercase: LocalOption<boolean> = new BooleanOption("infercase");
+export const infercase: BufferLocalOption<boolean> = new BooleanOption(
+  "infercase",
+);
 
 /**
  * The characters specified by this option are included in file names and
@@ -3797,7 +3854,9 @@ export const isident: GlobalOption<string> = new StringOption("isident");
  *  otherwise:  "@,48-57,_,192-255"
  *  Vi default: "@,48-57,_")
  */
-export const iskeyword: LocalOption<string> = new StringOption("iskeyword");
+export const iskeyword: BufferLocalOption<string> = new StringOption(
+  "iskeyword",
+);
 
 /**
  * The characters given by this option are displayed directly on the
@@ -3869,7 +3928,7 @@ export const jumpoptions: GlobalOption<string> = new StringOption(
  *
  * *only available when compiled with the `+keymap` feature*
  */
-export const keymap: LocalOption<string> = new StringOption("keymap");
+export const keymap: BufferLocalOption<string> = new StringOption("keymap");
 
 /**
  * List of comma-separated words, which enable special things that keys
@@ -3907,7 +3966,7 @@ export const keymodel: GlobalOption<string> = new StringOption("keymodel");
  * (default "man" or "man -s",  DOS: ":help",
  *  VMS: "help")
  */
-export const keywordprg: GlobalOrLocalOption<string> = new StringOption(
+export const keywordprg: GlobalOrBufferLocalOption<string> = new StringOption(
   "keywordprg",
 );
 
@@ -4051,7 +4110,9 @@ export const lazyredraw: GlobalOption<boolean> = new BooleanOption(
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const linebreak: LocalOption<boolean> = new BooleanOption("linebreak");
+export const linebreak: WindowLocalOption<boolean> = new BooleanOption(
+  "linebreak",
+);
 
 /**
  * Number of lines of the Vim window.
@@ -4102,7 +4163,7 @@ export const linespace: GlobalOption<number> = new NumberOption("linespace");
  *
  * (default off)
  */
-export const lisp: LocalOption<boolean> = new BooleanOption("lisp");
+export const lisp: BufferLocalOption<boolean> = new BooleanOption("lisp");
 
 /**
  * Comma-separated list of items that influence the Lisp indenting when
@@ -4115,7 +4176,9 @@ export const lisp: LocalOption<boolean> = new BooleanOption("lisp");
  *
  * (default "")
  */
-export const lispoptions: LocalOption<string> = new StringOption("lispoptions");
+export const lispoptions: BufferLocalOption<string> = new StringOption(
+  "lispoptions",
+);
 
 /**
  * Comma-separated list of words that influence the Lisp indenting when
@@ -4123,7 +4186,7 @@ export const lispoptions: LocalOption<string> = new StringOption("lispoptions");
  *
  * (default is very long)
  */
-export const lispwords: GlobalOrLocalOption<string> = new StringOption(
+export const lispwords: GlobalOrBufferLocalOption<string> = new StringOption(
   "lispwords",
 );
 
@@ -4145,7 +4208,7 @@ export const lispwords: GlobalOrLocalOption<string> = new StringOption(
  *
  * (default off)
  */
-export const list: LocalOption<boolean> = new BooleanOption("list");
+export const list: WindowLocalOption<boolean> = new BooleanOption("list");
 
 /**
  * Strings to use in 'list' mode and for the `:list` command.  It is a
@@ -4249,7 +4312,7 @@ export const list: LocalOption<boolean> = new BooleanOption("list");
  *
  * (default "eol:$")
  */
-export const listchars: GlobalOrLocalOption<string> = new StringOption(
+export const listchars: GlobalOrWindowLocalOption<string> = new StringOption(
   "listchars",
 );
 
@@ -4317,7 +4380,7 @@ export const makeef: GlobalOption<string> = new StringOption("makeef");
  *
  * (default "")
  */
-export const makeencoding: GlobalOrLocalOption<string> = new StringOption(
+export const makeencoding: GlobalOrBufferLocalOption<string> = new StringOption(
   "makeencoding",
 );
 
@@ -4344,7 +4407,9 @@ export const makeencoding: GlobalOrLocalOption<string> = new StringOption(
  *
  * (default "make", VMS: "MMS")
  */
-export const makeprg: GlobalOrLocalOption<string> = new StringOption("makeprg");
+export const makeprg: GlobalOrBufferLocalOption<string> = new StringOption(
+  "makeprg",
+);
 
 /**
  * Characters that form pairs.  The `%` command jumps from one to the
@@ -4367,7 +4432,9 @@ export const makeprg: GlobalOrLocalOption<string> = new StringOption("makeprg");
  *
  * (default "(:),**{:}**,[:]")
  */
-export const matchpairs: LocalOption<string> = new StringOption("matchpairs");
+export const matchpairs: BufferLocalOption<string> = new StringOption(
+  "matchpairs",
+);
 
 /**
  * Tenths of a second to show the matching paren, when 'showmatch' is
@@ -4493,7 +4560,9 @@ export const mkspellmem: GlobalOption<string> = new StringOption("mkspellmem");
  * (Vim default: on (off for root),
  *  Vi default: off)
  */
-export const modeline: LocalOption<boolean> = new BooleanOption("modeline");
+export const modeline: BufferLocalOption<boolean> = new BooleanOption(
+  "modeline",
+);
 
 /**
  * When on allow some options that are an expression to be set in the
@@ -4526,7 +4595,9 @@ export const modelines: GlobalOption<number> = new NumberOption("modelines");
  *
  * (default on)
  */
-export const modifiable: LocalOption<boolean> = new BooleanOption("modifiable");
+export const modifiable: BufferLocalOption<boolean> = new BooleanOption(
+  "modifiable",
+);
 
 /**
  * When on, the buffer is considered to be modified.  This option is set
@@ -4553,7 +4624,9 @@ export const modifiable: LocalOption<boolean> = new BooleanOption("modifiable");
  *
  * (default off)
  */
-export const modified: LocalOption<boolean> = new BooleanOption("modified");
+export const modified: BufferLocalOption<boolean> = new BooleanOption(
+  "modified",
+);
 
 /**
  * When on, listings pause when the whole screen is filled.  You will get
@@ -4798,7 +4871,9 @@ export const mousetime: GlobalOption<number> = new NumberOption("mousetime");
  * (default "bin,octal,hex",
  *  set to "bin,hex" in `defaults.vim`)
  */
-export const nrformats: LocalOption<string> = new StringOption("nrformats");
+export const nrformats: BufferLocalOption<string> = new StringOption(
+  "nrformats",
+);
 
 /**
  * Print the line number in front of each line.  When the 'n' option is
@@ -4825,7 +4900,7 @@ export const nrformats: LocalOption<string> = new StringOption("nrformats");
  *
  * (default off)
  */
-export const number: LocalOption<boolean> = new BooleanOption("number");
+export const number: WindowLocalOption<boolean> = new BooleanOption("number");
 
 /**
  * Minimal number of columns to use for the line number.  Only relevant
@@ -4845,7 +4920,9 @@ export const number: LocalOption<boolean> = new BooleanOption("number");
  *
  * *only available when compiled with the `+linebreak` feature*
  */
-export const numberwidth: LocalOption<number> = new NumberOption("numberwidth");
+export const numberwidth: WindowLocalOption<number> = new NumberOption(
+  "numberwidth",
+);
 
 /**
  * This option specifies a function to be used for Insert mode omni
@@ -4863,7 +4940,7 @@ export const numberwidth: LocalOption<number> = new NumberOption("numberwidth");
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const omnifunc: LocalOption<string> = new StringOption("omnifunc");
+export const omnifunc: BufferLocalOption<string> = new StringOption("omnifunc");
 
 /**
  * *only for MS-Windows*
@@ -5017,7 +5094,7 @@ export const patchmode: GlobalOption<string> = new StringOption("patchmode");
  * (default on Unix: ".,/usr/include,,"
  *  other systems: ".,,")
  */
-export const path: GlobalOrLocalOption<string> = new StringOption("path");
+export const path: GlobalOrBufferLocalOption<string> = new StringOption("path");
 
 /**
  * When changing the indent of the current line, preserve as much of the
@@ -5036,7 +5113,7 @@ export const path: GlobalOrLocalOption<string> = new StringOption("path");
  *
  * (default off)
  */
-export const preserveindent: LocalOption<boolean> = new BooleanOption(
+export const preserveindent: BufferLocalOption<boolean> = new BooleanOption(
   "preserveindent",
 );
 
@@ -5062,7 +5139,7 @@ export const previewheight: GlobalOption<number> = new NumberOption(
  *
  * *not available when compiled without the `+quickfix` feature*
  */
-export const previewwindow: LocalOption<boolean> = new BooleanOption(
+export const previewwindow: WindowLocalOption<boolean> = new BooleanOption(
   "previewwindow",
 );
 
@@ -5142,7 +5219,9 @@ export const quickfixtextfunc: GlobalOption<string> = new StringOption(
  *
  * (default "\")
  */
-export const quoteescape: LocalOption<string> = new StringOption("quoteescape");
+export const quoteescape: BufferLocalOption<string> = new StringOption(
+  "quoteescape",
+);
 
 /**
  * If on, writes fail unless you use a '!'.  Protects you from
@@ -5156,7 +5235,9 @@ export const quoteescape: LocalOption<string> = new StringOption("quoteescape");
  *
  * (default off)
  */
-export const readonly: LocalOption<boolean> = new BooleanOption("readonly");
+export const readonly: BufferLocalOption<boolean> = new BooleanOption(
+  "readonly",
+);
 
 /**
  * The time in milliseconds for redrawing the display.  This applies to
@@ -5217,7 +5298,7 @@ export const regexpengine: GlobalOption<number> = new NumberOption(
  *
  * (default off)
  */
-export const relativenumber: LocalOption<boolean> = new BooleanOption(
+export const relativenumber: WindowLocalOption<boolean> = new BooleanOption(
   "relativenumber",
 );
 
@@ -5261,7 +5342,9 @@ export const revins: GlobalOption<boolean> = new BooleanOption("revins");
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const rightleft: LocalOption<boolean> = new BooleanOption("rightleft");
+export const rightleft: WindowLocalOption<boolean> = new BooleanOption(
+  "rightleft",
+);
 
 /**
  * Each word in this option enables the command line editing to work in
@@ -5276,7 +5359,7 @@ export const rightleft: LocalOption<boolean> = new BooleanOption("rightleft");
  *
  * *only available when compiled with the `+rightleft` feature*
  */
-export const rightleftcmd: LocalOption<string> = new StringOption(
+export const rightleftcmd: WindowLocalOption<string> = new StringOption(
   "rightleftcmd",
 );
 
@@ -5441,7 +5524,7 @@ export const runtimepath: GlobalOption<string> = new StringOption(
  *
  * (default: half the window height)
  */
-export const scroll: LocalOption<number> = new NumberOption("scroll");
+export const scroll: WindowLocalOption<number> = new NumberOption("scroll");
 
 /**
  * See also `scroll-binding`.  When this option is set, scrolling the
@@ -5456,7 +5539,9 @@ export const scroll: LocalOption<number> = new NumberOption("scroll");
  *
  * (default off)
  */
-export const scrollbind: LocalOption<boolean> = new BooleanOption("scrollbind");
+export const scrollbind: WindowLocalOption<boolean> = new BooleanOption(
+  "scrollbind",
+);
 
 /**
  * Minimal number of lines to scroll when the cursor gets off the
@@ -5488,7 +5573,7 @@ export const scrolljump: GlobalOption<number> = new NumberOption("scrolljump");
  *
  * (default 0, set to 5 in `defaults.vim`)
  */
-export const scrolloff: GlobalOrLocalOption<number> = new NumberOption(
+export const scrolloff: GlobalOrWindowLocalOption<number> = new NumberOption(
   "scrolloff",
 );
 
@@ -5891,7 +5976,9 @@ export const shiftround: GlobalOption<boolean> = new BooleanOption(
  *
  * (default 8)
  */
-export const shiftwidth: LocalOption<number> = new NumberOption("shiftwidth");
+export const shiftwidth: BufferLocalOption<number> = new NumberOption(
+  "shiftwidth",
+);
 
 /**
  * This option helps to avoid all the `hit-enter` prompts caused by file
@@ -5988,7 +6075,7 @@ export const shortmess: GlobalOption<string> = new StringOption("shortmess");
  *
  * *not available when compiled without the `+linebreak` feature*
  */
-export const showbreak: GlobalOrLocalOption<string> = new StringOption(
+export const showbreak: GlobalOrWindowLocalOption<string> = new StringOption(
   "showbreak",
 );
 
@@ -6136,9 +6223,8 @@ export const sidescroll: GlobalOption<number> = new NumberOption("sidescroll");
  *
  * (default 0)
  */
-export const sidescrolloff: GlobalOrLocalOption<number> = new NumberOption(
-  "sidescrolloff",
-);
+export const sidescrolloff: GlobalOrWindowLocalOption<number> =
+  new NumberOption("sidescrolloff");
 
 /**
  * Whether or not to draw the signcolumn. Valid values are:
@@ -6152,7 +6238,9 @@ export const sidescrolloff: GlobalOrLocalOption<number> = new NumberOption(
  *
  * *not available when compiled without the `+signs` feature*
  */
-export const signcolumn: LocalOption<string> = new StringOption("signcolumn");
+export const signcolumn: WindowLocalOption<string> = new StringOption(
+  "signcolumn",
+);
 
 /**
  * Override the 'ignorecase' option if the search pattern contains upper
@@ -6193,7 +6281,7 @@ export const smartcase: GlobalOption<boolean> = new BooleanOption("smartcase");
  *
  * (default off)
  */
-export const smartindent: LocalOption<boolean> = new BooleanOption(
+export const smartindent: BufferLocalOption<boolean> = new BooleanOption(
   "smartindent",
 );
 
@@ -6227,7 +6315,7 @@ export const smarttab: GlobalOption<boolean> = new BooleanOption("smarttab");
  *
  * (default off)
  */
-export const smoothscroll: LocalOption<boolean> = new BooleanOption(
+export const smoothscroll: WindowLocalOption<boolean> = new BooleanOption(
   "smoothscroll",
 );
 
@@ -6254,7 +6342,9 @@ export const smoothscroll: LocalOption<boolean> = new BooleanOption(
  *
  * (default 0)
  */
-export const softtabstop: LocalOption<number> = new NumberOption("softtabstop");
+export const softtabstop: BufferLocalOption<number> = new NumberOption(
+  "softtabstop",
+);
 
 /**
  * When on spell checking will be done.  See `spell`.
@@ -6264,7 +6354,7 @@ export const softtabstop: LocalOption<number> = new NumberOption("softtabstop");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spell: LocalOption<boolean> = new BooleanOption("spell");
+export const spell: WindowLocalOption<boolean> = new BooleanOption("spell");
 
 /**
  * Pattern to locate the end of a sentence.  The following word will be
@@ -6281,7 +6371,7 @@ export const spell: LocalOption<boolean> = new BooleanOption("spell");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spellcapcheck: LocalOption<string> = new StringOption(
+export const spellcapcheck: BufferLocalOption<string> = new StringOption(
   "spellcapcheck",
 );
 
@@ -6312,7 +6402,9 @@ export const spellcapcheck: LocalOption<string> = new StringOption(
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spellfile: LocalOption<string> = new StringOption("spellfile");
+export const spellfile: BufferLocalOption<string> = new StringOption(
+  "spellfile",
+);
 
 /**
  * A comma-separated list of word list names.  When the 'spell' option is
@@ -6361,7 +6453,9 @@ export const spellfile: LocalOption<string> = new StringOption("spellfile");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spelllang: LocalOption<string> = new StringOption("spelllang");
+export const spelllang: BufferLocalOption<string> = new StringOption(
+  "spelllang",
+);
 
 /**
  * A comma-separated list of options for spell checking:
@@ -6374,7 +6468,7 @@ export const spelllang: LocalOption<string> = new StringOption("spelllang");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const spelloptions: LocalOption<string> = new StringOption(
+export const spelloptions: BufferLocalOption<string> = new StringOption(
   "spelloptions",
 );
 
@@ -6719,7 +6813,7 @@ export const startofline: GlobalOption<boolean> = new BooleanOption(
  *
  * *not available when compiled without the `+statusline` feature*
  */
-export const statusline: GlobalOrLocalOption<string> = new StringOption(
+export const statusline: GlobalOrWindowLocalOption<string> = new StringOption(
   "statusline",
 );
 
@@ -6747,7 +6841,9 @@ export const suffixes: GlobalOption<string> = new StringOption("suffixes");
  *
  * (default "")
  */
-export const suffixesadd: LocalOption<string> = new StringOption("suffixesadd");
+export const suffixesadd: BufferLocalOption<string> = new StringOption(
+  "suffixesadd",
+);
 
 /**
  * Use a swapfile for the buffer.  This option can be reset when a
@@ -6771,7 +6867,9 @@ export const suffixesadd: LocalOption<string> = new StringOption("suffixesadd");
  *
  * (default on)
  */
-export const swapfile: LocalOption<boolean> = new BooleanOption("swapfile");
+export const swapfile: BufferLocalOption<boolean> = new BooleanOption(
+  "swapfile",
+);
 
 /**
  * This option controls the behavior when switching between buffers.
@@ -6818,7 +6916,9 @@ export const switchbuf: GlobalOption<string> = new StringOption("switchbuf");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const synmaxcol: LocalOption<number> = new NumberOption("synmaxcol");
+export const synmaxcol: BufferLocalOption<number> = new NumberOption(
+  "synmaxcol",
+);
 
 /**
  * When this option is set, the syntax with this name is loaded, unless
@@ -6853,7 +6953,7 @@ export const synmaxcol: LocalOption<number> = new NumberOption("synmaxcol");
  *
  * *not available when compiled without the `+syntax` feature*
  */
-export const syntax: LocalOption<string> = new StringOption("syntax");
+export const syntax: BufferLocalOption<string> = new StringOption("syntax");
 
 /**
  * When non-empty, this option determines the content of the tab pages
@@ -6933,7 +7033,7 @@ export const tabpagemax: GlobalOption<number> = new NumberOption("tabpagemax");
  *
  * (default 8)
  */
-export const tabstop: LocalOption<number> = new NumberOption("tabstop");
+export const tabstop: BufferLocalOption<number> = new NumberOption("tabstop");
 
 /**
  * When searching for a tag (e.g., for the `:ta` command), Vim can either
@@ -7006,7 +7106,9 @@ export const tagbsearch: GlobalOption<boolean> = new BooleanOption(
  *
  * (default "followic")
  */
-export const tagcase: GlobalOrLocalOption<string> = new StringOption("tagcase");
+export const tagcase: GlobalOrBufferLocalOption<string> = new StringOption(
+  "tagcase",
+);
 
 /**
  * This option specifies a function to be used to perform tag searches.
@@ -7022,7 +7124,7 @@ export const tagcase: GlobalOrLocalOption<string> = new StringOption("tagcase");
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const tagfunc: LocalOption<string> = new StringOption("tagfunc");
+export const tagfunc: BufferLocalOption<string> = new StringOption("tagfunc");
 
 /**
  * If non-zero, tags are significant up to this number of characters.
@@ -7069,7 +7171,7 @@ export const tagrelative: GlobalOption<boolean> = new BooleanOption(
  * (default "./tags,tags", when compiled with
  *  `+emacs_tags`: "./tags,./TAGS,tags,TAGS")
  */
-export const tags: GlobalOrLocalOption<string> = new StringOption("tags");
+export const tags: GlobalOrBufferLocalOption<string> = new StringOption("tags");
 
 /**
  * When on, the `tagstack` is used normally.  When off, a ":tag" or
@@ -7148,7 +7250,9 @@ export const termguicolors: GlobalOption<boolean> = new BooleanOption(
  *
  * (default 0)
  */
-export const textwidth: LocalOption<number> = new NumberOption("textwidth");
+export const textwidth: BufferLocalOption<number> = new NumberOption(
+  "textwidth",
+);
 
 /**
  * List of file names, separated by commas, that are used to lookup words
@@ -7168,7 +7272,7 @@ export const textwidth: LocalOption<number> = new NumberOption("textwidth");
  *
  * (default "")
  */
-export const thesaurus: GlobalOrLocalOption<string> = new StringOption(
+export const thesaurus: GlobalOrBufferLocalOption<string> = new StringOption(
   "thesaurus",
 );
 
@@ -7185,9 +7289,8 @@ export const thesaurus: GlobalOrLocalOption<string> = new StringOption(
  *
  * *not available when compiled without the `+eval` feature*
  */
-export const thesaurusfunc: GlobalOrLocalOption<string> = new StringOption(
-  "thesaurusfunc",
-);
+export const thesaurusfunc: GlobalOrBufferLocalOption<string> =
+  new StringOption("thesaurusfunc");
 
 /**
  * When on: The tilde command `"~"` behaves like an operator.
@@ -7403,7 +7506,9 @@ export const undodir: GlobalOption<string> = new StringOption("undodir");
  *
  * *only when compiled with the `+persistent_undo` feature*
  */
-export const undofile: LocalOption<boolean> = new BooleanOption("undofile");
+export const undofile: BufferLocalOption<boolean> = new BooleanOption(
+  "undofile",
+);
 
 /**
  * Maximum number of changes that can be undone.  Since undo information
@@ -7430,7 +7535,7 @@ export const undofile: LocalOption<boolean> = new BooleanOption("undofile");
  *
  * (default 100, 1000 for Unix, VMS and Win32)
  */
-export const undolevels: GlobalOrLocalOption<number> = new NumberOption(
+export const undolevels: GlobalOrBufferLocalOption<number> = new NumberOption(
   "undolevels",
 );
 
@@ -7503,7 +7608,7 @@ export const updatetime: GlobalOption<number> = new NumberOption("updatetime");
  *
  * *only available when compiled with the `+vartabs` feature*
  */
-export const varsofttabstop: LocalOption<string> = new StringOption(
+export const varsofttabstop: BufferLocalOption<string> = new StringOption(
   "varsofttabstop",
 );
 
@@ -7524,7 +7629,9 @@ export const varsofttabstop: LocalOption<string> = new StringOption(
  *
  * *only available when compiled with the `+vartabs` feature*
  */
-export const vartabstop: LocalOption<string> = new StringOption("vartabstop");
+export const vartabstop: BufferLocalOption<string> = new StringOption(
+  "vartabstop",
+);
 
 /**
  * When bigger than zero, Vim will give messages about what it is doing.
@@ -7646,7 +7753,7 @@ export const viewoptions: GlobalOption<string> = new StringOption(
  *
  * (default "")
  */
-export const virtualedit: GlobalOrLocalOption<string> = new StringOption(
+export const virtualedit: GlobalOrWindowLocalOption<string> = new StringOption(
   "virtualedit",
 );
 
@@ -7990,7 +8097,9 @@ export const window: GlobalOption<number> = new NumberOption("window");
  *
  * (default off)
  */
-export const winfixbuf: LocalOption<boolean> = new BooleanOption("winfixbuf");
+export const winfixbuf: WindowLocalOption<boolean> = new BooleanOption(
+  "winfixbuf",
+);
 
 /**
  * Keep the window height when windows are opened or closed and
@@ -8000,7 +8109,7 @@ export const winfixbuf: LocalOption<boolean> = new BooleanOption("winfixbuf");
  *
  * (default off)
  */
-export const winfixheight: LocalOption<boolean> = new BooleanOption(
+export const winfixheight: WindowLocalOption<boolean> = new BooleanOption(
   "winfixheight",
 );
 
@@ -8011,7 +8120,7 @@ export const winfixheight: LocalOption<boolean> = new BooleanOption(
  *
  * (default off)
  */
-export const winfixwidth: LocalOption<boolean> = new BooleanOption(
+export const winfixwidth: WindowLocalOption<boolean> = new BooleanOption(
   "winfixwidth",
 );
 
@@ -8110,7 +8219,7 @@ export const winwidth: GlobalOption<number> = new NumberOption("winwidth");
  *
  * (default on)
  */
-export const wrap: LocalOption<boolean> = new BooleanOption("wrap");
+export const wrap: WindowLocalOption<boolean> = new BooleanOption("wrap");
 
 /**
  * Number of characters from the right window border where wrapping
@@ -8125,7 +8234,9 @@ export const wrap: LocalOption<boolean> = new BooleanOption("wrap");
  *
  * (default 0)
  */
-export const wrapmargin: LocalOption<number> = new NumberOption("wrapmargin");
+export const wrapmargin: BufferLocalOption<number> = new NumberOption(
+  "wrapmargin",
+);
 
 /**
  * Searches wrap around the end of the file.  Also applies to `]s` and
