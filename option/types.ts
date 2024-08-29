@@ -73,7 +73,13 @@ export interface LocalOption<T> extends Option<T> {
    * @returns A Promise that resolves when the option has been successfully reset.
    */
   resetLocal(denops: Denops): Promise<void>;
+}
 
+/**
+ * A buffer local option that can be retrieved and modified.
+ * @template T The type of the option value.
+ */
+export interface BufferLocalOption<T> extends WindowLocalOption<T> {
   /**
    * Gets the value of the option for the specified buffer.
    * @param bufnr The buffer number.
@@ -88,7 +94,21 @@ export interface LocalOption<T> extends Option<T> {
    * @returns A Promise that resolves when the option has been successfully set.
    */
   setBuffer(denops: Denops, bufnr: number, value: T): Promise<void>;
+}
 
+/**
+ * A tab page local option that can be retrieved and modified.
+ * @template T The type of the option value.
+ */
+export interface TabPageLocalOption<T> extends LocalOption<T> {
+  // NOTE: `getTabPage()` or `setTabPage()` is not implemented. See https://github.com/vim-denops/deno-denops-std/issues/268#issuecomment-2316587922
+}
+
+/**
+ * A window local option that can be retrieved and modified.
+ * @template T The type of the option value.
+ */
+export interface WindowLocalOption<T> extends LocalOption<T> {
   /**
    * Gets the value of the option for the specified window.
    * @param winnr The window number or `window-ID`.
@@ -106,7 +126,25 @@ export interface LocalOption<T> extends Option<T> {
 }
 
 /**
- * A global or local option that can be retrieved and modified.
+ * A global or buffer local option that can be retrieved and modified.
  * @template T The type of the option value.
  */
-export type GlobalOrLocalOption<T> = GlobalOption<T> & LocalOption<T>;
+export type GlobalOrBufferLocalOption<T> =
+  & GlobalOption<T>
+  & BufferLocalOption<T>;
+
+/**
+ * A global or tab page local option that can be retrieved and modified.
+ * @template T The type of the option value.
+ */
+export type GlobalOrTabPageLocalOption<T> =
+  & GlobalOption<T>
+  & TabPageLocalOption<T>;
+
+/**
+ * A global or window local option that can be retrieved and modified.
+ * @template T The type of the option value.
+ */
+export type GlobalOrWindowLocalOption<T> =
+  & GlobalOption<T>
+  & WindowLocalOption<T>;

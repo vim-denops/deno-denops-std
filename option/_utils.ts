@@ -1,11 +1,23 @@
 import type { Denops } from "@denops/core";
 import { getbufvar, getwinvar, setbufvar, setwinvar } from "../function/mod.ts";
 import { globalOptions, localOptions, options } from "../variable/option.ts";
-import type { GlobalOrLocalOption } from "./types.ts";
+import type {
+  BufferLocalOption,
+  GlobalOption,
+  LocalOption,
+  TabPageLocalOption,
+  WindowLocalOption,
+} from "./types.ts";
 
 type Coerce<T> = (value: unknown) => T;
 
-class OptionImpl<T> implements GlobalOrLocalOption<T> {
+class OptionImpl<T>
+  implements
+    GlobalOption<T>,
+    LocalOption<T>,
+    BufferLocalOption<T>,
+    TabPageLocalOption<T>,
+    WindowLocalOption<T> {
   readonly #name: string;
   readonly #defaultValue: T;
   readonly #coerce: Coerce<T>;

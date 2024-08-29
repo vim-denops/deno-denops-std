@@ -1,4 +1,9 @@
-import type { Option, OptionScope, OptionType } from "./types.ts";
+import type { Option, OptionConstructor, OptionExportType } from "./types.ts";
+
+type Context = {
+  types: Set<OptionExportType>;
+  constructors: Set<OptionConstructor>;
+};
 
 const translate: Record<string, string> = {
   "default": "defaultValue",
@@ -13,37 +18,57 @@ export function formatDocs(docs: string): string[] {
   return ["/**", ...normalizedLines, " */"];
 }
 
-function formatOption(option: Option): string[] {
-  const { type, scope, docs } = option;
+function formatOption(option: Option, context: Context): string[] {
+  const { docs, type } = option;
   const name = translate[option.name] ?? option.name;
+  const exportType = getOptionExportType(option);
+  context.types.add(exportType);
+  const constructor = getOptionConstructor({ ...option, name });
+  context.constructors.add(constructor);
   const lines = [
     ...formatDocs(docs),
-    `export const ${name}: ${getOptionTypeName(scope, type)} = ${
-      getOptionConstructor(name, type)
-    };`,
+    `export const ${name}: ${exportType}<${type}> = new ${constructor}("${name}");`,
     "",
   ];
   return lines;
 }
 
-function getOptionTypeName(scope: OptionScope[], type: OptionType): string {
-  if (scope.includes("global") && scope.includes("local")) {
-    return `GlobalOrLocalOption<${type}>`;
-  } else if (scope.includes("global")) {
-    return `GlobalOption<${type}>`;
+function getOptionExportType({ scope, localScope }: Option): OptionExportType {
+  if (scope.includes("local")) {
+    if (scope.includes("global")) {
+      switch (localScope) {
+        case "tab":
+          return "GlobalOrTabPageLocalOption";
+        case "window":
+          return "GlobalOrWindowLocalOption";
+        case "buffer":
+        default:
+          return "GlobalOrBufferLocalOption";
+      }
+    } else {
+      switch (localScope) {
+        case "tab":
+          return "TabPageLocalOption";
+        case "window":
+          return "WindowLocalOption";
+        case "buffer":
+        default:
+          return "BufferLocalOption";
+      }
+    }
   } else {
-    return `LocalOption<${type}>`;
+    return "GlobalOption";
   }
 }
 
-function getOptionConstructor(name: string, type: OptionType): string {
+function getOptionConstructor({ type }: Option): OptionConstructor {
   switch (type) {
     case "string":
-      return `new StringOption("${name}")`;
+      return "StringOption";
     case "number":
-      return `new NumberOption("${name}")`;
+      return "NumberOption";
     case "boolean":
-      return `new BooleanOption("${name}")`;
+      return "BooleanOption";
     default: {
       const unknownType: never = type;
       throw new Error(`Unknown type ${unknownType}`);
@@ -52,14 +77,19 @@ function getOptionConstructor(name: string, type: OptionType): string {
 }
 
 export function format(options: Option[], root: string): string[] {
-  const types = `${root}/types.ts`;
-  const utils = `${root}/_utils.ts`;
+  const context: Context = {
+    types: new Set(),
+    constructors: new Set(),
+  };
+  const body = options.flatMap((option) => formatOption(option, context));
+  const types = [...context.types];
+  const constructors = [...context.constructors];
   const lines = [
     "// NOTE: This file is generated. Do NOT modify it manually.",
-    `import type { GlobalOption, GlobalOrLocalOption, LocalOption } from "${types}";`,
-    `import { BooleanOption, NumberOption, StringOption } from "${utils}";`,
+    `import type { ${types.join(",")} } from "${root}/types.ts";`,
+    `import { ${constructors.join(",")} } from "${root}/_utils.ts";`,
     "",
-    ...options.map(formatOption),
+    ...body,
   ];
-  return lines.flat();
+  return lines;
 }
