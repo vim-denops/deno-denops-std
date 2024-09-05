@@ -24,11 +24,11 @@ test({
           fn: async () => {
             const info = await open(denops, "Hello world");
             const bufname = await fn.bufname(denops);
-            assertEquals("Hello world", bufname);
-            assertEquals(await fn.win_getid(denops), info.winid);
-            assertEquals(await fn.bufnr(denops), info.bufnr);
-            assertEquals(await fn.winnr(denops), info.winnr);
-            assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+            assertEquals(bufname, "Hello world");
+            assertEquals(info.winid, await fn.win_getid(denops));
+            assertEquals(info.bufnr, await fn.bufnr(denops));
+            assertEquals(info.winnr, await fn.winnr(denops));
+            assertEquals(info.tabpagenr, await fn.tabpagenr(denops));
           },
         });
         await t.step({
@@ -39,11 +39,11 @@ test({
               "gin://this-is-valid-remote-buffer-name",
             );
             const bufname = await fn.bufname(denops);
-            assertEquals("gin://this-is-valid-remote-buffer-name", bufname);
-            assertEquals(await fn.win_getid(denops), info.winid);
-            assertEquals(await fn.bufnr(denops), info.bufnr);
-            assertEquals(await fn.winnr(denops), info.winnr);
-            assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+            assertEquals(bufname, "gin://this-is-valid-remote-buffer-name");
+            assertEquals(info.winid, await fn.win_getid(denops));
+            assertEquals(info.bufnr, await fn.bufnr(denops));
+            assertEquals(info.winnr, await fn.winnr(denops));
+            assertEquals(info.tabpagenr, await fn.tabpagenr(denops));
           },
         });
         await t.step({
@@ -52,11 +52,11 @@ test({
             const symbols = " !%22#$%&'()%2a+,-./:;%3c=%3e%3f@[\\]^`{%7c}~";
             const info = await open(denops, `test://${symbols}`);
             const bufname = await fn.bufname(denops);
-            assertEquals(`test://${symbols}`, bufname);
-            assertEquals(await fn.win_getid(denops), info.winid);
-            assertEquals(await fn.bufnr(denops), info.bufnr);
-            assertEquals(await fn.winnr(denops), info.winnr);
-            assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+            assertEquals(bufname, `test://${symbols}`);
+            assertEquals(info.winid, await fn.win_getid(denops));
+            assertEquals(info.bufnr, await fn.bufnr(denops));
+            assertEquals(info.winnr, await fn.winnr(denops));
+            assertEquals(info.tabpagenr, await fn.tabpagenr(denops));
           },
         });
         await t.step({
@@ -77,11 +77,11 @@ test({
             await denops.cmd("set modified nohidden");
             const info = await open(denops, "Hello world", { bang: true });
             const bufname = await fn.bufname(denops);
-            assertEquals("Hello world", bufname);
-            assertEquals(await fn.win_getid(denops), info.winid);
-            assertEquals(await fn.bufnr(denops), info.bufnr);
-            assertEquals(await fn.winnr(denops), info.winnr);
-            assertEquals(await fn.tabpagenr(denops), info.tabpagenr);
+            assertEquals(bufname, "Hello world");
+            assertEquals(info.winid, await fn.win_getid(denops));
+            assertEquals(info.bufnr, await fn.bufnr(denops));
+            assertEquals(info.winnr, await fn.winnr(denops));
+            assertEquals(info.tabpagenr, await fn.tabpagenr(denops));
             await denops.cmd("set nomodified");
           },
         });
@@ -103,10 +103,10 @@ test({
                 "こんにちわ\n世界\n",
               ),
             );
-            assertEquals([
+            assertEquals(result.content, [
               "こんにちわ",
               "世界",
-            ], result.content);
+            ]);
 
             result = await decode(
               denops,
@@ -115,10 +115,10 @@ test({
                 "今すぐダウンロー\nド",
               ),
             );
-            assertEquals([
+            assertEquals(result.content, [
               "今すぐダウンロー",
               "ド",
-            ], result.content);
+            ]);
           },
         });
         await t.step({
@@ -142,11 +142,11 @@ test({
                 fileencoding: "sjis",
               },
             );
-            assertEquals("sjis", result.fileencoding);
-            assertEquals([
+            assertEquals(result.fileencoding, "sjis");
+            assertEquals(result.content, [
               "こんにちわ",
               "世界",
-            ], result.content);
+            ]);
 
             result = await decode(
               denops,
@@ -156,11 +156,11 @@ test({
                 fileencoding: "euc-jp",
               },
             );
-            assertEquals("euc-jp", result.fileencoding);
-            assertEquals([
+            assertEquals(result.fileencoding, "euc-jp");
+            assertEquals(result.content, [
               "今すぐダウンロー",
               "ド",
-            ], result.content);
+            ]);
           },
         });
         await t.step({
@@ -178,11 +178,11 @@ test({
                 fileformat: "dos",
               },
             );
-            assertEquals("dos", result.fileformat);
-            assertEquals([
+            assertEquals(result.fileformat, "dos");
+            assertEquals(result.content, [
               "こんにちわ",
               "世界",
-            ], result.content);
+            ]);
 
             result = await decode(
               denops,
@@ -191,11 +191,11 @@ test({
                 "今すぐダウンロー\r\nド",
               ),
             );
-            assertEquals("dos", result.fileformat);
-            assertEquals([
+            assertEquals(result.fileformat, "dos");
+            assertEquals(result.content, [
               "今すぐダウンロー",
               "ド",
-            ], result.content);
+            ]);
           },
         });
       },
@@ -215,32 +215,32 @@ test({
               "My",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
 
             await append(denops, bufnr, [
               "Joking",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
 
             await append(denops, bufnr, [
               "Foo",
             ], {
               lnum: 3,
             });
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello",
@@ -248,7 +248,7 @@ test({
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
           },
         });
         await t.step({
@@ -263,34 +263,34 @@ test({
               "My",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
-            assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+            ]);
+            assertEquals(await fn.getbufvar(denops, bufnr, "&modifiable"), 0);
 
             await append(denops, bufnr, [
               "Joking",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
-            assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+            ]);
+            assertEquals(await fn.getbufvar(denops, bufnr, "&modifiable"), 0);
 
             await append(denops, bufnr, [
               "Foo",
             ], {
               lnum: 3,
             });
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello",
@@ -298,8 +298,8 @@ test({
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
-            assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+            ]);
+            assertEquals(await fn.getbufvar(denops, bufnr, "&modifiable"), 0);
           },
         });
         await t.step({
@@ -315,13 +315,13 @@ test({
               "My }}}",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Hello {{{",
               "Darkness",
               "My }}}",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
             assertEquals(
               await fn.getbufvar(denops, bufnr, "&foldmethod"),
               "marker",
@@ -331,14 +331,14 @@ test({
             await append(denops, bufnr, [
               "Joking",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello {{{",
               "Darkness",
               "My }}}",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
             assertEquals(
               await fn.getbufvar(denops, bufnr, "&foldmethod"),
               "marker",
@@ -350,7 +350,7 @@ test({
             ], {
               lnum: 3,
             });
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "",
               "Joking",
               "Hello {{{",
@@ -358,7 +358,7 @@ test({
               "Darkness",
               "My }}}",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
             assertEquals(
               await fn.getbufvar(denops, bufnr, "&foldmethod"),
               "marker",
@@ -381,19 +381,19 @@ test({
               "My",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
 
             await replace(denops, bufnr, [
               "Joking",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Joking",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
           },
         });
         await t.step({
@@ -407,21 +407,21 @@ test({
               "My",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Hello",
               "Darkness",
               "My",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
-            assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+            ]);
+            assertEquals(await fn.getbufvar(denops, bufnr, "&modifiable"), 0);
 
             await replace(denops, bufnr, [
               "Joking",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Joking",
-            ], await fn.getline(denops, 1, "$"));
-            assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+            ]);
+            assertEquals(await fn.getbufvar(denops, bufnr, "&modifiable"), 0);
           },
         });
         await t.step({
@@ -436,12 +436,12 @@ test({
               "My }}}",
               "Old friend",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Hello {{{",
               "Darkness",
               "My }}}",
               "Old friend",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
             assertEquals(
               await fn.getbufvar(denops, bufnr, "&foldmethod"),
               "marker",
@@ -451,9 +451,9 @@ test({
             await replace(denops, bufnr, [
               "Joking {{{1",
             ]);
-            assertEquals([
+            assertEquals(await fn.getline(denops, 1, "$"), [
               "Joking {{{1",
-            ], await fn.getline(denops, 1, "$"));
+            ]);
             assertEquals(
               await fn.getbufvar(denops, bufnr, "&foldmethod"),
               "marker",
@@ -476,12 +476,12 @@ test({
         ]);
         await concrete(denops, bufnr);
         await denops.cmd("edit");
-        assertEquals([
+        assertEquals(await fn.getbufline(denops, bufnr, 1, "$"), [
           "Hello",
           "Darkness",
           "My",
           "Old friend",
-        ], await fn.getbufline(denops, bufnr, 1, "$"));
+        ]);
       },
     });
 
@@ -497,17 +497,17 @@ test({
             await open(denops, "World");
             const bufnr2 = await fn.bufnr(denops);
 
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
             await ensure(denops, bufnr1, async () => {
-              assertEquals(bufnr1, await fn.bufnr(denops));
+              assertEquals(await fn.bufnr(denops), bufnr1);
             });
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
 
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
             await ensure(denops, bufnr2, async () => {
-              assertEquals(bufnr2, await fn.bufnr(denops));
+              assertEquals(await fn.bufnr(denops), bufnr2);
             });
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
           },
         });
         await t.step({
@@ -520,17 +520,17 @@ test({
             await open(denops, "World");
             const bufnr2 = await fn.bufnr(denops);
 
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
             await ensure(denops, bufnr1, async () => {
-              assertEquals(bufnr1, await fn.bufnr(denops));
+              assertEquals(await fn.bufnr(denops), bufnr1);
             });
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
 
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
             await ensure(denops, bufnr2, async () => {
-              assertEquals(bufnr2, await fn.bufnr(denops));
+              assertEquals(await fn.bufnr(denops), bufnr2);
             });
-            assertEquals(bufnr2, await fn.bufnr(denops));
+            assertEquals(await fn.bufnr(denops), bufnr2);
           },
         });
       },
@@ -542,11 +542,11 @@ test({
         await denops.cmd("edit foobar");
         await denops.cmd("set nomodifiable");
         const bufnr = await fn.bufnr(denops);
-        assertEquals(0, await denops.eval("&modifiable"));
+        assertEquals(await denops.eval("&modifiable"), 0);
         await modifiable(denops, bufnr, async () => {
-          assertEquals(1, await denops.eval("&modifiable"));
+          assertEquals(await denops.eval("&modifiable"), 1);
         });
-        assertEquals(0, await denops.eval("&modifiable"));
+        assertEquals(await denops.eval("&modifiable"), 0);
       },
     });
   },
