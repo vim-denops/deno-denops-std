@@ -302,6 +302,69 @@ test({
             assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
           },
         });
+        await t.step({
+          name: "appends content of a 'foldmethod=marker' buffer",
+          fn: async () => {
+            await denops.cmd("enew");
+            const bufnr = await fn.bufnr(denops);
+            await fn.setbufvar(denops, bufnr, "&foldmethod", "marker");
+            await fn.setbufvar(denops, bufnr, "&foldmarker", "{{{,}}}");
+            await append(denops, bufnr, [
+              "Hello {{{",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ]);
+            assertEquals([
+              "",
+              "Hello {{{",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ], await fn.getline(denops, 1, "$"));
+            assertEquals(
+              await fn.getbufvar(denops, bufnr, "&foldmethod"),
+              "marker",
+            );
+
+            await fn.setbufvar(denops, bufnr, "&foldlevel", 0);
+            await append(denops, bufnr, [
+              "Joking",
+            ]);
+            assertEquals([
+              "",
+              "Joking",
+              "Hello {{{",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ], await fn.getline(denops, 1, "$"));
+            assertEquals(
+              await fn.getbufvar(denops, bufnr, "&foldmethod"),
+              "marker",
+            );
+
+            await fn.setbufvar(denops, bufnr, "&foldlevel", 0);
+            await append(denops, bufnr, [
+              "Foo",
+            ], {
+              lnum: 3,
+            });
+            assertEquals([
+              "",
+              "Joking",
+              "Hello {{{",
+              "Foo",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ], await fn.getline(denops, 1, "$"));
+            assertEquals(
+              await fn.getbufvar(denops, bufnr, "&foldmethod"),
+              "marker",
+            );
+          },
+        });
       },
     });
 
@@ -359,6 +422,42 @@ test({
               "Joking",
             ], await fn.getline(denops, 1, "$"));
             assertEquals(0, await fn.getbufvar(denops, bufnr, "&modifiable"));
+          },
+        });
+        await t.step({
+          name: "replaces content of an 'foldmethod=marker' buffer",
+          fn: async () => {
+            const bufnr = await fn.bufnr(denops);
+            await fn.setbufvar(denops, bufnr, "&foldmethod", "marker");
+            await fn.setbufvar(denops, bufnr, "&foldmarker", "{{{,}}}");
+            await replace(denops, bufnr, [
+              "Hello {{{",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ]);
+            assertEquals([
+              "Hello {{{",
+              "Darkness",
+              "My }}}",
+              "Old friend",
+            ], await fn.getline(denops, 1, "$"));
+            assertEquals(
+              await fn.getbufvar(denops, bufnr, "&foldmethod"),
+              "marker",
+            );
+
+            await fn.setbufvar(denops, bufnr, "&foldlevel", 0);
+            await replace(denops, bufnr, [
+              "Joking {{{1",
+            ]);
+            assertEquals([
+              "Joking {{{1",
+            ], await fn.getline(denops, 1, "$"));
+            assertEquals(
+              await fn.getbufvar(denops, bufnr, "&foldmethod"),
+              "marker",
+            );
           },
         });
       },
