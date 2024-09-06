@@ -57,21 +57,16 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
   function! DenopsStdBufferAppend_${suffix}(bufnr, lnum, repl) abort
     let modified = getbufvar(a:bufnr, '&modified')
     let modifiable = getbufvar(a:bufnr, '&modifiable')
-    let foldmethod = getbufvar(a:bufnr, '&foldmethod')
     call setbufvar(a:bufnr, '&modifiable', 1)
-    call setbufvar(a:bufnr, '&foldmethod', 'manual')
     call appendbufline(a:bufnr, a:lnum, a:repl)
     call setbufvar(a:bufnr, '&modified', modified)
     call setbufvar(a:bufnr, '&modifiable', modifiable)
-    call setbufvar(a:bufnr, '&foldmethod', foldmethod)
   endfunction
 
   function! DenopsStdBufferReplace_${suffix}(bufnr, repl, fileformat, fileencoding) abort
     let modified = getbufvar(a:bufnr, '&modified')
     let modifiable = getbufvar(a:bufnr, '&modifiable')
-    let foldmethod = getbufvar(a:bufnr, '&foldmethod')
     call setbufvar(a:bufnr, '&modifiable', 1)
-    call setbufvar(a:bufnr, '&foldmethod', 'manual')
     if a:fileformat isnot# v:null
       call setbufvar(a:bufnr, '&fileformat', a:fileformat)
     endif
@@ -82,7 +77,6 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
     call deletebufline(a:bufnr, len(a:repl) + 1, '$')
     call setbufvar(a:bufnr, '&modified', modified)
     call setbufvar(a:bufnr, '&modifiable', modifiable)
-    call setbufvar(a:bufnr, '&foldmethod', foldmethod)
   endfunction
 
   function! DenopsStdBufferConcreteRestore_${suffix}() abort
@@ -321,7 +315,7 @@ export interface DecodeResult {
  * }
  * ```
  *
- * It temporary change `modified`, `modifiable`, and `foldmethod` options to append
+ * It temporary change `modified` and `modifiable` options to append
  * the content of the `buffer` buffer without unmodifiable error or so on.
  */
 export async function append(
@@ -361,8 +355,8 @@ export interface AppendOptions {
  * }
  * ```
  *
- * It temporary change `modified`, `modifiable`, and `foldmethod` options to
- * replace the content of the `buffer` buffer without unmodifiable error or so on.
+ * It temporary change `modified` and `modifiable` options to replace
+ * the content of the `buffer` buffer without unmodifiable error or so on.
  */
 export async function replace(
   denops: Denops,
@@ -518,25 +512,20 @@ export async function modifiable<T>(
   bufnr: number,
   executor: () => T,
 ): Promise<T> {
-  const [modified, modifiable, foldmethod] = await batch.collect(
+  const [modified, modifiable] = await batch.collect(
     denops,
     (denops) => [
       op.modified.getBuffer(denops, bufnr),
       op.modifiable.getBuffer(denops, bufnr),
-      op.foldmethod.getBuffer(denops, bufnr),
     ],
   );
-  await batch.batch(denops, async (denops) => {
-    await fn.setbufvar(denops, bufnr, "&modifiable", 1);
-    await fn.setbufvar(denops, bufnr, "&foldmethod", "manual");
-  });
+  await fn.setbufvar(denops, bufnr, "&modifiable", 1);
   try {
     return await executor();
   } finally {
     await batch.batch(denops, async (denops) => {
       await fn.setbufvar(denops, bufnr, "&modified", modified);
       await fn.setbufvar(denops, bufnr, "&modifiable", modifiable);
-      await fn.setbufvar(denops, bufnr, "&foldmethod", foldmethod);
     });
   }
 }
