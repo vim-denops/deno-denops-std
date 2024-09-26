@@ -1,4 +1,11 @@
-import { isOptionType, type Option, type OptionType } from "./types.ts";
+import { isArrayOf, isUndefined, isUnionOf } from "@core/unknownutil/is";
+import {
+  isOptionLocalScope,
+  isOptionScope,
+  isOptionType,
+  type Option,
+  type OptionType,
+} from "./types.ts";
 import { createMarkdownFromHelp } from "../markdown.ts";
 import { regexIndexOf, trimLines } from "../utils.ts";
 
@@ -29,7 +36,12 @@ export function parse(content: string) {
 
   const options: Option[] = [];
   const succeeds = new Set<number>();
-  const errors: Array<{ name: string; start: number; block: string }> = [];
+  const errors: {
+    name: string;
+    start: number;
+    block: string;
+    err: Error;
+  }[] = [];
   let last = -1;
   for (const match of content.matchAll(/\*'(\w+)'\*/g)) {
     const name = match[1];
@@ -39,22 +51,22 @@ export function parse(content: string) {
       continue;
     }
     const { block, start, end } = extractBlock(content, index);
-    const option = parseBlock(name, block);
-    if (option) {
+    try {
+      const option = parseBlock(name, block);
       options.push(option);
       succeeds.add(start);
       last = end;
-    } else {
-      errors.push({ name, start, block });
+    } catch (err) {
+      errors.push({ name, start, block, err });
     }
   }
 
   if (errors.length) {
-    for (const { name, start, block } of errors) {
+    for (const { name, start, block, err } of errors) {
       if (!succeeds.has(start)) {
         const line = content.substring(0, start + 1).split("\n").length;
         console.error(
-          `Failed to parse option definition for '${name}' at line ${line}:`,
+          `Failed to parse option definition for '${name}' at line ${line}: ${err}`,
         );
         console.error("----- block start -----");
         console.error(block);
@@ -90,6 +102,7 @@ function extractBlock(content: string, index: number): {
  * - {name}      : Required.
  * - {type}      : Required. But some have fallbacks.
  * - {scope}     : Optional. If not present, assume "global".
+ * - {localscope}: Required if {scope} is "local".
  * - {defaults}  : Optional. Appended to {document}.
  * - {attention} : Optional. Appended to {document}.
  * - {document}  : Optional.
@@ -98,14 +111,14 @@ function extractBlock(content: string, index: number): {
  *  name                 type     defaults
  *  ~~~~~               ~~~~~~  ~~~~~~~~~~~~~
  * 'aleph' 'al'		number	(default 224)      *E123*
- * 			global                             <- scope
+ * 			global                             <- scope, localscope
  * 			{only available when compiled ...  <- attention
  * 			feature}                               :
  * 	The ASCII code for the first letter of the ...     <- document
  * 	routine that maps the keyboard in Hebrew mode ...      :
  * ```
  */
-function parseBlock(name: string, body: string): Option | undefined {
+function parseBlock(name: string, body: string): Option {
   // Extract definition line
   const reTags = /(?:[ \t]+\*[^*\s]+\*)+[ \t]*$/.source;
   const reShortNames = /(?:[ \t]+'\w+')*/.source;
@@ -117,17 +130,26 @@ function parseBlock(name: string, body: string): Option | undefined {
   const m1 = body.match(new RegExp(reDefinition, "dm"));
   const type = m1?.groups?.type ?? fallbackTypes[name];
   if (!m1 || !isOptionType(type)) {
-    // {name} not found, or {type} is invalid
-    return;
+    throw new TypeError("Failed to parse name or type");
   }
   const defaults = m1.groups!.defaults?.replaceAll(/^\s+/gm, " ").trim();
   body = trimLines(body.substring(m1.indices![0][1])) + "\n";
 
-  // Extract {scope}
-  const m2 = body.match(/^\t{3,}(global or local|global|local)(?:[ \t].*)?\n/d);
-  const scope = (
-    m2?.[1].split(" or ") ?? ["global"]
-  ) as Array<"global" | "local">;
+  // Extract {scope}, {localscope}
+  const m2 = body.match(
+    /^\t{3,}(?<scope>global or local|global|local)(?: to (?<localscope>buffer|tab|window))?(?:[ \t].*)?\n/d,
+  );
+  const scope = m2?.groups?.scope.split(" or ") ?? ["global"];
+  if (!isArrayOf(isOptionScope)(scope)) {
+    throw new TypeError("Failed to parse scope");
+  }
+  const localScope = m2?.groups?.localscope;
+  if (!isUnionOf([isOptionLocalScope, isUndefined])(localScope)) {
+    throw new TypeError("Failed to parse local scope");
+  }
+  if (scope.includes("local") && localScope === undefined) {
+    throw new TypeError("Invalid scope and local scope");
+  }
   body = trimLines(body.substring(m2?.indices?.at(0)?.at(1) ?? 0)) + "\n";
 
   // Extract {attention}
@@ -140,5 +162,5 @@ function parseBlock(name: string, body: string): Option | undefined {
 
   const docs = createMarkdownFromHelp(body);
 
-  return { name, type, scope, docs };
+  return { name, type, scope, localScope, docs };
 }

@@ -1,8 +1,9 @@
 // NOTE: This file is generated. Do NOT modify it manually.
 import type {
+  BufferLocalOption,
   GlobalOption,
-  GlobalOrLocalOption,
-  LocalOption,
+  GlobalOrBufferLocalOption,
+  WindowLocalOption,
 } from "../types.ts";
 import { BooleanOption, NumberOption, StringOption } from "../_utils.ts";
 
@@ -186,7 +187,7 @@ export const balloonevalterm: GlobalOption<boolean> = new BooleanOption(
  *
  * *only available when compiled with the `+balloon_eval` feature*
  */
-export const balloonexpr: GlobalOrLocalOption<string> = new StringOption(
+export const balloonexpr: GlobalOrBufferLocalOption<string> = new StringOption(
   "balloonexpr",
 );
 
@@ -416,7 +417,7 @@ export const conskey: GlobalOption<boolean> = new BooleanOption("conskey");
  *
  * (default "blowfish2")
  */
-export const cryptmethod: GlobalOrLocalOption<string> = new StringOption(
+export const cryptmethod: GlobalOrBufferLocalOption<string> = new StringOption(
   "cryptmethod",
 );
 
@@ -896,7 +897,7 @@ export const insertmode: GlobalOption<boolean> = new BooleanOption(
  *
  * *only available when compiled with the `+cryptv` feature*
  */
-export const key: LocalOption<string> = new StringOption("key");
+export const key: BufferLocalOption<string> = new StringOption("key");
 
 /**
  * Specifies what keyboard protocol to use depending on the value of
@@ -1086,7 +1087,9 @@ export const mzschemegcdll: GlobalOption<string> = new StringOption(
  *
  * (default: "")
  */
-export const osfiletype: LocalOption<string> = new StringOption("osfiletype");
+export const osfiletype: BufferLocalOption<string> = new StringOption(
+  "osfiletype",
+);
 
 /**
  * Put Vim in Paste mode.  This is useful if you want to cut or copy
@@ -1559,7 +1562,9 @@ export const shelltype: GlobalOption<number> = new NumberOption("shelltype");
  *
  * (default off)
  */
-export const shortname: LocalOption<boolean> = new BooleanOption("shortname");
+export const shortname: BufferLocalOption<boolean> = new BooleanOption(
+  "shortname",
+);
 
 /**
  * When this option is not empty a swap file is synced to disk after
@@ -1657,7 +1662,9 @@ export const termencoding: GlobalOption<string> = new StringOption(
  *
  * (default "")
  */
-export const termwinkey: LocalOption<string> = new StringOption("termwinkey");
+export const termwinkey: WindowLocalOption<string> = new StringOption(
+  "termwinkey",
+);
 
 /**
  * Number of scrollback lines to keep.  When going over this limit the
@@ -1671,7 +1678,7 @@ export const termwinkey: LocalOption<string> = new StringOption("termwinkey");
  *
  * *not available when compiled without the `+terminal` feature*
  */
-export const termwinscroll: LocalOption<number> = new NumberOption(
+export const termwinscroll: BufferLocalOption<number> = new NumberOption(
   "termwinscroll",
 );
 
@@ -1701,7 +1708,9 @@ export const termwinscroll: LocalOption<number> = new NumberOption(
  *
  * (default "")
  */
-export const termwinsize: LocalOption<string> = new StringOption("termwinsize");
+export const termwinsize: WindowLocalOption<string> = new StringOption(
+  "termwinsize",
+);
 
 /**
  * Specify the virtual console (pty) used when opening the terminal
@@ -1757,7 +1766,9 @@ export const textauto: GlobalOption<boolean> = new BooleanOption("textauto");
  * (Win32: default on,
  *  others: default off)
  */
-export const textmode: LocalOption<boolean> = new BooleanOption("textmode");
+export const textmode: BufferLocalOption<boolean> = new BooleanOption(
+  "textmode",
+);
 
 /**
  * The contents of this option controls various toolbar settings.  The
@@ -2105,7 +2116,7 @@ export const weirdinvert: GlobalOption<boolean> = new BooleanOption(
  *
  * (default empty)
  */
-export const wincolor: LocalOption<string> = new StringOption("wincolor");
+export const wincolor: WindowLocalOption<string> = new StringOption("wincolor");
 
 /**
  * Specifies the name of the winpty shared library, used for the
