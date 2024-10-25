@@ -178,8 +178,9 @@ async function vimDecorate(
       });
       rs.add(highlight);
     }
+    let id = 1;
     for (const [type, props] of decoMap.entries()) {
-      await vimFn.prop_add_list(denops, { bufnr, type }, [...props]);
+      await vimFn.prop_add_list(denops, { bufnr, type, id: id++ }, [...props]);
     }
   });
 }
@@ -193,7 +194,7 @@ async function vimUndecorate(
   const propList = await vimFn.prop_list(denops, start + 1, {
     bufnr,
     end_lnum: end,
-  }) as { id: string; type: string }[];
+  }) as { id: number; type: string }[];
   const propIds = new Set(
     propList
       .filter((p) => p.type.startsWith(`${prefix}:`))

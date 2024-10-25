@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import { omit } from "@std/collections";
 import { test } from "@denops/test";
 import * as fn from "../function/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
@@ -24,7 +25,7 @@ test({
         type: string;
         type_bufnr: number;
       }[];
-      return props;
+      return props.map((prop) => omit(prop, ["id"]));
     };
     const bufnr = await fn.bufnr(denops);
     await buffer.replace(denops, bufnr, [
@@ -50,7 +51,6 @@ test({
     assertEquals(await collect(bufnr), [{
       col: 1,
       end: 1,
-      id: 0,
       length: 5,
       lnum: 1,
       start: 1,
@@ -59,13 +59,28 @@ test({
     }, {
       col: 2,
       end: 1,
-      id: 0,
       length: 3,
       lnum: 2,
       start: 1,
       type: "denops_std:buffer:decoration:decorate:Search",
       type_bufnr: 0,
     }]);
+
+    // Re-appling the same decorations is OK
+    await decorate(denops, bufnr, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+      },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
   },
 });
 
