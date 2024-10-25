@@ -63,7 +63,7 @@ export interface Decoration {
 export function decorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
   switch (denops.meta.host) {
     case "vim":
@@ -133,14 +133,14 @@ export function undecorate(
   }
 }
 
-function uniq<T>(array: T[]): T[] {
+function uniq<T>(array: readonly T[]): T[] {
   return [...new Set(array)];
 }
 
 async function vimDecorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
   const toPropType = (n: string) => `${prefix}:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
@@ -195,7 +195,7 @@ async function vimUndecorate(
 async function nvimDecorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
   const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   for (const chunk of itertools.chunked(decorations, 1000)) {
