@@ -40,7 +40,7 @@ export function parse(content: string) {
     name: string;
     start: number;
     block: string;
-    err: Error;
+    err: unknown;
   }[] = [];
   let last = -1;
   for (const match of content.matchAll(/\*'(\w+)'\*/g)) {

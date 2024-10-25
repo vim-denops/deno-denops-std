@@ -7,6 +7,8 @@ import * as nvimFn from "../function/nvim/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
+const prefix = "denops_std:buffer:decoration:decorate";
+
 export interface Decoration {
   /**
    * Line number
@@ -61,7 +63,7 @@ export interface Decoration {
 export function decorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
   switch (denops.meta.host) {
     case "vim":
@@ -131,17 +133,30 @@ export function undecorate(
   }
 }
 
-function uniq<T>(array: T[]): T[] {
+export function listDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  switch (denops.meta.host) {
+    case "vim":
+      return vimListDecorations(denops, bufnr);
+    case "nvim":
+      return nvimListDecorations(denops, bufnr);
+    default:
+      unreachable(denops.meta.host);
+  }
+}
+
+function uniq<T>(array: readonly T[]): T[] {
   return [...new Set(array)];
 }
 
 async function vimDecorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
-  const toPropType = (n: string) =>
-    `denops_std:buffer:decoration:decorate:${n}`;
+  const toPropType = (n: string) => `${prefix}:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
   denops.context[cacheKey] = rs;
   const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
@@ -163,8 +178,9 @@ async function vimDecorate(
       });
       rs.add(highlight);
     }
+    let id = 1;
     for (const [type, props] of decoMap.entries()) {
-      await vimFn.prop_add_list(denops, { bufnr, type }, [...props]);
+      await vimFn.prop_add_list(denops, { bufnr, type, id: id++ }, [...props]);
     }
   });
 }
@@ -178,11 +194,11 @@ async function vimUndecorate(
   const propList = await vimFn.prop_list(denops, start + 1, {
     bufnr,
     end_lnum: end,
-  }) as { id: string; type: string }[];
+  }) as { id: number; type: string }[];
   const propIds = new Set(
-    propList.filter((p) =>
-      p.type.startsWith("denops_std:buffer:decoration:decorate:")
-    ).map((p) => p.id),
+    propList
+      .filter((p) => p.type.startsWith(`${prefix}:`))
+      .map((p) => p.id),
   );
   await batch(denops, async (denops) => {
     for (const propId of propIds) {
@@ -191,15 +207,39 @@ async function vimUndecorate(
   });
 }
 
+async function vimListDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  const props = await vimFn.prop_list(denops, 1, {
+    bufnr,
+    end_lnum: -1,
+  }) as {
+    col: number;
+    end: number;
+    id: number;
+    length: number;
+    lnum: number;
+    start: number;
+    type: string;
+    type_bufnr: number;
+  }[];
+  return props
+    .filter((prop) => prop.type.startsWith(`${prefix}:`))
+    .map((prop) => ({
+      line: prop.lnum,
+      column: prop.col,
+      length: prop.length,
+      highlight: prop.type.split(":").pop() as string,
+    }));
+}
+
 async function nvimDecorate(
   denops: Denops,
   bufnr: number,
-  decorations: Decoration[],
+  decorations: readonly Decoration[],
 ): Promise<void> {
-  const ns = await nvimFn.nvim_create_namespace(
-    denops,
-    "denops_std:buffer:decoration:decorate",
-  );
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   for (const chunk of itertools.chunked(decorations, 1000)) {
     await batch(denops, async (denops) => {
       for (const deco of chunk) {
@@ -223,9 +263,41 @@ async function nvimUndecorate(
   start: number,
   end: number,
 ): Promise<void> {
-  const ns = await nvimFn.nvim_create_namespace(
-    denops,
-    "denops_std:buffer:decoration:decorate",
-  );
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, start, end);
+}
+
+async function nvimListDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
+  const extmarks = await nvimFn.nvim_buf_get_extmarks(
+    denops,
+    bufnr,
+    ns,
+    0,
+    -1,
+    { details: true },
+  ) as [
+    extmark_id: number,
+    row: number,
+    col: number,
+    {
+      hl_group: string;
+      hl_eol: boolean;
+      end_right_gravity: boolean;
+      priority: number;
+      right_gravity: boolean;
+      end_col: number;
+      ns_id: number;
+      end_row: number;
+    },
+  ][];
+  return extmarks.map((extmark) => ({
+    line: extmark[1] + 1,
+    column: extmark[2] + 1,
+    length: extmark[3].end_col - extmark[2],
+    highlight: extmark[3].hl_group,
+  }));
 }
