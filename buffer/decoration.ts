@@ -7,6 +7,8 @@ import * as nvimFn from "../function/nvim/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
+const prefix = "denops_std:buffer:decoration:decorate";
+
 export interface Decoration {
   /**
    * Line number
@@ -140,8 +142,7 @@ async function vimDecorate(
   bufnr: number,
   decorations: Decoration[],
 ): Promise<void> {
-  const toPropType = (n: string) =>
-    `denops_std:buffer:decoration:decorate:${n}`;
+  const toPropType = (n: string) => `${prefix}:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
   denops.context[cacheKey] = rs;
   const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
@@ -180,9 +181,9 @@ async function vimUndecorate(
     end_lnum: end,
   }) as { id: string; type: string }[];
   const propIds = new Set(
-    propList.filter((p) =>
-      p.type.startsWith("denops_std:buffer:decoration:decorate:")
-    ).map((p) => p.id),
+    propList
+      .filter((p) => p.type.startsWith(`${prefix}:`))
+      .map((p) => p.id),
   );
   await batch(denops, async (denops) => {
     for (const propId of propIds) {
@@ -196,10 +197,7 @@ async function nvimDecorate(
   bufnr: number,
   decorations: Decoration[],
 ): Promise<void> {
-  const ns = await nvimFn.nvim_create_namespace(
-    denops,
-    "denops_std:buffer:decoration:decorate",
-  );
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   for (const chunk of itertools.chunked(decorations, 1000)) {
     await batch(denops, async (denops) => {
       for (const deco of chunk) {
@@ -223,9 +221,6 @@ async function nvimUndecorate(
   start: number,
   end: number,
 ): Promise<void> {
-  const ns = await nvimFn.nvim_create_namespace(
-    denops,
-    "denops_std:buffer:decoration:decorate",
-  );
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, start, end);
 }
