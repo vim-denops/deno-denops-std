@@ -11,17 +11,23 @@ test({
   name: "decorate define highlights as text properties",
   fn: async (denops) => {
     const collect = async (bufnr: number) => {
-      const lines = await fn.getbufline(denops, bufnr, 1, "$");
-      const props = [];
-      for (let line = 1; line <= lines.length; line++) {
-        props.push(
-          ...(await vimFn.prop_list(denops, line, { bufnr }) as unknown[]),
-        );
-      }
+      const props = await vimFn.prop_list(denops, 1, {
+        bufnr,
+        end_lnum: -1,
+      }) as {
+        col: number;
+        end: number;
+        id: number;
+        length: number;
+        lnum: number;
+        start: number;
+        type: string;
+        type_bufnr: number;
+      }[];
       return props;
     };
     const bufnr = await fn.bufnr(denops);
-    await buffer.append(denops, bufnr, [
+    await buffer.replace(denops, bufnr, [
       "Hello",
       "Darkness",
       "My",
@@ -45,7 +51,8 @@ test({
       col: 1,
       end: 1,
       id: 0,
-      length: 1,
+      length: 5,
+      lnum: 1,
       start: 1,
       type: "denops_std:buffer:decoration:decorate:Title",
       type_bufnr: 0,
@@ -54,18 +61,20 @@ test({
       end: 1,
       id: 0,
       length: 3,
+      lnum: 2,
       start: 1,
       type: "denops_std:buffer:decoration:decorate:Search",
       type_bufnr: 0,
     }]);
   },
 });
+
 test({
   mode: "nvim",
   name: "decorate define highlights as extmarks",
   fn: async (denops) => {
     const bufnr = await fn.bufnr(denops);
-    await buffer.append(denops, bufnr, [
+    await buffer.replace(denops, bufnr, [
       "Hello",
       "Darkness",
       "My",
