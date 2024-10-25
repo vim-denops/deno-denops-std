@@ -4,7 +4,7 @@ import * as fn from "../function/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
 import * as buffer from "./buffer.ts";
-import { decorate, listDecorations } from "./decoration.ts";
+import { decorate, listDecorations, undecorate } from "./decoration.ts";
 
 test({
   mode: "vim",
@@ -140,6 +140,73 @@ test({
         length: 5,
         highlight: "Title",
       },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
+  },
+});
+
+test({
+  mode: "all",
+  name: "undecorate clears decorations in the buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await buffer.replace(denops, bufnr, [
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ]);
+    await decorate(denops, bufnr, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+      },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
+    await undecorate(denops, bufnr);
+    assertEquals(await listDecorations(denops, bufnr), []);
+  },
+});
+
+test({
+  mode: "all",
+  name: "undecorate clears decorations in specified region in the buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await buffer.replace(denops, bufnr, [
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ]);
+    await decorate(denops, bufnr, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+      },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
+    await undecorate(denops, bufnr, 0, 1);
+    assertEquals(await listDecorations(denops, bufnr), [
       {
         line: 2,
         column: 2,
