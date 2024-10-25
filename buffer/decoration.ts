@@ -133,6 +133,20 @@ export function undecorate(
   }
 }
 
+export function listDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  switch (denops.meta.host) {
+    case "vim":
+      return vimListDecorations(denops, bufnr);
+    case "nvim":
+      return nvimListDecorations(denops, bufnr);
+    default:
+      unreachable(denops.meta.host);
+  }
+}
+
 function uniq<T>(array: readonly T[]): T[] {
   return [...new Set(array)];
 }
@@ -192,6 +206,33 @@ async function vimUndecorate(
   });
 }
 
+async function vimListDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  const props = await vimFn.prop_list(denops, 1, {
+    bufnr,
+    end_lnum: -1,
+  }) as {
+    col: number;
+    end: number;
+    id: number;
+    length: number;
+    lnum: number;
+    start: number;
+    type: string;
+    type_bufnr: number;
+  }[];
+  return props
+    .filter((prop) => prop.type.startsWith(`${prefix}:`))
+    .map((prop) => ({
+      line: prop.lnum,
+      column: prop.col,
+      length: prop.length,
+      highlight: prop.type.split(":").pop() as string,
+    }));
+}
+
 async function nvimDecorate(
   denops: Denops,
   bufnr: number,
@@ -223,4 +264,39 @@ async function nvimUndecorate(
 ): Promise<void> {
   const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, start, end);
+}
+
+async function nvimListDecorations(
+  denops: Denops,
+  bufnr: number,
+): Promise<Decoration[]> {
+  const ns = await nvimFn.nvim_create_namespace(denops, prefix);
+  const extmarks = await nvimFn.nvim_buf_get_extmarks(
+    denops,
+    bufnr,
+    ns,
+    0,
+    -1,
+    { details: true },
+  ) as [
+    extmark_id: number,
+    row: number,
+    col: number,
+    {
+      hl_group: string;
+      hl_eol: boolean;
+      end_right_gravity: boolean;
+      priority: number;
+      right_gravity: boolean;
+      end_col: number;
+      ns_id: number;
+      end_row: number;
+    },
+  ][];
+  return extmarks.map((extmark) => ({
+    line: extmark[1] + 1,
+    column: extmark[2] + 1,
+    length: extmark[3].end_col - extmark[2],
+    highlight: extmark[3].hl_group,
+  }));
 }

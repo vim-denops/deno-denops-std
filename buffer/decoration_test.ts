@@ -4,7 +4,7 @@ import * as fn from "../function/mod.ts";
 import * as vimFn from "../function/vim/mod.ts";
 import * as nvimFn from "../function/nvim/mod.ts";
 import * as buffer from "./buffer.ts";
-import { decorate } from "./decoration.ts";
+import { decorate, listDecorations } from "./decoration.ts";
 
 test({
   mode: "vim",
@@ -105,5 +105,47 @@ test({
         [2, 1, 1],
       ],
     );
+  },
+});
+
+test({
+  mode: "all",
+  name: "listDecorations list decorations defined in the buffer",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await buffer.replace(denops, bufnr, [
+      "Hello",
+      "Darkness",
+      "My",
+      "Old friend",
+    ]);
+    await decorate(denops, bufnr, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+      },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
+    assertEquals(await listDecorations(denops, bufnr), [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+      },
+      {
+        line: 2,
+        column: 2,
+        length: 3,
+        highlight: "Search",
+      },
+    ]);
   },
 });
