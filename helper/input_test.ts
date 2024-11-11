@@ -158,6 +158,36 @@ test({
       },
     });
     await t.step({
+      name: "returns `null` when <Esc> is pressed outside EOL",
+      fn: async () => {
+        await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+          helper.remove("*");
+          helper.define(
+            "CmdlineEnter",
+            "*",
+            `call feedkeys("Hello world!\\<Left>\\<Esc>", "it")`,
+          );
+        });
+        const result = await input(denops);
+        assertEquals(result, null);
+      },
+    });
+    await t.step({
+      name: "returns `null` when <C-c> is pressed outside EOL",
+      fn: async () => {
+        await autocmd.group(denops, "denops_std_helper_input", (helper) => {
+          helper.remove("*");
+          helper.define(
+            "CmdlineEnter",
+            "*",
+            `call feedkeys("Hello world!\\<Left>\\<C-c>", "it")`,
+          );
+        });
+        const result = await input(denops);
+        assertEquals(result, null);
+      },
+    });
+    await t.step({
       name: "should have global mapping restored",
       fn: async () => {
         await denops.cmd("cnoremap <Esc> foo");
