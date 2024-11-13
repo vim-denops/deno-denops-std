@@ -82,8 +82,9 @@ function toNvimWinSetConfig(
     anchor: options.anchor,
     width: options.width,
     height: options.height,
-    col: options.col,
-    row: options.row,
+    // Neovim col/row is 0-based
+    col: options.col !== undefined ? options.col - 1 : undefined,
+    row: options.row !== undefined ? options.row - 1 : undefined,
     focusable: false, // To keep consistent with the behavior of Vim's `popup_create()`
     zindex: options.zindex,
     border: options.border ? toNvimBorder(options.border) : undefined,
