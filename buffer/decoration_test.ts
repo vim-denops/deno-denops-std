@@ -54,7 +54,7 @@ test({
       length: 5,
       lnum: 1,
       start: 1,
-      type: "denops_std:buffer:decoration:decorate:Title",
+      type: "denops_std:buffer:decoration:decorate:denops-test:Title",
       type_bufnr: 0,
     }, {
       col: 2,
@@ -62,7 +62,7 @@ test({
       length: 3,
       lnum: 2,
       start: 1,
-      type: "denops_std:buffer:decoration:decorate:Search",
+      type: "denops_std:buffer:decoration:decorate:denops-test:Search",
       type_bufnr: 0,
     }]);
 
@@ -111,7 +111,7 @@ test({
     ]);
     const ns = await nvimFn.nvim_create_namespace(
       denops,
-      "denops_std:buffer:decoration:decorate",
+      "denops_std:buffer:decoration:decorate:denops-test",
     );
     assertEquals(
       await nvimFn.nvim_buf_get_extmarks(denops, bufnr, ns, 0, -1, {}),
