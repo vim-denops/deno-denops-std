@@ -176,7 +176,7 @@ async function ensurePrerequisites(denops: Denops): Promise<string> {
 export async function open(
   denops: Denops,
   bufname: string,
-  options: OpenOptions = {},
+  options: Readonly<OpenOptions> = {},
 ): Promise<OpenResult> {
   const suffix = await ensurePrerequisites(denops);
   const bang = options.bang ?? false;
@@ -259,7 +259,7 @@ export async function decode(
   denops: Denops,
   bufnr: number,
   data: Uint8Array,
-  options: DecodeOptions = {},
+  options: Readonly<DecodeOptions> = {},
 ): Promise<DecodeResult> {
   const [fileformat, fileformatsStr, fileencodingsStr] = await batch.collect(
     denops,
@@ -321,8 +321,8 @@ export interface DecodeResult {
 export async function append(
   denops: Denops,
   bufnr: number,
-  repl: string[],
-  options: AppendOptions = {},
+  repl: readonly string[],
+  options: Readonly<AppendOptions> = {},
 ): Promise<void> {
   const suffix = await ensurePrerequisites(denops);
   const lnum = options.lnum ??
@@ -361,8 +361,8 @@ export interface AppendOptions {
 export async function replace(
   denops: Denops,
   bufnr: number,
-  repl: string[],
-  options: ReplaceOptions = {},
+  repl: readonly string[],
+  options: Readonly<ReplaceOptions> = {},
 ): Promise<void> {
   const suffix = await ensurePrerequisites(denops);
   await denops.call(
