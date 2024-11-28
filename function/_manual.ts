@@ -5,3 +5,4 @@ export * from "./getreginfo.ts";
 export * from "./input.ts";
 export * from "./types.ts";
 export * from "./various.ts";
+export * from "./window.ts";
