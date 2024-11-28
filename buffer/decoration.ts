@@ -7,7 +7,14 @@ import * as nvimFn from "../function/nvim/mod.ts";
 
 const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
-const prefix = "denops_std:buffer:decoration:decorate";
+const PREFIX = "denops_std:buffer:decoration:decorate";
+
+export type DecorateOptions = {
+  /**
+   * Decoration namespace
+   */
+  namespace?: string;
+};
 
 export interface Decoration {
   /**
@@ -64,12 +71,13 @@ export function decorate(
   denops: Denops,
   bufnr: number,
   decorations: readonly Decoration[],
+  options: Readonly<DecorateOptions> = {},
 ): Promise<void> {
   switch (denops.meta.host) {
     case "vim":
-      return vimDecorate(denops, bufnr, decorations);
+      return vimDecorate(denops, bufnr, decorations, options);
     case "nvim":
-      return nvimDecorate(denops, bufnr, decorations);
+      return nvimDecorate(denops, bufnr, decorations, options);
     default:
       unreachable(denops.meta.host);
   }
@@ -122,12 +130,13 @@ export function undecorate(
   bufnr: number,
   start = 0,
   end = -1,
+  options: Readonly<DecorateOptions> = {},
 ): Promise<void> {
   switch (denops.meta.host) {
     case "vim":
-      return vimUndecorate(denops, bufnr, start, end);
+      return vimUndecorate(denops, bufnr, start, end, options);
     case "nvim":
-      return nvimUndecorate(denops, bufnr, start, end);
+      return nvimUndecorate(denops, bufnr, start, end, options);
     default:
       unreachable(denops.meta.host);
   }
@@ -136,12 +145,13 @@ export function undecorate(
 export function listDecorations(
   denops: Denops,
   bufnr: number,
+  options: Readonly<DecorateOptions> = {},
 ): Promise<Decoration[]> {
   switch (denops.meta.host) {
     case "vim":
-      return vimListDecorations(denops, bufnr);
+      return vimListDecorations(denops, bufnr, options);
     case "nvim":
-      return nvimListDecorations(denops, bufnr);
+      return nvimListDecorations(denops, bufnr, options);
     default:
       unreachable(denops.meta.host);
   }
@@ -155,7 +165,9 @@ async function vimDecorate(
   denops: Denops,
   bufnr: number,
   decorations: readonly Decoration[],
+  options: Readonly<DecorateOptions> = {},
 ): Promise<void> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const toPropType = (n: string) => `${prefix}:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
   denops.context[cacheKey] = rs;
@@ -190,7 +202,9 @@ async function vimUndecorate(
   bufnr: number,
   start: number,
   end: number,
+  options: Readonly<DecorateOptions>,
 ): Promise<void> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const propList = await vimFn.prop_list(denops, start + 1, {
     bufnr,
     end_lnum: end,
@@ -210,7 +224,9 @@ async function vimUndecorate(
 async function vimListDecorations(
   denops: Denops,
   bufnr: number,
+  options: Readonly<DecorateOptions>,
 ): Promise<Decoration[]> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const props = await vimFn.prop_list(denops, 1, {
     bufnr,
     end_lnum: -1,
@@ -238,7 +254,9 @@ async function nvimDecorate(
   denops: Denops,
   bufnr: number,
   decorations: readonly Decoration[],
+  options: Readonly<DecorateOptions>,
 ): Promise<void> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   for (const chunk of itertools.chunked(decorations, 1000)) {
     await batch(denops, async (denops) => {
@@ -262,7 +280,9 @@ async function nvimUndecorate(
   bufnr: number,
   start: number,
   end: number,
+  options: Readonly<DecorateOptions>,
 ): Promise<void> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   await nvimFn.nvim_buf_clear_namespace(denops, bufnr, ns, start, end);
 }
@@ -270,7 +290,9 @@ async function nvimUndecorate(
 async function nvimListDecorations(
   denops: Denops,
   bufnr: number,
+  options: Readonly<DecorateOptions>,
 ): Promise<Decoration[]> {
+  const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
   const ns = await nvimFn.nvim_create_namespace(denops, prefix);
   const extmarks = await nvimFn.nvim_buf_get_extmarks(
     denops,
