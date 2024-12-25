@@ -20,6 +20,7 @@
     "./helper/echo": "./helper/echo.ts",
     "./helper/execute": "./helper/execute.ts",
     "./helper/expr_string": "./helper/expr_string.ts",
+    "./helper/getbufinfo": "./helper/getbufinfo.ts",
     "./helper/input": "./helper/input.ts",
     "./helper/keymap": "./helper/keymap.ts",
     "./helper/load": "./helper/load.ts",
