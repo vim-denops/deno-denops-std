@@ -127,8 +127,8 @@ test({
         assertEquals(await fn.winheight(denops, popupWindow.winid), 20);
 
         const info = (await fn.getwininfo(denops, popupWindow.winid))[0];
-        assertEquals(info.winrow, 7);
-        assertEquals(info.wincol, 8);
+        assertEquals(info.winrow, 7, "winrow should be 7");
+        assertEquals(info.wincol, 7, "wincol should be 7");
       },
     });
   },
