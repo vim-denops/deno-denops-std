@@ -105,5 +105,29 @@ test({
         },
       });
     }
+
+    t.step({
+      name: `open() with relative cursor`,
+      fn: async () => {
+        await denops.cmd("normal! 10G10");
+        await using popupWindow = await popup.open(denops, {
+          relative: "cursor",
+          width: 20,
+          height: 20,
+          row: 3,
+          col: 3,
+        });
+        console.log(popupWindow.winid);
+        assertEquals(await fn.win_gettype(denops, popupWindow.winid), "popup");
+        assertEquals(await fn.winwidth(denops, popupWindow.winid), 20);
+        assertEquals(await fn.winheight(denops, popupWindow.winid), 20);
+
+        const info = (await fn.getwininfo(denops, popupWindow.winid))[0];
+        assertEquals(info.winrow, 13);
+        assertEquals(info.wincol, 13);
+
+        await denops.cmd("normal! 0G0");
+      },
+    })
   },
 });
