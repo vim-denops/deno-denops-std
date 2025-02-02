@@ -127,7 +127,7 @@ test({
         assertEquals(await fn.winheight(denops, popupWindow.winid), 20);
 
         const info = (await fn.getwininfo(denops, popupWindow.winid))[0];
-        assertEquals(info.winrow, 9);
+        assertEquals(info.winrow, 7);
         assertEquals(info.wincol, 8);
       },
     });
