@@ -55,8 +55,12 @@ function toPopupSetOptionsOptions(
   options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
 ): vimFn.PopupSetOptionsOptions {
   const v: vimFn.PopupCreateOptions = {
-    line: options.row ? handleRelative(options.relative ?? "editor", options.row) : undefined,
-    col: options.col ? handleRelative(options.relative ?? "editor", options.col) : undefined,
+    line: options.row
+      ? handleRelative(options.relative ?? "editor", options.row)
+      : undefined,
+    col: options.col
+      ? handleRelative(options.relative ?? "editor", options.col)
+      : undefined,
     pos: options.anchor ? posFromAnchor(options.anchor) : undefined,
     fixed: true, // To keep consistent with the behavior of Neovim's floating window
     flip: false, // To keep consistent with the behavior of Neovim's floating window
