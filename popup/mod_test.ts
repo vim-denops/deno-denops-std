@@ -109,7 +109,12 @@ test({
     await t.step({
       name: `open() with relative cursor`,
       fn: async () => {
-        await denops.cmd("normal! 10G10");
+        for (let i = 0; i < 10; i++) {
+          await fn.append(denops, 0, [
+            "0123456789",
+          ]);
+        }
+        await denops.cmd("normal! G$");
         await using popupWindow = await popup.open(denops, {
           relative: "cursor",
           width: 20,
