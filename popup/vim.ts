@@ -37,12 +37,26 @@ function toPopupCreateOptions(
   };
 }
 
+function handleRelative(
+  relative: "editor" | "cursor",
+  offset?: number,
+): string | number | undefined {
+  if (offset == undefined) {
+    return undefined;
+  }
+  if (relative == "editor") {
+    return offset;
+  } else {
+    return offset < 0 ? `cursor${offset}` : `cursor+${offset}`;
+  }
+}
+
 function toPopupSetOptionsOptions(
   options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
 ): vimFn.PopupSetOptionsOptions {
   const v: vimFn.PopupCreateOptions = {
-    line: options.row,
-    col: options.col,
+    line: handleRelative(options.relative ?? "editor", options.row),
+    col: handleRelative(options.relative ?? "editor", options.col),
     pos: options.anchor ? posFromAnchor(options.anchor) : undefined,
     fixed: true, // To keep consistent with the behavior of Neovim's floating window
     flip: false, // To keep consistent with the behavior of Neovim's floating window
