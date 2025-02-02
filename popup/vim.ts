@@ -39,15 +39,15 @@ function toPopupCreateOptions(
 
 function handleRelative(
   relative: "editor" | "cursor",
-  offset?: number,
-): string | number | undefined {
-  if (offset == undefined) {
-    return undefined;
-  }
-  if (relative == "editor") {
-    return offset;
-  } else {
-    return offset < 0 ? `cursor${offset}` : `cursor+${offset}`;
+  offset: number,
+): string | number {
+  switch (relative) {
+    case "editor":
+      return offset;
+    case "cursor":
+      return offset < 0 ? `cursor${offset}` : `cursor+${offset}`;
+    default:
+      unreachable(relative);
   }
 }
 
@@ -55,8 +55,8 @@ function toPopupSetOptionsOptions(
   options: Partial<Omit<OpenOptions, "bufnr" | "noRedraw">>,
 ): vimFn.PopupSetOptionsOptions {
   const v: vimFn.PopupCreateOptions = {
-    line: handleRelative(options.relative ?? "editor", options.row),
-    col: handleRelative(options.relative ?? "editor", options.col),
+    line: options.row ? handleRelative(options.relative ?? "editor", options.row) : undefined,
+    col: options.col ? handleRelative(options.relative ?? "editor", options.col) : undefined,
     pos: options.anchor ? posFromAnchor(options.anchor) : undefined,
     fixed: true, // To keep consistent with the behavior of Neovim's floating window
     flip: false, // To keep consistent with the behavior of Neovim's floating window
