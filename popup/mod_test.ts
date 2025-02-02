@@ -129,6 +129,7 @@ test({
           height: 20,
           row: 3,
           col: 3,
+          anchor: "NW",
         });
 
         assertEquals(await fn.win_gettype(denops, popupWindow.winid), "popup");
