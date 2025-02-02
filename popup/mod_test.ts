@@ -122,7 +122,7 @@ test({
           row: 3,
           col: 3,
         });
-        console.log(popupWindow.winid);
+
         assertEquals(await fn.win_gettype(denops, popupWindow.winid), "popup");
         assertEquals(await fn.winwidth(denops, popupWindow.winid), 20);
         assertEquals(await fn.winheight(denops, popupWindow.winid), 20);
