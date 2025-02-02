@@ -128,6 +128,6 @@ test({
 
         await denops.cmd("normal! 0G0");
       },
-    })
+    });
   },
 });
