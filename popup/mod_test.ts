@@ -106,7 +106,7 @@ test({
       });
     }
 
-    t.step({
+    await t.step({
       name: `open() with relative cursor`,
       fn: async () => {
         await denops.cmd("normal! 10G10");
