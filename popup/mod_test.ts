@@ -110,11 +110,10 @@ test({
       name: `open() with relative cursor`,
       fn: async () => {
         for (let i = 0; i < 10; i++) {
-          await fn.append(denops, 0, [
-            "0123456789",
-          ]);
+          await fn.append(denops, 0, "0123456789");
         }
-        await denops.cmd("normal! G$");
+        await fn.cursor(denops, [5, 5]);
+
         await using popupWindow = await popup.open(denops, {
           relative: "cursor",
           width: 20,
@@ -128,10 +127,8 @@ test({
         assertEquals(await fn.winheight(denops, popupWindow.winid), 20);
 
         const info = (await fn.getwininfo(denops, popupWindow.winid))[0];
-        assertEquals(info.winrow, 13);
-        assertEquals(info.wincol, 13);
-
-        await denops.cmd("normal! 0G0");
+        assertEquals(info.winrow, 9);
+        assertEquals(info.wincol, 8);
       },
     });
   },
