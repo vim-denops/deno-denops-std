@@ -120,11 +120,8 @@ export function register(
   const id = `lambda:${denops.name}:${uuid}`;
   if (options.once) {
     denops.dispatcher[id] = async (...args: unknown[]) => {
-      try {
-        return await fn(...args);
-      } finally {
-        unregister(denops, id);
-      }
+      unregister(denops, id);
+      return await fn(...args);
     };
   } else {
     denops.dispatcher[id] = async (...args: unknown[]) => {
