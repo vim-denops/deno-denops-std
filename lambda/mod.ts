@@ -143,7 +143,7 @@ export function unregister(
   denops: Denops,
   id: Identifier,
 ): boolean {
-  if (id in denops.dispatcher) {
+  if (isRegisteredFnId(id) && id in denops.dispatcher) {
     delete denops.dispatcher[id];
     return true;
   }
@@ -293,3 +293,7 @@ const isFnWrapperArgs = isTupleOf([
   isLiteralOneOf(["notify", "request"] as const),
   isArray,
 ]) satisfies Predicate<FnWrapperArgs>;
+
+function isRegisteredFnId(id: unknown): id is Identifier {
+  return typeof id === "string" && id.startsWith("lambda:");
+}
