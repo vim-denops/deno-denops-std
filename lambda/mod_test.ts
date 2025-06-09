@@ -6,6 +6,7 @@ import {
   returnsNext,
   spy,
 } from "@std/testing/mock";
+import { flushPromises } from "@core/asyncutil";
 import { assert, is } from "@core/unknownutil";
 import { test } from "@denops/test";
 import { expr, rawString } from "../eval/mod.ts";
@@ -72,16 +73,23 @@ test({
       });
       await t.step("if 'once' option is specified", async (t) => {
         await t.step("registers an oneshot lambda function", async (t) => {
-          const fn = spy(returnsNext(["foo"]));
+          const waiter = Promise.withResolvers<void>();
+          const fn = spy(resolvesNext([waiter.promise.then(() => "foo")]));
           const id = lambda.register(denops, fn, { once: true });
           assertSpyCalls(fn, 0);
-          assertEquals(await denops.dispatch(denops.name, id), "foo");
+
+          // Call the lambda function twice before the first call resolves
+          const firstCall = denops.dispatch(denops.name, id);
+          const secondCall = denops.dispatch(denops.name, id);
+          secondCall.catch(NOOP);
+          await flushPromises();
+          waiter.resolve();
+
+          assertEquals(await firstCall, "foo");
           assertSpyCalls(fn, 1);
 
           await t.step("which will be removed if called once", async () => {
-            const error = await assertRejects(
-              () => denops.dispatch(denops.name, id),
-            );
+            const error = await assertRejects(() => secondCall);
             assertStringIncludes(
               error as string,
               "denops.dispatcher[name] is not a function",
