@@ -262,6 +262,7 @@ export function add(denops: Denops, fn: Fn): Lambda {
   };
   const id = register(denops, fnWrapper);
   const { name } = denops;
+  const dispose = (): void => void unregister(denops, id);
   return {
     id,
     notify: (...args: unknown[]) => {
@@ -272,8 +273,8 @@ export function add(denops: Denops, fn: Fn): Lambda {
       const fnArgs: FnWrapperArgs = [VIM_REQUEST_FLAG, "request", args];
       return expr`eval(denops#request(${name}, ${id}, ${fnArgs}))`;
     },
-    dispose: () => unregister(denops, id),
-    [Symbol.dispose]: () => void unregister(denops, id),
+    dispose,
+    [Symbol.dispose]: dispose,
   };
 }
 
