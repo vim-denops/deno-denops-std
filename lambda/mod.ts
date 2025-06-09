@@ -1,15 +1,15 @@
 /**
- * A module to provide lambda function that is callable from the outside of the plugin.
+ * A module to provide lambda functions that is callable from outside of the plugin.
  *
- * Use `denops#callback#register()` and `denops#callback#call()` functions instead if you'd like
- * to create a lambda function of Vim script that is callable from Deno.
+ * If you want to create a Vim script lambda functions callable from Deno,
+ * use `denops#callback#register()` and `denops#callback#call()` instead.
  *
  * ```typescript
  * import type { Entrypoint } from "jsr:@denops/std";
  * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
- *   // Add lambda function
+ *   // Add a lambda function
  *   const lo = lambda.add(
  *     denops,
  *     () => {
@@ -17,10 +17,10 @@
  *     },
  *   );
  *
- *   // Use id to dispatch added function from Deno
+ *   // Dispatch the function from Deno using its id
  *   await denops.dispatch(denops.name, lo.id);
  *
- *   // Or from Vim
+ *   // Or call it from Vim
  *   await denops.cmd(`call ${lo.notify()}`);
  *
  *   // Dispose the lambda object
@@ -41,32 +41,32 @@ import { stringify } from "../eval/stringify.ts";
 import { expr, type Expression } from "../eval/expression.ts";
 
 /**
- * Lambda function identifier
+ * A unique identifier for a registered lambda function.
  */
 export type Identifier = string;
 
 /**
- * Lambda function
+ * The type signature for a lambda function.
  */
 export type Fn = (...args: unknown[]) => unknown;
 
 /**
- * Register options
+ * Options for registering a lambda function.
  */
 export interface Options {
-  /** Register the function as a one-time lambda function that will be removed when the function has called */
+  /** If true, the lambda function will be unregistered when it is called once */
   once?: boolean;
 }
 
 /**
- * Register a lambda function as a denops API and return the identifier.
+ * Registers a lambda function as a denops API and returns its identifier
  *
  * ```typescript
  * import type { Entrypoint } from "jsr:@denops/std";
  * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
- *   // Add lambda function
+ *   // Add a lambda function
  *   const id = lambda.register(
  *     denops,
  *     () => {
@@ -74,10 +74,10 @@ export interface Options {
  *     },
  *   );
  *
- *   // Use id to dispatch added function from Deno
+ *   // Dispatch the function from Deno using its id
  *   await denops.dispatch(denops.name, id);
  *
- *   // Or from Vim
+ *   // Or call it from Vim
  *   await denops.cmd("call denops#notify(name, id, [])", {
  *     name: denops.name,
  *     id,
@@ -85,14 +85,14 @@ export interface Options {
  * }
  * ```
  *
- * If you need an one-time lambda function, use `once` option like
+ * To register a lambda function that is executed only once, use the {@linkcode Options.once|once} option:
  *
  * ```typescript
  * import type { Entrypoint } from "jsr:@denops/std";
  * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
- *   // Add lambda function
+ *   // Add a lambda function
  *   const id = lambda.register(
  *     denops,
  *     () => {
@@ -103,7 +103,7 @@ export interface Options {
  *     },
  *   );
  *
- *   // Use id to dispatch added function from Deno
+ *   // Dispatch the function from Deno using its id
  *   await denops.dispatch(denops.name, id);
  *
  *   // Second call would throw error
@@ -132,9 +132,9 @@ export function register(
 }
 
 /**
- * Unregister a lambda function from a denops API identified by the identifier
+ * Unregisters a lambda function registered via {@linkcode register} function using its identifier
  *
- * It returns `true` if the lambda function is unregistered. Otherwise it returns `false`.
+ * Returns `true` if successfully unregistered, otherwise `false`.
  */
 export function unregister(
   denops: Denops,
@@ -147,11 +147,19 @@ export function unregister(
   return false;
 }
 
+/**
+ * An object representing a registered lambda function in the denops API
+ *
+ * Instances of this interface are returned by {@linkcode add} function.
+ */
 export interface Lambda extends Disposable {
+  /**
+   * The identifier of the registered lambda function
+   */
   readonly id: Identifier;
 
   /**
-   * Create a Vim script expression to notify the lambda function
+   * Generates a Vim script expression to notify the lambda function
    *
    * ```typescript
    * import type { Entrypoint } from "jsr:@denops/std";
@@ -168,7 +176,7 @@ export interface Lambda extends Disposable {
   notify(...args: unknown[]): Expression;
 
   /**
-   * Create a Vim script expression to request the lambda function
+   * Generates a Vim script expression to request the lambda function
    *
    * ```typescript
    * import type { Entrypoint } from "jsr:@denops/std";
@@ -185,7 +193,7 @@ export interface Lambda extends Disposable {
   request(...args: unknown[]): Expression;
 
   /**
-   * Dispose the lambda function
+   * Disposes the lambda function
    *
    * ```typescript
    * import type { Entrypoint } from "jsr:@denops/std";
@@ -195,8 +203,8 @@ export interface Lambda extends Disposable {
    *   const a = lambda.add(denops, () => {
    *     // Do what ever you want.
    *   });
-   *  // Dispose the lambda function manually
-   *  a.dispose();
+   *   // Dispose the lambda function manually
+   *   a.dispose();
    * }
    * ```
    */
@@ -204,14 +212,19 @@ export interface Lambda extends Disposable {
 }
 
 /**
- * Add a lambda function to a denops API and return the lambda object
+ * Adds a lambda function as a denops API and returns a {@linkcode Lambda} object
+ *
+ * The returned {@linkcode Lambda} object provides methods to generate Vim script expressions for
+ * invoking the registered lambda function, either as a {@linkcode Lambda.notify|notify} or as
+ * a {@linkcode Lambda.request|request}. It also provides a method to {@linkcode Lambda.dispose|dispose}
+ * the lambda function.
  *
  * ```typescript
  * import type { Entrypoint } from "jsr:@denops/std";
  * import * as lambda from "jsr:@denops/std/lambda";
  *
  * export const main: Entrypoint = async (denops) => {
- *   // Add lambda function
+ *   // Add a lambda function
  *   const lo = lambda.add(
  *     denops,
  *     () => {
@@ -227,9 +240,12 @@ export interface Lambda extends Disposable {
  * }
  * ```
  *
- * You can pass JSON serializable values, {@linkcode Expression} or
- * {@linkcode [eval].RawString|RawString} for {@linkcode [lambda].notify|notify}
- * or {@linkcode [lambda].request|request} arguments.
+ * The {@linkcode Lambda.notify|notify} and {@linkcode Lambda.request|request} methods accept JSON
+ * serializable values, {@linkcode [eval].Expression|Expression} or {@linkcode [eval].RawString|RawString}
+ * as arguments. The registered lambda function will be invoked with the arguments.
+ *
+ * The lambda function itself can return any of the serializable values as described above.
+ * The return value will be sent back to Vim when using {@linkcode Lambda.request|request}.
  *
  * ```typescript
  * import type { Denops } from "jsr:@denops/std";
