@@ -158,7 +158,7 @@ test({
         await t.step("does not unregister lambda functions", async () => {
           const fn = spy(returnsNext(["foo"]));
           const id = lambda.register(denops, fn);
-          lambda.unregister(denops, "not-registered-id");
+          lambda.unregister(denops, "lambda:not-registered-id");
 
           assertSpyCalls(fn, 0);
           assertEquals(
@@ -169,7 +169,35 @@ test({
           assertSpyCalls(fn, 1);
         });
         await t.step("returns `false`", () => {
-          assertEquals(lambda.unregister(denops, "not-registered-id"), false);
+          assertEquals(
+            lambda.unregister(denops, "lambda:not-registered-id"),
+            false,
+          );
+        });
+      });
+      await t.step("if 'id' is not a lambda identifier", async (t) => {
+        await t.step("does not unregister method", async () => {
+          const fn = spy(returnsNext(["foo"]));
+          const notLambdaId = "not-lambda-id";
+          denops.dispatcher = {
+            [notLambdaId]: fn,
+          };
+          lambda.unregister(denops, notLambdaId);
+
+          assertSpyCalls(fn, 0);
+          assertEquals(
+            await denops.dispatch(denops.name, notLambdaId),
+            "foo",
+            "The method is available",
+          );
+          assertSpyCalls(fn, 1);
+        });
+        await t.step("returns `false`", () => {
+          const notLambdaId = "not-lambda-id";
+          denops.dispatcher = {
+            [notLambdaId]: () => "foo",
+          };
+          assertEquals(lambda.unregister(denops, notLambdaId), false);
         });
       });
     });
