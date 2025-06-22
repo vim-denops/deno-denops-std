@@ -176,6 +176,49 @@ export async function open(
 }
 
 /**
+ * Close a popup window by its window ID.
+ *
+ * This function closes a popup window in both Vim and Neovim using the
+ * appropriate platform-specific method. After closing, it automatically
+ * triggers a redraw to ensure the UI is updated.
+ *
+ * @param denops - The Denops instance
+ * @param winid - The window ID of the popup window to close
+ *
+ * @example
+ * ```typescript
+ * import type { Entrypoint } from "jsr:@denops/std";
+ * import * as popup from "jsr:@denops/std/popup";
+ *
+ * export const main: Entrypoint = async (denops) => {
+ *   // Open a popup window
+ *   const popupWindow = await popup.open(denops, {
+ *     relative: "editor",
+ *     width: 20,
+ *     height: 20,
+ *     row: 1,
+ *     col: 1,
+ *   });
+ *
+ *   // Do something with the popup window...
+ *
+ *   // Close the popup window using the standalone close function
+ *   await popup.close(denops, popupWindow.winid);
+ * }
+ * ```
+ *
+ * Note that this function does NOT work in `batch.collect()`.
+ */
+export async function close(
+  denops: Denops,
+  winid: number,
+): Promise<void> {
+  const close = denops.meta.host === "vim" ? closePopupVim : closePopupNvim;
+  await close(denops, winid);
+  await denops.redraw();
+}
+
+/**
  * Config a popup window in Vim/Neovim compatible way.
  *
  * ```typescript
