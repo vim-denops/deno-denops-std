@@ -105,5 +105,28 @@ test({
         },
       });
     }
+
+    await t.step({
+      name: `close() closes a popup window by window ID`,
+      fn: async () => {
+        const popupWindow = await popup.open(denops, {
+          relative: "editor",
+          width: 30,
+          height: 30,
+          row: 10,
+          col: 10,
+        });
+        const { winid } = popupWindow;
+
+        // Verify popup is open
+        assertEquals(await fn.win_gettype(denops, winid), "popup");
+
+        // Close using standalone close() function
+        await popup.close(denops, winid);
+
+        // Verify popup is closed
+        assertEquals(await fn.win_gettype(denops, winid), "unknown");
+      },
+    });
   },
 });
