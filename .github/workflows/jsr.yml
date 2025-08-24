@@ -1,7 +1,7 @@
 name: jsr
 
 env:
-  DENO_VERSION: 1.x
+  DENO_VERSION: 2.x
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
         with:
           deno-version: ${{ env.DENO_VERSION }}
       - name: Publish
