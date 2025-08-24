@@ -58,6 +58,8 @@ import type { Denops } from "../mod.ts";
  * Can also be used as a `method`:
  *
  *     DoFull()->mode()
+ *
+ * Return type: `String`
  */
 export function mode(denops: Denops, expr?: number | string): Promise<string> {
   return denops.call("mode", expr) as Promise<string>;

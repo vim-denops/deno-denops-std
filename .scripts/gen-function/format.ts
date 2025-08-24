@@ -18,6 +18,7 @@ const translate: Record<string, string> = {
   "lnum-end": "lnum_end",
   "instanceof": "instanceof_",
   "class": "class_",
+  "package": "package_",
 };
 
 export function formatDocs(docs: string): string[] {

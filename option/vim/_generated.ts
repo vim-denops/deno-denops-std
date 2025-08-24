@@ -46,6 +46,29 @@ export const altkeymap: GlobalOption<boolean> = new BooleanOption("altkeymap");
 export const antialias: GlobalOption<boolean> = new BooleanOption("antialias");
 
 /**
+ * When on, Vim shows a completion menu as you type, similar to using
+ * `i_CTRL-N`, but triggered automatically.  See `ins-autocompletion`.
+ *
+ * (default off)
+ *
+ * *only available on platforms with timing support*
+ */
+export const autocomplete: GlobalOption<boolean> = new BooleanOption(
+  "autocomplete",
+);
+
+/**
+ * Delay in milliseconds before the autocomplete menu appears after
+ * typing. If you prefer it not to open too quickly, set this value
+ * slightly above your typing speed. See `ins-autocompletion`.
+ *
+ * (default 0)
+ */
+export const autocompletedelay: GlobalOption<number> = new NumberOption(
+  "autocompletedelay",
+);
+
+/**
  * When on, Vim will change the current working directory whenever you
  * change the directory of the shell running in a terminal window. You
  * need proper setting-up, so whenever the shell's pwd changes an OSC 7
@@ -201,6 +224,63 @@ export const balloonexpr: GlobalOrBufferLocalOption<string> = new StringOption(
 export const bioskey: GlobalOption<boolean> = new BooleanOption("bioskey");
 
 /**
+ * Which directory to use for the file browser:
+ *    last         Use same directory as with last file browser, where a
+ *                 file was opened or saved.
+ *    buffer       Use the directory of the related buffer.
+ *    current      Use the current directory.
+ *    **{path}**       Use the specified directory
+ *
+ * (default: "last")
+ *
+ * *only for Motif, GTK, Mac and Win32 GUI*
+ */
+export const browsedir: GlobalOption<string> = new StringOption("browsedir");
+
+/**
+ * Number of quickfix lists that should be remembered for the quickfix
+ * stack.  Must be between 1 and 100.  If the option is set to a value
+ * that is lower than the amount of entries in the quickfix list stack,
+ * entries will be removed starting from the oldest one.  If the current
+ * quickfix list was removed, then the quickfix list at top of the stack
+ * (the most recently created) will be used in its place.  For additional
+ * info, see `quickfix-stack`.
+ *
+ * (default: 10)
+ *
+ * *only available when compiled with the `+quickfix` feature*
+ */
+export const chistory: GlobalOption<number> = new NumberOption("chistory");
+
+/**
+ * Specifies which method of accessing the system clipboard is used,
+ * depending on which method works first or is available.  Supported
+ * methods are:
+ *         wayland         Wayland selections
+ *         x11             X11 selections
+ *
+ * Note: This option is ignored when either the GUI is running or if Vim
+ * is run on a system without Wayland or X11 support, such as Windows or
+ * macOS.  The GUI or system way of accessing the clipboard is always
+ * used instead.
+ *
+ * The option value is a list of comma separated items.  The list is
+ * parsed left to right in order, and the first method that Vim
+ * determines is available or is working is used as the actual method for
+ * accessing the clipboard.
+ *
+ * The current method that is being used can be found in the `v:clipmethod`
+ * variable.
+ *
+ * (default for Unix: "wayland,x11",
+ *  for VMS: "x11",
+ *  otherwise: "")
+ *
+ * *only when the `+xterm_clipboard` or `+wayland_clipboard` features are included*
+ */
+export const clipmethod: GlobalOption<string> = new StringOption("clipmethod");
+
+/**
  * This option has the effect of making Vim either more Vi-compatible, or
  * make Vim behave in a more useful way.
  *
@@ -304,7 +384,7 @@ export const bioskey: GlobalOption<boolean> = new BooleanOption("bioskey");
  * 'smartcase'     + off           no automatic ignore case switch
  * 'smartindent'   + off           no smart indentation
  * 'smarttab'      + off           no smart tab size
- * 'softtabstop'   + 0             tabs are always 'tabstop' positions
+ * 'softtabstop'   + 0             no soft tab stops
  * 'startofline'   + on            goto startofline with some commands
  * 'tagcase'       & "followic"    'ignorecase' when searching tags file
  * 'tagrelative'   & off           tag file names are not relative
@@ -326,6 +406,32 @@ export const bioskey: GlobalOption<boolean> = new BooleanOption("bioskey");
  */
 export const compatible: GlobalOption<boolean> = new BooleanOption(
   "compatible",
+);
+
+/**
+ * A comma-separated list of strings to enable fuzzy collection for
+ * specific `ins-completion` modes, affecting how matches are gathered
+ * during completion.  For specified modes, fuzzy matching is used to
+ * find completion candidates instead of the standard prefix-based
+ * matching.  This option can contain the following values:
+ *
+ * keyword         keywords in the current file    `i_CTRL-X_CTRL-N`
+ *                 keywords with flags ".", "w",   `i_CTRL-N` `i_CTRL-P`
+ *                 "b", "u", "U" and "k**{dict}**" in 'complete'
+ *                 keywords in 'dictionary'        `i_CTRL-X_CTRL-K`
+ *
+ * files           file names                      `i_CTRL-X_CTRL-F`
+ *
+ * whole_line      whole lines                     `i_CTRL-X_CTRL-L`
+ *
+ * When using the 'completeopt' "longest" option value, fuzzy collection
+ * can identify the longest common string among the best fuzzy matches
+ * and insert it automatically.
+ *
+ * (default: empty)
+ */
+export const completefuzzycollect: GlobalOption<string> = new StringOption(
+  "completefuzzycollect",
 );
 
 /**
@@ -373,7 +479,7 @@ export const conskey: GlobalOption<boolean> = new BooleanOption("conskey");
  *                 the pieces of text.
  *
  *    xchacha20    XChaCha20 Cipher with Poly1305 Message Authentication
- *                 Code.  Medium strong till strong encryption.
+ *                 Code.  Medium strong to strong encryption.
  *                 Encryption is provided by the libsodium library, it
  *                 requires Vim to be built with `+sodium`.
  *                 It adds a seed and a message authentication code (MAC)
@@ -507,6 +613,33 @@ export const cscopeverbose: GlobalOption<boolean> = new BooleanOption(
 );
 
 /**
+ * List of **{address}** in each buffer, separated by commas, that are
+ * considered anchors when used for diffing.  It's valid to specify "$+1"
+ * for 1 past the last line.  "%" cannot be used for this option.  There
+ * can be at most 20 anchors set for each buffer.
+ *
+ * Each anchor line splits the buffer (the split happens above the
+ * anchor), with each part being diff'ed separately before the final
+ * result is joined.  When more than one **{address}** are provided, the
+ * anchors will be sorted interally by line number.  If using buffer
+ * local options, each buffer should have the same number of anchors
+ * (extra anchors will be ignored).  This option is only used when
+ * 'diffopt' has "anchor" set.  See `diff-anchors` for more details and
+ * examples.
+ *
+ * If some of the **{address}** do not resolve to a line in each buffer (e.g.
+ * a pattern search that does not match anything), none of the anchors
+ * will be used.
+ *
+ * Diff anchors can only be used when there are no hidden diff buffers.
+ *
+ * (default "")
+ */
+export const diffanchors: GlobalOrBufferLocalOption<string> = new StringOption(
+  "diffanchors",
+);
+
+/**
  * Makes the 'g' and 'c' flags of the ":substitute" command to be
  * toggled each time the flag is given.  See `complex-change`.  See
  * also 'gdefault' option.
@@ -597,6 +730,140 @@ export const guiligatures: GlobalOption<string> = new StringOption(
 );
 
 /**
+ * This option only has an effect in the GUI version of Vim.  It is a
+ * sequence of letters which describes what components and options of the
+ * GUI should be used.
+ * To avoid problems with flags that are added in the future, use the
+ * "+=" and "-=" feature of ":set" `add-option-flags`.
+ *
+ * Valid characters are as follows:
+ *
+ *   '!'   External commands are executed in a terminal window.  Without
+ *         this flag the MS-Windows GUI will open a console window to
+ *         execute the command.  The Unix GUI will simulate a dumb
+ *         terminal to list the command output.
+ *         The terminal window will be positioned at the bottom, and grow
+ *         upwards as needed.
+ *
+ *   'a'   Autoselect:  If present, then whenever VISUAL mode is started,
+ *         or the Visual area extended, Vim tries to become the owner of
+ *         the windowing system's global selection.  This means that the
+ *         Visually highlighted text is available for pasting into other
+ *         applications as well as into Vim itself.  When the Visual mode
+ *         ends, possibly due to an operation on the text, or when an
+ *         application wants to paste the selection, the highlighted text
+ *         is automatically yanked into the "* selection register.
+ *         Thus the selection is still available for pasting into other
+ *         applications after the VISUAL mode has ended.
+ *             If not present, then Vim won't become the owner of the
+ *         windowing system's global selection unless explicitly told to
+ *         by a yank or delete operation for the "* register.
+ *         The same applies to the modeless selection.
+ *
+ *   'P'   Like autoselect but using the "+ register instead of the "*
+ *         register.
+ *
+ *   'A'   Autoselect for the modeless selection.  Like 'a', but only
+ *         applies to the modeless selection.
+ *
+ *             'guioptions'   autoselect Visual  autoselect modeless
+ *                  ""              -                       -
+ *                  "a"            yes                     yes
+ *                  "A"             -                      yes
+ *                  "aA"           yes                     yes
+ *
+ *         When using a terminal see the 'clipboard' option.
+ *
+ *   'c'   Use console dialogs instead of popup dialogs for simple
+ *         choices.
+ *
+ *   'd'   Use dark theme variant if available. Currently only works for
+ *         GTK+ GUI.
+ *
+ *   'e'   Add tab pages when indicated with 'showtabline'.
+ *         'guitablabel' can be used to change the text in the labels.
+ *         When 'e' is missing a non-GUI tab pages line may be used.
+ *         The GUI tabs are only supported on some systems, currently
+ *         GTK, Motif, Mac OS/X, Haiku, and MS-Windows.
+ *
+ *   'f'   Foreground: Don't use fork() to detach the GUI from the shell
+ *         where it was started.  Use this for programs that wait for the
+ *         editor to finish (e.g., an e-mail program).  Alternatively you
+ *         can use "gvim -f" or ":gui -f" to start the GUI in the
+ *         foreground.  `gui-fork`
+ *         Note: Set this option in the vimrc file.  The forking may have
+ *         happened already when the `gvimrc` file is read.
+ *
+ *   'i'   Use a Vim icon.  For GTK with KDE it is used in the left-upper
+ *         corner of the window.  It's black&white on non-GTK, because of
+ *         limitations of X11.  For a color icon, see `X11-icon`.
+ *
+ *   'm'   Menu bar is present.
+ *
+ *   'M'   The system menu "$VIMRUNTIME/menu.vim" is not sourced.  Note
+ *         that this flag must be added in the .vimrc file, before
+ *         switching on syntax or filetype recognition (when the `gvimrc`
+ *         file is sourced the system menu has already been loaded; the
+ *         `:syntax on` and `:filetype on` commands load the menu too).
+ *
+ *   'g'   Grey menu items: Make menu items that are not active grey.  If
+ *         'g' is not included inactive menu items are not shown at all.
+ *
+ *   't'   Include tearoff menu items.  Currently only works for Win32,
+ *         GTK+, and Motif 1.2 GUI.
+ *
+ *   'T'   Include Toolbar.  Currently only in Win32, GTK+, Motif and
+ *         Photon GUIs.
+ *
+ *   'r'   Right-hand scrollbar is always present.
+ *
+ *   'R'   Right-hand scrollbar is present when there is a vertically
+ *         split window.
+ *
+ *   'l'   Left-hand scrollbar is always present.
+ *
+ *   'L'   Left-hand scrollbar is present when there is a vertically
+ *         split window.
+ *
+ *   'b'   Bottom (horizontal) scrollbar is present.  Its size depends on
+ *         the longest visible line, or on the cursor line if the 'h'
+ *         flag is included. `gui-horiz-scroll`
+ *
+ *   'h'   Limit horizontal scrollbar size to the length of the cursor
+ *         line.  Reduces computations. `gui-horiz-scroll`
+ *
+ * And yes, you may even have scrollbars on the left AND the right if
+ * you really want to :-).  See `gui-scrollbars` for more information.
+ *
+ *   'v'   Use a vertical button layout for dialogs.  When not included,
+ *         a horizontal layout is preferred, but when it doesn't fit a
+ *         vertical layout is used anyway.  Not supported in GTK 3.
+ *
+ *   'p'   Use Pointer callbacks for X11 GUI.  This is required for some
+ *         window managers.  If the cursor is not blinking or hollow at
+ *         the right moment, try adding this flag.  This must be done
+ *         before starting the GUI.  Set it in your `gvimrc`.  Adding or
+ *         removing it after the GUI has started has no effect.
+ *
+ *   'F'   Add a footer.  Only for Motif.  See `gui-footer`.
+ *
+ *   'k'   Keep the GUI window size when adding/removing a scrollbar, or
+ *         toolbar, tabline, etc.  Instead, the behavior is similar to
+ *         when the window is maximized and will adjust 'lines' and
+ *         'columns' to fit to the window.  Without the 'k' flag Vim will
+ *         try to keep 'lines' and 'columns' the same when adding and
+ *         removing GUI components.
+ *
+ * (default "egmrLtT"   (MS-Windows,
+ *  "t" is removed in `defaults.vim`),
+ *  "aegimrLtT" (GTK and Motif),
+ *  )
+ *
+ * *only available when compiled with GUI enabled*
+ */
+export const guioptions: GlobalOption<string> = new StringOption("guioptions");
+
+/**
  * Only in the GUI: If on, an attempt is made to open a pseudo-tty for
  * I/O to/from shell commands.  See `gui-pty`.
  *
@@ -605,6 +872,45 @@ export const guiligatures: GlobalOption<string> = new StringOption(
  * *only available when compiled with GUI enabled*
  */
 export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
+
+/**
+ * When non-empty describes the text to use in a label of the GUI tab
+ * pages line.  When empty and when the result is empty Vim will use a
+ * default label.  See `setting-guitablabel` for more info.
+ *
+ * The format of this option is like that of 'statusline'.
+ * 'guitabtooltip' is used for the tooltip, see below.
+ * The expression will be evaluated in the `sandbox` when set from a
+ * modeline, see `sandbox-option`.
+ * This option cannot be set in a modeline when 'modelineexpr' is off.
+ *
+ * Only used when the GUI tab pages line is displayed.  'e' must be
+ * present in 'guioptions'.  For the non-GUI tab pages line 'tabline' is
+ * used.
+ *
+ * (default empty)
+ *
+ * *only available when compiled with GUI enabled*
+ */
+export const guitablabel: GlobalOption<string> = new StringOption(
+  "guitablabel",
+);
+
+/**
+ * When non-empty describes the text to use in a tooltip for the GUI tab
+ * pages line.  When empty Vim will use a default tooltip.
+ * This option is otherwise just like 'guitablabel' above.
+ * You can include a line break.  Simplest method is to use `:let`:
+ *
+ *     :let &guitabtooltip = "line one\nline two"
+ *
+ * (default empty)
+ *
+ * *only available when compiled with GUI enabled*
+ */
+export const guitabtooltip: GlobalOption<string> = new StringOption(
+  "guitabtooltip",
+);
 
 /**
  * This option can be used to set highlighting mode for various
@@ -618,13 +924,13 @@ export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
  * `hl-Directory`   d  directories in CTRL-D listing and other special
  *                     things in listings
  * `hl-ErrorMsg`    e  error messages
- *                  h  (obsolete, ignored)
  * `hl-IncSearch`   i  'incsearch' highlighting
  * `hl-CurSearch`   y  current instance of last search pattern
  * `hl-Search`      l  last search pattern highlighting (see 'hlsearch')
  * `hl-MoreMsg`     m  `more-prompt`
  * `hl-ModeMsg`     M  Mode (e.g., "-- INSERT --")
  * `hl-MsgArea`     g  `Command-line` and message area
+ * `hl-ComplMatchIns` h  matched text of currently inserted completion
  * `hl-LineNr`      n  line number for ":number" and ":#" commands, and
  *                     when 'number' or 'relativenumber' option is set.
  * `hl-LineNrAbove`   a  line number above the cursor for when the
@@ -639,9 +945,9 @@ export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
  * `hl-Title`       t  Titles for output from ":set all", ":autocmd" etc.
  * `hl-VertSplit`   c  column used to separate vertically split windows
  * `hl-Visual`      v  Visual mode
- * `hl-VisualNOS`   V  Visual mode when Vim does is "Not Owning the
- *                     Selection" Only X11 Gui's `gui-x11` and
- *                     `xterm-clipboard`.
+ * `hl-VisualNOS`   V  Visual mode when Vim is "Not Owning the
+ *                     Selection" Only X11 Gui's `gui-x11`,
+ *                     `xterm-clipboard` and `wayland-selections`
  * `hl-WarningMsg`  w  warning messages
  * `hl-WildMenu`    W  wildcard matches displayed for 'wildmenu'
  * `hl-Folded`      f  line used for closed folds
@@ -649,7 +955,8 @@ export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
  * `hl-DiffAdd`     A  added line in diff mode
  * `hl-DiffChange`  C  changed line in diff mode
  * `hl-DiffDelete`  D  deleted line in diff mode
- * `hl-DiffText`    T  inserted text in diff mode
+ * `hl-DiffText`    T  changed text in diff mode
+ * `hl-DiffTextAdd`   E  inserted text in diff mode
  * `hl-SignColumn`  >  column used for `signs`
  * `hl-Conceal`     -  the placeholders used for concealed characters
  *                     (see 'conceallevel')
@@ -665,6 +972,8 @@ export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
  * `hl-PmenuExtraSel` }  popup menu "extra" selected line
  * `hl-PmenuSbar`   x  popup menu scrollbar
  * `hl-PmenuThumb`  X  popup menu scrollbar thumb
+ * `hl-PmenuMatch`  k  popup menu matched text
+ * `hl-PmenuMatchSel` <  popup menu matched text in selected line
  *
  * The display modes are:
  *         r       reverse         (termcap entry "mr" and "me")
@@ -699,16 +1008,17 @@ export const guipty: GlobalOption<boolean> = new BooleanOption("guipty");
  *  v:Visual,V:VisualNOS,w:WarningMsg,
  *  W:WildMenu,f:Folded,F:FoldColumn,
  *  A:DiffAdd,C:DiffChange,D:DiffDelete,
- *  T:DiffText,>:SignColumn,-:Conceal,
- *  B:SpellBad,P:SpellCap,R:SpellRare,
- *  L:SpellLocal,+:Pmenu,=:PmenuSel,
+ *  T:DiffText,E:DiffTextAdd,>:SignColumn,
+ *  -:Conceal,B:SpellBad,P:SpellCap,
+ *  R:SpellRare, L:SpellLocal,+:Pmenu,
+ *  =:PmenuSel, k:PmenuMatch,<:PmenuMatchSel,
  *  [:PmenuKind,]:PmenuKindSel,
  *  {:PmenuExtra,}:PmenuExtraSel,
  *  x:PmenuSbar,X:PmenuThumb,*:TabLine,
  *  #:TabLineSel,_:TabLineFill,!:CursorColumn,
  *  .:CursorLine,o:ColorColumn,q:QuickFixLine,
  *  z:StatusLineTerm,Z:StatusLineTermNC,
- *  g:MsgArea"`)
+ *  g:MsgArea,h:ComplMatchIns"`)
  */
 export const highlight: GlobalOption<string> = new StringOption("highlight");
 
@@ -801,6 +1111,27 @@ export const imactivatekey: GlobalOption<string> = new StringOption(
 );
 
 /**
+ * When set the Input Method is always on when starting to edit a command
+ * line, unless entering a search pattern (see 'imsearch' for that).
+ * Setting this option is useful when your input method allows entering
+ * English characters directly, e.g., when it's used to type accented
+ * characters with dead keys.
+ *
+ * (default off)
+ */
+export const imcmdline: GlobalOption<boolean> = new BooleanOption("imcmdline");
+
+/**
+ * When set the Input Method is never used.  This is useful to disable
+ * the IM when it doesn't work properly.
+ * Currently this option is on by default for SGI/IRIX machines.  This
+ * may change in later releases.
+ *
+ * (default off, on for some systems (SGI))
+ */
+export const imdisable: GlobalOption<boolean> = new BooleanOption("imdisable");
+
+/**
  * This option specifies a function that is called to obtain the status
  * of Input Method.  It must return a positive number when IME is active.
  * The value can be the name of a function, a `lambda` or a `Funcref`.
@@ -844,6 +1175,25 @@ export const imstatusfunc: GlobalOption<string> = new StringOption(
  * *only available when compiled with `+xim` and `+GUI_GTK`*
  */
 export const imstyle: GlobalOption<number> = new NumberOption("imstyle");
+
+/**
+ * Defines characters and patterns for completion in insert mode.  Used
+ * by the `complete_match()` function to determine the starting position
+ * for completion.  This is a comma-separated list of triggers.  Each
+ * trigger can be:
+ * - A single character like "." or "/"
+ * - A sequence of characters like "->", "/*", or "/**"
+ *
+ * Note: Use "\\," to add a literal comma as trigger character, see
+ * `option-backslash`.
+ *
+ * Examples:
+ *
+ *     set isexpand=.,->,/*,\\,
+ *
+ * (default: "")
+ */
+export const isexpand: BufferLocalOption<string> = new StringOption("isexpand");
 
 /**
  * Makes Vim work in a way that Insert mode is the default mode.  Useful
@@ -911,11 +1261,12 @@ export const key: BufferLocalOption<string> = new StringOption("key");
  * protocol name to be used.  To illustrate this, the default value would
  * be set with:
  *
- *     set keyprotocol=kitty:kitty,foot:kitty,wezterm:kitty,xterm:mok2
+ *     set keyprotocol=kitty:kitty,foot:kitty,ghostty:kitty,wezterm:kitty
+ *     set keyprotocol+=xterm:mok2
  *
- * This means that when 'term' contains "kitty, "foot" or "wezterm"
- * somewhere then the "kitty" protocol is used.  When 'term' contains
- * "xterm" somewhere, then the "mok2" protocol is used.
+ * This means that when 'term' contains "kitty, "foot", "ghostty" or
+ * "wezterm" somewhere, then the "kitty" protocol is used.  When 'term'
+ * contains "xterm" somewhere, then the "mok2" protocol is used.
  *
  * The first match is used, thus if you want to have "kitty" use the
  * kitty protocol, but "badkitty" not, then you should match "badkitty"
@@ -970,6 +1321,20 @@ export const langnoremap: GlobalOption<boolean> = new BooleanOption(
 );
 
 /**
+ * Like 'chistory', but for the location list stack associated with a
+ * window.  If the option is changed in either the location list window
+ * itself or the window that is associated with the location list stack,
+ * the new value will also be applied to the other one.  This means this
+ * value will always be the same for a given location list window and its
+ * corresponding window.  See `quickfix-stack` for additional info.
+ *
+ * (default: 10)
+ *
+ * *only available when compiled with the `+quickfix` feature*
+ */
+export const lhistory: WindowLocalOption<number> = new NumberOption("lhistory");
+
+/**
  * Specifies the name of the Lua shared library. The default is
  * DYNAMIC_LUA_DLL, which was specified at compile time.
  * Environment variables are expanded `:set_env`.
@@ -998,6 +1363,7 @@ export const macatsui: GlobalOption<boolean> = new BooleanOption("macatsui");
  * Maximum value is 6.
  * Even when this option is set to 2 you can still edit text with more
  * combining characters, you just can't see them.  Use `g8` or `ga`.
+ * When set to 0, you will not be able to see any combining characters.
  * See `mbyte-combining`.
  *
  * (default 2)
@@ -1036,6 +1402,106 @@ export const maxmem: GlobalOption<number> = new NumberOption("maxmem");
  *  available)
  */
 export const maxmemtot: GlobalOption<number> = new NumberOption("maxmemtot");
+
+/**
+ * Maximum number of matches shown for the search count status `shm-S`
+ * When the number of matches exceeds this value, Vim shows ">" instead
+ * of the exact count to keep searching fast.
+ * Note: larger values may impact performance.
+ * The value must be between 1 and 9999.
+ *
+ * (default 99)
+ */
+export const maxsearchcount: GlobalOption<number> = new NumberOption(
+  "maxsearchcount",
+);
+
+/**
+ * When on, mouse move events are delivered to the input queue and are
+ * available for mapping. The default, off, avoids the mouse movement
+ * overhead except when needed. See `gui-mouse-mapping`.
+ * Warning: Setting this option can make pending mappings to be aborted
+ * when the mouse is moved.
+ * Currently only works in the GUI, may be made to work in a terminal
+ * later.
+ *
+ * (default off)
+ *
+ * *only works in the GUI*
+ */
+export const mousemoveevent: GlobalOption<boolean> = new BooleanOption(
+  "mousemoveevent",
+);
+
+/**
+ * This option tells Vim what the mouse pointer should look like in
+ * different modes.  The option is a comma-separated list of parts, much
+ * like used for 'guicursor'.  Each part consists of a mode/location-list
+ * and an argument-list:
+ *         mode-list:shape,mode-list:shape,..
+ * The mode-list is a dash separated list of these modes/locations:
+ *                 In a normal window:
+ *         n       Normal mode
+ *         v       Visual mode
+ *         ve      Visual mode with 'selection' "exclusive" (same as 'v',
+ *                 if not specified)
+ *         o       Operator-pending mode
+ *         i       Insert mode
+ *         r       Replace mode
+ *
+ *                 Others:
+ *         c       appending to the command-line
+ *         ci      inserting in the command-line
+ *         cr      replacing in the command-line
+ *         m       at the 'Hit ENTER' or 'More' prompts
+ *         ml      idem, but cursor in the last line
+ *         e       any mode, pointer below last window
+ *         s       any mode, pointer on a status line
+ *         sd      any mode, while dragging a status line
+ *         vs      any mode, pointer on a vertical separator line
+ *         vd      any mode, while dragging a vertical separator line
+ *         a       everywhere
+ *
+ * The shape is one of the following:
+ * avail   name            looks like
+ * w x g   arrow           Normal mouse pointer
+ * w x     blank           no pointer at all (use with care!)
+ * w x g   beam            I-beam
+ * w x g   updown          up-down sizing arrows
+ * w x g   leftright       left-right sizing arrows
+ * w x g   busy            The system's usual busy pointer
+ * w x g   no              The system's usual 'no input' pointer
+ *   x g   udsizing        indicates up-down resizing
+ *   x g   lrsizing        indicates left-right resizing
+ *   x g   crosshair       like a big thin +
+ *   x g   hand1           black hand
+ *   x g   hand2           white hand
+ *   x     pencil          what you write with
+ *   x g   question        big ?
+ *   x     rightup-arrow   arrow pointing right-up
+ * w x     up-arrow        arrow pointing up
+ *   x     `<number>`        any X11 pointer number (see X11/cursorfont.h)
+ *
+ * The "avail" column contains a 'w' if the shape is available for Win32,
+ * x for X11 (including GTK+ 2), g for GTK+ 3.
+ * Any modes not specified or shapes not available use the normal mouse
+ * pointer.
+ *
+ * Example:
+ *
+ *     :set mouseshape=s:udsizing,m:no
+ *
+ * will make the mouse turn to a sizing arrow over the status lines and
+ * indicate no input when the hit-enter prompt is displayed (since
+ * clicking the mouse has no effect in this state.)
+ *
+ * (default "i-r:beam,s:updown,sd:udsizing,
+ *  vs:leftright,vd:lrsizing,m:no,
+ *  ml:up-arrow,v:rightup-arrow")
+ *
+ * *only available when compiled with the `+mouseshape` feature*
+ */
+export const mouseshape: GlobalOption<string> = new StringOption("mouseshape");
 
 /**
  * The number of milliseconds between polls for MzScheme threads.
@@ -1080,6 +1546,20 @@ export const mzschemedll: GlobalOption<string> = new StringOption(
  */
 export const mzschemegcdll: GlobalOption<string> = new StringOption(
   "mzschemegcdll",
+);
+
+/**
+ * *only for MS-Windows*
+ *         Enable reading and writing from devices.  This may get Vim stuck on a
+ *         device that can be opened but doesn't actually do the I/O.  Therefore
+ *         it is off by default.
+ *         Note that on MS-Windows editing "aux.h", "lpt1.txt" and the like also
+ *         result in editing a device.
+ *
+ * (default off)
+ */
+export const opendevice: GlobalOption<boolean> = new BooleanOption(
+  "opendevice",
 );
 
 /**
@@ -1299,6 +1779,21 @@ export const printoptions: GlobalOption<string> = new StringOption(
  * (default on)
  */
 export const prompt: GlobalOption<boolean> = new BooleanOption("prompt");
+
+/**
+ * Determines the maximum width to use for the popup menu for completion.
+ * When zero, there is no maximum width limit, otherwise the popup menu
+ * will never be wider than this value.  Truncated text will be indicated
+ * by "trunc" value of 'fillchars' option.
+ *
+ * This option takes precedence over 'pumwidth'.
+ * `ins-completion-menu`.
+ *
+ * (default 0)
+ */
+export const pummaxwidth: GlobalOption<number> = new NumberOption(
+  "pummaxwidth",
+);
 
 /**
  * Specifies the name of the Python 2.x shared library. The default is
@@ -1567,6 +2062,22 @@ export const shortname: BufferLocalOption<boolean> = new BooleanOption(
 );
 
 /**
+ * The value of this option specifies when the `tabpanel` with tab page
+ * labels will be displayed:
+ *         0: never
+ *         1: only if there are at least two tab pages
+ *         2: always
+ * See `tab-page` for more information about tab page labels.
+ *
+ * (default 0)
+ *
+ * *not available when compiled without the `+tabpanel` feature*
+ */
+export const showtabpanel: GlobalOption<number> = new NumberOption(
+  "showtabpanel",
+);
+
+/**
  * When this option is not empty a swap file is synced to disk after
  * writing to it.  This takes some time, especially on busy unix systems.
  * When this option is empty parts of the swap file may be in memory and
@@ -1581,6 +2092,74 @@ export const shortname: BufferLocalOption<boolean> = new BooleanOption(
  * (default "fsync")
  */
 export const swapsync: GlobalOption<string> = new StringOption("swapsync");
+
+/**
+ * When non-empty, this option determines the content of the `tabpanel`.
+ * The option consists of printf style '%' items interspersed with
+ * normal text, similar to the 'statusline' or 'tabline'.
+ *
+ * When changing something that is used in 'tabpanel' that does not
+ * trigger it to be updated, use `:redrawtabpanel`.
+ * This option cannot be set in a modeline when 'modelineexpr' is off.
+ *
+ * You can use `g:actual_curtabpage` within a function assigned to
+ * tabpanel. `g:actual_curtabpage` represents current tab's label number.
+ * The option value can contain line breaks:
+ *
+ *     set tabpanel=%!TabPanel()
+ *     function! TabPanel() abort
+ *       return printf("(%2d)\n  %%f", g:actual_curtabpage)
+ *     endfunction
+ *
+ * The result is:
+ *
+ *     +-----------+---------------------------------
+ *     |(1)        |
+ *     |  ~/aaa.txt|
+ *     |(2)        |
+ *     |  ~/.vimrc |
+ *     |           |
+ *     |           |
+ *     |           |
+ *
+ * (default empty)
+ */
+export const tabpanel: GlobalOption<string> = new StringOption("tabpanel");
+
+/**
+ * Optional settings for the `tabpanel`,  It can consist of the following
+ * items.  Items must be separated by a comma.
+ *
+ *         align:**{text}**    Specifies the position of the tabpanel.
+ *                         Currently supported positions are:
+ *
+ *                         left    left-side
+ *                         right   right-side
+ *
+ *                         (default "left")
+ *
+ *         columns:**{n}**     Number of columns of the tabpanel.
+ *                         If this value is 0 or less than 'columns', the
+ *                         tab panel will not be displayed.
+ *                         (default 20)
+ *
+ *         vert            Use a vertical separator for tabpanel.
+ *                         The vertical separator character is taken from
+ *                         "tpl_vert" in 'fillchars'.
+ *                         (default off)
+ *
+ * Examples:
+ *
+ *     :set tabpanelopt=columns:16,align:right
+ *     :set tabpanelopt=
+ *     :set tabpanelopt=vert,align:right
+ *     :set tabpanelopt=columns:16
+ *
+ * (default "")
+ */
+export const tabpanelopt: GlobalOption<string> = new StringOption(
+  "tabpanelopt",
+);
 
 /**
  * Specifies the name of the Tcl shared library. The default is
@@ -1651,9 +2230,12 @@ export const termencoding: GlobalOption<string> = new StringOption(
 /**
  * The key that starts a CTRL-W command in a terminal window.  Other keys
  * are sent to the job running in the window.
- * The `<>` notation can be used, e.g.:
+ * The key can be specified as a single character, a `key-notation` (e.g.
+ * `<Up>`, `<C-F>`) or a letter preceded with a caret (e.g. `^F` is CTRL-F):
  *
- *     :set termwinkey=<C-L>
+ *     :set twk=X
+ *     :set twk=^I
+ *     :set twk=<C-L>
  *
  * The string must be one key stroke but can be multiple bytes.
  * When not set CTRL-W is used, so that CTRL-W : gets you to the command
@@ -2132,6 +2714,50 @@ export const wincolor: WindowLocalOption<string> = new StringOption("wincolor");
  * *only available when compiled with the `terminal` feature on MS-Windows*
  */
 export const winptydll: GlobalOption<string> = new StringOption("winptydll");
+
+/**
+ * Specifies the Wayland seat to use for Wayland functionality,
+ * specifically the clipboard.  If the seat does not exist, then the
+ * option will still be set to the new value, with the Wayland clipboard
+ * being unavailable as a result.  If an empty value is passed then Vim
+ * will attempt to use the first seat found available.  Updating this
+ * option will also update `v:clipmethod`.
+ *
+ * (default "")
+ *
+ * *only when the `+wayland` feature is included*
+ */
+export const wlseat: GlobalOption<string> = new StringOption("wlseat");
+
+/**
+ * When enabled, then allow Vim to steal focus by creating a temporary
+ * surface, in order to access the clipboard.  For more information see
+ * `wayland-focus-steal`.
+ *
+ * (default off)
+ *
+ * *only when the `+wayland_clipboard` feature is included*
+ */
+export const wlsteal: GlobalOption<boolean> = new BooleanOption("wlsteal");
+
+/**
+ * The timeout in milliseconds before Vim gives up on waiting for the
+ * Wayland compositor.  While Vim waits on the compositor, it is
+ * unresponsive to input and does not update the screen.  Therefore
+ * setting this to a lower value may make Vim feel more responsive in
+ * some cases.  On the other hand, it may also mean you receive errors
+ * when the compositor takes more time to respond than usual.
+ *
+ * Additionally, this option is also used as the maximum timeout when
+ * waiting for a surface to gain focus, see `wayland-focus-steal`.
+ *
+ * (default 500)
+ *
+ * *only when the `+wayland` feature is included*
+ */
+export const wltimeoutlen: GlobalOption<number> = new NumberOption(
+  "wltimeoutlen",
+);
 
 /**
  * When detecting xterm patchlevel 141 or higher with the termresponse

@@ -8,8 +8,11 @@ import type { NvimOpenWinConfig } from "./nvim_open_win.ts";
  *
  * `relative` is empty for normal windows.
  *
+ * Attributes:
+ *     Since: 0.4.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     Map defining the window configuration, see `nvim_open_win()`

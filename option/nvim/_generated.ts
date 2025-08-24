@@ -124,6 +124,9 @@ export const redrawdebug: GlobalOption<string> = new StringOption(
  * Minimum is 1, maximum is 100000.
  * Only in `terminal` buffers.
  *
+ * Note: Lines that are not visible and kept in scrollback are not
+ * reflown when the terminal buffer is resized horizontally.
+ *
  * (default 10000)
  */
 export const scrollback: BufferLocalOption<number> = new NumberOption(
@@ -262,7 +265,6 @@ export const shada: GlobalOption<string> = new StringOption("shada");
 export const shadafile: GlobalOption<string> = new StringOption("shadafile");
 
 /**
- * EXPERIMENTAL
  * When non-empty, this option determines the content of the area to the
  * side of a window, normally containing the fold, sign and number columns.
  * The format of this option is like that of 'statusline'.
@@ -270,8 +272,7 @@ export const shadafile: GlobalOption<string> = new StringOption("shadafile");
  * Some of the items from the 'statusline' format are different for
  * 'statuscolumn':
  *
- * %l      line number of currently drawn line
- * %r      relative line number of currently drawn line
+ * %l      line number column for currently drawn line
  * %s      sign column for currently drawn line
  * %C      fold column for currently drawn line
  *
@@ -299,11 +300,8 @@ export const shadafile: GlobalOption<string> = new StringOption("shadafile");
  *
  * Examples:
  *
- *     " Relative number with bar separator and click handlers:
- *     set statuscolumn=%@SignCb@%s%=%T%@NumCb@%r│%T
- *
- *     " Right aligned relative cursor line number:
- *     let &stc='%=%{v:relnum?v:relnum:v:lnum} '
+ *     " Line number with bar separator and click handlers:
+ *     set statuscolumn=%@SignCb@%s%=%T%@NumCb@%l│%T
  *
  *     " Line numbers in hexadecimal for non wrapped part of lines:
  *     let &stc='%=%{v:virtnum>0?"":printf("%x",v:lnum)} '
@@ -394,6 +392,21 @@ export const winbar: GlobalOrWindowLocalOption<string> = new StringOption(
  * (default 0)
  */
 export const winblend: WindowLocalOption<number> = new NumberOption("winblend");
+
+/**
+ * Defines the default border style of floating windows. The default value
+ * is empty, which is equivalent to "none". Valid values include:
+ * - "bold": Bold line box.
+ * - "double": Double-line box.
+ * - "none": No border.
+ * - "rounded": Like "single", but with rounded corners ("╭" etc.).
+ * - "shadow": Drop shadow effect, by blending with the background.
+ * - "single": Single-line box.
+ * - "solid": Adds padding by a single whitespace cell.
+ *
+ * (default "")
+ */
+export const winborder: GlobalOption<string> = new StringOption("winborder");
 
 /**
  * Window-local highlights.  Comma-delimited list of highlight

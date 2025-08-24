@@ -41,22 +41,26 @@ const vimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/testing.txt`,
   `https://raw.githubusercontent.com/vim/vim/v${VIM_VERSION}/runtime/doc/textprop.txt`,
 ];
-for (const vimHelpDownloadUrl of vimHelpDownloadUrls) {
-  console.log(`Download from ${vimHelpDownloadUrl}`);
-}
 const vimHelps = await Promise.all(vimHelpDownloadUrls.map(downloadString));
 const vimDefs = parse(vimHelps.join("\n"));
 const vimFnSet = new Set(vimDefs.map((def) => def.fn)).difference(manualFnSet);
 
 const nvimHelpDownloadUrls = [
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/api.txt`,
-  `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/builtin.txt`,
-  `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/eval.txt`,
+  [
+    `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/builtin.txt`,
+    // Neovim 0.11+ removed "builtin.txt", but "vimfn.txt" seems to be equivalent.
+    // https://github.com/neovim/neovim/pull/24493
+    `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/vimfn.txt`,
+  ],
+  [
+    `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/eval.txt`,
+    // Neovim 0.11+ removed "eval.txt", but "vimeval.txt" seems to be equivalent.
+    // https://github.com/neovim/neovim/pull/24493
+    `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/vimeval.txt`,
+  ],
   `https://raw.githubusercontent.com/neovim/neovim/v${NVIM_VERSION}/runtime/doc/sign.txt`,
 ];
-for (const nvimHelpDownloadUrl of nvimHelpDownloadUrls) {
-  console.log(`Download from ${nvimHelpDownloadUrl}`);
-}
 const nvimHelps = await Promise.all(nvimHelpDownloadUrls.map(downloadString));
 const nvimDefs = parse(nvimHelps.join("\n"));
 const nvimFnSet = new Set(nvimDefs.map((def) => def.fn)).difference(

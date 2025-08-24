@@ -4,12 +4,20 @@ import { toText } from "@std/streams/to-text";
  * Downloads a text file and returns the contents.
  * Throws error if fetch fails.
  */
-export async function downloadString(url: string): Promise<string> {
-  const response = await fetch(url);
-  if (response.status >= 400 || !response.body) {
-    throw new Error(`Failed to read ${url}`);
+export async function downloadString(urls: string | string[]): Promise<string> {
+  urls = Array.isArray(urls) ? urls : [urls];
+  for (const url of urls) {
+    console.log(`Download from ${url}`);
+    const response = await fetch(url);
+    if (response.status >= 400 || !response.body) {
+      console.debug(
+        `Failed to download ${url}. Fallback to next URL if exists.`,
+      );
+      continue;
+    }
+    return await toText(response.body);
   }
-  return await toText(response.body);
+  throw new Error(`Failed to download from ${urls.join(", ")}`);
 }
 
 /**

@@ -81,6 +81,8 @@ export interface WinInfo {
  *         botline         last complete displayed buffer line
  *         bufnr           number of buffer in the window
  *         height          window height (excluding winbar)
+ *         leftcol         first column displayed; only used when
+ *                         'wrap' is off
  *         loclist         1 if showing a location list
  *                         *only with the +quickfix feature*
  *         quickfix        1 if quickfix or location list window
@@ -107,6 +109,8 @@ export interface WinInfo {
  * Can also be used as a `method`:
  *
  *     GetWinnr()->getwininfo()
+ *
+ * Return type: list<dict<any>>
  */
 export function getwininfo(denops: Denops, winid?: number): Promise<WinInfo[]>;
 export function getwininfo(
@@ -139,6 +143,8 @@ export function getwininfo(
  * Can also be used as a `method`:
  *
  *     GetTimeout()->getwinpos()
+ *
+ * Return type: list<number>
  */
 export function getwinpos(
   denops: Denops,

@@ -47,7 +47,8 @@ Deno.test(downloadString.name, async (t) => {
 
   await t.step("Throws error if fetch fails", async () => {
     const url = "https://example.net/foo.ts";
-    const expectedMessage = "Failed to read https://example.net/foo.ts";
+    const expectedMessage =
+      "Failed to download from https://example.net/foo.ts";
     await mockFetch({
       init: { status: 404 },
       async fn() {

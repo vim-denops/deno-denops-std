@@ -4,7 +4,7 @@ import {
 } from "./supported_versions.ts";
 
 async function main(): Promise<void> {
-  const supportedVersions = await loadSupportedVersions("main");
+  const supportedVersions = await loadSupportedVersions();
   await updateREADME(supportedVersions);
   await updateGithubWorkflowsTest(supportedVersions);
 }

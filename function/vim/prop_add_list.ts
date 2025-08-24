@@ -46,7 +46,7 @@ export type PropAddListItem = [
  *     call prop_add_list(#{type: 'MyProp', id: 2},
  *                     \ [[1, 4, 1, 7],
  *                     \  [1, 15, 1, 20],
- *                     \  [2, 30, 3, 30]]
+ *                     \  [2, 30, 3, 30]])
  *
  * Can also be used as a `method`:
  *

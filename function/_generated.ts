@@ -24,6 +24,8 @@ import type { Denops } from "@denops/core";
  * Can also be used as a `method`:
  *
  *     Compute()->abs()
+ *
+ * Return type: `Number` or `Float` depending on **{expr}**
  */
 export function abs(denops: Denops, expr: unknown): Promise<number>;
 export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -48,6 +50,8 @@ export function abs(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->acos()
+ *
+ * Return type: `Float`
  */
 export function acos(denops: Denops, expr: unknown): Promise<number>;
 export function acos(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -70,6 +74,9 @@ export function acos(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->add(val1)->add(val2)
+ *
+ * Return type: list<**{type}**> (depending on the given `List`) or
+ * `Blob`
  */
 export function add(
   denops: Denops,
@@ -91,6 +98,8 @@ export function add(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     :let flag = bits->and(0x80)
+ *
+ * Return type: `Number`
  */
 export function and(
   denops: Denops,
@@ -122,6 +131,8 @@ export function and(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * passed as the second argument:
  *
  *     mylist->append(lnum)
+ *
+ * Return type: `Number`
  */
 export function append(
   denops: Denops,
@@ -141,6 +152,8 @@ export function append(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Otherwise **{winid}** specifies the window of which the argument
  * list is used: either the window number or the window ID.
  * Returns -1 if the **{winid}** argument is invalid.
+ *
+ * Return type: `Number`
  */
 export function argc(denops: Denops, winid?: unknown): Promise<number>;
 export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -150,6 +163,8 @@ export function argc(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * The result is the current index in the argument list.  0 is
  * the first file.  argc() - 1 is the last one.  See `arglist`.
+ *
+ * Return type: `Number`
  */
 export function argidx(denops: Denops): Promise<number>;
 export function argidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -167,6 +182,8 @@ export function argidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * With **{winnr}** and **{tabnr}** use the window in the specified tab
  * page.
  * **{winnr}** can be the window number or the `window-ID`.
+ *
+ * Return type: `Number`
  */
 export function arglistid(
   denops: Denops,
@@ -200,6 +217,8 @@ export function arglistid(
  * Returns an empty string if **{nr}**th argument is not present in
  * the argument list.  Returns an empty List if the **{winid}**
  * argument is invalid.
+ *
+ * Return type: `String`
  */
 export function argv(
   denops: Denops,
@@ -230,6 +249,8 @@ export function argv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->asin()
+ *
+ * Return type: `Float`
  */
 export function asin(denops: Denops, expr: unknown): Promise<number>;
 export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -254,6 +275,8 @@ export function asin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->atan()
+ *
+ * Return type: `Float`
  */
 export function atan(denops: Denops, expr: unknown): Promise<number>;
 export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -279,6 +302,8 @@ export function atan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->atan2(1)
+ *
+ * Return type: `Float`
  */
 export function atan2(
   denops: Denops,
@@ -302,6 +327,8 @@ export function atan2(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetBlob()->blob2list()
+ *
+ * Return type: list<any> or list<number>
  */
 export function blob2list(denops: Denops, blob: unknown): Promise<unknown[]>;
 export function blob2list(
@@ -321,6 +348,8 @@ export function blob2list(
  *     **{default}**   default file name
  * An empty string is returned when the "Cancel" button is hit,
  * something went wrong, or browsing is not possible.
+ *
+ * Return type: `String`
  */
 export function browse(
   denops: Denops,
@@ -344,6 +373,8 @@ export function browse(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     **{initdir}**   directory to start browsing in
  * When the "Cancel" button is hit, something went wrong, or
  * browsing is not possible, an empty string is returned.
+ *
+ * Return type: `String`
  */
 export function browsedir(
   denops: Denops,
@@ -400,6 +431,8 @@ export function browsedir(
  * Can also be used as a `method`:
  *
  *     GetName()->byteidx(idx)
+ *
+ * Return type: `Number`
  */
 export function byteidx(
   denops: Denops,
@@ -429,6 +462,8 @@ export function byteidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->byteidxcomp(idx)
+ *
+ * Return type: `Number`
  */
 export function byteidxcomp(
   denops: Denops,
@@ -455,6 +490,8 @@ export function byteidxcomp(
  * Can also be used as a `method`:
  *
  *     GetFunc()->call([arg, arg], dict)
+ *
+ * Return type: any, depending on **{func}**
  */
 export function call(
   denops: Denops,
@@ -489,6 +526,8 @@ export function call(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->ceil()
+ *
+ * Return type: `Float`
  */
 export function ceil(denops: Denops, expr: unknown): Promise<number>;
 export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -503,6 +542,8 @@ export function ceil(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * redo it is the number of the redone change.  After undo it is
  * one less than the number of the undone change.
  * Returns 0 if the undo list is empty.
+ *
+ * Return type: `Number`
  */
 export function changenr(denops: Denops): Promise<number>;
 export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -537,6 +578,8 @@ export function changenr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetChar()->char2nr()
+ *
+ * Return type: `Number`
  */
 export function char2nr(
   denops: Denops,
@@ -552,11 +595,13 @@ export function char2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The character class is one of:
  *         0       blank
  *         1       punctuation
- *         2       word character
+ *         2       word character (depends on 'iskeyword')
  *         3       emoji
  *         other   specific Unicode class
  * The class is used in patterns and word motions.
  * Returns 0 if **{string}** is not a `String`.
+ *
+ * Return type: `Number`
  */
 export function charclass(denops: Denops, string: unknown): Promise<number>;
 export function charclass(
@@ -579,6 +624,8 @@ export function charclass(
  * Can also be used as a `method`:
  *
  *     GetPos()->col()
+ *
+ * Return type: `Number`
  */
 export function charcol(
   denops: Denops,
@@ -626,6 +673,8 @@ export function charcol(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->charidx(idx)
+ *
+ * Return type: `Number`
  */
 export function charidx(
   denops: Denops,
@@ -639,15 +688,22 @@ export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Change the current working directory to **{dir}**.  The scope of
- * the directory change depends on the directory of the current
- * window:
- *         - If the current window has a window-local directory
- *           (`:lcd`), then changes the window local directory.
- *         - Otherwise, if the current tabpage has a local
- *           directory (`:tcd`) then changes the tabpage local
- *           directory.
- *         - Otherwise, changes the global directory.
+ * Changes the current working directory to **{dir}**.  The scope of
+ * the change is determined as follows:
+ * If **{scope}** is not present, the current working directory is
+ * changed to the scope of the current directory:
+ *     - If the window local directory (`:lcd`) is set, it
+ *       changes the current working directory for that scope.
+ *     - Otherwise, if the tab page local directory (`:tcd`) is
+ *       set, it changes the current directory for that scope.
+ *     - Otherwise, changes the global directory for that scope.
+ *
+ * If **{scope}** is present, changes the current working directory
+ * for the specified scope:
+ *     "window"    Changes the window local directory.  `:lcd`
+ *     "tabpage"   Changes the tab page local directory.  `:tcd`
+ *     "global"    Changes the global directory.  `:cd`
+ *
  * **{dir}** must be a String.
  * If successful, returns the previous working directory.  Pass
  * this to another chdir() to restore the directory.
@@ -664,8 +720,14 @@ export function charidx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetDir()->chdir()
+ *
+ * Return type: `String`
  */
-export function chdir(denops: Denops, dir: unknown): Promise<string>;
+export function chdir(
+  denops: Denops,
+  dir: unknown,
+  scope?: unknown,
+): Promise<string>;
 export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("chdir", ...args);
 }
@@ -681,6 +743,8 @@ export function chdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->cindent()
+ *
+ * Return type: `Number`
  */
 export function cindent(denops: Denops, lnum: unknown): Promise<number>;
 export function cindent(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -696,6 +760,8 @@ export function cindent(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetWin()->clearmatches()
+ *
+ * Return type: `Number`
  */
 export function clearmatches(denops: Denops, win?: unknown): Promise<void>;
 export function clearmatches(
@@ -741,6 +807,8 @@ export function clearmatches(
  * second argument:
  *
  *     GetMatches()->complete(col('.'))
+ *
+ * Return type: `Number`
  */
 export function complete(
   denops: Denops,
@@ -763,6 +831,8 @@ export function complete(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetMoreMatches()->complete_add()
+ *
+ * Return type: `Number`
  */
 export function complete_add(denops: Denops, expr: unknown): Promise<number>;
 export function complete_add(
@@ -779,6 +849,8 @@ export function complete_add(
  * zero otherwise.
  * Only to be used by the function specified with the
  * 'completefunc' option.
+ *
+ * Return type: `Number`
  */
 export function complete_check(denops: Denops): Promise<number>;
 export function complete_check(
@@ -796,16 +868,22 @@ export function complete_check(
  *                 See `complete_info_mode` for the values.
  *    pum_visible  `TRUE` if popup menu is visible.
  *                 See `pumvisible()`.
- *    items        List of completion matches.  Each item is a
- *                 dictionary containing the entries "word",
+ *    items        List of all completion candidates. Each item
+ *                 is a dictionary containing the entries "word",
  *                 "abbr", "menu", "kind", "info" and "user_data".
  *                 See `complete-items`.
+ *    matches      Same as "items", but only returns items that
+ *                 are matching current query. If both "matches"
+ *                 and "items" are in "what", the returned list
+ *                 will still be named "items", but each item
+ *                 will have an additional "match" field.
  *    selected     Selected item index.  First index is zero.
  *                 Index is -1 if no item is selected (showing
  *                 typed text only, or the last completion after
  *                 no item is selected when using the `<Up>` or
  *                 `<Down>` keys)
- *    inserted     Inserted string. [NOT IMPLEMENTED YET]
+ *    completed    Return a dictionary containing the entries of
+ *                 the currently selected index item.
  *
  * mode values are:
  *    ""                Not in completion mode
@@ -825,6 +903,7 @@ export function complete_check(
  *    "omni"            Omni completion `i_CTRL-X_CTRL-O`
  *    "spell"           Spelling suggestions `i_CTRL-X_s`
  *    "eval"            `complete()` completion
+ *    "register"        Words from registers `i_CTRL-X_CTRL-R`
  *    "unknown"         Other internal modes
  *
  * If the optional **{what}** list argument is supplied, then only
@@ -849,6 +928,8 @@ export function complete_check(
  * Can also be used as a `method`:
  *
  *     GetItems()->complete_info()
+ *
+ * Return type: dict<any>
  */
 export function complete_info(
   denops: Denops,
@@ -925,6 +1006,8 @@ export function complete_info(
  * Can also be used as a `method`in:
  *
  *     BuildMessage()->confirm("&Yes\n&No")
+ *
+ * Return type: `Number`
  */
 export function confirm(
   denops: Denops,
@@ -944,11 +1027,14 @@ export function confirm(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * that the original `List` can be changed without changing the
  * copy, and vice versa.  But the items are identical, thus
  * changing an item changes the contents of both `Lists`.
- * A `Dictionary` is copied in a similar way as a `List`.
+ * A `Tuple` or `Dictionary` is copied in a similar way as a
+ * `List`.
  * Also see `deepcopy()`.
  * Can also be used as a `method`:
  *
  *     mylist->copy()
+ *
+ * Return type: any, depending on **{expr}**
  */
 export function copy(denops: Denops, expr: unknown): Promise<unknown>;
 export function copy(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -972,6 +1058,8 @@ export function copy(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->cos()
+ *
+ * Return type: `Float`
  */
 export function cos(denops: Denops, expr: unknown): Promise<number>;
 export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -996,6 +1084,8 @@ export function cos(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->cosh()
+ *
+ * Return type: `Float`
  */
 export function cosh(denops: Denops, expr: unknown): Promise<number>;
 export function cosh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1004,10 +1094,10 @@ export function cosh(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Return the number of times an item with value **{expr}** appears
- * in `String`, `List` or `Dictionary` **{comp}**.
+ * in `String`, `List`, `Tuple` or `Dictionary` **{comp}**.
  *
  * If **{start}** is given then start with the item with this index.
- * **{start}** can only be used with a `List`.
+ * **{start}** can only be used with a `List` or a `Tuple`.
  *
  * When **{ic}** is given and it's `TRUE` then case is ignored.
  *
@@ -1018,6 +1108,8 @@ export function cosh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->count(val)
+ *
+ * Return type: `Number`
  */
 export function count(
   denops: Denops,
@@ -1042,6 +1134,8 @@ export function count(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetPid()->debugbreak()
+ *
+ * Return type: `Number`
  */
 export function debugbreak(denops: Denops, pid: unknown): Promise<number>;
 export function debugbreak(
@@ -1060,7 +1154,8 @@ export function debugbreak(
  * `Dictionary`, a copy for it is made, recursively.  Thus
  * changing an item in the copy does not change the contents of
  * the original `List`.
- * A `Dictionary` is copied in a similar way as a `List`.
+ * A `Tuple` or `Dictionary` is copied in a similar way as a
+ * `List`.
  *
  * When **{noref}** is omitted or zero a contained `List` or
  * `Dictionary` is only copied once.  All references point to
@@ -1076,6 +1171,8 @@ export function debugbreak(
  * Can also be used as a `method`:
  *
  *     GetObject()->deepcopy()
+ *
+ * Return type: any, depending on **{expr}**
  */
 export function deepcopy(
   denops: Denops,
@@ -1112,6 +1209,8 @@ export function deepcopy(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->delete()
+ *
+ * Return type: `Number`
  */
 export function delete_(
   denops: Denops,
@@ -1133,6 +1232,8 @@ export function delete_(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * current buffer.  This allows an autocommand that starts
  * editing another buffer to set 'filetype' and load a syntax
  * file.
+ *
+ * Return type: `Number`
  */
 export function did_filetype(denops: Denops): Promise<number>;
 export function did_filetype(
@@ -1156,6 +1257,8 @@ export function did_filetype(
  * Can also be used as a `method`:
  *
  *     GetLnum()->diff_hlID(col)
+ *
+ * Return type: `Number`
  */
 export function diff_hlID(
   denops: Denops,
@@ -1194,6 +1297,8 @@ export function diff_hlID(
  *
  *     GetChars()->digraph_get()
  *
+ * Return type: `String`
+ *
  * This function works only when compiled with the `+digraphs`
  * feature.  If this feature is disabled, this function will
  * display an error message.
@@ -1229,6 +1334,8 @@ export function digraph_get(
  *
  *     GetNumber()->digraph_getlist()
  *
+ * Return type: list<list<string>>
+ *
  * This function works only when compiled with the `+digraphs`
  * feature.  If this feature is disabled, this function will
  * display an error message.
@@ -1252,7 +1359,7 @@ export function digraph_getlist(
  * function is similar to `:digraphs` command, but useful to add
  * digraphs start with a white space.
  *
- * The function result is v:true if `digraph` is registered.  If
+ * The function returns v:true if `digraph` is registered.  If
  * this fails an error message is given and v:false is returned.
  *
  * If you want to define multiple digraphs at once, you can use
@@ -1265,6 +1372,8 @@ export function digraph_getlist(
  * Can be used as a `method`:
  *
  *     GetString()->digraph_set('あ')
+ *
+ * Return type: `vim9-boolean`
  *
  * This function works only when compiled with the `+digraphs`
  * feature.  If this feature is disabled, this function will
@@ -1304,6 +1413,8 @@ export function digraph_set(
  *
  *     GetList()->digraph_setlist()
  *
+ * Return type: `vim9-boolean`
+ *
  * This function works only when compiled with the `+digraphs`
  * feature.  If this feature is disabled, this function will
  * display an error message.
@@ -1321,8 +1432,8 @@ export function digraph_setlist(
 
 /**
  * Return the Number 1 if **{expr}** is empty, zero otherwise.
- * - A `List` or `Dictionary` is empty when it does not have any
- *   items.
+ * - A `List`, `Tuple` or `Dictionary` is empty when it does
+ *   not have any items.
  * - A `String` is empty when its length is zero.
  * - A `Number` and `Float` are empty when their value is zero.
  * - `v:false`, `v:none` and `v:null` are empty, `v:true` is not.
@@ -1338,6 +1449,8 @@ export function digraph_setlist(
  * Can also be used as a `method`:
  *
  *     mylist->empty()
+ *
+ * Return type: `Number`
  */
 export function empty(denops: Denops, expr: unknown): Promise<number>;
 export function empty(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1354,6 +1467,8 @@ export function empty(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * use this:
  *
  *     :echo index(keys(environ()), 'HOME', 0, 1) != -1
+ *
+ * Return type: dict<string>
  */
 export function environ(denops: Denops): Promise<Record<string, unknown>>;
 export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1375,6 +1490,8 @@ export function environ(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->escape(' \')
+ *
+ * Return type: `String`
  */
 export function escape(
   denops: Denops,
@@ -1396,6 +1513,8 @@ export function escape(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     argv->join()->eval()
+ *
+ * Return type: any, depending on **{string}**
  */
 export function eval_(denops: Denops, string: unknown): Promise<unknown>;
 export function eval_(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1407,6 +1526,8 @@ export function eval_(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * interrupted while waiting for the user to type a character,
  * e.g., when dropping a file on Vim.  This means interactive
  * commands cannot be used.  Otherwise zero is returned.
+ *
+ * Return type: `Number`
  */
 export function eventhandler(denops: Denops): Promise<number>;
 export function eventhandler(
@@ -1420,8 +1541,10 @@ export function eventhandler(
  * This function checks if an executable with the name **{expr}**
  * exists.  **{expr}** must be the name of the program without any
  * arguments.
+ *
  * executable() uses the value of $PATH and/or the normal
  * searchpath for programs.
+ *
  * On MS-Windows the ".exe", ".bat", etc. can optionally be
  * included.  Then the extensions in $PATHEXT are tried.  Thus if
  * "foo.exe" does not exist, "foo.exe.bat" can be found.  If
@@ -1431,11 +1554,14 @@ export function eventhandler(
  * then the name is also tried without adding an extension.
  * On MS-Windows it only checks if the file exists and is not a
  * directory, not if it's really executable.
- * On MS-Windows an executable in the same directory as Vim is
- * normally found.  Since this directory is added to $PATH it
- * should also work to execute it `win32-PATH`.  This can be
- * disabled by setting the $NoDefaultCurrentDirectoryInExePath
- * environment variable.
+ * On MS-Windows an executable in the same directory as the Vim
+ * executable is always found.  Since this directory is added to
+ * $PATH it should also work to execute it `win32-PATH`.
+ *
+ * On MS-Windows an executable in Vim's current working directory
+ * is also normally found, but this can be disabled by setting
+ * the $NoDefaultCurrentDirectoryInExePath environment variable.
+ *
  * The result is a Number:
  *         1       exists
  *         0       does not exist
@@ -1445,6 +1571,8 @@ export function eventhandler(
  * Can also be used as a `method`:
  *
  *     GetCommand()->executable()
+ *
+ * Return type: `Number`
  */
 export function executable(denops: Denops, expr: unknown): Promise<number>;
 export function executable(
@@ -1490,6 +1618,8 @@ export function executable(
  * Can also be used as a `method`:
  *
  *     GetCommand()->execute()
+ *
+ * Return type: `String`
  */
 export function execute(
   denops: Denops,
@@ -1514,6 +1644,8 @@ export function execute(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetCommand()->exepath()
+ *
+ * Return type: `String`
  */
 export function exepath(denops: Denops, expr: unknown): Promise<string>;
 export function exepath(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1538,6 +1670,8 @@ export function exepath(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->exp()
+ *
+ * Return type: `Float`
  */
 export function exp(denops: Denops, expr: unknown): Promise<number>;
 export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -1651,6 +1785,8 @@ export function exp(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Getpattern()->expand()
+ *
+ * Return type: `String` or list<string> depending on **{list}**
  */
 export function expand(
   denops: Denops,
@@ -1687,6 +1823,8 @@ export function expand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetCommand()->expandcmd()
+ *
+ * Return type: `String` or list<string> depending on **{list}**
  */
 export function expandcmd(
   denops: Denops,
@@ -1733,7 +1871,8 @@ export function expandcmd(
  * When **{expr3}** is omitted then "force" is assumed.
  *
  * **{expr1}** is changed when **{expr2}** is not empty.  If necessary
- * make a copy of **{expr1}** first.
+ * make a copy of **{expr1}** first or use `extendnew()` to return a
+ * new List/Dictionary.
  * **{expr2}** remains unchanged.
  * When **{expr1}** is locked and **{expr2}** is not empty the operation
  * fails.
@@ -1742,6 +1881,9 @@ export function expandcmd(
  * Can also be used as a `method`:
  *
  *     mylist->extend(otherlist)
+ *
+ * Return type: list<**{type}**> or dict<**{type}**> depending on **{expr1}**
+ * and **{expr2}**, in case of error: `Number`
  */
 export function extend(
   denops: Denops,
@@ -1757,6 +1899,9 @@ export function extend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Like `extend()` but instead of adding items to **{expr1}** a new
  * List or Dictionary is created and returned.  **{expr1}** remains
  * unchanged.
+ *
+ * Return type: list<**{type}**> or dict<**{type}**> depending on **{expr1}**
+ * and **{expr2}**, in case of error: `Number`
  */
 export function extendnew(
   denops: Denops,
@@ -1828,6 +1973,8 @@ export function extendnew(
  * Can also be used as a `method`:
  *
  *     GetInput()->feedkeys()
+ *
+ * Return type: `Number`
  */
 export function feedkeys(
   denops: Denops,
@@ -1836,6 +1983,30 @@ export function feedkeys(
 ): Promise<number>;
 export function feedkeys(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("feedkeys", ...args);
+}
+
+/**
+ * Copy the file pointed to by the name **{from}** to **{to}**. The
+ * result is a Number, which is `TRUE` if the file was copied
+ * successfully, and `FALSE` when it failed.
+ * If a file with name **{to}** already exists, it will fail.
+ * Note that it does not handle directories (yet).
+ *
+ * This function is not available in the `sandbox`.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetOldName()->filecopy(newname)
+ *
+ * Return type: `Number`
+ */
+export function filecopy(
+  denops: Denops,
+  from: unknown,
+  to: unknown,
+): Promise<number>;
+export function filecopy(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("filecopy", ...args);
 }
 
 /**
@@ -1856,6 +2027,8 @@ export function feedkeys(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetName()->filereadable()
  *
+ * Return type: `Number`
+ *
  * Obsolete name: file_readable().
  */
 export function filereadable(denops: Denops, file: unknown): Promise<number>;
@@ -1875,6 +2048,8 @@ export function filereadable(
  * Can also be used as a `method`:
  *
  *     GetName()->filewritable()
+ *
+ * Return type: `Number`
  */
 export function filewritable(denops: Denops, file: unknown): Promise<number>;
 export function filewritable(
@@ -1959,6 +2134,9 @@ export function filewritable(
  * Can also be used as a `method`:
  *
  *     mylist->filter(expr2)
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or dict<**{type}**>
+ * depending on **{expr1}**
  */
 export function filter(
   denops: Denops,
@@ -1990,13 +2168,16 @@ export function filter(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->finddir()
+ *
+ * Return type: list<string> if **{count}** is negative, `String`
+ * otherwise
  */
 export function finddir(
   denops: Denops,
   name: unknown,
   path?: unknown,
   count?: unknown,
-): Promise<string>;
+): Promise<unknown>;
 export function finddir(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("finddir", ...args);
 }
@@ -2014,13 +2195,16 @@ export function finddir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->findfile()
+ *
+ * Return type: list<string> if **{count}** is negative, `String`
+ * otherwise
  */
 export function findfile(
   denops: Denops,
   name: unknown,
   path?: unknown,
   count?: unknown,
-): Promise<string>;
+): Promise<unknown>;
 export function findfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("findfile", ...args);
 }
@@ -2053,6 +2237,8 @@ export function findfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->flatten()
+ *
+ * Return type: list<**{type}**>
  */
 export function flatten(
   denops: Denops,
@@ -2065,6 +2251,8 @@ export function flatten(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Like `flatten()` but first make a copy of **{list}**.
+ *
+ * Return type: list<**{type}**>
  */
 export function flattennew(
   denops: Denops,
@@ -2113,6 +2301,8 @@ export function flattennew(
  * Can also be used as a `method`:
  *
  *     Compute()->float2nr()
+ *
+ * Return type: `Number`
  */
 export function float2nr(denops: Denops, expr: unknown): Promise<number>;
 export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2141,6 +2331,8 @@ export function float2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->floor()
+ *
+ * Return type: `Float`
  */
 export function floor(denops: Denops, expr: unknown): Promise<number>;
 export function floor(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -2170,6 +2362,8 @@ export function floor(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->fmod(1.22)
+ *
+ * Return type: `Float`
  */
 export function fmod(
   denops: Denops,
@@ -2202,6 +2396,8 @@ export function fmod(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->fnameescape()
+ *
+ * Return type: `String`
  */
 export function fnameescape(denops: Denops, string: unknown): Promise<string>;
 export function fnameescape(
@@ -2235,6 +2431,8 @@ export function fnameescape(
  * Can also be used as a `method`:
  *
  *     GetName()->fnamemodify(':p:h')
+ *
+ * Return type: `String`
  */
 export function fnamemodify(
   denops: Denops,
@@ -2258,6 +2456,8 @@ export function fnamemodify(
  * Can also be used as a `method`:
  *
  *     GetLnum()->foldclosed()
+ *
+ * Return type: `Number`
  */
 export function foldclosed(denops: Denops, lnum: unknown): Promise<number>;
 export function foldclosed(
@@ -2277,6 +2477,8 @@ export function foldclosed(
  * Can also be used as a `method`:
  *
  *     GetLnum()->foldclosedend()
+ *
+ * Return type: `Number`
  */
 export function foldclosedend(denops: Denops, lnum: unknown): Promise<number>;
 export function foldclosedend(
@@ -2301,6 +2503,8 @@ export function foldclosedend(
  * Can also be used as a `method`:
  *
  *     GetLnum()->foldlevel()
+ *
+ * Return type: `Number`
  */
 export function foldlevel(denops: Denops, lnum: unknown): Promise<number>;
 export function foldlevel(
@@ -2328,6 +2532,8 @@ export function foldlevel(
  * will be filled with the fold char from the 'fillchars'
  * setting.
  * Returns an empty string when there is no fold.
+ *
+ * Return type: `String`
  * *not available when compiled without the `+folding` feature*
  */
 export function foldtext(denops: Denops): Promise<string>;
@@ -2348,6 +2554,8 @@ export function foldtext(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->foldtextresult()
+ *
+ * Return type: `String`
  */
 export function foldtextresult(denops: Denops, lnum: unknown): Promise<string>;
 export function foldtextresult(
@@ -2358,7 +2566,8 @@ export function foldtextresult(
 }
 
 /**
- * **{expr1}** must be a `List`, `String`, `Blob` or `Dictionary`.
+ * **{expr1}** must be a `List`, `Tuple`, `String`, `Blob` or
+ * `Dictionary`.
  * For each item in **{expr1}** execute **{expr2}**. **{expr1}** is not
  * modified; its values may be, as with `:lockvar` 1. `E741`
  * See `map()` and `filter()` to modify **{expr1}**.
@@ -2367,10 +2576,10 @@ export function foldtextresult(
  *
  * If **{expr2}** is a `string`, inside **{expr2}** `v:val` has the value
  * of the current item.  For a `Dictionary` `v:key` has the key
- * of the current item and for a `List` `v:key` has the index of
- * the current item.  For a `Blob` `v:key` has the index of the
- * current byte. For a `String` `v:key` has the index of the
- * current character.
+ * of the current item and for a `List` or a `Tuple` `v:key` has
+ * the index of the current item.  For a `Blob` `v:key` has the
+ * index of the current byte. For a `String` `v:key` has the
+ * index of the current character.
  * Examples:
  *
  *     call foreach(mylist, 'used[v:val] = true')
@@ -2398,12 +2607,15 @@ export function foldtextresult(
  * Can also be used as a `method`:
  *
  *     mylist->foreach(expr2)
+ *
+ * Return type: `String`, `Blob`, list<**{type}**>, tuple<**{type}**> or
+ * dict<**{type}**> depending on **{expr1}**
  */
 export function foreach(
   denops: Denops,
   expr1: unknown,
   expr2: unknown,
-): Promise<unknown[] | Record<string, unknown> | unknown | string>;
+): Promise<unknown[] | unknown | Record<string, unknown> | string>;
 export function foreach(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("foreach", ...args);
 }
@@ -2429,6 +2641,8 @@ export function foreach(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->fullcommand()
+ *
+ * Return type: `String`
  */
 export function fullcommand(
   denops: Denops,
@@ -2457,6 +2671,8 @@ export function fullcommand(
  * Can also be used as a `method`:
  *
  *     GetFuncname()->funcref([arg])
+ *
+ * Return type: func(...): any or `Number` on error
  */
 export function funcref(
   denops: Denops,
@@ -2565,6 +2781,8 @@ export function funcref(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFuncname()->function([arg])
+ *
+ * Return type: func(...): any or `Number` on error
  */
 export function function_(
   denops: Denops,
@@ -2599,6 +2817,8 @@ export function function_(
  * it's safe to perform.  This is when waiting for the user to
  * type a character.  To force garbage collection immediately use
  * `test_garbagecollect_now()`.
+ *
+ * Return type: `String`
  */
 export function garbagecollect(denops: Denops, atexit?: unknown): Promise<void>;
 export function garbagecollect(
@@ -2615,6 +2835,8 @@ export function garbagecollect(
  * Preferably used as a `method`:
  *
  *     mylist->get(idx)
+ *
+ * Return type: any, depending on **{list}**
  */
 export function get(
   denops: Denops,
@@ -2629,6 +2851,8 @@ export function get(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Just like `getbufline()` but only get one line and return it
  * as a string.
+ *
+ * Return type: `String`
  */
 export function getbufoneline(
   denops: Denops,
@@ -2647,6 +2871,8 @@ export function getbufoneline(
  * by `setcellwidths()`.  The format is equal to the argument of
  * `setcellwidths()`.  If no character ranges have their cell
  * widths overridden, an empty List is returned.
+ *
+ * Return type: list<any>
  */
 export function getcellwidths(denops: Denops): Promise<unknown[]>;
 export function getcellwidths(
@@ -2658,12 +2884,14 @@ export function getcellwidths(
 
 /**
  * Get a single character from the user or input stream.
- * If **{expr}** is omitted, wait until a character is available.
+ * If **{expr}** is omitted or is -1, wait until a character is
+ *         available.
  * If **{expr}** is 0, only get a character when one is available.
  *         Return zero otherwise.
  * If **{expr}** is 1, only check if a character is available, it is
  *         not consumed.  Return zero if no character available.
- * If you prefer always getting a string use `getcharstr()`.
+ * If you prefer always getting a string use `getcharstr()`, or
+ * specify `FALSE` as "number" in **{opts}**.
  *
  * Without **{expr}** and when **{expr}** is 0 a whole character or
  * special key is returned.  If it is a single character, the
@@ -2673,7 +2901,8 @@ export function getcellwidths(
  * starting with 0x80 (decimal: 128).  This is the same value as
  * the String `"\<Key>"`, e.g., `"\<Left>"`.  The returned value is
  * also a String when a modifier (shift, control, alt) was used
- * that is not included in the character.
+ * that is not included in the character.  `keytrans()` can also
+ * be used to convert a returned String into a readable form.
  *
  * When **{expr}** is 0 and Esc is typed, there will be a short delay
  * while Vim waits to see if this is the start of an escape
@@ -2684,6 +2913,31 @@ export function getcellwidths(
  * Use nr2char() to convert it to a String.
  *
  * Use getcharmod() to obtain any additional modifiers.
+ *
+ * The optional argument **{opts}** is a Dict and supports the
+ * following items:
+ *
+ *         cursor          A String specifying cursor behavior
+ *                         when waiting for a character.
+ *                         "hide": hide the cursor.
+ *                         "keep": keep current cursor unchanged.
+ *                         "msg": move cursor to message area.
+ *                         (default: "msg")
+ *
+ *         number          If `TRUE`, return a Number when getting
+ *                         a single character.
+ *                         If `FALSE`, the return value is always
+ *                         converted to a String, and an empty
+ *                         String (instead of 0) is returned when
+ *                         no character is available.
+ *                         (default: `TRUE`)
+ *
+ *         simplify        If `TRUE`, include modifiers in the
+ *                         character if possible.  E.g., return
+ *                         the same value for CTRL-I and `<Tab>`.
+ *                         If `FALSE`, don't include modifiers in
+ *                         the character.
+ *                         (default: `TRUE`)
  *
  * When the user clicks a mouse button, the mouse event will be
  * returned.  The position can then be found in `v:mouse_col`,
@@ -2740,10 +2994,13 @@ export function getcellwidths(
  *     :  endwhile
  *     :  return c
  *     :endfunction
+ *
+ * Return type: `Number` or `String`
  */
 export function getchar(
   denops: Denops,
   expr?: unknown,
+  opts?: unknown,
 ): Promise<number | string>;
 export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("getchar", ...args);
@@ -2764,6 +3021,8 @@ export function getchar(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Only the modifiers that have not been included in the
  * character itself are obtained.  Thus Shift-a results in "A"
  * without a modifier.  Returns 0 if no modifiers are used.
+ *
+ * Return type: `Number`
  */
 export function getcharmod(denops: Denops): Promise<number>;
 export function getcharmod(
@@ -2790,6 +3049,8 @@ export function getcharmod(
  * Can also be used as a `method`:
  *
  *     GetMark()->getcharpos()
+ *
+ * Return type: list<number>
  */
 export function getcharpos(denops: Denops, expr: unknown): Promise<unknown[]>;
 export function getcharpos(
@@ -2820,6 +3081,8 @@ export function getcharpos(
  *     :nnoremap <expr> , getcharsearch().forward ? ',' : ';'
  *
  * Also see `setcharsearch()`.
+ *
+ * Return type: dict<any>
  */
 export function getcharsearch(denops: Denops): Promise<Record<string, unknown>>;
 export function getcharsearch(
@@ -2830,18 +3093,16 @@ export function getcharsearch(
 }
 
 /**
- * Get a single character from the user or input stream as a
- * string.
- * If **{expr}** is omitted, wait until a character is available.
- * If **{expr}** is 0 or false, only get a character when one is
- *         available.  Return an empty string otherwise.
- * If **{expr}** is 1 or true, only check if a character is
- *         available, it is not consumed.  Return an empty string
- *         if no character is available.
- * Otherwise this works like `getchar()`, except that a number
- * result is converted to a string.
+ * The same as `getchar()`, except that this always returns a
+ * String, and "number" isn't allowed in **{opts}**.
+ *
+ * Return type: `String`
  */
-export function getcharstr(denops: Denops, expr?: unknown): Promise<string>;
+export function getcharstr(
+  denops: Denops,
+  expr?: unknown,
+  opts?: unknown,
+): Promise<string>;
 export function getcharstr(
   denops: Denops,
   ...args: unknown[]
@@ -2850,13 +3111,36 @@ export function getcharstr(
 }
 
 /**
+ * Return completion pattern of the current command-line.
+ * Only works when the command line is being edited, thus
+ * requires use of `c_CTRL-\_e` or `c_CTRL-R_=`.
+ * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()`,
+ * `getcmdprompt()`, `getcmdcompltype()` and `setcmdline()`.
+ * Returns an empty string when completion is not defined.
+ *
+ * Return type: `String`
+ */
+export function getcmdcomplpat(denops: Denops): Promise<string>;
+export function getcmdcomplpat(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcmdcomplpat", ...args);
+}
+
+/**
  * Return the type of the current command-line completion.
  * Only works when the command line is being edited, thus
  * requires use of `c_CTRL-\_e` or `c_CTRL-R_=`.
  * See `:command-completion` for the return string.
- * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()` and
- * `setcmdline()`.
+ * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()`,
+ * `getcmdprompt()`, `getcmdcomplpat()` and `setcmdline()`.
  * Returns an empty string when completion is not defined.
+ *
+ * To get the type of the command-line completion for a specified
+ * string, use `getcompletiontype()`.
+ *
+ * Return type: `String`
  */
 export function getcmdcompltype(denops: Denops): Promise<string>;
 export function getcmdcompltype(
@@ -2867,17 +3151,19 @@ export function getcmdcompltype(
 }
 
 /**
- * Return the current command-line.  Only works when the command
- * line is being edited, thus requires use of `c_CTRL-\_e` or
- * `c_CTRL-R_=`.
+ * Return the current command-line input.  Only works when the
+ * command line is being edited, thus requires use of
+ * `c_CTRL-\_e` or `c_CTRL-R_=`.
  * Example:
  *
  *     :cmap <F7> <C-\>eescape(getcmdline(), ' \')<CR>
  *
- * Also see `getcmdtype()`, `getcmdpos()`, `setcmdpos()` and
- * `setcmdline()`.
+ * Also see `getcmdtype()`, `getcmdpos()`, `setcmdpos()`,
+ * `getcmdprompt()` and `setcmdline()`.
  * Returns an empty string when entering a password or using
  * `inputsecret()`.
+ *
+ * Return type: `String`
  */
 export function getcmdline(denops: Denops): Promise<string>;
 export function getcmdline(
@@ -2893,8 +3179,10 @@ export function getcmdline(
  * Only works when editing the command line, thus requires use of
  * `c_CTRL-\_e` or `c_CTRL-R_=` or an expression mapping.
  * Returns 0 otherwise.
- * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()` and
- * `setcmdline()`.
+ * Also see `getcmdtype()`, `setcmdpos()`, `getcmdline()`,
+ * `getcmdprompt()` and `setcmdline()`.
+ *
+ * Return type: `Number`
  */
 export function getcmdpos(denops: Denops): Promise<number>;
 export function getcmdpos(
@@ -2902,6 +3190,24 @@ export function getcmdpos(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getcmdpos", ...args);
+}
+
+/**
+ * Return the current command-line prompt when using functions
+ * like `input()` or `confirm()`.
+ * Only works when the command line is being edited, thus
+ * requires use of `c_CTRL-\_e` or `c_CTRL-R_=`.
+ * Also see `getcmdtype()`, `getcmdline()`, `getcmdpos()`,
+ * `setcmdpos()` and `setcmdline()`.
+ *
+ * Return type: `String`
+ */
+export function getcmdprompt(denops: Denops): Promise<string>;
+export function getcmdprompt(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getcmdprompt", ...args);
 }
 
 /**
@@ -2913,6 +3219,8 @@ export function getcmdpos(
  * Returns 0 otherwise.
  * Also see `getcmdpos()`, `setcmdpos()`, `getcmdline()` and
  * `setcmdline()`.
+ *
+ * Return type: `Number`
  */
 export function getcmdscreenpos(denops: Denops): Promise<number>;
 export function getcmdscreenpos(
@@ -2936,6 +3244,8 @@ export function getcmdscreenpos(
  * `c_CTRL-\_e` or `c_CTRL-R_=` or an expression mapping.
  * Returns an empty string otherwise.
  * Also see `getcmdpos()`, `setcmdpos()` and `getcmdline()`.
+ *
+ * Return type: `String`
  */
 export function getcmdtype(denops: Denops): Promise<string>;
 export function getcmdtype(
@@ -2949,6 +3259,8 @@ export function getcmdtype(
  * Return the current `command-line-window` type. Possible return
  * values are the same as `getcmdtype()`. Returns an empty string
  * when not in the command-line window.
+ *
+ * Return type: `String`
  */
 export function getcmdwintype(denops: Denops): Promise<string>;
 export function getcmdwintype(
@@ -2977,12 +3289,14 @@ export function getcmdwintype(
  * customlist,**{func}** custom completion, defined via **{func}**
  * diff_buffer     `:diffget` and `:diffput` completion
  * dir             directory names
+ * dir_in_path     directory names in 'cdpath'
  * environment     environment variable names
  * event           autocommand events
  * expression      Vim expression
  * file            file and directory names
- * file_in_path    file and directory names in `'path'`
- * filetype        filetype names `'filetype'`
+ * file_in_path    file and directory names in 'path'
+ * filetype        filetype names 'filetype'
+ * filetypecmd     `:filetype` suboptions
  * function        function name
  * help            help subjects
  * highlight       highlight groups
@@ -2995,11 +3309,13 @@ export function getcmdwintype(
  * messages        `:messages` suboptions
  * option          options
  * packadd         optional package `pack-add` names
+ * retab           `:retab` suboptions
  * runtime         `:runtime` completion
  * scriptnames     sourced script names `:scriptnames`
  * shellcmd        Shell command
+ * shellcmdline    Shell command line with filename arguments
  * sign            `:sign` suboptions
- * syntax          syntax file names `'syntax'`
+ * syntax          syntax file names 'syntax'
  * syntime         `:syntime` suboptions
  * tag             tags
  * tag_listfiles   tags, file names
@@ -3033,6 +3349,8 @@ export function getcmdwintype(
  * Can also be used as a `method`:
  *
  *     GetPattern()->getcompletion('color')
+ *
+ * Return type: list<string>
  */
 export function getcompletion(
   denops: Denops,
@@ -3060,6 +3378,8 @@ export function getcompletion(
  * Can also be used as a `method`:
  *
  *     GetWinid()->getcursorcharpos()
+ *
+ * Return type: list<number>
  */
 export function getcursorcharpos(
   denops: Denops,
@@ -3109,6 +3429,8 @@ export function getcursorcharpos(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->getcwd()
+ *
+ * Return type: `String`
  */
 export function getcwd(
   denops: Denops,
@@ -3133,6 +3455,8 @@ export function getcwd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetVarname()->getenv()
+ *
+ * Return type: `String` or `Number`
  */
 export function getenv(denops: Denops, name: unknown): Promise<string>;
 export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -3152,6 +3476,8 @@ export function getenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * function just after the GUI has started.
  * Note that the GTK GUI accepts any font name, thus checking for
  * a valid name does not work.
+ *
+ * Return type: `String`
  */
 export function getfontname(denops: Denops, name?: unknown): Promise<string>;
 export function getfontname(
@@ -3182,6 +3508,8 @@ export function getfontname(
  *
  *     GetFilename()->getfperm()
  *
+ * Return type: `String`
+ *
  * For setting permissions use `setfperm()`.
  */
 export function getfperm(denops: Denops, fname: unknown): Promise<string>;
@@ -3200,6 +3528,8 @@ export function getfperm(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFilename()->getfsize()
+ *
+ * Return type: `Number`
  */
 export function getfsize(denops: Denops, fname: unknown): Promise<number>;
 export function getfsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -3216,6 +3546,8 @@ export function getfsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFilename()->getftime()
+ *
+ * Return type: `Number`
  */
 export function getftime(denops: Denops, fname: unknown): Promise<number>;
 export function getftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -3248,6 +3580,8 @@ export function getftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFilename()->getftype()
+ *
+ * Return type: `String`
  */
 export function getftype(denops: Denops, fname: unknown): Promise<string>;
 export function getftype(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -3277,6 +3611,8 @@ export function getftype(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetWinnr()->getjumplist()
+ *
+ * Return type: list<any>
  */
 export function getjumplist(
   denops: Denops,
@@ -3321,6 +3657,8 @@ export function getjumplist(
  *
  *     :echo getloclist(3, {'all': 0})
  *     :echo getloclist(5, {'filewinid': 0})
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function getloclist(
   denops: Denops,
@@ -3365,6 +3703,8 @@ export function getloclist(
  *         'pattern': 'FIXME', 'priority': 10, 'id': 2}]
  *
  *             :unlet m
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function getmatches(denops: Denops, win?: unknown): Promise<unknown[]>;
 export function getmatches(
@@ -3389,8 +3729,9 @@ export function getmatches(
  *                         start of the clicked char
  * All numbers are 1-based.
  *
- * If not over a window, e.g. when in the command line, then only
- * "screenrow" and "screencol" are valid, the others are zero.
+ * If not over a window, e.g. when in the command line or within
+ * `tabpanel`, then only "screenrow" and "screencol" are valid,
+ * the others are zero.
  *
  * When on the status line below a window or the vertical
  * separator right of a window, the "line" and "column" values
@@ -3403,6 +3744,8 @@ export function getmatches(
  *
  * When using `getchar()` the Vim variables `v:mouse_lnum`,
  * `v:mouse_col` and `v:mouse_winid` also provide these values.
+ *
+ * Return type: dict<number>
  */
 export function getmousepos(denops: Denops): Promise<Record<string, unknown>>;
 export function getmousepos(
@@ -3416,6 +3759,8 @@ export function getmousepos(
  * Return a Number which is the process ID of the Vim process.
  * On Unix and MS-Windows this is a unique number, until Vim
  * exits.
+ *
+ * Return type: `Number`
  */
 export function getpid(denops: Denops): Promise<number>;
 export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -3526,6 +3871,8 @@ export function getpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :echo getqflist({'all': 1})
  *     :echo getqflist({'nr': 2, 'title': 1})
  *     :echo getqflist({'lines' : ["F1:10:L10"]})
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function getqflist(
   denops: Denops,
@@ -3568,6 +3915,8 @@ export function getqflist(
  * Can also be used as a `method`:
  *
  *     GetRegname()->getreg()
+ *
+ * Return type: `String` or list<string> depending on **{list}**
  */
 export function getreg(
   denops: Denops,
@@ -3622,6 +3971,10 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * - It is evaluated in current window context, which makes a
  *   difference if the buffer is displayed in a window with
  *   different 'virtualedit' or 'list' values.
+ * - When specifying an exclusive selection and **{pos1}** and **{pos2}**
+ *   are equal, the returned list contains a single character as
+ *   if selection is inclusive, to match the behavior of an empty
+ *   exclusive selection in Visual mode.
  *
  * Examples:
  *
@@ -3632,6 +3985,8 @@ export function getreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     getpos('.')->getregion(getpos("'a"))
+ *
+ * Return type: list<string>
  */
 export function getregion(
   denops: Denops,
@@ -3644,6 +3999,60 @@ export function getregion(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getregion", ...args);
+}
+
+/**
+ * Same as `getregion()`, but returns a list of positions
+ * describing the buffer text segments bound by **{pos1}** and
+ * **{pos2}**.
+ * The segments are a pair of positions for every line:
+ *
+ *     [[{start_pos}, {end_pos}], ...]
+ *
+ * The position is a `List` with four numbers:
+ *     [bufnum, lnum, col, off]
+ * "bufnum" is the buffer number.
+ * "lnum" and "col" are the position in the buffer.  The first
+ * column is 1.
+ * If the "off" number of a starting position is non-zero, it is
+ * the offset in screen columns from the start of the character.
+ * E.g., a position within a `<Tab>` or after the last character.
+ * If the "off" number of an ending position is non-zero, it is
+ * the offset of the character's first cell not included in the
+ * selection, otherwise all its cells are included.
+ *
+ * Apart from the options supported by `getregion()`, **{opts}** also
+ * supports the following:
+ *
+ *         eol             If `TRUE`, indicate positions beyond
+ *                         the end of a line with "col" values
+ *                         one more than the length of the line.
+ *                         If `FALSE`, positions are limited
+ *                         within their lines, and if a line is
+ *                         empty or the selection is entirely
+ *                         beyond the end of a line, a "col"
+ *                         value of 0 is used for both positions.
+ *                         (default: `FALSE`)
+ *
+ * Can also be used as a `method`:
+ *
+ *     getpos('.')->getregionpos(getpos("'a"))
+ *
+ * For an example, see the highlight-yank plugin `52.6`
+ *
+ * Return type: list<list<list<number>>>
+ */
+export function getregionpos(
+  denops: Denops,
+  pos1: unknown,
+  pos2: unknown,
+  opts?: unknown,
+): Promise<unknown[]>;
+export function getregionpos(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getregionpos", ...args);
 }
 
 /**
@@ -3662,6 +4071,8 @@ export function getregion(
  * Can also be used as a `method`:
  *
  *     GetRegname()->getregtype()
+ *
+ * Return type: `String`
  */
 export function getregtype(denops: Denops, regname?: unknown): Promise<string>;
 export function getregtype(
@@ -3712,6 +4123,8 @@ export function getregtype(
  *
  *     :echo getscriptinfo({'name': 'myscript'})
  *     :echo getscriptinfo({'sid': 15})[0].variables
+ *
+ * Return type: list<dict<any>>
  */
 export function getscriptinfo(
   denops: Denops,
@@ -3722,6 +4135,28 @@ export function getscriptinfo(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("getscriptinfo", ...args);
+}
+
+/**
+ * Returns the current stack trace of Vim scripts.
+ * Stack trace is a `List`, of which each item is a `Dictionary`
+ * with the following items:
+ *     funcref     The funcref if the stack is at a function,
+ *                 otherwise this item is omitted.
+ *     event       The string of the event description if the
+ *                 stack is at an autocmd event, otherwise this
+ *                 item is omitted.
+ *     lnum        The line number in the script on the stack.
+ *     filepath    The file path of the script on the stack.
+ *
+ * Return type: list<dict<any>>
+ */
+export function getstacktrace(denops: Denops): Promise<unknown[]>;
+export function getstacktrace(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("getstacktrace", ...args);
 }
 
 /**
@@ -3740,6 +4175,8 @@ export function getscriptinfo(
  * Can also be used as a `method`:
  *
  *     GetTabnr()->gettabinfo()
+ *
+ * Return type: list<dict<any>>
  */
 export function gettabinfo(denops: Denops, tabnr?: unknown): Promise<unknown[]>;
 export function gettabinfo(
@@ -3762,6 +4199,8 @@ export function gettabinfo(
  * Can also be used as a `method`:
  *
  *     GetTabnr()->gettabvar(varname)
+ *
+ * Return type: any, depending on **{varname}**
  */
 export function gettabvar(
   denops: Denops,
@@ -3807,6 +4246,8 @@ export function gettabvar(
  * Can also be used as a `method`:
  *
  *     GetTabnr()->gettabwinvar(winnr, varname)
+ *
+ * Return type: any, depending on **{varname}**
  */
 export function gettabwinvar(
   denops: Denops,
@@ -3853,6 +4294,8 @@ export function gettabwinvar(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->gettagstack()
+ *
+ * Return type: dict<any>
  */
 export function gettagstack(
   denops: Denops,
@@ -3867,16 +4310,26 @@ export function gettagstack(
 
 /**
  * Translate String **{text}** if possible.
- * This is mainly for use in the distributed Vim scripts.  When
- * generating message translations the **{text}** is extracted by
- * xgettext, the translator can add the translated message in the
- * .po file and Vim will lookup the translation when gettext() is
- * called.
+ * This is intended for use in Vim scripts.  When generating
+ * message translations the **{text}** is extracted by `xgettext`,
+ * the translator can add translated messages into the .po file
+ * and Vim will lookup the translation when gettext() is called.
  * For **{text}** double quoted strings are preferred, because
- * xgettext does not understand escaping in single quoted
- * strings.
+ * `xgettext` does not support single quoted escaped text.
+ *
+ * When the **{package}** is specified, the translation is looked up
+ * for that specific package.  This is mainly required for
+ * third-party Vim scripts.  You need to specify a path to the
+ * translations with the `bindtextdomain()` function before
+ * using the gettext() function.
+ *
+ * Return type: `String`
  */
-export function gettext(denops: Denops, text: unknown): Promise<string>;
+export function gettext(
+  denops: Denops,
+  text: unknown,
+  package_?: unknown,
+): Promise<string>;
 export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("gettext", ...args);
 }
@@ -3888,6 +4341,8 @@ export function gettext(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The result will be -1 if the information is not available
  * (e.g. on the Wayland backend).
  * The value can be used with `:winpos`.
+ *
+ * Return type: `Number`
  */
 export function getwinposx(denops: Denops): Promise<number>;
 export function getwinposx(
@@ -3904,6 +4359,8 @@ export function getwinposx(
  * The result will be -1 if the information is not available
  * (e.g. on the Wayland backend).
  * The value can be used with `:winpos`.
+ *
+ * Return type: `Number`
  */
 export function getwinposy(denops: Denops): Promise<number>;
 export function getwinposy(
@@ -3923,6 +4380,8 @@ export function getwinposy(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->getwinvar(varname)
+ *
+ * Return type: any, depending on **{varname}**
  */
 export function getwinvar(
   denops: Denops,
@@ -3978,6 +4437,9 @@ export function getwinvar(
  * Can also be used as a `method`:
  *
  *     GetExpr()->glob()
+ *
+ * Return type: `String` or list<string> or list<any> depending
+ * on **{list}**
  */
 export function glob(
   denops: Denops,
@@ -4009,6 +4471,8 @@ export function glob(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetExpr()->glob2regpat()
+ *
+ * Return type: `String`
  */
 export function glob2regpat(denops: Denops, string: unknown): Promise<string>;
 export function glob2regpat(
@@ -4061,6 +4525,9 @@ export function glob2regpat(
  * second argument:
  *
  *     GetExpr()->globpath(&rtp)
+ *
+ * Return type: `String` or list<string> or list<any> depending
+ * on **{list}**
  */
 export function globpath(
   denops: Denops,
@@ -4085,6 +4552,8 @@ export function globpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mydict->has_key(key)
+ *
+ * Return type: `Number`
  */
 export function has_key(
   denops: Denops,
@@ -4133,6 +4602,8 @@ export function has_key(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetWinnr()->haslocaldir()
+ *
+ * Return type: `Number`
  */
 export function haslocaldir(
   denops: Denops,
@@ -4182,6 +4653,8 @@ export function haslocaldir(
  * Can also be used as a `method`:
  *
  *     GetRHS()->hasmapto()
+ *
+ * Return type: `Number`
  */
 export function hasmapto(
   denops: Denops,
@@ -4220,6 +4693,8 @@ export function hasmapto(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * second argument:
  *
  *     GetHistory()->histadd('search')
+ *
+ * Return type: `Number`
  */
 export function histadd(
   denops: Denops,
@@ -4269,6 +4744,8 @@ export function histadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetHistory()->histdel()
+ *
+ * Return type: `Number`
  */
 export function histdel(
   denops: Denops,
@@ -4299,6 +4776,8 @@ export function histdel(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetHistory()->histget()
+ *
+ * Return type: `String`
  */
 export function histget(
   denops: Denops,
@@ -4321,6 +4800,8 @@ export function histget(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetHistory()->histnr()
+ *
+ * Return type: `Number`
  */
 export function histnr(denops: Denops, history: unknown): Promise<number>;
 export function histnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4339,6 +4820,8 @@ export function histnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->hlexists()
+ *
+ * Return type: `Number`
  */
 export function hlexists(denops: Denops, name: unknown): Promise<number>;
 export function hlexists(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4360,6 +4843,8 @@ export function hlexists(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->hlID()
+ *
+ * Return type: `Number`
  */
 export function hlID(denops: Denops, name: unknown): Promise<number>;
 export function hlID(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4370,6 +4855,8 @@ export function hlID(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * The result is a String, which is the name of the machine on
  * which Vim is currently running.  Machine names greater than
  * 256 characters long are truncated.
+ *
+ * Return type: `String`
  */
 export function hostname(denops: Denops): Promise<string>;
 export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4400,6 +4887,8 @@ export function hostname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->iconv('latin1', 'utf-8')
+ *
+ * Return type: `String`
  */
 export function iconv(
   denops: Denops,
@@ -4409,6 +4898,41 @@ export function iconv(
 ): Promise<string>;
 export function iconv(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("iconv", ...args);
+}
+
+/**
+ * The result is a unique String associated with the **{item}** and
+ * not with the **{item}**'s contents. It is only valid while the
+ * **{item}** exists and is referenced. It is valid only in the
+ * instance of vim that produces the result. The whole idea is
+ * that `id({item})` does not change if the contents of **{item}**
+ * changes. This is useful as a `key` for creating an identity
+ * dictionary, rather than one based on equals.
+ *
+ * This operation does not reference **{item}** and there is no
+ * function to convert the `id` to the **{item}**. It may be useful to
+ * have a map of `id` to **{item}**. The following
+ *
+ *     var referenceMap: dict<any>
+ *     var id = item->id()
+ *     referenceMap[id] = item
+ *
+ * prevents **{item}** from being garbage collected and provides a
+ * way to get the **{item}** from the `id`.
+ *
+ * **{item}** may be a List, Tuple, Dictionary, Object, Job, Channel
+ * or Blob. If the item is not a permitted type, or it is a null
+ * value, then an empty String is returned.
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetItem()->id()
+ *
+ * Return type: `String`
+ */
+export function id(denops: Denops, item: unknown): Promise<string>;
+export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
+  return denops.call("id", ...args);
 }
 
 /**
@@ -4422,6 +4946,8 @@ export function iconv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->indent()
+ *
+ * Return type: `Number`
  */
 export function indent(denops: Denops, lnum: unknown): Promise<number>;
 export function indent(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4432,12 +4958,12 @@ export function indent(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Find **{expr}** in **{object}** and return its index.  See
  * `indexof()` for using a lambda to select the item.
  *
- * If **{object}** is a `List` return the lowest index where the item
- * has a value equal to **{expr}**.  There is no automatic
- * conversion, so the String "4" is different from the Number 4.
- * And the number 4 is different from the Float 4.0.  The value
- * of 'ignorecase' is not used here, case matters as indicated by
- * the **{ic}** argument.
+ * If **{object}** is a `List` or a `Tuple` return the lowest index
+ * where the item has a value equal to **{expr}**.  There is no
+ * automatic conversion, so the String "4" is different from the
+ * Number 4.  And the number 4 is different from the Float 4.0.
+ * The value of 'ignorecase' is not used here, case matters as
+ * indicated by the **{ic}** argument.
  *
  * If **{object}** is `Blob` return the lowest index where the byte
  * value is equal to **{expr}**.
@@ -4457,6 +4983,8 @@ export function indent(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetObject()->index(what)
+ *
+ * Return type: `Number`
  */
 export function index(
   denops: Denops,
@@ -4471,11 +4999,11 @@ export function index(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Returns the index of an item in **{object}** where **{expr}** is
- * v:true.  **{object}** must be a `List` or a `Blob`.
+ * v:true.  **{object}** must be a `List`, a `Tuple` or a `Blob`.
  *
- * If **{object}** is a `List`, evaluate **{expr}** for each item in the
- * List until the expression is v:true and return the index of
- * this item.
+ * If **{object}** is a `List` or a `Tuple`, evaluate **{expr}** for each
+ * item in the List or Tuple until the expression is v:true
+ * and return the index of this item.
  *
  * If **{object}** is a `Blob` evaluate **{expr}** for each byte in the
  * Blob until the expression is v:true and return the index of
@@ -4483,11 +5011,11 @@ export function index(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * **{expr}** must be a `string` or `Funcref`.
  *
- * If **{expr}** is a `string`: If **{object}** is a `List`, inside
- * **{expr}** `v:key` has the index of the current List item and
- * `v:val` has the value of the item.  If **{object}** is a `Blob`,
- * inside **{expr}** `v:key` has the index of the current byte and
- * `v:val` has the byte value.
+ * If **{expr}** is a `string`: If **{object}** is a `List` or a `Tuple`,
+ * inside **{expr}** `v:key` has the index of the current List or
+ * Tuple item and `v:val` has the value of the item.  If **{object}**
+ * is a `Blob`, inside **{expr}** `v:key` has the index of the
+ * current byte and `v:val` has the byte value.
  *
  * If **{expr}** is a `Funcref` it must take two arguments:
  *         1. the key or the index of the current item.
@@ -4511,6 +5039,8 @@ export function index(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->indexof(expr)
+ *
+ * Return type: `Number`
  */
 export function indexof(
   denops: Denops,
@@ -4544,6 +5074,8 @@ export function indexof(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->insert(item)
+ *
+ * Return type: `Number`
  */
 export function insert(
   denops: Denops,
@@ -4568,6 +5100,8 @@ export function insert(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :   endif
  *     :endfunction
  *     :au BufWritePre * call s:check_typoname(expand('<amatch>'))
+ *
+ * Return type: void
  */
 export function interrupt(denops: Denops): Promise<void>;
 export function interrupt(
@@ -4586,10 +5120,41 @@ export function interrupt(
  * Can also be used as a `method`:
  *
  *     :let bits = bits->invert()
+ *
+ * Return type: `Number`
  */
 export function invert(denops: Denops, expr: unknown): Promise<number>;
 export function invert(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("invert", ...args);
+}
+
+/**
+ * The result is a Number, which is `TRUE` when **{path}** is an
+ * absolute path.
+ * On Unix, a path is considered absolute when it starts with '/'.
+ * On MS-Windows, it is considered absolute when it starts with an
+ * optional drive prefix and is followed by a '\' or '/'. UNC paths
+ * are always absolute.
+ * Example:
+ *
+ *     echo isabsolutepath('/usr/share/')      " 1
+ *     echo isabsolutepath('./foobar')         " 0
+ *     echo isabsolutepath('C:\Windows')       " 1
+ *     echo isabsolutepath('foobar')           " 0
+ *     echo isabsolutepath('\\remote\file')    " 1
+ *
+ * Can also be used as a `method`:
+ *
+ *     GetName()->isabsolutepath()
+ *
+ * Return type: `Number`
+ */
+export function isabsolutepath(denops: Denops, path: unknown): Promise<number>;
+export function isabsolutepath(
+  denops: Denops,
+  ...args: unknown[]
+): Promise<unknown> {
+  return denops.call("isabsolutepath", ...args);
 }
 
 /**
@@ -4601,6 +5166,8 @@ export function invert(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->isdirectory()
+ *
+ * Return type: `Number`
  */
 export function isdirectory(
   denops: Denops,
@@ -4628,6 +5195,8 @@ export function isdirectory(
  * Can also be used as a `method`:
  *
  *     Compute()->isinf()
+ *
+ * Return type: `Number`
  */
 export function isinf(denops: Denops, expr: unknown): Promise<number>;
 export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4655,6 +5224,8 @@ export function isinf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->islocked()
+ *
+ * Return type: `Number`
  */
 export function islocked(denops: Denops, expr: unknown): Promise<number>;
 export function islocked(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4671,6 +5242,8 @@ export function islocked(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->isnan()
+ *
+ * Return type: `Number`
  */
 export function isnan(denops: Denops, expr: unknown): Promise<number>;
 export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4678,31 +5251,38 @@ export function isnan(denops: Denops, ...args: unknown[]): Promise<unknown> {
 }
 
 /**
- * Return a `List` with all the key-value pairs of **{dict}**.  Each
- * `List` item is a list with two items: the key of a **{dict}**
- * entry and the value of this entry.  The `List` is in arbitrary
- * order.  Also see `keys()` and `values()`.
- * Example:
+ * Return a `List` with all the key/index and value pairs of **{expr}**.
+ * Each `List` item is a list with two items:
+ * - for a `Dict`: the key and the value
+ * - for a `List`, `Tuple` or `String`: the index and the value
+ * The `List` is in arbitrary order.
  *
+ * Also see `keys()` and `values()`.
+ *
+ * Examples:
+ *
+ *     let mydict = #{a: 'red', b: 'blue'}
  *     for [key, value] in items(mydict)
- *        echo key .. ': ' .. value
+ *        echo $"{key} = {value}"
  *     endfor
- *
- * A List or a String argument is also supported.  In these
- * cases, items() returns a List with the index and the value at
- * the index.
+ *     echo items([1, 2, 3])
+ *     echo items(('a', 'b', 'c'))
+ *     echo items("foobar")
  *
  * Can also be used as a `method`:
  *
  *     mydict->items()
+ *
+ * Return type: list<list<any>> or list<any>
  */
-export function items(denops: Denops, dict: unknown): Promise<unknown[]>;
+export function items(denops: Denops, expr: unknown): Promise<unknown[]>;
 export function items(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("items", ...args);
 }
 
 /**
- * Join the items in **{list}** together into one String.
+ * Join the items in **{expr}** together into one String.  **{expr}** can
+ * be a `List` or a `Tuple`.
  * When **{sep}** is specified it is put in between the items.  If
  * **{sep}** is omitted a single space is used.
  * Note that **{sep}** is not added at the end.  You might want to
@@ -4710,17 +5290,19 @@ export function items(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     let lines = join(mylist, "\n") .. "\n"
  *
- * String items are used as-is.  `Lists` and `Dictionaries` are
- * converted into a string like with `string()`.
- * The opposite function is `split()`.
+ * String items are used as-is.  `Lists`, `Tuples` and
+ * `Dictionaries` are converted into a string like with
+ * `string()`.  The opposite function is `split()`.
  *
  * Can also be used as a `method`:
  *
  *     mylist->join()
+ *
+ * Return type: `String`
  */
 export function join(
   denops: Denops,
-  list: unknown,
+  expr: unknown,
   sep?: unknown,
 ): Promise<string>;
 export function join(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4763,6 +5345,8 @@ export function join(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     ReadObject()->json_decode()
+ *
+ * Return type: any, depending on **{varname}**
  */
 export function json_decode(denops: Denops, string: unknown): Promise<unknown>;
 export function json_decode(
@@ -4786,6 +5370,8 @@ export function json_decode(
  *    `Funcref`            not possible, error
  *    `List`               as an array (possibly null); when
  *                         used recursively: []
+ *    `Tuple`              as an array (possibly null); when
+ *                         used recursively: []
  *    `Dict`               as an object (possibly null); when
  *                         used recursively: {}
  *    `Blob`               as an array of the individual bytes
@@ -4802,6 +5388,8 @@ export function json_decode(
  * Can also be used as a `method`:
  *
  *     GetObject()->json_encode()
+ *
+ * Return type: `String`
  */
 export function json_encode(denops: Denops, expr: unknown): Promise<string>;
 export function json_encode(
@@ -4818,6 +5406,8 @@ export function json_encode(
  * Can also be used as a `method`:
  *
  *     mydict->keys()
+ *
+ * Return type: list<string>
  */
 export function keys(denops: Denops, dict: unknown): Promise<unknown[]>;
 export function keys(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4836,6 +5426,8 @@ export function keys(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     "\<C-Home>"->keytrans()
+ *
+ * Return type: `String`
  */
 export function keytrans(denops: Denops, string: unknown): Promise<string>;
 export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4848,6 +5440,8 @@ export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * used, as with `strlen()`.
  * When **{expr}** is a `List` the number of items in the `List` is
  * returned.
+ * When **{expr}** is a `Tuple` the number of items in the `Tuple` is
+ * returned.
  * When **{expr}** is a `Blob` the number of bytes is returned.
  * When **{expr}** is a `Dictionary` the number of entries in the
  * `Dictionary` is returned.
@@ -4858,6 +5452,8 @@ export function keytrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->len()
+ *
+ * Return type: `Number`
  */
 export function len(denops: Denops, expr: unknown): Promise<number>;
 export function len(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4928,7 +5524,7 @@ export function libcall(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Just like `libcall()`, but used for a function that returns an
  * int instead of a string.
- * *only in Win32 on some Unix versions, when the `+libcall`
+ * *only in Win32 and some Unix versions, when the `+libcall`
  * feature is present*
  * Examples:
  *
@@ -4940,6 +5536,8 @@ export function libcall(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * third argument:
  *
  *     GetValue()->libcallnr("libc.so", "printf")
+ *
+ * Return type: `String`
  */
 export function libcallnr(
   denops: Denops,
@@ -4965,6 +5563,8 @@ export function libcallnr(
  * Can also be used as a `method`:
  *
  *     GetLnum()->lispindent()
+ *
+ * Return type: `Number`
  */
 export function lispindent(denops: Denops, lnum: unknown): Promise<number>;
 export function lispindent(
@@ -4989,6 +5589,8 @@ export function lispindent(
  * Can also be used as a `method`:
  *
  *     GetList()->list2blob()
+ *
+ * Return type: `Blob`
  */
 export function list2blob(denops: Denops, list: unknown): Promise<unknown>;
 export function list2blob(
@@ -4999,8 +5601,8 @@ export function list2blob(
 }
 
 /**
- * Convert each number in **{list}** to a character string can
- * concatenate them all.  Examples:
+ * Convert each number in **{list}** to a character string and
+ * concatenates them all.  Examples:
  *
  *     list2str([32])          returns " "
  *     list2str([65, 66, 67])  returns "ABC"
@@ -5022,6 +5624,8 @@ export function list2blob(
  * Can also be used as a `method`:
  *
  *     GetList()->list2str()
+ *
+ * Return type: `String`
  */
 export function list2str(
   denops: Denops,
@@ -5035,6 +5639,8 @@ export function list2str(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Return the current time, measured as seconds since 1st Jan
  * 1970.  See also `strftime()`, `strptime()` and `getftime()`.
+ *
+ * Return type: `Number`
  */
 export function localtime(denops: Denops): Promise<number>;
 export function localtime(
@@ -5062,6 +5668,8 @@ export function localtime(
  * Can also be used as a `method`:
  *
  *     Compute()->log()
+ *
+ * Return type: `Float`
  */
 export function log(denops: Denops, expr: unknown): Promise<number>;
 export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5085,6 +5693,8 @@ export function log(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->log10()
+ *
+ * Return type: `Float`
  */
 export function log10(denops: Denops, expr: unknown): Promise<number>;
 export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5108,6 +5718,8 @@ export function log10(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetExpr()->luaeval()
+ *
+ * Return type: any, depending on **{expr}**
  *
  * *only available when compiled with the `+lua` feature*
  */
@@ -5192,6 +5804,9 @@ export function luaeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->map(expr2)
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or dict<**{type}**>
+ * depending on **{expr1}**
  */
 export function map(
   denops: Denops,
@@ -5278,6 +5893,8 @@ export function map(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetKey()->maparg('n')
+ *
+ * Return type: `String` or dict<any> depending on **{dict}**
  */
 export function maparg(
   denops: Denops,
@@ -5328,6 +5945,8 @@ export function maparg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetKey()->mapcheck('n')
+ *
+ * Return type: `String`
  */
 export function mapcheck(
   denops: Denops,
@@ -5376,6 +5995,8 @@ export function mapcheck(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         (_, m) => m.lhs == 'xyzzy')[0].mode_bits
  *     ounmap xyzzy
  *     echo printf("Operator-pending mode bit: 0x%x", op_bit)
+ *
+ * Return type: list<dict<any>>
  */
 export function maplist(denops: Denops, abbr?: unknown): Promise<unknown[]>;
 export function maplist(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5387,6 +6008,9 @@ export function maplist(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * List or Dictionary is created and returned.  **{expr1}** remains
  * unchanged.  Items can still be changed by **{expr2}**, if you
  * don't want that use `deepcopy()` first.
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or dict<**{type}**>
+ * depending on **{expr1}**
  */
 export function mapnew(
   denops: Denops,
@@ -5436,6 +6060,8 @@ export function mapnew(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     for d in save_maps
  *         mapset(d)
  *     endfor
+ *
+ * Return type: `Number`
  */
 export function mapset(
   denops: Denops,
@@ -5526,6 +6152,8 @@ export function mapset(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetText()->match('word')
  *     GetList()->match('word')
+ *
+ * Return type: `Number`
  */
 export function match(
   denops: Denops,
@@ -5602,6 +6230,8 @@ export function match(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetGroup()->matchadd('TODO')
+ *
+ * Return type: `Number`
  */
 export function matchadd(
   denops: Denops,
@@ -5618,10 +6248,10 @@ export function matchadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Same as `matchadd()`, but requires a list of positions **{pos}**
  * instead of a pattern. This command is faster than `matchadd()`
- * because it does not require to handle regular expressions and
- * sets buffer line boundaries to redraw screen. It is supposed
- * to be used when fast match additions and deletions are
- * required, for example to highlight matching parentheses.
+ * because it does not handle regular expressions and it sets
+ * buffer line boundaries to redraw screen. It is supposed to be
+ * used when fast match additions and deletions are required, for
+ * example to highlight matching parentheses.
  *
  * **{pos}** is a list of positions.  Each position can be one of
  * these:
@@ -5654,6 +6284,8 @@ export function matchadd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetGroup()->matchaddpos([23, 11])
+ *
+ * Return type: `Number`
  */
 export function matchaddpos(
   denops: Denops,
@@ -5685,6 +6317,8 @@ export function matchaddpos(
  * Can also be used as a `method`:
  *
  *     GetMatch()->matcharg()
+ *
+ * Return type: list<string>
  */
 export function matcharg(denops: Denops, nr: unknown): Promise<unknown[]>;
 export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5724,7 +6358,8 @@ export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     [{'lnum': 3, 'byteidx': 0, 'text': 'a'}]
  *     " Assuming line 4 in buffer 10 contains "tik tok"
  *     :echo matchbufline(10, '\<\k\+\>', 1, 4)
- *     [{'lnum': 4, 'byteidx': 0, 'text': 'tik'}, {'lnum': 4, 'byteidx': 4, 'text': 'tok'}]
+ *     [{'lnum': 4, 'byteidx': 0, 'text': 'tik'},
+ *      {'lnum': 4, 'byteidx': 4, 'text': 'tok'}]
  *
  * If **{submatch}** is present and is v:true, then submatches like
  * "\1", "\2", etc. are also returned.  Example:
@@ -5732,7 +6367,8 @@ export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     " Assuming line 2 in buffer 2 contains "acd"
  *     :echo matchbufline(2, '\(a\)\?\(b\)\?\(c\)\?\(.*\)', 2, 2
  *                                 \ {'submatches': v:true})
- *     [{'lnum': 2, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *     [{'lnum': 2, 'byteidx': 0, 'text': 'acd', 'submatches':
+ *     ['a', '', 'c', 'd', '', '', '', '', '']}]
  *
  * The "submatches" List always contains 9 items.  If a submatch
  * is not found, then an empty string is returned for that
@@ -5741,6 +6377,8 @@ export function matcharg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetBuffer()->matchbufline('mypat', 1, '$')
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function matchbufline(
   denops: Denops,
@@ -5768,6 +6406,8 @@ export function matchbufline(
  * Can also be used as a `method`:
  *
  *     GetMatch()->matchdelete()
+ *
+ * Return type: `Number`
  */
 export function matchdelete(
   denops: Denops,
@@ -5811,6 +6451,8 @@ export function matchdelete(
  * Can also be used as a `method`:
  *
  *     GetText()->matchend('word')
+ *
+ * Return type: `Number`
  */
 export function matchend(
   denops: Denops,
@@ -5901,6 +6543,8 @@ export function matchend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *                                  \ {'matchseq': 1})
  *
  * results in ['two one'].
+ *
+ * Return type: list<string> or list<any>
  */
 export function matchfuzzy(
   denops: Denops,
@@ -5938,9 +6582,12 @@ export function matchfuzzy(
  *
  * results in [['lacy', 'clay'], [[0, 1], [1, 2]], [153, 133]]
  *
- *     :echo [{'text': 'hello', 'id' : 10}]->matchfuzzypos('ll', {'key' : 'text'})
+ *     :echo [{'text': 'hello', 'id' : 10}]
+ *       \ ->matchfuzzypos('ll', {'key' : 'text'})
  *
  * results in [[{'id': 10, 'text': 'hello'}], [[2, 3]], [127]]
+ *
+ * Return type: list<list<any>>
  */
 export function matchfuzzypos(
   denops: Denops,
@@ -5972,6 +6619,8 @@ export function matchfuzzypos(
  * Can also be used as a `method`:
  *
  *     GetText()->matchlist('word')
+ *
+ * Return type: list<string> or list<any>
  */
 export function matchlist(
   denops: Denops,
@@ -6008,16 +6657,19 @@ export function matchlist(
  * Example:
  *
  *     :echo matchstrlist(['tik tok'], '\<\k\+\>')
- *     [{'idx': 0, 'byteidx': 0, 'text': 'tik'}, {'idx': 0, 'byteidx': 4, 'text': 'tok'}]
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'tik'},
+ *      {'idx': 0, 'byteidx': 4, 'text': 'tok'}]
  *     :echo matchstrlist(['a', 'b'], '\<\k\+\>')
- *     [{'idx': 0, 'byteidx': 0, 'text': 'a'}, {'idx': 1, 'byteidx': 0, 'text': 'b'}]
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'a'},
+ *      {'idx': 1, 'byteidx': 0, 'text': 'b'}]
  *
  * If "submatches" is present and is v:true, then submatches like
  * "\1", "\2", etc. are also returned.  Example:
  *
  *     :echo matchstrlist(['acd'], '\(a\)\?\(b\)\?\(c\)\?\(.*\)',
  *                                 \ #{submatches: v:true})
- *     [{'idx': 0, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+ *     [{'idx': 0, 'byteidx': 0, 'text': 'acd',
+ *       'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
  *
  * The "submatches" List always contains 9 items.  If a submatch
  * is not found, then an empty string is returned for that
@@ -6026,6 +6678,8 @@ export function matchlist(
  * Can also be used as a `method`:
  *
  *     GetListOfStrings()->matchstrlist('mypat')
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function matchstrlist(
   denops: Denops,
@@ -6062,6 +6716,8 @@ export function matchstrlist(
  * Can also be used as a `method`:
  *
  *     GetText()->matchstr('word')
+ *
+ * Return type: `String`
  */
 export function matchstr(
   denops: Denops,
@@ -6103,6 +6759,8 @@ export function matchstr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->matchstrpos('word')
+ *
+ * Return type: list<any>
  */
 export function matchstrpos(
   denops: Denops,
@@ -6123,15 +6781,18 @@ export function matchstrpos(
  *
  *     echo max([apples, pears, oranges])
  *
- * **{expr}** can be a `List` or a `Dictionary`.  For a Dictionary,
- * it returns the maximum of all values in the Dictionary.
- * If **{expr}** is neither a List nor a Dictionary, or one of the
- * items in **{expr}** cannot be used as a Number this results in
- * an error.  An empty `List` or `Dictionary` results in zero.
+ * **{expr}** can be a `List`, a `Tuple` or a `Dictionary`.  For a
+ * Dictionary, it returns the maximum of all values in the
+ * Dictionary.  If **{expr}** is neither a List nor a Tuple nor a
+ * Dictionary, or one of the items in **{expr}** cannot be used as a
+ * Number this results in an error.  An empty `List`, `Tuple`
+ * or `Dictionary` results in zero.
  *
  * Can also be used as a `method`:
  *
  *     mylist->max()
+ *
+ * Return type: `Number`
  */
 export function max(denops: Denops, expr: unknown): Promise<number>;
 export function max(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6212,6 +6873,8 @@ export function max(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetMenuName()->menu_info('v')
+ *
+ * Return type: dict<any>
  */
 export function menu_info(
   denops: Denops,
@@ -6230,15 +6893,18 @@ export function menu_info(
  *
  *     echo min([apples, pears, oranges])
  *
- * **{expr}** can be a `List` or a `Dictionary`.  For a Dictionary,
- * it returns the minimum of all values in the Dictionary.
- * If **{expr}** is neither a List nor a Dictionary, or one of the
- * items in **{expr}** cannot be used as a Number this results in
- * an error.  An empty `List` or `Dictionary` results in zero.
+ * **{expr}** can be a `List`, a `Tuple` or a `Dictionary`.  For a
+ * Dictionary, it returns the minimum of all values in the
+ * Dictionary.  If **{expr}** is neither a List nor a Tuple nor a
+ * Dictionary, or one of the items in **{expr}** cannot be used as a
+ * Number this results in an error.  An empty `List`, `Tuple` or
+ * `Dictionary` results in zero.
  *
  * Can also be used as a `method`:
  *
  *     mylist->min()
+ *
+ * Return type: `Number`
  */
 export function min(denops: Denops, expr: unknown): Promise<number>;
 export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6251,18 +6917,12 @@ export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * When **{flags}** is present it must be a string.  An empty string
  * has no effect.
  *
- * If **{flags}** contains "p" then intermediate directories are
- * created as necessary.
- *
- * If **{flags}** contains "D" then **{name}** is deleted at the end of
- * the current function, as with:
- *
- *     defer delete({name}, 'd')
- *
- * If **{flags}** contains "R" then **{name}** is deleted recursively at
- * the end of the current function, as with:
- *
- *     defer delete({name}, 'rf')
+ * **{flags}** can contain these character flags:
+ *  "p"    intermediate directories will be created as necessary
+ *  "D"    **{name}** will be deleted at the end of the current
+ *         function, but not recursively `:defer`
+ *  "R"    **{name}** will be deleted recursively at the end of the
+ *         current function `:defer`
  *
  * Note that when **{name}** has more than one part and "p" is used
  * some directories may already exist.  Only the first one that
@@ -6282,9 +6942,8 @@ export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If **{prot}** is given it is used to set the protection bits of
  * the new directory.  The default is 0o755 (rwxr-xr-x: r/w for
  * the user, readable for others).  Use 0o700 to make it
- * unreadable for others.  This is only used for the last part of
- * **{name}**.  Thus if you create /tmp/foo/bar then /tmp/foo will be
- * created with 0o755.
+ * unreadable for others.  This is used for the newly created
+ * directories.  Note: umask is applied to **{prot}** (on Unix).
  * Example:
  *
  *     :call mkdir($HOME .. "/tmp/foo/bar", "p", 0o700)
@@ -6306,6 +6965,8 @@ export function min(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->mkdir()
+ *
+ * Return type: `Number`
  */
 export function mkdir(
   denops: Denops,
@@ -6331,6 +6992,8 @@ export function mkdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->nextnonblank()
+ *
+ * Return type: `Number`
  */
 export function nextnonblank(denops: Denops, lnum: unknown): Promise<number>;
 export function nextnonblank(
@@ -6367,6 +7030,8 @@ export function nextnonblank(
  * Can also be used as a `method`:
  *
  *     GetNumber()->nr2char()
+ *
+ * Return type: `String`
  */
 export function nr2char(
   denops: Denops,
@@ -6393,6 +7058,8 @@ export function nr2char(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * character like many languages, is that Vi has always used "|"
  * to separate commands.  In many places it would not be clear if
  * "|" is an operator or a command separator.
+ *
+ * Return type: `Number`
  */
 export function or(
   denops: Denops,
@@ -6423,6 +7090,8 @@ export function or(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetDirectories()->pathshorten()
+ *
+ * Return type: `String`
  */
 export function pathshorten(
   denops: Denops,
@@ -6455,6 +7124,8 @@ export function pathshorten(
  *
  *     GetExpr()->perleval()
  *
+ * Return type: any, depending on **{expr}**
+ *
  * *only available when compiled with the `+perl` feature*
  */
 export function perleval(denops: Denops, expr: unknown): Promise<unknown>;
@@ -6483,6 +7154,8 @@ export function perleval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->pow(3)
+ *
+ * Return type: `Number`
  */
 export function pow(denops: Denops, x: unknown, y: unknown): Promise<number>;
 export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -6503,6 +7176,8 @@ export function pow(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->prevnonblank()
+ *
+ * Return type: `Number`
  */
 export function prevnonblank(denops: Denops, lnum: unknown): Promise<number>;
 export function prevnonblank(
@@ -6788,7 +7463,8 @@ export function prevnonblank(
  *       1.41
  *
  * You will get an overflow error `E1510`, when the field-width
- * or precision will result in a string longer than 6400 chars.
+ * or precision will result in a string longer than 1 MiB
+ * (1024*1024 = 1048576) chars.
  *
  * You cannot mix positional and non-positional arguments:
  *
@@ -6858,6 +7534,8 @@ export function prevnonblank(
  * otherwise reported.  Please file a bug against Vim if you run
  * into this, copying the exact format string and parameters that
  * were used.
+ *
+ * Return type: `String`
  */
 export function printf(
   denops: Denops,
@@ -6878,6 +7556,8 @@ export function printf(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetBuffer()->prompt_getprompt()
+ *
+ * Return type: `String`
  *
  * *only available when compiled with the `+channel` feature*
  */
@@ -6953,6 +7633,8 @@ export function prompt_setcallback(
  *
  *     GetBuffer()->prompt_setinterrupt(callback)
  *
+ * Return type: `Number`
+ *
  * *only available when compiled with the `+channel` feature*
  */
 export function prompt_setinterrupt(
@@ -6978,6 +7660,8 @@ export function prompt_setinterrupt(
  * Can also be used as a `method`:
  *
  *     GetBuffer()->prompt_setprompt('command: ')
+ *
+ * Return type: `Number`
  *
  * *only available when compiled with the `+channel` feature*
  */
@@ -7006,6 +7690,8 @@ export function prompt_setprompt(
  *
  * The values are the same as in `v:event` during
  * `CompleteChanged`.
+ *
+ * Return type: dict<any>
  */
 export function pum_getpos(denops: Denops): Promise<Record<string, unknown>>;
 export function pum_getpos(
@@ -7020,6 +7706,8 @@ export function pum_getpos(
  * otherwise.  See `ins-completion-menu`.
  * This can be used to avoid some things that would remove the
  * popup menu.
+ *
+ * Return type: `Number`
  */
 export function pumvisible(denops: Denops): Promise<number>;
 export function pumvisible(
@@ -7032,10 +7720,16 @@ export function pumvisible(
 /**
  * Evaluate Python expression **{expr}** and return its result
  * converted to Vim data structures.
+ * If a **{locals}** `Dictionary` is given, it defines set of local
+ * variables available in the expression. The keys are variable
+ * names and the values are the variable values. `Dictionary`,
+ * `List` and `Tuple` values are referenced, and may be updated
+ * by the expression (as if `python-bindeval` was used).
  * Numbers and strings are returned as they are (strings are
  * copied though, Unicode strings are additionally converted to
  * 'encoding').
  * Lists are represented as Vim `List` type.
+ * Tuples are represented as Vim `Tuple` type.
  * Dictionaries are represented as Vim `Dictionary` type with
  * keys converted to strings.
  * Note that in a `:def` function local variables are not visible
@@ -7044,10 +7738,17 @@ export function pumvisible(
  * Can also be used as a `method`:
  *
  *     GetExpr()->py3eval()
+ *     'b",".join(l)'->py3eval({'l': ['a', 'b', 'c']})
+ *
+ * Return type: any, depending on **{expr}**
  *
  * *only available when compiled with the `+python3` feature*
  */
-export function py3eval(denops: Denops, expr: unknown): Promise<unknown>;
+export function py3eval(
+  denops: Denops,
+  expr: unknown,
+  locals?: unknown,
+): Promise<unknown>;
 export function py3eval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("py3eval", ...args);
 }
@@ -7055,9 +7756,11 @@ export function py3eval(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Evaluate Python expression **{expr}** and return its result
  * converted to Vim data structures.
+ * For **{locals}** see `py3eval()`.
  * Numbers and strings are returned as they are (strings are
  * copied though).
  * Lists are represented as Vim `List` type.
+ * Tuples are represented as Vim `Tuple` type.
  * Dictionaries are represented as Vim `Dictionary` type,
  * non-string keys result in error.
  * Note that in a `:def` function local variables are not visible
@@ -7067,9 +7770,15 @@ export function py3eval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetExpr()->pyeval()
  *
+ * Return type: any, depending on **{expr}**
+ *
  * *only available when compiled with the `+python` feature*
  */
-export function pyeval(denops: Denops, expr: unknown): Promise<unknown>;
+export function pyeval(
+  denops: Denops,
+  expr: unknown,
+  locals?: unknown,
+): Promise<unknown>;
 export function pyeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("pyeval", ...args);
 }
@@ -7077,6 +7786,7 @@ export function pyeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Evaluate Python expression **{expr}** and return its result
  * converted to Vim data structures.
+ * For **{locals}** see `py3eval()`.
  * Uses Python 2 or 3, see `python_x` and 'pyxversion'.
  * See also: `pyeval()`, `py3eval()`
  *
@@ -7084,10 +7794,16 @@ export function pyeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetExpr()->pyxeval()
  *
+ * Return type: any, depending on **{expr}**
+ *
  * *only available when compiled with the `+python` or the
  * `+python3` feature*
  */
-export function pyxeval(denops: Denops, expr: unknown): Promise<unknown>;
+export function pyxeval(
+  denops: Denops,
+  expr: unknown,
+  locals?: unknown,
+): Promise<unknown>;
 export function pyxeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("pyxeval", ...args);
 }
@@ -7107,6 +7823,8 @@ export function pyxeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let seed = srand()
  *     :echo rand(seed)
  *     :echo rand(seed) % 16  " random number 0 - 15
+ *
+ * Return type: `Number`
  */
 export function rand(denops: Denops, expr?: unknown): Promise<number>;
 export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7135,6 +7853,8 @@ export function rand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetExpr()->range()
+ *
+ * Return type: list<number>
  */
 export function range(
   denops: Denops,
@@ -7175,6 +7895,8 @@ export function range(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * When trying to read more bytes than are available the result
  * is truncated.
  * Also see `readfile()` and `writefile()`.
+ *
+ * Return type: `Blob`
  */
 export function readblob(
   denops: Denops,
@@ -7248,6 +7970,8 @@ export function readblob(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetDirName()->readdir()
+ *
+ * Return type: list<string> or list<any>
  */
 export function readdir(
   denops: Denops,
@@ -7298,6 +8022,8 @@ export function readdir(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFileName()->readfile()
+ *
+ * Return type: list<string> or list<any>
  */
 export function readfile(
   denops: Denops,
@@ -7311,8 +8037,8 @@ export function readfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * **{func}** is called for every item in **{object}**, which can be a
- * `String`, `List` or a `Blob`.  **{func}** is called with two
- * arguments: the result so far and current item.  After
+ * `String`, `List`, `Tuple` or a `Blob`.  **{func}** is called with
+ * two arguments: the result so far and current item.  After
  * processing all items the result is returned.
  *
  * **{initial}** is the initial result.  When omitted, the first item
@@ -7330,6 +8056,9 @@ export function readfile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     echo mylist->reduce({ acc, val -> acc + val }, 0)
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or dict<**{type}**>
+ * depending on **{object}** and **{func}**
  */
 export function reduce(
   denops: Denops,
@@ -7345,6 +8074,8 @@ export function reduce(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Returns the single letter name of the register being executed.
  * Returns an empty string when no register is being executed.
  * See `@`.
+ *
+ * Return type: `String`
  */
 export function reg_executing(denops: Denops): Promise<string>;
 export function reg_executing(
@@ -7357,6 +8088,8 @@ export function reg_executing(
 /**
  * Returns the single letter name of the register being recorded.
  * Returns an empty string when not recording.  See `q`.
+ *
+ * Return type: `String`
  */
 export function reg_recording(denops: Denops): Promise<string>;
 export function reg_recording(
@@ -7394,8 +8127,12 @@ export function reg_recording(
  *
  *     GetStart()->reltime()
  *
+ * Return type: list<number>
+ *
  * *only available when compiled with the `+reltime` feature*
  */
+export function reltime(denops: Denops): Promise<unknown[]>;
+export function reltime(denops: Denops, start: unknown): Promise<unknown[]>;
 export function reltime(
   denops: Denops,
   start: unknown,
@@ -7421,6 +8158,8 @@ export function reltime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     reltime(start)->reltimefloat()
+ *
+ * Return type: `Float`
  *
  * *only available when compiled with the `+reltime` feature*
  */
@@ -7457,6 +8196,8 @@ export function reltimefloat(
  *
  *     reltime(start)->reltimestr()
  *
+ * Return type: `String`
+ *
  * *only available when compiled with the `+reltime` feature*
  */
 export function reltimestr(denops: Denops, time: unknown): Promise<string>;
@@ -7486,7 +8227,14 @@ export function reltimestr(
  * Can also be used as a `method`:
  *
  *     mylist->remove(idx)
+ *
+ * Return type: any, depending on **{list}**
  */
+export function remove(
+  denops: Denops,
+  list: unknown,
+  idx: unknown,
+): Promise<unknown>;
 export function remove(
   denops: Denops,
   list: unknown,
@@ -7508,6 +8256,8 @@ export function remove(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetOldName()->rename(newname)
+ *
+ * Return type: `Number`
  */
 export function rename(
   denops: Denops,
@@ -7525,8 +8275,8 @@ export function rename(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let separator = repeat('-', 80)
  *
  * When **{count}** is zero or negative the result is empty.
- * When **{expr}** is a `List` or a `Blob` the result is **{expr}**
- * concatenated **{count}** times.  Example:
+ * When **{expr}** is a `List`, a `Tuple` or a `Blob` the result is
+ * **{expr}** concatenated **{count}** times.  Example:
  *
  *     :let longlist = repeat(['a', 'b'], 3)
  *
@@ -7535,6 +8285,9 @@ export function rename(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->repeat(count)
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or tuple<**{type}**>
+ * depending on **{expr}**
  */
 export function repeat(
   denops: Denops,
@@ -7564,6 +8317,8 @@ export function repeat(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->resolve()
+ *
+ * Return type: `String`
  */
 export function resolve(denops: Denops, filename: unknown): Promise<string>;
 export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7572,18 +8327,22 @@ export function resolve(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Reverse the order of items in **{object}**.  **{object}** can be a
- * `List`, a `Blob` or a `String`.  For a List and a Blob the
- * items are reversed in-place and **{object}** is returned.
+ * `List`, a `Tuple`, a `Blob` or a `String`.  For a List and a
+ * Blob the items are reversed in-place and **{object}** is returned.
+ * For a Tuple, a new Tuple is returned.
  * For a String a new String is returned.
- * Returns zero if **{object}** is not a List, Blob or a String.
- * If you want a List or Blob to remain unmodified make a copy
- * first:
+ * Returns zero if **{object}** is not a List, Tuple, Blob or a
+ * String.  If you want a List or Blob to remain unmodified make
+ * a copy first:
  *
  *     :let revlist = reverse(copy(mylist))
  *
  * Can also be used as a `method`:
  *
  *     mylist->reverse()
+ *
+ * Return type: `String`, `Blob`, list<**{type}**> or tuple<**{type}**>
+ * depending on **{object}**
  */
 export function reverse(
   denops: Denops,
@@ -7616,6 +8375,8 @@ export function reverse(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->round()
+ *
+ * Return type: `Float`
  */
 export function round(denops: Denops, expr: unknown): Promise<number>;
 export function round(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -7638,6 +8399,8 @@ export function round(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetRubyExpr()->rubyeval()
  *
+ * Return type: any, depending on **{expr}**
+ *
  * *only available when compiled with the `+ruby` feature*
  */
 export function rubyeval(denops: Denops, expr: unknown): Promise<unknown>;
@@ -7654,6 +8417,8 @@ export function rubyeval(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetRow()->screenattr(col)
+ *
+ * Return type: `Number`
  */
 export function screenattr(
   denops: Denops,
@@ -7680,6 +8445,8 @@ export function screenattr(
  * Can also be used as a `method`:
  *
  *     GetRow()->screenchar(col)
+ *
+ * Return type: `Number`
  */
 export function screenchar(
   denops: Denops,
@@ -7703,6 +8470,8 @@ export function screenchar(
  * Can also be used as a `method`:
  *
  *     GetRow()->screenchars(col)
+ *
+ * Return type: list<number> or list<any>
  */
 export function screenchars(
   denops: Denops,
@@ -7730,6 +8499,8 @@ export function screenchars(
  *     nnoremap <expr> GG ":echom " .. screencol() .. "\n"
  *     nnoremap <silent> GG :echom screencol()<CR>
  *     nnoremap GG <Cmd>echom screencol()<CR>
+ *
+ * Return type: `Number`
  */
 export function screencol(denops: Denops): Promise<number>;
 export function screencol(
@@ -7746,6 +8517,8 @@ export function screencol(
  * Alternatively you can use `winline()`.
  *
  * Note: Same restrictions as with `screencol()`.
+ *
+ * Return type: `Number`
  */
 export function screenrow(denops: Denops): Promise<number>;
 export function screenrow(
@@ -7766,6 +8539,8 @@ export function screenrow(
  * Can also be used as a `method`:
  *
  *     GetRow()->screenstring(col)
+ *
+ * Return type: `String`
  */
 export function screenstring(
   denops: Denops,
@@ -7797,7 +8572,7 @@ export function screenstring(
  * 's'     Set the ' mark at the previous location of the cursor
  * 'w'     Wrap around the end of the file
  * 'W'     don't Wrap around the end of the file
- * 'z'     start searching at the cursor column instead of zero
+ * 'z'     start searching at the cursor column instead of Zero
  * If neither 'w' or 'W' is given, the 'wrapscan' option applies.
  *
  * If the 's' flag is supplied, the ' mark is set, only if the
@@ -7835,6 +8610,9 @@ export function screenstring(
  * **{timeout}** is 500 the search stops after half a second.
  * The value must not be negative.  A zero value is like not
  * giving the argument.
+ *
+ * Note: the timeout is only considered when searching, not
+ * while evaluating the **{skip}** expression.
  * *only available when compiled with the `+reltime` feature*
  *
  * If the **{skip}** expression is given it is evaluated with the
@@ -7890,6 +8668,8 @@ export function screenstring(
  * Can also be used as a `method`:
  *
  *     GetPattern()->search()
+ *
+ * Return type: `Number`
  */
 export function search(
   denops: Denops,
@@ -7926,11 +8706,12 @@ export function search(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * To get the last search count when `n` or `N` was pressed, call
  * this function with `recompute: 0` . This sometimes returns
- * wrong information because `n` and `N`'s maximum count is 99.
- * If it exceeded 99 the result must be max count + 1 (100). If
- * you want to get correct information, specify `recompute: 1`:
+ * wrong information because of 'maxsearchcount'.
+ * If the count exceeded 'maxsearchcount', the result must be
+ * 'maxsearchcount' + 1. If you want to get correct information,
+ * specify `recompute: 1`:
  *
- *     " result == maxcount + 1 (100) when many matches
+ *     " result == 'maxsearchcount' + 1 when many matches
  *     let result = searchcount(#{recompute: 0})
  *
  *     " Below returns correct result (recompute defaults
@@ -8020,7 +8801,7 @@ export function search(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *                                 result.  if search exceeded
  *                                 total count, "total" value
  *                                 becomes `maxcount + 1`
- *                                 (default: 99)
+ *                                 (default: 'maxsearchcount')
  *   pos           `List`          `[lnum, col, off]` value
  *                                 when recomputing the result.
  *                                 this changes "current" result
@@ -8031,6 +8812,8 @@ export function search(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetSearchOpts()->searchcount()
+ *
+ * Return type: dict<number>
  */
 export function searchcount(
   denops: Denops,
@@ -8065,6 +8848,8 @@ export function searchcount(
  * Can also be used as a `method`:
  *
  *     GetName()->searchdecl()
+ *
+ * Return type: `Number`
  */
 export function searchdecl(
   denops: Denops,
@@ -8168,6 +8953,8 @@ export function searchdecl(
  *
  *     :echo searchpair('{', '', '}', 'bW',
  *          \ 'synIDattr(synID(line("."), col("."), 0), "name") =~? "string"')
+ *
+ * Return type: `Number`
  */
 export function searchpair(
   denops: Denops,
@@ -8196,6 +8983,8 @@ export function searchpair(
  *     :let [lnum,col] = searchpairpos('{', '', '}', 'n')
  *
  * See `match-parens` for a bigger and more useful example.
+ *
+ * Return type: list<number>
  */
 export function searchpairpos(
   denops: Denops,
@@ -8235,6 +9024,8 @@ export function searchpairpos(
  * Can also be used as a `method`:
  *
  *     GetPattern()->searchpos()
+ *
+ * Return type: list<number>
  */
 export function searchpos(
   denops: Denops,
@@ -8259,6 +9050,8 @@ export function searchpos(
  * Example:
  *
  *     :echo serverlist()
+ *
+ * Return type: `String`
  */
 export function serverlist(denops: Denops): Promise<string>;
 export function serverlist(
@@ -8303,6 +9096,8 @@ export function serverlist(
  * through the text to check if the cell widths of your terminal
  * match with what Vim knows about each emoji.  If it doesn't
  * look right you need to adjust the **{list}** argument.
+ *
+ * Return type: `Number`
  */
 export function setcellwidths(denops: Denops, list: unknown): Promise<void>;
 export function setcellwidths(
@@ -8330,6 +9125,8 @@ export function setcellwidths(
  * Can also be used as a `method`:
  *
  *     GetPosition()->setcharpos('.')
+ *
+ * Return type: `Number`
  */
 export function setcharpos(
   denops: Denops,
@@ -8368,6 +9165,8 @@ export function setcharpos(
  * Can also be used as a `method`:
  *
  *     SavedSearch()->setcharsearch()
+ *
+ * Return type: dict<any>
  */
 export function setcharsearch(
   denops: Denops,
@@ -8390,6 +9189,8 @@ export function setcharsearch(
  * Can also be used as a `method`:
  *
  *     GetText()->setcmdline()
+ *
+ * Return type: `Number`
  */
 export function setcmdline(
   denops: Denops,
@@ -8421,6 +9222,8 @@ export function setcmdline(
  * Can also be used as a `method`:
  *
  *     GetPos()->setcmdpos()
+ *
+ * Return type: `Number`
  */
 export function setcmdpos(denops: Denops, pos: unknown): Promise<number>;
 export function setcmdpos(
@@ -8448,6 +9251,9 @@ export function setcmdpos(
  * Can also be used as a `method`:
  *
  *     GetCursorPos()->setcursorcharpos()
+ *
+ * Returns 0 when the position could be set, -1 otherwise.
+ * Return type: `Number`
  */
 export function setcursorcharpos(
   denops: Denops,
@@ -8478,6 +9284,8 @@ export function setcursorcharpos(
  * second argument:
  *
  *     GetPath()->setenv('PATH')
+ *
+ * Return type: `Number`
  */
 export function setenv(
   denops: Denops,
@@ -8508,6 +9316,8 @@ export function setenv(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     GetFilename()->setfperm(mode)
  *
  * To read permissions see `getfperm()`.
+ *
+ * Return type: `Number`
  */
 export function setfperm(
   denops: Denops,
@@ -8538,6 +9348,8 @@ export function setfperm(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * second argument:
  *
  *     GetLoclist()->setloclist(winnr)
+ *
+ * Return type: `Number`
  */
 export function setloclist(
   denops: Denops,
@@ -8564,6 +9376,8 @@ export function setloclist(
  * Can also be used as a `method`:
  *
  *     GetMatches()->setmatches()
+ *
+ * Return type: `Number`
  */
 export function setmatches(
   denops: Denops,
@@ -8636,6 +9450,8 @@ export function setmatches(
  *
  *             :call setqflist([], 'r')
  *
+ * 'u'     Like 'r', but tries to preserve the current selection
+ *         in the quickfix list.
  * 'f'     All the quickfix lists in the quickfix stack are
  *         freed.
  *
@@ -8696,6 +9512,8 @@ export function setmatches(
  * second argument:
  *
  *     GetErrorlist()->setqflist()
+ *
+ * Return type: `Number`
  */
 export function setqflist(
   denops: Denops,
@@ -8774,6 +9592,8 @@ export function setqflist(
  * second argument:
  *
  *     GetText()->setreg('a')
+ *
+ * Return type: `Number`
  */
 export function setreg(
   denops: Denops,
@@ -8799,6 +9619,8 @@ export function setreg(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * third argument:
  *
  *     GetValue()->settabvar(tab, name)
+ *
+ * Return type: `Number`
  */
 export function settabvar(
   denops: Denops,
@@ -8837,6 +9659,8 @@ export function settabvar(
  * fourth argument:
  *
  *     GetValue()->settabwinvar(tab, winnr, name)
+ *
+ * Return type: `Number`
  */
 export function settabwinvar(
   denops: Denops,
@@ -8891,6 +9715,8 @@ export function settabwinvar(
  * second argument:
  *
  *     GetStack()->settagstack(winnr)
+ *
+ * Return type: `Number`
  */
 export function settagstack(
   denops: Denops,
@@ -8916,6 +9742,8 @@ export function settagstack(
  * third argument:
  *
  *     GetValue()->setwinvar(winnr, name)
+ *
+ * Return type: `Number`
  */
 export function setwinvar(
   denops: Denops,
@@ -8937,6 +9765,8 @@ export function setwinvar(
  * Can also be used as a `method`:
  *
  *     GetText()->sha256()
+ *
+ * Return type: `String`
  *
  * *only available when compiled with the `+cryptv` feature*
  */
@@ -8991,6 +9821,8 @@ export function sha256(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetCommand()->shellescape()
+ *
+ * Return type: `String`
  */
 export function shellescape(
   denops: Denops,
@@ -9019,6 +9851,8 @@ export function shellescape(
  * Can also be used as a `method`:
  *
  *     GetColumn()->shiftwidth()
+ *
+ * Return type: `Number`
  */
 export function shiftwidth(denops: Denops, col?: unknown): Promise<number>;
 export function shiftwidth(
@@ -9050,6 +9884,8 @@ export function shiftwidth(
  * Can also be used as a `method`:
  *
  *     GetName()->simplify()
+ *
+ * Return type: `String`
  */
 export function simplify(denops: Denops, filename: unknown): Promise<string>;
 export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9073,6 +9909,8 @@ export function simplify(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sin()
+ *
+ * Return type: `Float`
  */
 export function sin(denops: Denops, expr: unknown): Promise<number>;
 export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9097,6 +9935,8 @@ export function sin(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sinh()
+ *
+ * Return type: `Float`
  */
 export function sinh(denops: Denops, expr: unknown): Promise<number>;
 export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9116,6 +9956,8 @@ export function sinh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetList()->slice(offset)
+ *
+ * Return type: list<**{type}**> or tuple<**{type}**>
  */
 export function slice(
   denops: Denops,
@@ -9213,6 +10055,8 @@ export function slice(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * For a simple expression you can use a lambda:
  *
  *     eval mylist->sort({i1, i2 -> i1 - i2})
+ *
+ * Return type: list<**{type}**>
  */
 export function sort(
   denops: Denops,
@@ -9235,6 +10079,8 @@ export function sort(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetWord()->soundfold()
+ *
+ * Return type: `String`
  */
 export function soundfold(denops: Denops, word: unknown): Promise<string>;
 export function soundfold(
@@ -9273,6 +10119,8 @@ export function soundfold(
  * Can also be used as a `method`:
  *
  *     GetText()->spellbadword()
+ *
+ * Return type: list<string>
  */
 export function spellbadword(
   denops: Denops,
@@ -9309,6 +10157,8 @@ export function spellbadword(
  * Can also be used as a `method`:
  *
  *     GetWord()->spellsuggest()
+ *
+ * Return type: list<string> or list<any>
  */
 export function spellsuggest(
   denops: Denops,
@@ -9325,8 +10175,8 @@ export function spellsuggest(
 
 /**
  * Make a `List` out of **{string}**.  When **{pattern}** is omitted or
- * empty each white-separated sequence of characters becomes an
- * item.
+ * empty each white space separated sequence of characters
+ * becomes an item.
  * Otherwise the string is split where **{pattern}** matches,
  * removing the matched characters. 'ignorecase' is not used
  * here, add \c to ignore case. `/\c`
@@ -9357,6 +10207,8 @@ export function spellsuggest(
  * Can also be used as a `method`:
  *
  *     GetString()->split()
+ *
+ * Return type: list<string>
  */
 export function split(
   denops: Denops,
@@ -9388,6 +10240,8 @@ export function split(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->sqrt()
+ *
+ * Return type: `Float`
  */
 export function sqrt(denops: Denops, expr: unknown): Promise<number>;
 export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9408,6 +10262,8 @@ export function sqrt(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let seed = srand()
  *     :let seed = srand(userinput)
  *     :echo rand(seed)
+ *
+ * Return type: list<number>
  */
 export function srand(denops: Denops, expr?: unknown): Promise<unknown[]>;
 export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9450,6 +10306,8 @@ export function srand(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     c   callback invoked, including timer (repeats for
  *         recursiveness up to "ccc")
  *     s   screen has scrolled for messages
+ *
+ * Return type: `String`
  */
 export function state(denops: Denops, what?: unknown): Promise<string>;
 export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9479,6 +10337,8 @@ export function state(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     let f = text->substitute(',', '', 'g')->str2float()
+ *
+ * Return type: `Float`
  */
 export function str2float(
   denops: Denops,
@@ -9511,6 +10371,8 @@ export function str2float(
  * Can also be used as a `method`:
  *
  *     GetString()->str2list()
+ *
+ * Return type: list<number>
  */
 export function str2list(
   denops: Denops,
@@ -9544,6 +10406,8 @@ export function str2list(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->str2nr()
+ *
+ * Return type: `Number`
  */
 export function str2nr(
   denops: Denops,
@@ -9568,6 +10432,8 @@ export function str2nr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->strcharlen()
+ *
+ * Return type: `Number`
  */
 export function strcharlen(denops: Denops, string: unknown): Promise<number>;
 export function strcharlen(
@@ -9597,6 +10463,8 @@ export function strcharlen(
  * Can also be used as a `method`:
  *
  *     GetText()->strcharpart(5)
+ *
+ * Return type: `String`
  */
 export function strcharpart(
   denops: Denops,
@@ -9644,6 +10512,8 @@ export function strcharpart(
  * Can also be used as a `method`:
  *
  *     GetText()->strchars()
+ *
+ * Return type: `Number`
  */
 export function strchars(
   denops: Denops,
@@ -9671,6 +10541,8 @@ export function strchars(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->strdisplaywidth()
+ *
+ * Return type: `Number`
  */
 export function strdisplaywidth(
   denops: Denops,
@@ -9709,6 +10581,8 @@ export function strdisplaywidth(
  * Can also be used as a `method`:
  *
  *     GetFormat()->strftime()
+ *
+ * Return type: `String`
  */
 export function strftime(
   denops: Denops,
@@ -9731,6 +10605,8 @@ export function strftime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->strgetchar(5)
+ *
+ * Return type: `Number`
  */
 export function strgetchar(
   denops: Denops,
@@ -9769,6 +10645,8 @@ export function strgetchar(
  * Can also be used as a `method`:
  *
  *     GetHaystack()->stridx(needle)
+ *
+ * Return type: `Number`
  */
 export function stridx(
   denops: Denops,
@@ -9791,15 +10669,16 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Funcref         function('name')
  *         Blob            0z00112233.44556677.8899
  *         List            [item, item]
+ *         Tuple           (item, item)
  *         Dictionary      {key: value, key: value}
  *         Class           class SomeName
  *         Object          object of SomeName {lnum: 1, col: 3}
  *         Enum            enum EnumName
  *         EnumValue       enum name.value {name: str, ordinal: nr}
  *
- * When a `List` or `Dictionary` has a recursive reference it is
- * replaced by "[...]" or "**{...}**".  Using eval() on the result
- * will then fail.
+ * When a `List`, `Tuple` or `Dictionary` has a recursive
+ * reference it is replaced by "[...]" or "(...)" or "**{...}**".
+ * Using eval() on the result will then fail.
  *
  * For an object, invokes the string() method to get a textual
  * representation of the object.  If the method is not present,
@@ -9810,6 +10689,8 @@ export function stridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     mylist->string()
  *
  * Also see `strtrans()`.
+ *
+ * Return type: `String`
  */
 export function string(denops: Denops, expr: unknown): Promise<string>;
 export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9828,6 +10709,8 @@ export function string(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetString()->strlen()
+ *
+ * Return type: `Number`
  */
 export function strlen(denops: Denops, string: unknown): Promise<number>;
 export function strlen(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -9864,6 +10747,8 @@ export function strlen(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->strpart(5)
+ *
+ * Return type: `String`
  */
 export function strpart(
   denops: Denops,
@@ -9913,6 +10798,8 @@ export function strpart(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Not available on all systems.  To check use:
  *
  *     :if exists("*strptime")
+ *
+ * Return type: `Number`
  */
 export function strptime(
   denops: Denops,
@@ -9947,6 +10834,8 @@ export function strptime(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetHaystack()->strridx(needle)
+ *
+ * Return type: `Number`
  */
 export function strridx(
   denops: Denops,
@@ -9960,7 +10849,7 @@ export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * The result is a String, which is **{string}** with all unprintable
- * characters translated into printable characters `'isprint'`.
+ * characters translated into printable characters 'isprint'.
  * Like they are shown in a window.  Example:
  *
  *     echo strtrans(@a)
@@ -9973,6 +10862,8 @@ export function strridx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetString()->strtrans()
+ *
+ * Return type: `String`
  */
 export function strtrans(denops: Denops, string: unknown): Promise<string>;
 export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10002,6 +10893,8 @@ export function strtrans(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->strutf16len()
+ *
+ * Return type: `Number`
  */
 export function strutf16len(
   denops: Denops,
@@ -10027,6 +10920,8 @@ export function strutf16len(
  * Can also be used as a `method`:
  *
  *     GetString()->strwidth()
+ *
+ * Return type: `Number`
  */
 export function strwidth(denops: Denops, string: unknown): Promise<number>;
 export function strwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10066,6 +10961,8 @@ export function strwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetNr()->submatch()
+ *
+ * Return type: `String` or list<string> depending on **{list}**
  */
 export function submatch(
   denops: Denops,
@@ -10130,6 +11027,8 @@ export function submatch(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetString()->substitute(pat, sub, flags)
+ *
+ * Return type: `String`
  */
 export function substitute(
   denops: Denops,
@@ -10156,6 +11055,8 @@ export function substitute(
  *     let &directory = '.'
  *     let swapfiles = swapfilelist()
  *     let &directory = save_dir
+ *
+ * Return type: list<string>
  */
 export function swapfilelist(denops: Denops): Promise<unknown[]>;
 export function swapfilelist(
@@ -10187,6 +11088,8 @@ export function swapfilelist(
  * Can also be used as a `method`:
  *
  *     GetFilename()->swapinfo()
+ *
+ * Return type: dict<any> or dict<string>
  */
 export function swapinfo(
   denops: Denops,
@@ -10221,6 +11124,8 @@ export function swapinfo(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Example (echoes the name of the syntax item under the cursor):
  *
  *     :echo synIDattr(synID(line("."), col("."), 1), "name")
+ *
+ * Return type: `Number`
  */
 export function synID(
   denops: Denops,
@@ -10276,6 +11181,8 @@ export function synID(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     :echo synID(line("."), col("."), 1)->synIDtrans()->synIDattr("fg")
+ *
+ * Return type: `String`
  */
 export function synIDattr(
   denops: Denops,
@@ -10301,6 +11208,8 @@ export function synIDattr(
  * Can also be used as a `method`:
  *
  *     :echo synID(line("."), col("."), 1)->synIDtrans()->synIDattr("fg")
+ *
+ * Return type: `Number`
  */
 export function synIDtrans(denops: Denops, synID: unknown): Promise<number>;
 export function synIDtrans(
@@ -10338,6 +11247,8 @@ export function synIDtrans(
  * Note: Doesn't consider `matchadd()` highlighting items,
  * since syntax and matching highlighting are two different
  * mechanisms `syntax-vs-match`.
+ *
+ * Return type: list<any>
  */
 export function synconcealed(
   denops: Denops,
@@ -10371,6 +11282,8 @@ export function synconcealed(
  * an empty List is returned.  The position just after the last
  * character in a line and the first column in an empty line are
  * valid positions.
+ *
+ * Return type: list<number> or list<any>
  */
 export function synstack(
   denops: Denops,
@@ -10446,6 +11359,8 @@ export function synstack(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     :echo GetCmd()->system()
+ *
+ * Return type: `String`
  */
 export function system(
   denops: Denops,
@@ -10474,6 +11389,8 @@ export function system(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     :echo GetCmd()->systemlist()
+ *
+ * Return type: list<string>
  */
 export function systemlist(
   denops: Denops,
@@ -10505,6 +11422,8 @@ export function systemlist(
  * Can also be used as a `method`:
  *
  *     GetTabpage()->tabpagebuflist()
+ *
+ * Return type: list<number>
  */
 export function tabpagebuflist(
   denops: Denops,
@@ -10530,6 +11449,8 @@ export function tabpagebuflist(
  * The number can be used with the `:tab` command.
  *
  * Returns zero on error.
+ *
+ * Return type: `Number`
  */
 export function tabpagenr(denops: Denops, arg?: unknown): Promise<number>;
 export function tabpagenr(
@@ -10557,6 +11478,8 @@ export function tabpagenr(
  * Can also be used as a `method`:
  *
  *     GetTabpage()->tabpagewinnr()
+ *
+ * Return type: `Number`
  */
 export function tabpagewinnr(
   denops: Denops,
@@ -10573,6 +11496,8 @@ export function tabpagewinnr(
 /**
  * Returns a `List` with the file names used to search for tags
  * for the current buffer.  This is the 'tags' option expanded.
+ *
+ * Return type: list<string> or list<any>
  */
 export function tagfiles(denops: Denops): Promise<unknown[]>;
 export function tagfiles(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10618,13 +11543,15 @@ export function tagfiles(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Refer to `tag-regexp` for more information about the tag
  * search regular expression pattern.
  *
- * Refer to `'tags'` for information about how the tags file is
+ * Refer to 'tags' for information about how the tags file is
  * located by Vim. Refer to `tags-file-format` for the format of
  * the tags file generated by the different ctags tools.
  *
  * Can also be used as a `method`:
  *
  *     GetTagpattern()->taglist()
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export function taglist(
   denops: Denops,
@@ -10653,6 +11580,8 @@ export function taglist(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->tan()
+ *
+ * Return type: `Float`
  */
 export function tan(denops: Denops, expr: unknown): Promise<number>;
 export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10677,6 +11606,8 @@ export function tan(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->tanh()
+ *
+ * Return type: `Float`
  */
 export function tanh(denops: Denops, expr: unknown): Promise<number>;
 export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10697,6 +11628,8 @@ export function tanh(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * For MS-Windows forward slashes are used when the 'shellslash'
  * option is set, or when 'shellcmdflag' starts with '-' and
  * 'shell' does not contain powershell or pwsh.
+ *
+ * Return type: `String`
  */
 export function tempname(denops: Denops): Promise<string>;
 export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10724,6 +11657,8 @@ export function tempname(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  *     GetTimer()->timer_info()
  *
+ * Return type: list<dict<any>> or list<any>
+ *
  * *only available when compiled with the `+timers` feature*
  */
 export function timer_info(denops: Denops, id?: unknown): Promise<unknown[]>;
@@ -10750,6 +11685,8 @@ export function timer_info(
  * Can also be used as a `method`:
  *
  *     GetTimer()->timer_pause(1)
+ *
+ * Return type: `Number`
  *
  * *only available when compiled with the `+timers` feature*
  */
@@ -10808,6 +11745,9 @@ export function timer_pause(
  *     GetMsec()->timer_start(callback)
  *
  * Not available in the `sandbox`.
+ *
+ * Return type: `Number`
+ *
  * *only available when compiled with the `+timers` feature*
  */
 export function timer_start(
@@ -10832,6 +11772,8 @@ export function timer_start(
  *
  *     GetTimer()->timer_stop()
  *
+ * Return type: `Number`
+ *
  * *only available when compiled with the `+timers` feature*
  */
 export function timer_stop(denops: Denops, timer: unknown): Promise<void>;
@@ -10846,6 +11788,8 @@ export function timer_stop(
  * Stop all timers.  The timer callbacks will no longer be
  * invoked.  Useful if a timer is misbehaving.  If there are no
  * timers there is no error.
+ *
+ * Return type: `Number`
  *
  * *only available when compiled with the `+timers` feature*
  */
@@ -10865,6 +11809,8 @@ export function timer_stopall(
  * Can also be used as a `method`:
  *
  *     GetText()->tolower()
+ *
+ * Return type: `String`
  */
 export function tolower(denops: Denops, expr: unknown): Promise<string>;
 export function tolower(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10879,6 +11825,8 @@ export function tolower(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->toupper()
+ *
+ * Return type: `String`
  */
 export function toupper(denops: Denops, expr: unknown): Promise<string>;
 export function toupper(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -10908,6 +11856,8 @@ export function toupper(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->tr(from, to)
+ *
+ * Return type: `String`
  */
 export function tr(
   denops: Denops,
@@ -10958,6 +11908,8 @@ export function tr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetText()->trim()
+ *
+ * Return type: `String`
  */
 export function trim(
   denops: Denops,
@@ -10991,6 +11943,8 @@ export function trim(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     Compute()->trunc()
+ *
+ * Return type: `Float`
  */
 export function trunc(denops: Denops, expr: unknown): Promise<number>;
 export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11017,6 +11971,7 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         Typealias: 14  `v:t_typealias`
  *         Enum:      15  `v:t_enum`
  *         EnumValue: 16  `v:t_enumvalue`
+ *         Tuple:     17  `v:t_tuple`
  * For backward compatibility, this method can be used:
  *
  *     :if type(myvar) == type(0)
@@ -11035,6 +11990,8 @@ export function trunc(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mylist->type()
+ *
+ * Return type: `Number`
  */
 export function type(denops: Denops, expr: unknown): Promise<number>;
 export function type(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11057,6 +12014,8 @@ export function type(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetFilename()->undofile()
+ *
+ * Return type: `String`
  */
 export function undofile(denops: Denops, name: unknown): Promise<string>;
 export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11106,6 +12065,8 @@ export function undofile(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *   "alt"         Alternate entry.  This is again a List of undo
  *                 blocks.  Each item may again have an "alt"
  *                 item.
+ *
+ * Return type: dict<any>
  */
 export function undotree(denops: Denops, buf?: unknown): Promise<unknown[]>;
 export function undotree(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11121,12 +12082,15 @@ export function undotree(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * The default compare function uses the string representation of
  * each item.  For the use of **{func}** and **{dict}** see `sort()`.
+ * For deduplicating text in the current buffer see `:uniq`.
  *
  * Returns zero if **{list}** is not a `List`.
  *
  * Can also be used as a `method`:
  *
  *     mylist->uniq()
+ *
+ * Return type: list<**{type}**>
  */
 export function uniq(
   denops: Denops,
@@ -11169,6 +12133,8 @@ export function uniq(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetName()->utf16idx(idx)
+ *
+ * Return type: `Number`
  */
 export function utf16idx(
   denops: Denops,
@@ -11189,6 +12155,8 @@ export function utf16idx(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     mydict->values()
+ *
+ * Return type: list<any>
  */
 export function values(denops: Denops, dict: unknown): Promise<unknown[]>;
 export function values(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11220,6 +12188,8 @@ export function values(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetWinid()->virtcol2col(lnum, col)
+ *
+ * Return type: `Number`
  */
 export function virtcol2col(
   denops: Denops,
@@ -11253,6 +12223,8 @@ export function virtcol2col(
  * If **{expr}** is supplied and it evaluates to a non-zero Number or
  * a non-empty String, then the Visual mode will be cleared and
  * the old value is returned.  See `non-zero-arg`.
+ *
+ * Return type: `String`
  */
 export function visualmode(denops: Denops, expr?: unknown): Promise<string>;
 export function visualmode(
@@ -11272,7 +12244,9 @@ export function visualmode(
  *
  *     :cnoremap <expr> <C-j> wildmenumode() ? "\<Down>\<Tab>" : "\<c-j>"
  *
- * (Note, this needs the 'wildcharm' option set appropriately).
+ * (Note: this needs the 'wildcharm' option set appropriately).
+ *
+ * Return type: `Number`
  */
 export function wildmenumode(denops: Denops): Promise<number>;
 export function wildmenumode(
@@ -11303,6 +12277,8 @@ export function wildmenumode(
  * second argument:
  *
  *     GetCommand()->win_execute(winid)
+ *
+ * Return type: `String`
  */
 export function win_execute(
   denops: Denops,
@@ -11324,6 +12300,8 @@ export function win_execute(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->win_findbuf()
+ *
+ * Return type: list<number> or list<any>
  */
 export function win_findbuf(denops: Denops, bufnr: unknown): Promise<unknown[]>;
 export function win_findbuf(
@@ -11345,6 +12323,8 @@ export function win_findbuf(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->win_getid()
+ *
+ * Return type: `Number`
  */
 export function win_getid(
   denops: Denops,
@@ -11381,6 +12361,8 @@ export function win_getid(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_gettype()
+ *
+ * Return type: `String`
  */
 export function win_gettype(denops: Denops, nr?: unknown): Promise<string>;
 export function win_gettype(
@@ -11398,6 +12380,8 @@ export function win_gettype(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_gotoid()
+ *
+ * Return type: `Number`
  */
 export function win_gotoid(denops: Denops, expr: unknown): Promise<number>;
 export function win_gotoid(
@@ -11415,6 +12399,8 @@ export function win_gotoid(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_id2tabwin()
+ *
+ * Return type: list<number>
  */
 export function win_id2tabwin(
   denops: Denops,
@@ -11434,6 +12420,8 @@ export function win_id2tabwin(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_id2win()
+ *
+ * Return type: `Number`
  */
 export function win_id2win(denops: Denops, expr: unknown): Promise<number>;
 export function win_id2win(
@@ -11461,6 +12449,8 @@ export function win_id2win(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->win_move_separator(offset)
+ *
+ * Return type: `Number`
  */
 export function win_move_separator(
   denops: Denops,
@@ -11489,6 +12479,8 @@ export function win_move_separator(
  * Can also be used as a `method`:
  *
  *     GetWinnr()->win_move_statusline(offset)
+ *
+ * Return type: `Number`
  */
 export function win_move_statusline(
   denops: Denops,
@@ -11513,6 +12505,8 @@ export function win_move_statusline(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_screenpos()
+ *
+ * Return type: list<number>
  */
 export function win_screenpos(denops: Denops, nr: unknown): Promise<unknown[]>;
 export function win_screenpos(
@@ -11545,6 +12539,8 @@ export function win_screenpos(
  * Can also be used as a `method`:
  *
  *     GetWinid()->win_splitmove(target)
+ *
+ * Return type: `Number`
  */
 export function win_splitmove(
   denops: Denops,
@@ -11573,6 +12569,8 @@ export function win_splitmove(
  * Can also be used as a `method`:
  *
  *     FindWindow()->winbufnr()->bufname()
+ *
+ * Return type: `Number`
  */
 export function winbufnr(denops: Denops, nr: unknown): Promise<number>;
 export function winbufnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11584,6 +12582,8 @@ export function winbufnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * version.  E.g, Windows 10 is "10.0", Windows 8 is "6.2",
  * Windows XP is "5.1".  For non-MS-Windows systems the result is
  * an empty string.
+ *
+ * Return type: `String`
  */
 export function windowsversion(denops: Denops): Promise<string>;
 export function windowsversion(
@@ -11607,6 +12607,8 @@ export function windowsversion(
  * Can also be used as a `method`:
  *
  *     GetWinid()->winheight()
+ *
+ * Return type: `Number`
  */
 export function winheight(denops: Denops, nr: unknown): Promise<number>;
 export function winheight(
@@ -11650,6 +12652,8 @@ export function winheight(
  * Can also be used as a `method`:
  *
  *     GetTabnr()->winlayout()
+ *
+ * Return type: list<any>
  */
 export function winlayout(denops: Denops, tabnr?: unknown): Promise<unknown[]>;
 export function winlayout(
@@ -11694,6 +12698,8 @@ export function winlayout(
  * Can also be used as a `method`:
  *
  *     GetWinval()->winnr()
+ *
+ * Return type: `Number`
  */
 export function winnr(denops: Denops, arg?: unknown): Promise<number>;
 export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11710,6 +12716,8 @@ export function winnr(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :let cmd = winrestcmd()
  *     :call MessWithWindowSizes()
  *     :exe cmd
+ *
+ * Return type: `String`
  */
 export function winrestcmd(denops: Denops): Promise<string>;
 export function winrestcmd(
@@ -11739,6 +12747,8 @@ export function winrestcmd(
  * Can also be used as a `method`:
  *
  *     GetView()->winrestview()
+ *
+ * Return type: `Number`
  */
 export function winrestview(denops: Denops, dict: unknown): Promise<void>;
 export function winrestview(
@@ -11774,6 +12784,8 @@ export function winrestview(
  *                         'wrap' is off
  *         skipcol         columns skipped
  * Note that no option values are saved.
+ *
+ * Return type: dict<number>
  */
 export function winsaveview(denops: Denops): Promise<Record<string, unknown>>;
 export function winsaveview(
@@ -11802,6 +12814,8 @@ export function winsaveview(
  * Can also be used as a `method`:
  *
  *     GetWinid()->winwidth()
+ *
+ * Return type: `Number`
  */
 export function winwidth(denops: Denops, nr: unknown): Promise<number>;
 export function winwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -11828,6 +12842,8 @@ export function winwidth(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *                         (only in Visual mode)
  *         visual_words    Number of words visually selected
  *                         (only in Visual mode)
+ *
+ * Return type: dict<number>
  */
 export function wordcount(denops: Denops): Promise<Record<string, unknown>>;
 export function wordcount(
@@ -11890,6 +12906,8 @@ export function wordcount(
  * Can also be used as a `method`:
  *
  *     GetText()->writefile("thefile")
+ *
+ * Return type: `Number`
  */
 export function writefile(
   denops: Denops,
@@ -11915,6 +12933,8 @@ export function writefile(
  * Can also be used as a `method`:
  *
  *     :let bits = bits->xor(0x80)
+ *
+ * Return type: `Number`
  */
 export function xor(
   denops: Denops,
@@ -11938,6 +12958,7 @@ export function xor(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *    icon         full path to the bitmap file for the sign.
  *    linehl       highlight group used for the whole line the
  *                 sign is placed in.
+ *    priority     default priority value of the sign
  *    numhl        highlight group used for the line number where
  *                 the sign is placed.
  *    text         text that is displayed when there is no icon
@@ -11974,6 +12995,8 @@ export function xor(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Can also be used as a `method`:
  *
  *     GetSignList()->sign_define()
+ *
+ * Return type: `Number`
  */
 export function sign_define(
   denops: Denops,
@@ -12002,6 +13025,7 @@ export function sign_define(
  *    linehl       highlight group used for the whole line the
  *                 sign is placed in; not present if not set
  *    name         name of the sign
+ *    priority     default priority value of the sign
  *    numhl        highlight group used for the line number where
  *                 the sign is placed; not present if not set
  *    text         text that is displayed when there is no icon
@@ -12027,6 +13051,8 @@ export function sign_define(
  * Can also be used as a `method`:
  *
  *     GetSignList()->sign_getdefined()
+ *
+ * Return type: list<dict<string>> or list<any>
  */
 export function sign_getdefined(
   denops: Denops,
@@ -12103,6 +13129,8 @@ export function sign_getdefined(
  * Can also be used as a `method`:
  *
  *     GetBufname()->sign_getplaced()
+ *
+ * Return type: list<dict<any>>
  */
 export function sign_getplaced(
   denops: Denops,
@@ -12135,6 +13163,8 @@ export function sign_getplaced(
  * Can also be used as a `method`:
  *
  *     GetSignid()->sign_jump()
+ *
+ * Return type: `Number`
  */
 export function sign_jump(
   denops: Denops,
@@ -12201,6 +13231,8 @@ export function sign_jump(
  * Can also be used as a `method`:
  *
  *     GetSignid()->sign_place(group, name, expr)
+ *
+ * Return type: `Number`
  */
 export function sign_place(
   denops: Denops,
@@ -12241,7 +13273,8 @@ export function sign_place(
  *     priority    Priority of the sign. When multiple signs are
  *                 placed on a line, the sign with the highest
  *                 priority is used. If not specified, the
- *                 default value of 10 is used. See
+ *                 default value of 10 is used, unless specified
+ *                 otherwise by the sign definition. See
  *                 `sign-priority` for more information.
  *
  * If **{id}** refers to an existing sign, then the existing sign is
@@ -12279,6 +13312,8 @@ export function sign_place(
  * Can also be used as a `method`:
  *
  *     GetSignlist()->sign_placelist()
+ *
+ * Return type: `Number`
  */
 export function sign_placelist(
   denops: Denops,
@@ -12317,6 +13352,8 @@ export function sign_placelist(
  * Can also be used as a `method`:
  *
  *     GetSignlist()->sign_undefine()
+ *
+ * Return type: `Number`
  */
 export function sign_undefine(
   denops: Denops,
@@ -12379,6 +13416,8 @@ export function sign_undefine(
  * Can also be used as a `method`:
  *
  *     GetSigngroup()->sign_unplace()
+ *
+ * Return type: `Number`
  */
 export function sign_unplace(
   denops: Denops,
@@ -12424,6 +13463,8 @@ export function sign_unplace(
  * Can also be used as a `method`:
  *
  *     GetSignlist()->sign_unplacelist()
+ *
+ * Return type: list<number> or list<any>
  */
 export function sign_unplacelist(
   denops: Denops,
@@ -12437,12 +13478,14 @@ export function sign_unplacelist(
 }
 
 /**
- * Like garbagecollect(), but executed right away.  This must
+ * Like `garbagecollect()`, but executed right away.  This must
  * only be called directly to avoid any structure to exist
  * internally, and `v:testing` must have been set before calling
  * any function.
  * This will not work when called from a :def function, because
  * variables on the stack will be freed.
+ *
+ * Return type: `Number`
  */
 export function test_garbagecollect_now(denops: Denops): Promise<void>;
 export function test_garbagecollect_now(
@@ -12461,6 +13504,8 @@ export function test_garbagecollect_now(
  * Can also be used as a `method`:
  *
  *     GetCmd()->assert_beeps()
+ *
+ * Return type: `Number`
  */
 export function assert_beeps(denops: Denops, cmd: unknown): Promise<number>;
 export function assert_beeps(
@@ -12475,7 +13520,8 @@ export function assert_beeps(
  * added to `v:errors` and 1 is returned.  Otherwise zero is
  * returned. `assert-return`
  * The error is in the form "Expected **{expected}** but got
- * **{actual}**".  When **{msg}** is present it is prefixed to that.
+ * **{actual}**".  When **{msg}** is present it is prefixed to that,
+ * along with the location of the assert when run from a script.
  *
  * There is no automatic conversion, the String "4" is different
  * from the Number 4.  And the number 4 is different from the
@@ -12483,15 +13529,17 @@ export function assert_beeps(
  * always matters.
  * Example:
  *
- *     assert_equal('foo', 'bar')
+ *     call assert_equal('foo', 'bar', 'baz')
  *
- * Will result in a string to be added to `v:errors`:
- *         test.vim line 12: Expected 'foo' but got 'bar'
+ * Will add the following to `v:errors`:
+ *         test.vim line 12: baz: Expected 'foo' but got 'bar'
  *
  * Can also be used as a `method`, the base is passed as the
  * second argument:
  *
  *     mylist->assert_equal([1, 2, 3])
+ *
+ * Return type: `Number`
  */
 export function assert_equal(
   denops: Denops,
@@ -12517,6 +13565,8 @@ export function assert_equal(
  * Can also be used as a `method`:
  *
  *     GetLog()->assert_equalfile('expected.log')
+ *
+ * Return type: `Number`
  */
 export function assert_equalfile(
   denops: Denops,
@@ -12544,6 +13594,8 @@ export function assert_equalfile(
  *     catch
  *       call assert_exception('E492:')
  *     endtry
+ *
+ * Return type: `Number`
  */
 export function assert_exception(
   denops: Denops,
@@ -12566,13 +13618,13 @@ export function assert_exception(
  * first reported error. Most often this will be the error code,
  * including the colon, e.g. "E123:".
  *
- *     assert_fails('bad cmd', 'E987:')
+ *     call assert_fails('bad cmd', 'E987:')
  *
  * When **{error}** is a `List` with one or two strings, these are
  * used as patterns.  The first pattern is matched against the
  * first reported error:
  *
- *     assert_fails('cmd', ['E987:.*expected bool'])
+ *     call assert_fails('cmd', ['E987:.*expected bool'])
  *
  * The second pattern, if present, is matched against the last
  * reported error.
@@ -12581,7 +13633,7 @@ export function assert_exception(
  * To only match the last error use an empty string for the first
  * error:
  *
- *     assert_fails('cmd', ['', 'E987:'])
+ *     call assert_fails('cmd', ['', 'E987:'])
  *
  * If **{msg}** is empty then it is not used.  Do this to get the
  * default message when passing the **{lnum}** argument.
@@ -12601,6 +13653,8 @@ export function assert_exception(
  * Can also be used as a `method`:
  *
  *     GetCmd()->assert_fails('E99:')
+ *
+ * Return type: `Number`
  */
 export function assert_fails(
   denops: Denops,
@@ -12621,7 +13675,8 @@ export function assert_fails(
  * When **{actual}** is not false an error message is added to
  * `v:errors`, like with `assert_equal()`.
  * The error is in the form "Expected False but got **{actual}**".
- * When **{msg}** is present it is prepended to that.
+ * When **{msg}** is present it is prefixed to that, along with the
+ * location of the assert when run from a script.
  * Also see `assert-return`.
  *
  * A value is false when it is zero. When **{actual}** is not a
@@ -12630,6 +13685,8 @@ export function assert_fails(
  * Can also be used as a `method`:
  *
  *     GetResult()->assert_false()
+ *
+ * Return type: `Number`
  */
 export function assert_false(
   denops: Denops,
@@ -12650,6 +13707,8 @@ export function assert_false(
  * The error is in the form "Expected range **{lower}** - **{upper}**,
  * but got **{actual}**".  When **{msg}** is present it is prefixed to
  * that.
+ *
+ * Return type: `Number`
  */
 export function assert_inrange(
   denops: Denops,
@@ -12669,7 +13728,8 @@ export function assert_inrange(
  * When **{pattern}** does not match **{actual}** an error message is
  * added to `v:errors`.  Also see `assert-return`.
  * The error is in the form "Pattern **{pattern}** does not match
- * **{actual}**".  When **{msg}** is present it is prefixed to that.
+ * **{actual}**".  When **{msg}** is present it is prefixed to that,
+ * along with the location of the assert when run from a script.
  *
  * **{pattern}** is used as with `=~`: The matching is always done
  * like 'magic' was set and 'cpoptions' is empty, no matter what
@@ -12681,7 +13741,7 @@ export function assert_inrange(
  *
  * Example:
  *
- *     assert_match('^f.*o$', 'foobar')
+ *     call assert_match('^f.*o$', 'foobar')
  *
  * Will result in a string to be added to `v:errors`:
  *         test.vim line 12: Pattern '^f.*o$' does not match 'foobar'
@@ -12689,6 +13749,8 @@ export function assert_inrange(
  * Can also be used as a `method`:
  *
  *     getFile()->assert_match('foo.*')
+ *
+ * Return type: `Number`
  */
 export function assert_match(
   denops: Denops,
@@ -12711,6 +13773,8 @@ export function assert_match(
  * Can also be used as a `method`:
  *
  *     GetCmd()->assert_nobeep()
+ *
+ * Return type: `Number`
  */
 export function assert_nobeep(denops: Denops, cmd: unknown): Promise<number>;
 export function assert_nobeep(
@@ -12728,6 +13792,8 @@ export function assert_nobeep(
  * Can also be used as a `method`:
  *
  *     mylist->assert_notequal([1, 2, 3])
+ *
+ * Return type: `Number`
  */
 export function assert_notequal(
   denops: Denops,
@@ -12750,6 +13816,8 @@ export function assert_notequal(
  * Can also be used as a `method`:
  *
  *     getFile()->assert_notmatch('bar.*')
+ *
+ * Return type: `Number`
  */
 export function assert_notmatch(
   denops: Denops,
@@ -12771,6 +13839,8 @@ export function assert_notmatch(
  * Can also be used as a `method`:
  *
  *     GetMessage()->assert_report()
+ *
+ * Return type: `Number`
  */
 export function assert_report(denops: Denops, msg: unknown): Promise<number>;
 export function assert_report(
@@ -12786,11 +13856,14 @@ export function assert_report(
  * Also see `assert-return`.
  * A value is TRUE when it is a non-zero number.  When **{actual}**
  * is not a number the assert fails.
- * When **{msg}** is given it precedes the default message.
+ * When **{msg}** is given it is prefixed to the default message,
+ * along with the location of the assert when run from a script.
  *
  * Can also be used as a `method`:
  *
  *     GetResult()->assert_true()
+ *
+ * Return type: `Number`
  */
 export function assert_true(
   denops: Denops,
