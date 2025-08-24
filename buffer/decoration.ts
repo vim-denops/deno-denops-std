@@ -261,14 +261,16 @@ async function nvimDecorate(
   for (const chunk of itertools.chunked(decorations, 1000)) {
     await batch(denops, async (denops) => {
       for (const deco of chunk) {
-        await nvimFn.nvim_buf_add_highlight(
+        await nvimFn.nvim_buf_set_extmark(
           denops,
           bufnr,
           ns,
-          deco.highlight,
           deco.line - 1,
           deco.column - 1,
-          deco.column - 1 + deco.length,
+          {
+            end_col: deco.column - 1 + deco.length,
+            hl_group: deco.highlight,
+          },
         );
       }
     });
