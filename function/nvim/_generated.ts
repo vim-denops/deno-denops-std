@@ -15,6 +15,7 @@ import type { Denops } from "@denops/core";
  * Attributes:
  *     `RPC` only
  *     Lua `vim.api` only
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - **{chan}**  id of the channel
@@ -35,6 +36,9 @@ export function nvim_chan_send(
 /**
  * Creates a new, empty, unnamed buffer.
  *
+ * Attributes:
+ *     Since: 0.4.0
+ *
  * Parameters:
  *   - **{listed}**   Sets 'buflisted'
  *   - **{scratch}**  Creates a "throwaway" `scratch-buffer` for temporary work
@@ -42,7 +46,7 @@ export function nvim_chan_send(
  *                buffer.
  *
  * Return:
- *     Buffer handle, or 0 on error
+ *     Buffer id, or 0 on error
  *
  * See also:
  *   - buf_open_scratch
@@ -64,6 +68,7 @@ export function nvim_create_buf(
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.1.0
  */
 export function nvim_del_current_line(denops: Denops): Promise<unknown>;
 export function nvim_del_current_line(
@@ -77,6 +82,9 @@ export function nvim_del_current_line(
  * Unmaps a global `mapping` for the given mode.
  *
  * To unmap a buffer-local mapping, use `nvim_buf_del_keymap()`.
+ *
+ * Attributes:
+ *     Since: 0.4.0
  *
  * See also:
  *   - `nvim_set_keymap()`
@@ -99,6 +107,9 @@ export function nvim_del_keymap(
  * Note:
  *   - Lowercase name (or other buffer-local mark) is an error.
  *
+ * Attributes:
+ *     Since: 0.6.0
+ *
  * Parameters:
  *   - **{name}**  Mark name
  *
@@ -120,6 +131,9 @@ export function nvim_del_mark(
 /**
  * Removes a global (g:) variable.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
  *   - **{name}**  Variable name
  */
@@ -132,18 +146,25 @@ export function nvim_del_var(
 }
 
 /**
- * Echo a message.
+ * Prints a message given by a list of `[text, hl_group]` "chunks".
+ *
+ * Example:
+ *
+ *     vim.api.nvim_echo({ { 'chunk1-line1\nchunk1-line2\n' }, { 'chunk2-line1' } }, true, {})
+ *
+ * Attributes:
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{chunks}**   A list of `[text, hl_group]` arrays, each representing a
- *                text chunk with specified highlight. `hl_group` element can
- *                be omitted for no highlight.
+ *   - **{chunks}**   List of `[text, hl_group]` pairs, where each is a `text`
+ *                string highlighted by the (optional) name or ID `hl_group`.
  *   - **{history}**  if true, add to `message-history`.
  *   - **{opts}**     Optional parameters.
- *                - verbose: Message was printed as a result of 'verbose'
- *                  option if Nvim was invoked with -V3log_file, the message
- *                  will be redirected to the log_file and suppressed from
- *                  direct output.
+ *                - err: Treat the message like `:echoerr`. Sets `hl_group`
+ *                  to `hl-ErrorMsg` by default.
+ *                - verbose: Message is controlled by the 'verbose' option.
+ *                  Nvim invoked with `-V3log` will write the message to the
+ *                  "log" file instead of standard output.
  */
 export function nvim_echo(
   denops: Denops,
@@ -159,46 +180,11 @@ export function nvim_echo(
 }
 
 /**
- * Writes a message to the Vim error buffer. Does not append "\n", the
- * message is buffered (won't display) until a linefeed is written.
- *
- * Parameters:
- *   - **{str}**  Message
- */
-export function nvim_err_write(denops: Denops, str: unknown): Promise<unknown>;
-export function nvim_err_write(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_err_write", ...args);
-}
-
-/**
- * Writes a message to the Vim error buffer. Appends "\n", so the buffer is
- * flushed (and displayed).
- *
- * Parameters:
- *   - **{str}**  Message
- *
- * See also:
- *   - nvim_err_write()
- */
-export function nvim_err_writeln(
-  denops: Denops,
-  str: unknown,
-): Promise<unknown>;
-export function nvim_err_writeln(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_err_writeln", ...args);
-}
-
-/**
  * Evaluates statusline string.
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.6.0
  *
  * Parameters:
  *   - **{str}**   Statusline string (see 'statusline').
@@ -218,15 +204,17 @@ export function nvim_err_writeln(
  *               line number instead of statusline.
  *
  * Return:
- *     Dictionary containing statusline information, with these keys:
+ *     Dict containing statusline information, with these keys:
  *     - str: (string) Characters that will be displayed on the statusline.
  *     - width: (number) Display width of the statusline.
  *     - highlights: Array containing highlight information of the
  *       statusline. Only included when the "highlights" key in **{opts}** is
- *       true. Each element of the array is a `Dictionary` with these keys:
+ *       true. Each element of the array is a `Dict` with these keys:
  *       - start: (number) Byte index (0-based) of first character that uses
  *         the highlight.
- *       - group: (string) Name of highlight group.
+ *       - group: (string) Deprecated. Use `groups` instead.
+ *       - groups: (array) Names of stacked highlight groups (highest
+ *         priority last).
  */
 export function nvim_eval_statusline(
   denops: Denops,
@@ -249,6 +237,7 @@ export function nvim_eval_statusline(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - **{code}**  Lua code to execute
@@ -284,6 +273,9 @@ export function nvim_exec_lua(
  *     :let key = nvim_replace_termcodes("<C-o>", v:true, v:false, v:true)
  *     :call nvim_feedkeys(key, 'n', v:false)
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
  *   - **{keys}**       to be typed
  *   - **{mode}**       behavior flags, see `feedkeys()`
@@ -310,11 +302,12 @@ export function nvim_feedkeys(
 
 /**
  * Returns a 2-tuple (Array), where item 0 is the current channel id and item
- * 1 is the `api-metadata` map (Dictionary).
+ * 1 is the `api-metadata` map (Dict).
  *
  * Attributes:
  *     `api-fast`
  *     `RPC` only
+ *     Since: 0.1.0
  *
  * Return:
  *     2-tuple `[{channel-id}, {api-metadata}]`
@@ -330,11 +323,16 @@ export function nvim_get_api_info(
 /**
  * Gets information about a channel.
  *
+ * See `nvim_list_uis()` for an example of how to get channel info.
+ *
+ * Attributes:
+ *     Since: 0.3.0
+ *
  * Parameters:
  *   - **{chan}**  channel_id, or 0 for current channel
  *
  * Return:
- *     Dictionary describing a channel, with these keys:
+ *     Channel info dict with these keys:
  *     - "id" Channel id.
  *     - "argv" (optional) Job arguments list.
  *     - "stream" Stream underlying the channel.
@@ -347,11 +345,11 @@ export function nvim_get_api_info(
  *       - "terminal" `terminal` instance interprets ASCII sequences.
  *       - "rpc" `RPC` communication on the channel is active.
  *     - "pty" (optional) Name of pseudoterminal. On a POSIX system this is a
- *       device path like "/dev/pts/1". If the name is unknown, the key will
- *       still be present if a pty is used (e.g. for conpty on Windows).
- *     - "buffer" (optional) Buffer with connected `terminal` instance.
+ *       device path like "/dev/pts/1". If unknown, the key will still be
+ *       present if a pty is used (e.g. for conpty on Windows).
+ *     - "buffer" (optional) Buffer connected to `terminal` instance.
  *     - "client" (optional) Info about the peer (client on the other end of
- *       the RPC channel), if provided by it via `nvim_set_client_info()`.
+ *       the channel), as set by `nvim_set_client_info()`.
  */
 export function nvim_get_chan_info(
   denops: Denops,
@@ -372,6 +370,9 @@ export function nvim_get_chan_info(
  *
  *     :echo nvim_get_color_by_name("Pink")
  *     :echo nvim_get_color_by_name("#cbcbcb")
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{name}**  Color name or "#rrggbb" string
@@ -396,6 +397,9 @@ export function nvim_get_color_by_name(
  * Keys are color names (e.g. "Aqua") and values are 24-bit RGB color values
  * (e.g. 65535).
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
  *     Map of color names and RGB values.
  */
@@ -409,6 +413,9 @@ export function nvim_get_color_map(
 
 /**
  * Gets a map of the current editor state.
+ *
+ * Attributes:
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{opts}**  Optional parameters.
@@ -432,8 +439,11 @@ export function nvim_get_context(
 /**
  * Gets the current buffer.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
- *     Buffer handle
+ *     Buffer id
  */
 export function nvim_get_current_buf(denops: Denops): Promise<unknown>;
 export function nvim_get_current_buf(
@@ -445,6 +455,9 @@ export function nvim_get_current_buf(
 
 /**
  * Gets the current line.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Return:
  *     Current line string
@@ -460,8 +473,11 @@ export function nvim_get_current_line(
 /**
  * Gets the current tabpage.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
- *     Tabpage handle
+ *     `tab-ID`
  */
 export function nvim_get_current_tabpage(denops: Denops): Promise<unknown>;
 export function nvim_get_current_tabpage(
@@ -474,8 +490,11 @@ export function nvim_get_current_tabpage(
 /**
  * Gets the current window.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
- *     Window handle
+ *     `window-ID`
  */
 export function nvim_get_current_win(denops: Denops): Promise<unknown>;
 export function nvim_get_current_win(
@@ -491,6 +510,9 @@ export function nvim_get_current_win(
  * Note:
  *   - When the `link` attribute is defined in the highlight definition map,
  *     other attributes will not be taking effect (see `:hi-link`).
+ *
+ * Attributes:
+ *     Since: 0.9.0
  *
  * Parameters:
  *   - {ns_id}  Get highlight groups for namespace ns_id
@@ -525,6 +547,9 @@ export function nvim_get_hl(
  * Gets a highlight group by name
  *
  * similar to `hlID()`, but allocates a new ID if not present.
+ *
+ * Attributes:
+ *     Since: 0.5.0
  */
 export function nvim_get_hl_id_by_name(
   denops: Denops,
@@ -539,6 +564,9 @@ export function nvim_get_hl_id_by_name(
 
 /**
  * Gets the active highlight namespace.
+ *
+ * Attributes:
+ *     Since: 0.10.0
  *
  * Parameters:
  *   - **{opts}**  Optional parameters
@@ -560,6 +588,9 @@ export function nvim_get_hl_ns(
 
 /**
  * Gets a list of global (non-buffer-local) `mapping` definitions.
+ *
+ * Attributes:
+ *     Since: 0.2.1
  *
  * Parameters:
  *   - **{mode}**  Mode short-name ("n", "i", "v", ...)
@@ -588,6 +619,9 @@ export function nvim_get_keymap(
  *
  * Note:
  *   - Lowercase name (or other buffer-local mark) is an error.
+ *
+ * Attributes:
+ *     Since: 0.6.0
  *
  * Parameters:
  *   - **{name}**  Mark name
@@ -619,9 +653,10 @@ export function nvim_get_mark(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.2.0
  *
  * Return:
- *     Dictionary { "mode": String, "blocking": Boolean }
+ *     Dict { "mode": String, "blocking": Boolean }
  */
 export function nvim_get_mode(denops: Denops): Promise<unknown>;
 export function nvim_get_mode(
@@ -633,6 +668,9 @@ export function nvim_get_mode(
 
 /**
  * Gets info describing process `pid`.
+ *
+ * Attributes:
+ *     Since: 0.3.0
  *
  * Return:
  *     Map of process properties, or NIL if process not found.
@@ -647,6 +685,9 @@ export function nvim_get_proc(
 
 /**
  * Gets the immediate children of process `pid`.
+ *
+ * Attributes:
+ *     Since: 0.3.0
  *
  * Return:
  *     Array of child process ids, empty if process not found.
@@ -663,17 +704,18 @@ export function nvim_get_proc_children(
 }
 
 /**
- * Find files in runtime directories
+ * Finds files in runtime directories, in 'runtimepath' order.
  *
  * "name" can contain wildcards. For example
- * nvim_get_runtime_file("colors/*.vim", true) will return all color scheme
- * files. Always use forward slashes (/) in the search pattern for
+ * `nvim_get_runtime_file("colors/*.{vim,lua}", true)` will return all color
+ * scheme files. Always use forward slashes (/) in the search pattern for
  * subdirectories regardless of platform.
  *
  * It is not an error to not find any files. An empty array is returned then.
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - **{name}**  pattern of files to search for
@@ -697,6 +739,9 @@ export function nvim_get_runtime_file(
 /**
  * Gets a global (g:) variable.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
  *   - **{name}**  Variable name
  *
@@ -713,6 +758,9 @@ export function nvim_get_var(
 
 /**
  * Gets a v: variable.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{name}**  Variable name
@@ -733,6 +781,9 @@ export function nvim_get_vvar(
  * input buffer and the call is non-blocking (input is processed
  * asynchronously by the eventloop).
  *
+ * To input blocks of text, `nvim_paste()` is much faster and should be
+ * preferred.
+ *
  * On execution error: does not fail, but updates v:errmsg.
  *
  * Note:
@@ -743,6 +794,7 @@ export function nvim_get_vvar(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{keys}**  to be typed
@@ -774,6 +826,7 @@ export function nvim_input(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{button}**    Mouse button: one of "left", "right", "middle", "wheel",
@@ -806,13 +859,16 @@ export function nvim_input_mouse(
 }
 
 /**
- * Gets the current list of buffer handles
+ * Gets the current list of buffers.
  *
  * Includes unlisted (unloaded/deleted) buffers, like `:ls!`. Use
  * `nvim_buf_is_loaded()` to check if a buffer is loaded.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
- *     List of buffer handles
+ *     List of buffer ids
  */
 export function nvim_list_bufs(denops: Denops): Promise<unknown>;
 export function nvim_list_bufs(
@@ -824,6 +880,9 @@ export function nvim_list_bufs(
 
 /**
  * Get information about all open channels.
+ *
+ * Attributes:
+ *     Since: 0.3.0
  *
  * Return:
  *     Array of Dictionaries, each describing a channel with the format
@@ -840,6 +899,9 @@ export function nvim_list_chans(
 /**
  * Gets the paths contained in `runtime-search-path`.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Return:
  *     List of paths
  */
@@ -852,10 +914,13 @@ export function nvim_list_runtime_paths(
 }
 
 /**
- * Gets the current list of tabpage handles.
+ * Gets the current list of `tab-ID`s.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Return:
- *     List of tabpage handles
+ *     List of `tab-ID`s
  */
 export function nvim_list_tabpages(denops: Denops): Promise<unknown>;
 export function nvim_list_tabpages(
@@ -867,6 +932,15 @@ export function nvim_list_tabpages(
 
 /**
  * Gets a list of dictionaries representing attached UIs.
+ *
+ * Example: The Nvim builtin `TUI` sets its channel info as described in
+ * `startup-tui`. In particular, it sets `client.name` to "nvim-tui". So you
+ * can check if the TUI is running by inspecting the client name of each UI:
+ *
+ *     vim.print(vim.api.nvim_get_chan_info(vim.api.nvim_list_uis()[1].chan).client.name)
+ *
+ * Attributes:
+ *     Since: 0.3.0
  *
  * Return:
  *     Array of UI dictionaries, each with these keys:
@@ -885,10 +959,13 @@ export function nvim_list_uis(
 }
 
 /**
- * Gets the current list of window handles.
+ * Gets the current list of all `window-ID`s in all tabpages.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Return:
- *     List of window handles
+ *     List of `window-ID`s
  */
 export function nvim_list_wins(denops: Denops): Promise<unknown>;
 export function nvim_list_wins(
@@ -900,6 +977,9 @@ export function nvim_list_wins(
 
 /**
  * Sets the current editor state from the given `context` map.
+ *
+ * Attributes:
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{dict}**  `Context` map.
@@ -916,34 +996,10 @@ export function nvim_load_context(
 }
 
 /**
- * Notify the user with a message
- *
- * Relays the call to vim.notify . By default forwards your message in the
- * echo area but can be overridden to trigger desktop notifications.
- *
- * Parameters:
- *   - **{msg}**        Message to display to the user
- *   - {log_level}  The log level
- *   - **{opts}**       Reserved for future use.
- */
-export function nvim_notify(
-  denops: Denops,
-  msg: unknown,
-  log_level: unknown,
-  opts: unknown,
-): Promise<unknown>;
-export function nvim_notify(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_notify", ...args);
-}
-
-/**
  * Open a terminal instance in a buffer
  *
  * By default (and currently the only option) the terminal will not be
- * connected to an external process. Instead, input send on the channel will
+ * connected to an external process. Instead, input sent on the channel will
  * be echoed directly by the terminal. This is useful to display ANSI
  * terminal sequences returned as part of a rpc message, or similar.
  *
@@ -954,8 +1010,17 @@ export function nvim_notify(
  * `nvim_chan_send()` can be called immediately to process sequences in a
  * virtual terminal having the intended size.
  *
+ * Example: this `TermHl` command can be used to display and highlight raw
+ * ANSI termcodes, so you can use Nvim as a "scrollback pager" (for terminals
+ * like kitty):
+ *
+ *     vim.api.nvim_create_user_command('TermHl', function()
+ *       vim.api.nvim_open_term(0, {})
+ *     end, { desc = 'Highlights ANSI termcodes in curbuf' })
+ *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - **{buffer}**  the buffer to use (expected to be empty)
@@ -985,36 +1050,36 @@ export function nvim_open_term(
 }
 
 /**
- * Writes a message to the Vim output buffer. Does not append "\n", the
- * message is buffered (won't display) until a linefeed is written.
+ * Pastes at cursor (in any mode), and sets "redo" so dot (`.`) will repeat
+ * the input. UIs call this to implement "paste", but it's also intended for
+ * use by scripts to input large, dot-repeatable blocks of text (as opposed
+ * to `nvim_input()` which is subject to mappings/events and is thus much
+ * slower).
  *
- * Parameters:
- *   - **{str}**  Message
- */
-export function nvim_out_write(denops: Denops, str: unknown): Promise<unknown>;
-export function nvim_out_write(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_out_write", ...args);
-}
-
-/**
- * Pastes at cursor, in any mode.
- *
- * Invokes the `vim.paste` handler, which handles each mode appropriately.
- * Sets redo/undo. Faster than `nvim_input()`. Lines break at LF ("\n").
+ * Invokes the `vim.paste()` handler, which handles each mode appropriately.
  *
  * Errors ('nomodifiable', `vim.paste()` failure, …) are reflected in `err`
  * but do not affect the return value (which is strictly decided by
- * `vim.paste()`). On error, subsequent calls are ignored ("drained") until
- * the next paste is initiated (phase 1 or -1).
+ * `vim.paste()`). On error or cancel, subsequent calls are ignored
+ * ("drained") until the next paste is initiated (phase 1 or -1).
+ *
+ * Useful in mappings and scripts to insert multiline text. Example:
+ *
+ *     vim.keymap.set('n', 'x', function()
+ *       vim.api.nvim_paste([[
+ *         line1
+ *         line2
+ *         line3
+ *       ]], false, -1)
+ *     end, { buffer = true })
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.4.0
  *
  * Parameters:
- *   - **{data}**   Multiline input. May be binary (containing NUL bytes).
+ *   - **{data}**   Multiline input. Lines break at LF ("\n"). May be binary
+ *              (containing NUL bytes).
  *   - **{crlf}**   Also break lines at CR and CRLF.
  *   - **{phase}**  -1: paste in a single call (i.e. without streaming). To
  *              "stream" a paste, call `nvim_paste` sequentially with these
@@ -1025,7 +1090,7 @@ export function nvim_out_write(
  *
  * Return:
  *     - true: Client may continue pasting.
- *     - false: Client must cancel the paste.
+ *     - false: Client should cancel the paste.
  */
 export function nvim_paste(
   denops: Denops,
@@ -1041,12 +1106,14 @@ export function nvim_paste(
 }
 
 /**
- * Puts text at cursor, in any mode.
+ * Puts text at cursor, in any mode. For dot-repeatable input, use
+ * `nvim_paste()`.
  *
  * Compare `:put` and `p` which are always linewise.
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{lines}**   `readfile()`-style list of lines. `channel-lines`
@@ -1073,6 +1140,9 @@ export function nvim_put(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Replaces terminal codes and `keycodes` (`<CR>`, `<Esc>`, ...) in a string with
  * the internal representation.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{str}**        String to be converted.
@@ -1107,6 +1177,9 @@ export function nvim_replace_termcodes(
  * in a mapping; use `<Cmd>` `:map-cmd` or a Lua mapping to ensure the mapping
  * doesn't end completion mode.
  *
+ * Attributes:
+ *     Since: 0.4.0
+ *
  * Parameters:
  *   - **{item}**    Index (zero-based) of the item to select. Value of -1
  *               selects nothing and restores the original text.
@@ -1131,27 +1204,25 @@ export function nvim_select_popupmenu_item(
 }
 
 /**
- * Self-identifies the client.
+ * Self-identifies the client, and sets optional flags on the channel.
+ * Defines the `client` object returned by `nvim_get_chan_info()`.
  *
- * The client/plugin/application should call this after connecting, to
- * provide hints about its identity and purpose, for debugging and
- * orchestration.
+ * Clients should call this just after connecting, to provide hints for
+ * debugging and orchestration. (Note: Something is better than nothing!
+ * Fields are optional, but at least set `name`.)
  *
  * Can be called more than once; the caller should merge old info if
  * appropriate. Example: library first identifies the channel, then a plugin
  * using that library later identifies itself.
  *
- * Note:
- *   - "Something is better than nothing". You don't need to include all the
- *     fields.
- *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.3.0
  *
  * Parameters:
- *   - **{name}**        Short name for the connected client
- *   - **{version}**     Dictionary describing the version, with these (optional)
- *                   keys:
+ *   - **{name}**        Client short-name. Sets the `client.name` field of
+ *                   `nvim_get_chan_info()`.
+ *   - **{version}**     Dict describing the version, with these (optional) keys:
  *                   - "major" major version (defaults to 0 if not set, for
  *                     no release yet)
  *                   - "minor" minor version
@@ -1186,6 +1257,7 @@ export function nvim_select_popupmenu_item(
  *                     inclusive.
  *   - **{attributes}**  Arbitrary string:string map of informal client
  *                   properties. Suggested keys:
+ *                   - "pid": Process id.
  *                   - "website": Client homepage URL (e.g. GitHub
  *                     repository)
  *                   - "license": License description ("Apache 2", "GPLv3",
@@ -1209,13 +1281,14 @@ export function nvim_set_client_info(
 }
 
 /**
- * Sets the current buffer.
+ * Sets the current window's buffer to `buffer`.
  *
  * Attributes:
  *     not allowed when `textlock` is active or in the `cmdwin`
+ *     Since: 0.1.0
  *
  * Parameters:
- *   - **{buffer}**  Buffer handle
+ *   - **{buffer}**  Buffer id
  */
 export function nvim_set_current_buf(
   denops: Denops,
@@ -1230,6 +1303,9 @@ export function nvim_set_current_buf(
 
 /**
  * Changes the global working directory.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{dir}**  Directory path
@@ -1246,10 +1322,11 @@ export function nvim_set_current_dir(
 }
 
 /**
- * Sets the current line.
+ * Sets the text on the current line.
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{line}**  Line contents
@@ -1270,9 +1347,10 @@ export function nvim_set_current_line(
  *
  * Attributes:
  *     not allowed when `textlock` is active or in the `cmdwin`
+ *     Since: 0.1.0
  *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle
+ *   - **{tabpage}**  `tab-ID` to focus
  */
 export function nvim_set_current_tabpage(
   denops: Denops,
@@ -1286,13 +1364,14 @@ export function nvim_set_current_tabpage(
 }
 
 /**
- * Sets the current window.
+ * Sets the current window (and tabpage, implicitly).
  *
  * Attributes:
  *     not allowed when `textlock` is active or in the `cmdwin`
+ *     Since: 0.1.0
  *
  * Parameters:
- *   - **{window}**  Window handle
+ *   - **{window}**  `window-ID` to focus
  */
 export function nvim_set_current_win(
   denops: Denops,
@@ -1319,6 +1398,9 @@ export function nvim_set_current_win(
  *     using these values results in an error.
  *   - If `link` is used in combination with other attributes; only the
  *     `link` will take effect (see `:hi-link`).
+ *
+ * Attributes:
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - {ns_id}  Namespace id for this highlight `nvim_create_namespace()`.
@@ -1371,6 +1453,9 @@ export function nvim_set_hl(
  * Set active namespace for highlights defined with `nvim_set_hl()`. This can
  * be set for a single window, see `nvim_win_set_hl_ns()`.
  *
+ * Attributes:
+ *     Since: 0.8.0
+ *
  * Parameters:
  *   - {ns_id}  the namespace to use
  */
@@ -1395,6 +1480,7 @@ export function nvim_set_hl_ns(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.8.0
  *
  * Parameters:
  *   - {ns_id}  the namespace to activate
@@ -1425,6 +1511,9 @@ export function nvim_set_hl_ns_fast(
  * is equivalent to:
  *
  *     nmap <nowait> <Space><NL> <Nop>
+ *
+ * Attributes:
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{mode}**  Mode short-name (map command prefix: "n", "i", "v", "x", …)
@@ -1460,6 +1549,9 @@ export function nvim_set_keymap(
 /**
  * Sets a global (g:) variable.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
  *   - **{name}**   Variable name
  *   - **{value}**  Variable value
@@ -1478,6 +1570,9 @@ export function nvim_set_var(
 
 /**
  * Sets a v: variable, if it is not readonly.
+ *
+ * Attributes:
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{name}**   Variable name
@@ -1499,6 +1594,9 @@ export function nvim_set_vvar(
  * Calculates the number of display cells occupied by `text`. Control
  * characters including `<Tab>` count as one cell.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
  *   - **{text}**  Some text
  *
@@ -1514,46 +1612,6 @@ export function nvim_strwidth(
 }
 
 /**
- * Subscribes to event broadcasts.
- *
- * Attributes:
- *     `RPC` only
- *
- * Parameters:
- *   - **{event}**  Event type string
- */
-export function nvim_subscribe(
-  denops: Denops,
-  event: unknown,
-): Promise<unknown>;
-export function nvim_subscribe(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_subscribe", ...args);
-}
-
-/**
- * Unsubscribes to event broadcasts.
- *
- * Attributes:
- *     `RPC` only
- *
- * Parameters:
- *   - **{event}**  Event type string
- */
-export function nvim_unsubscribe(
-  denops: Denops,
-  event: unknown,
-): Promise<unknown>;
-export function nvim_unsubscribe(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_unsubscribe", ...args);
-}
-
-/**
  * EXPERIMENTAL: this API may change in the future.
  *
  * Sets info for the completion item at the given index. If the info text was
@@ -1566,7 +1624,7 @@ export function nvim_unsubscribe(
  *              - info: (string) info text.
  *
  * Return:
- *     Dictionary containing these keys:
+ *     Dict containing these keys:
  *     - winid: (number) floating window id
  *     - bufnr: (number) buffer id in floating window
  */
@@ -1587,6 +1645,7 @@ export function nvim__complete_set(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.6.0
  *
  * Parameters:
  *   - **{pat}**   pattern of files to search for
@@ -1647,26 +1706,23 @@ export function nvim__id_array(
 }
 
 /**
- * Returns dictionary given as argument.
+ * Returns dict given as argument.
  *
  * This API function is used for testing. One should not rely on its presence
  * in plugins.
  *
  * Parameters:
- *   - **{dct}**  Dictionary to return.
+ *   - **{dct}**  Dict to return.
  *
  * Return:
  *     its argument.
  */
-export function nvim__id_dictionary(
-  denops: Denops,
-  dct: unknown,
-): Promise<unknown>;
-export function nvim__id_dictionary(
+export function nvim__id_dict(denops: Denops, dct: unknown): Promise<unknown>;
+export function nvim__id_dict(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("nvim__id_dictionary", ...args);
+  return denops.call("nvim__id_dict", ...args);
 }
 
 /**
@@ -1723,6 +1779,9 @@ export function nvim__invalidate_glyph_cache(
  *
  * Instruct Nvim to redraw various components.
  *
+ * Attributes:
+ *     Since: 0.10.0
+ *
  * Parameters:
  *   - **{opts}**  Optional parameters.
  *             - win: Target a specific `window-ID` as described below.
@@ -1774,8 +1833,11 @@ export function nvim__stats(
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
  *
+ * Attributes:
+ *     Since: 0.3.0
+ *
  * Parameters:
- *   - **{dict}**  Dictionary, or String evaluating to a Vimscript `self` dict
+ *   - **{dict}**  Dict, or String evaluating to a Vimscript `self` dict
  *   - **{fn}**    Name of the function defined on the Vimscript dict
  *   - **{args}**  Function arguments packed in an Array
  *
@@ -1799,6 +1861,9 @@ export function nvim_call_dict_function(
  * Calls a Vimscript function with the given arguments.
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{fn}**    Function to call
@@ -1824,11 +1889,12 @@ export function nvim_call_function(
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
  *
- * Prefer using `nvim_cmd()` or `nvim_exec2()` over this. To evaluate
- * multiple lines of Vim script or an Ex command directly, use
- * `nvim_exec2()`. To construct an Ex command using a structured format and
- * then execute it, use `nvim_cmd()`. To modify an Ex command before
- * evaluating it, use `nvim_parse_cmd()` in conjunction with `nvim_cmd()`.
+ * Prefer `nvim_cmd()` or `nvim_exec2()` instead. To modify an Ex command in
+ * a structured way before executing it, modify the result of
+ * `nvim_parse_cmd()` then pass it to `nvim_cmd()`.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{command}**  Ex command string
@@ -1845,10 +1911,13 @@ export function nvim_command(
 }
 
 /**
- * Evaluates a Vimscript `expression`. Dictionaries and Lists are recursively
+ * Evaluates a Vimscript `expression`. Dicts and Lists are recursively
  * expanded.
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
+ *
+ * Attributes:
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{expr}**  Vimscript expression string
@@ -1873,6 +1942,9 @@ export function nvim_eval(
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
  *
+ * Attributes:
+ *     Since: 0.9.0
+ *
  * Parameters:
  *   - **{src}**   Vimscript code
  *   - **{opts}**  Optional parameters.
@@ -1880,7 +1952,7 @@ export function nvim_eval(
  *               return all (non-error, non-shell `:!`) output.
  *
  * Return:
- *     Dictionary containing information about execution, with these keys:
+ *     Dict containing information about execution, with these keys:
  *     - output: (string|nil) Output if `opts.output` is true.
  *
  * See also:
@@ -1905,6 +1977,7 @@ export function nvim_exec2(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.3.0
  *
  * Parameters:
  *   - **{expr}**       Expression to parse. Always treated as a single line.
@@ -1928,9 +2001,9 @@ export function nvim_exec2(
  *                  region [start_col, end_col)).
  *
  * Return:
- *     - AST: top-level dictionary with these keys:
- *       - "error": Dictionary with error, present only if parser saw some
- *         error. Contains the following keys:
+ *     - AST: top-level dict with these keys:
+ *       - "error": Dict with error, present only if parser saw some error.
+ *         Contains the following keys:
  *         - "message": String, error message in printf format, translated.
  *           Must contain exactly one "%.*s".
  *         - "arg": String, error message argument.
@@ -1938,7 +2011,7 @@ export function nvim_exec2(
  *         that should be equal to the length of expr string. ("Successfully
  *         parsed" here means "participated in AST creation", not "till the
  *         first error".)
- *       - "ast": AST, either nil or a dictionary with these keys:
+ *       - "ast": AST, either nil or a dict with these keys:
  *         - "type": node type, one of the value names from ExprASTNodeType
  *           stringified without "kExprNode" prefix.
  *         - "start": a pair `[line, column]` describing where node is
@@ -1992,8 +2065,11 @@ export function nvim_parse_expression(
 /**
  * Creates a buffer-local command `user-commands`.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
- *   - **{buffer}**   Buffer handle, or 0 for current buffer.
+ *   - **{buffer}**   Buffer id, or 0 for current buffer.
  *
  * See also:
  *   - nvim_create_user_command
@@ -2018,8 +2094,11 @@ export function nvim_buf_create_user_command(
  * Only commands created with `:command-buffer` or
  * `nvim_buf_create_user_command()` can be deleted with this function.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer.
+ *   - **{buffer}**  Buffer id, or 0 for current buffer.
  *   - **{name}**    Name of the command to delete.
  */
 export function nvim_buf_del_user_command(
@@ -2037,8 +2116,11 @@ export function nvim_buf_del_user_command(
 /**
  * Gets a map of buffer-local `user-commands`.
  *
+ * Attributes:
+ *     Since: 0.3.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{opts}**    Optional parameters. Currently not used.
  *
  * Return:
@@ -2059,8 +2141,8 @@ export function nvim_buf_get_commands(
 /**
  * Executes an Ex command.
  *
- * Unlike `nvim_command()` this command takes a structured Dictionary instead
- * of a String. This allows for easier construction and manipulation of an Ex
+ * Unlike `nvim_command()` this command takes a structured Dict instead of a
+ * String. This allows for easier construction and manipulation of an Ex
  * command. This also allows for things such as having spaces inside a
  * command argument, expanding filenames in a command that otherwise doesn't
  * expand filenames, etc. Command arguments may also be Number, Boolean or
@@ -2073,9 +2155,12 @@ export function nvim_buf_get_commands(
  *
  * On execution error: fails with Vimscript error, updates v:errmsg.
  *
+ * Attributes:
+ *     Since: 0.8.0
+ *
  * Parameters:
- *   - **{cmd}**   Command to execute. Must be a Dictionary that can contain the
- *             same values as the return value of `nvim_parse_cmd()` except
+ *   - **{cmd}**   Command to execute. Must be a Dict that can contain the same
+ *             values as the return value of `nvim_parse_cmd()` except
  *             "addr", "nargs" and "nextcmd" which are ignored if provided.
  *             All values except for "cmd" are optional.
  *   - **{opts}**  Optional parameters.
@@ -2109,6 +2194,9 @@ export function nvim_cmd(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *     :call nvim_create_user_command('SayHello', 'echo "Hello world!"', {'bang': v:true})
  *     :SayHello
  *     Hello world!
+ *
+ * Attributes:
+ *     Since: 0.7.0
  *
  * Parameters:
  *   - **{name}**     Name of the new user command. Must begin with an uppercase
@@ -2168,6 +2256,9 @@ export function nvim_create_user_command(
 /**
  * Delete a user-defined command.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{name}**  Name of the command to delete.
  */
@@ -2186,6 +2277,9 @@ export function nvim_del_user_command(
  * Gets a map of global (non-buffer-local) Ex commands.
  *
  * Currently only `user-commands` are supported, not builtin Ex commands.
+ *
+ * Attributes:
+ *     Since: 0.3.0
  *
  * Parameters:
  *   - **{opts}**  Optional parameters. Currently only supports **{"builtin":false}**
@@ -2214,13 +2308,14 @@ export function nvim_get_commands(
  *
  * Attributes:
  *     `api-fast`
+ *     Since: 0.8.0
  *
  * Parameters:
  *   - **{str}**   Command line string to parse. Cannot contain "\n".
  *   - **{opts}**  Optional parameters. Reserved for future use.
  *
  * Return:
- *     Dictionary containing command information, with these keys:
+ *     Dict containing command information, with these keys:
  *     - cmd: (string) Command name.
  *     - range: (array) (optional) Command range (`<line1>` `<line2>`). Omitted
  *       if command doesn't accept a range. Otherwise, has no elements if no
@@ -2237,15 +2332,15 @@ export function nvim_get_commands(
  *     - nargs: (string) Value of `:command-nargs`.
  *     - nextcmd: (string) Next command if there are multiple commands
  *       separated by a `:bar`. Empty if there isn't a next command.
- *     - magic: (dictionary) Which characters have special meaning in the
- *       command arguments.
+ *     - magic: (dict) Which characters have special meaning in the command
+ *       arguments.
  *       - file: (boolean) The command expands filenames. Which means
  *         characters such as "%", "#" and wildcards are expanded.
  *       - bar: (boolean) The "|" character is treated as a command separator
  *         and the double quote character (") is treated as the start of a
  *         comment.
- *     - mods: (dictionary) `:command-modifiers`.
- *       - filter: (dictionary) `:filter`.
+ *     - mods: (dict) `:command-modifiers`.
+ *       - filter: (dict) `:filter`.
  *         - pattern: (string) Filter pattern. Empty string if there is no
  *           filter.
  *         - force: (boolean) Whether filter is inverted or not.
@@ -2290,11 +2385,14 @@ export function nvim_parse_cmd(
 /**
  * Gets the option information for all options.
  *
- * The dictionary has the full option names as keys and option metadata
- * dictionaries as detailed at `nvim_get_option_info2()`.
+ * The dict has the full option names as keys and option metadata dicts as
+ * detailed at `nvim_get_option_info2()`.
+ *
+ * Attributes:
+ *     Since: 0.5.0
  *
  * Return:
- *     dictionary of all options
+ *     dict of all options
  *
  * See also:
  *   - `nvim_get_commands()`
@@ -2310,7 +2408,7 @@ export function nvim_get_all_options_info(
 /**
  * Gets the option information for one option from arbitrary buffer or window
  *
- * Resulting dictionary has keys:
+ * Resulting dict has keys:
  * - name: Name of the option (like 'filetype')
  * - shortname: Shortened name of the option (like 'ft')
  * - type: type of option ("string", "number" or "boolean")
@@ -2328,6 +2426,9 @@ export function nvim_get_all_options_info(
  * local value in the current buffer or window if it is available, otherwise
  * the global value information is returned. This behavior can be disabled by
  * explicitly specifying **{scope}** in the **{opts}** table.
+ *
+ * Attributes:
+ *     Since: 0.9.0
  *
  * Parameters:
  *   - **{name}**  Option name
@@ -2358,6 +2459,9 @@ export function nvim_get_option_info2(
  * `:set`: the local value of an option is returned if it exists; otherwise,
  * the global value is returned. Local values always correspond to the
  * current buffer or window, unless "buf" or "win" is set in **{opts}**.
+ *
+ * Attributes:
+ *     Since: 0.7.0
  *
  * Parameters:
  *   - **{name}**  Option name
@@ -2394,6 +2498,9 @@ export function nvim_get_option_value(
  *
  * Note the options **{win}** and **{buf}** cannot be used together.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{name}**   Option name
  *   - **{value}**  New option value
@@ -2429,8 +2536,11 @@ export function nvim_set_option_value(
  *       end,
  *     })
  *
+ * Attributes:
+ *     Since: 0.3.0
+ *
  * Parameters:
- *   - **{buffer}**       Buffer handle, or 0 for current buffer
+ *   - **{buffer}**       Buffer id, or 0 for current buffer
  *   - {send_buffer}  True if the initial notification should contain the
  *                    whole buffer: first notification will be
  *                    `nvim_buf_lines_event`. Else the first notification
@@ -2440,7 +2550,7 @@ export function nvim_set_option_value(
  *                    - on_lines: Lua callback invoked on change. Return a
  *                      truthy value (not `false` or `nil`) to detach. Args:
  *                      - the string "lines"
- *                      - buffer handle
+ *                      - buffer id
  *                      - b:changedtick
  *                      - first line that changed (zero-indexed)
  *                      - last line that was changed
@@ -2453,7 +2563,7 @@ export function nvim_set_option_value(
  *                      change compared to on_lines. Return a truthy value
  *                      (not `false` or `nil`) to detach. Args:
  *                      - the string "bytes"
- *                      - buffer handle
+ *                      - buffer id
  *                      - b:changedtick
  *                      - start row of the changed text (zero-indexed)
  *                      - start column of the changed text
@@ -2472,15 +2582,15 @@ export function nvim_set_option_value(
  *                    - on_changedtick: Lua callback invoked on changedtick
  *                      increment without text change. Args:
  *                      - the string "changedtick"
- *                      - buffer handle
+ *                      - buffer id
  *                      - b:changedtick
  *                    - on_detach: Lua callback invoked on detach. Args:
  *                      - the string "detach"
- *                      - buffer handle
+ *                      - buffer id
  *                    - on_reload: Lua callback invoked on reload. The entire
  *                      buffer content should be considered changed. Args:
  *                      - the string "reload"
- *                      - buffer handle
+ *                      - buffer id
  *                    - utf_sizes: include UTF-32 and UTF-16 size of the
  *                      replaced region, as args to `on_lines`.
  *                    - preview: also attach to command preview (i.e.
@@ -2508,23 +2618,24 @@ export function nvim_buf_attach(
 }
 
 /**
- * call a function with buffer as temporary current buffer
+ * Call a function with buffer as temporary current buffer.
  *
  * This temporarily switches current buffer to "buffer". If the current
- * window already shows "buffer", the window is not switched If a window
- * inside the current tabpage (including a float) already shows the buffer
- * One of these windows will be set as current window temporarily. Otherwise
- * a temporary scratch window (called the "autocmd window" for historical
- * reasons) will be used.
+ * window already shows "buffer", the window is not switched. If a window
+ * inside the current tabpage (including a float) already shows the buffer,
+ * then one of those windows will be set as current window temporarily.
+ * Otherwise a temporary scratch window (called the "autocmd window" for
+ * historical reasons) will be used.
  *
  * This is useful e.g. to call Vimscript functions that only work with the
- * current buffer/window currently, like `termopen()`.
+ * current buffer/window currently, like `jobstart(…, {'term': v:true})`.
  *
  * Attributes:
  *     Lua `vim.api` only
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{fun}**     Function to call inside the buffer (currently Lua callable
  *               only)
  *
@@ -2546,8 +2657,11 @@ export function nvim_buf_call(
 /**
  * Unmaps a buffer-local `mapping` for the given mode.
  *
+ * Attributes:
+ *     Since: 0.4.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * See also:
  *   - `nvim_del_keymap()`
@@ -2571,6 +2685,9 @@ export function nvim_buf_del_keymap(
  * Note:
  *   - only deletes marks set in the buffer, if the mark is not set in the
  *     buffer it will return false.
+ *
+ * Attributes:
+ *     Since: 0.6.0
  *
  * Parameters:
  *   - **{buffer}**  Buffer to set the mark on
@@ -2598,8 +2715,11 @@ export function nvim_buf_del_mark(
 /**
  * Removes a buffer-scoped (b:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{name}**    Variable name
  */
 export function nvim_buf_del_var(
@@ -2619,9 +2739,10 @@ export function nvim_buf_del_var(
  *
  * Attributes:
  *     not allowed when `textlock` is active or in the `cmdwin`
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{opts}**    Optional parameters. Keys:
  *               - force: Force deletion and ignore unsaved changes.
  *               - unload: Unloaded only, do not delete. See `:bunload`
@@ -2643,9 +2764,10 @@ export function nvim_buf_delete(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.3.0
  *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     False if detach failed (because the buffer isn't loaded); otherwise
@@ -2669,8 +2791,11 @@ export function nvim_buf_detach(
 /**
  * Gets a changed tick of a buffer
  *
+ * Attributes:
+ *     Since: 0.2.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     `b:changedtick` value.
@@ -2689,13 +2814,16 @@ export function nvim_buf_get_changedtick(
 /**
  * Gets a list of buffer-local `mapping` definitions.
  *
+ * Attributes:
+ *     Since: 0.2.1
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{mode}**    Mode short-name ("n", "i", "v", ...)
  *
  * Return:
  *     Array of `maparg()`-like dictionaries describing mappings. The
- *     "buffer" key holds the associated buffer handle.
+ *     "buffer" key holds the associated buffer id.
  */
 export function nvim_buf_get_keymap(
   denops: Denops,
@@ -2719,14 +2847,20 @@ export function nvim_buf_get_keymap(
  * Out-of-bounds indices are clamped to the nearest valid value, unless
  * `strict_indexing` is set.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**           Buffer handle, or 0 for current buffer
+ *   - **{buffer}**           Buffer id, or 0 for current buffer
  *   - **{start}**            First line index
  *   - **{end}**              Last line index, exclusive
  *   - {strict_indexing}  Whether out-of-bounds should be an error.
  *
  * Return:
  *     Array of lines, or empty array for unloaded buffer.
+ *
+ * See also:
+ *   - `nvim_buf_get_text()`
  */
 export function nvim_buf_get_lines(
   denops: Denops,
@@ -2749,8 +2883,11 @@ export function nvim_buf_get_lines(
  *
  * Marks are (1,0)-indexed. `api-indexing`
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{name}**    Mark name
  *
  * Return:
@@ -2776,8 +2913,11 @@ export function nvim_buf_get_mark(
 /**
  * Gets the full file name for the buffer
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     Buffer name
@@ -2804,8 +2944,11 @@ export function nvim_buf_get_name(
  * Unlike `line2byte()`, throws error for out-of-bounds indexing. Returns -1
  * for unloaded buffer.
  *
+ * Attributes:
+ *     Since: 0.3.2
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{index}**   Line index
  *
  * Return:
@@ -2824,18 +2967,19 @@ export function nvim_buf_get_offset(
 }
 
 /**
- * Gets a range from the buffer.
- *
- * This differs from `nvim_buf_get_lines()` in that it allows retrieving only
- * portions of a line.
+ * Gets a range from the buffer (may be partial lines, unlike
+ * `nvim_buf_get_lines()`).
  *
  * Indexing is zero-based. Row indices are end-inclusive, and column indices
  * are end-exclusive.
  *
  * Prefer `nvim_buf_get_lines()` when retrieving entire lines.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
- *   - **{buffer}**     Buffer handle, or 0 for current buffer
+ *   - **{buffer}**     Buffer id, or 0 for current buffer
  *   - {start_row}  First line index
  *   - {start_col}  Starting column (byte offset) on first line
  *   - {end_row}    Last line index, inclusive
@@ -2864,8 +3008,11 @@ export function nvim_buf_get_text(
 /**
  * Gets a buffer-scoped (b:) variable.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{name}**    Variable name
  *
  * Return:
@@ -2887,8 +3034,11 @@ export function nvim_buf_get_var(
  * Checks if a buffer is valid and loaded. See `api-buffer` for more info
  * about unloaded buffers.
  *
+ * Attributes:
+ *     Since: 0.3.2
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     true if the buffer is valid and loaded, false otherwise.
@@ -2911,8 +3061,11 @@ export function nvim_buf_is_loaded(
  *   - Even if a buffer is valid it may have been unloaded. See `api-buffer`
  *     for more info about unloaded buffers.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     true if the buffer is valid, false otherwise.
@@ -2931,8 +3084,11 @@ export function nvim_buf_is_valid(
 /**
  * Returns the number of lines in the given buffer.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * Return:
  *     Line count, or 0 for unloaded buffer. `api-buffer`
@@ -2951,8 +3107,11 @@ export function nvim_buf_line_count(
 /**
  * Sets a buffer-local `mapping` for the given mode.
  *
+ * Attributes:
+ *     Since: 0.4.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *
  * See also:
  *   - `nvim_set_keymap()`
@@ -2977,7 +3136,7 @@ export function nvim_buf_set_keymap(
  *
  * Indexing is zero-based, end-exclusive. Negative indices are interpreted as
  * length+1+index: -1 refers to the index past the end. So to change or
- * delete the last element use start=-2 and end=-1.
+ * delete the last line use start=-2 and end=-1.
  *
  * To insert lines at a given index, set `start` and `end` to the same index.
  * To delete a range of lines, set `replacement` to an empty array.
@@ -2987,9 +3146,10 @@ export function nvim_buf_set_keymap(
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.1.0
  *
  * Parameters:
- *   - **{buffer}**           Buffer handle, or 0 for current buffer
+ *   - **{buffer}**           Buffer id, or 0 for current buffer
  *   - **{start}**            First line index
  *   - **{end}**              Last line index, exclusive
  *   - {strict_indexing}  Whether out-of-bounds should be an error.
@@ -3021,6 +3181,9 @@ export function nvim_buf_set_lines(
  *
  * Note:
  *   - Passing 0 as line deletes the mark
+ *
+ * Attributes:
+ *     Since: 0.6.0
  *
  * Parameters:
  *   - **{buffer}**  Buffer to set the mark on
@@ -3054,8 +3217,11 @@ export function nvim_buf_set_mark(
 /**
  * Sets the full file name for a buffer, like `:file_f`
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{name}**    Buffer name
  */
 export function nvim_buf_set_name(
@@ -3084,25 +3250,23 @@ export function nvim_buf_set_name(
  * `start_row = end_row = row` and `start_col = end_col = col`. To delete the
  * text in a range, use `replacement = {}`.
  *
- * Prefer `nvim_buf_set_lines()` if you are only adding or deleting entire
- * lines.
- *
- * Prefer `nvim_put()` if you want to insert text at the cursor position.
+ * Note:
+ *   - Prefer `nvim_buf_set_lines()` (for performance) to add or delete
+ *     entire lines.
+ *   - Prefer `nvim_paste()` or `nvim_put()` to insert (instead of replace)
+ *     text at cursor.
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{buffer}**       Buffer handle, or 0 for current buffer
+ *   - **{buffer}**       Buffer id, or 0 for current buffer
  *   - {start_row}    First line index
  *   - {start_col}    Starting column (byte offset) on first line
  *   - {end_row}      Last line index, inclusive
  *   - {end_col}      Ending column (byte offset) on last line, exclusive
  *   - **{replacement}**  Array of lines to use as replacement
- *
- * See also:
- *   - `nvim_buf_set_lines()`
- *   - `nvim_put()`
  */
 export function nvim_buf_set_text(
   denops: Denops,
@@ -3123,8 +3287,11 @@ export function nvim_buf_set_text(
 /**
  * Sets a buffer-scoped (b:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - **{name}**    Variable name
  *   - **{value}**   Variable value
  */
@@ -3142,64 +3309,17 @@ export function nvim_buf_set_var(
 }
 
 /**
- * Adds a highlight to buffer.
- *
- * Useful for plugins that dynamically generate highlights to a buffer (like
- * a semantic highlighter or linter). The function adds a single highlight to
- * a buffer. Unlike `matchaddpos()` highlights follow changes to line
- * numbering (as lines are inserted/removed above the highlighted line), like
- * signs and marks do.
- *
- * Namespaces are used for batch deletion/updating of a set of highlights. To
- * create a namespace, use `nvim_create_namespace()` which returns a
- * namespace id. Pass it in to this function as `ns_id` to add highlights to
- * the namespace. All highlights in the same namespace can then be cleared
- * with single call to `nvim_buf_clear_namespace()`. If the highlight never
- * will be deleted by an API call, pass `ns_id = -1`.
- *
- * As a shorthand, `ns_id = 0` can be used to create a new namespace for the
- * highlight, the allocated id is then returned. If `hl_group` is the empty
- * string no highlight is added, but a new `ns_id` is still returned. This is
- * supported for backwards compatibility, new code should use
- * `nvim_create_namespace()` to create a new empty namespace.
- *
- * Parameters:
- *   - **{buffer}**     Buffer handle, or 0 for current buffer
- *   - {ns_id}      namespace to use or -1 for ungrouped highlight
- *   - {hl_group}   Name of the highlight group to use
- *   - **{line}**       Line to highlight (zero-indexed)
- *   - {col_start}  Start of (byte-indexed) column range to highlight
- *   - {col_end}    End of (byte-indexed) column range to highlight, or -1 to
- *                  highlight to end of line
- *
- * Return:
- *     The ns_id that was used
- */
-export function nvim_buf_add_highlight(
-  denops: Denops,
-  buffer: unknown,
-  ns_id: unknown,
-  hl_group: unknown,
-  line: unknown,
-  col_start: unknown,
-  col_end: unknown,
-): Promise<unknown>;
-export function nvim_buf_add_highlight(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim_buf_add_highlight", ...args);
-}
-
-/**
  * Clears `namespace`d objects (highlights, `extmarks`, virtual text) from a
  * region.
  *
  * Lines are 0-indexed. `api-indexing` To clear the namespace in the entire
  * buffer, specify line_start=0 and line_end=-1.
  *
+ * Attributes:
+ *     Since: 0.3.2
+ *
  * Parameters:
- *   - **{buffer}**      Buffer handle, or 0 for current buffer
+ *   - **{buffer}**      Buffer id, or 0 for current buffer
  *   - {ns_id}       Namespace to clear, or -1 to clear all namespaces.
  *   - {line_start}  Start of range of lines to clear
  *   - {line_end}    End of range of lines to clear (exclusive) or -1 to
@@ -3222,8 +3342,11 @@ export function nvim_buf_clear_namespace(
 /**
  * Removes an `extmark`.
  *
+ * Attributes:
+ *     Since: 0.5.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - {ns_id}   Namespace id from `nvim_create_namespace()`
  *   - **{id}**      Extmark id
  *
@@ -3246,8 +3369,11 @@ export function nvim_buf_del_extmark(
 /**
  * Gets the position (0-indexed) of an `extmark`.
  *
+ * Attributes:
+ *     Since: 0.5.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - {ns_id}   Namespace id from `nvim_create_namespace()`
  *   - **{id}**      Extmark id
  *   - **{opts}**    Optional parameters. Keys:
@@ -3283,8 +3409,11 @@ export function nvim_buf_get_extmark_by_id(
  *     vim.api.nvim_buf_get_extmarks(0, my_ns, 0, -1, {})
  *     vim.api.nvim_buf_get_extmarks(0, my_ns, {0,0}, {-1,-1}, {})
  *
- * If `end` is less than `start`, traversal works backwards. (Useful with
- * `limit`, to get the first marks prior to a given position.)
+ * If `end` is less than `start`, marks are returned in reverse order.
+ * (Useful with `limit`, to get the first marks prior to a given position.)
+ *
+ * Note: For a reverse range, `limit` does not actually affect the traversed
+ * range, just how many marks are returned
  *
  * Note: when using extmark ranges (marks with a end_row/end_col position)
  * the `overlap` option might be useful. Otherwise only the start position of
@@ -3309,8 +3438,11 @@ export function nvim_buf_get_extmark_by_id(
  *     local all = api.nvim_buf_get_extmarks(0, ns, 0, -1, {})
  *     vim.print(ms)
  *
+ * Attributes:
+ *     Since: 0.5.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - {ns_id}   Namespace id from `nvim_create_namespace()` or -1 for all
  *               namespaces
  *   - **{start}**   Start of range: a 0-indexed (row, col) or valid extmark id
@@ -3363,8 +3495,11 @@ export function nvim_buf_get_extmarks(
  * earlier end position is not an error, but then it behaves like an empty
  * range (no highlighting).
  *
+ * Attributes:
+ *     Since: 0.5.0
+ *
  * Parameters:
- *   - **{buffer}**  Buffer handle, or 0 for current buffer
+ *   - **{buffer}**  Buffer id, or 0 for current buffer
  *   - {ns_id}   Namespace id from `nvim_create_namespace()`
  *   - **{line}**    Line where to place the mark, 0-based. `api-indexing`
  *   - **{col}**     Column where to place the mark, 0-based. `api-indexing`
@@ -3372,8 +3507,12 @@ export function nvim_buf_get_extmarks(
  *               - id : id of the extmark to edit.
  *               - end_row : ending line of the mark, 0-based inclusive.
  *               - end_col : ending col of the mark, 0-based exclusive.
- *               - hl_group : name of the highlight group used to highlight
- *                 this mark.
+ *               - hl_group : highlight group used for the text range. This
+ *                 and below highlight groups can be supplied either as a
+ *                 string or as an integer, the latter of which can be
+ *                 obtained using `nvim_get_hl_id_by_name()`.
+ *                 Multiple highlight groups can be stacked by passing an
+ *                 array (highest priority last).
  *               - hl_eol : when true, for a multiline highlight covering the
  *                 EOL of a line, continue the highlight for the rest of the
  *                 screen line (just like for diff and cursorline highlight).
@@ -3382,11 +3521,16 @@ export function nvim_buf_get_extmarks(
  *                 with specified highlight. `highlight` element can either
  *                 be a single highlight group, or an array of multiple
  *                 highlight groups that will be stacked (highest priority
- *                 last). A highlight group can be supplied either as a
- *                 string or as an integer, the latter which can be obtained
- *                 using `nvim_get_hl_id_by_name()`.
+ *                 last).
  *               - virt_text_pos : position of virtual text. Possible values:
  *                 - "eol": right after eol character (default).
+ *                 - "eol_right_align": display right aligned in the window
+ *                   unless the virtual text is longer than the space
+ *                   available. If the virtual text is too long, it is
+ *                   truncated to fit in the window after the EOL character.
+ *                   If the line is wrapped, the virtual text is shown after
+ *                   the end of the line rather than the previous screen
+ *                   line.
  *                 - "overlay": display over the specified column, without
  *                   shifting the underlying text.
  *                 - "right_align": display right aligned in the window.
@@ -3420,12 +3564,17 @@ export function nvim_buf_get_extmarks(
  *                 lines are placed below the buffer line containing the
  *                 mark.
  *               - virt_lines_above: place virtual lines above instead.
- *               - virt_lines_leftcol: Place extmarks in the leftmost column
- *                 of the window, bypassing sign and number columns.
+ *               - virt_lines_leftcol: Place virtual lines in the leftmost
+ *                 column of the window, bypassing sign and number columns.
+ *               - virt_lines_overflow: controls how to handle virtual lines
+ *                 wider than the window. Currently takes the one of the
+ *                 following values:
+ *                 - "trunc": truncate virtual lines on the right (default).
+ *                 - "scroll": virtual lines can scroll horizontally with
+ *                   'nowrap', otherwise the same as "trunc".
  *               - ephemeral : for use with `nvim_set_decoration_provider()`
  *                 callbacks. The mark will only be used for the current
- *                 redraw cycle, and not be permantently stored in the
- *                 buffer.
+ *                 redraw cycle, and not be permanently stored in the buffer.
  *               - right_gravity : boolean that indicates the direction the
  *                 extmark will be shifted in when new text is inserted (true
  *                 for right, false for left). Defaults to true.
@@ -3450,20 +3599,23 @@ export function nvim_buf_get_extmarks(
  *                 buffer or end of the line respectively. Defaults to true.
  *               - sign_text: string of length 1-2 used to display in the
  *                 sign column.
- *               - sign_hl_group: name of the highlight group used to
- *                 highlight the sign column text.
- *               - number_hl_group: name of the highlight group used to
- *                 highlight the number column.
- *               - line_hl_group: name of the highlight group used to
- *                 highlight the whole line.
- *               - cursorline_hl_group: name of the highlight group used to
- *                 highlight the sign column text when the cursor is on the
- *                 same line as the mark and 'cursorline' is enabled.
+ *               - sign_hl_group: highlight group used for the sign column
+ *                 text.
+ *               - number_hl_group: highlight group used for the number
+ *                 column.
+ *               - line_hl_group: highlight group used for the whole line.
+ *               - cursorline_hl_group: highlight group used for the sign
+ *                 column text when the cursor is on the same line as the
+ *                 mark and 'cursorline' is enabled.
  *               - conceal: string which should be either empty or a single
  *                 character. Enable concealing similar to `:syn-conceal`.
  *                 When a character is supplied it is used as `:syn-cchar`.
  *                 "hl_group" is used as highlight for the cchar if provided,
  *                 otherwise it defaults to `hl-Conceal`.
+ *               - conceal_lines: string which should be empty. When
+ *                 provided, lines in the range are not drawn at all
+ *                 (according to 'conceallevel'); the next unconcealed line
+ *                 is drawn instead.
  *               - spell: boolean indicating that spell checking should be
  *                 performed within this extmark
  *               - ui_watched: boolean that indicates the mark should be
@@ -3473,8 +3625,6 @@ export function nvim_buf_get_extmarks(
  *               - url: A URL to associate with this extmark. In the TUI, the
  *                 OSC 8 control sequence is used to generate a clickable
  *                 hyperlink to this URL.
- *               - scoped: boolean (EXPERIMENTAL) enables "scoping" for the
- *                 extmark. See `nvim__win_add_ns()`
  *
  * Return:
  *     Id of the created/updated extmark
@@ -3498,11 +3648,14 @@ export function nvim_buf_set_extmark(
  * Creates a new namespace or gets an existing one.
  *
  * Namespaces are used for buffer highlights and virtual text, see
- * `nvim_buf_add_highlight()` and `nvim_buf_set_extmark()`.
+ * `nvim_buf_set_extmark()`.
  *
  * Namespaces can be named or anonymous. If `name` matches an existing
  * namespace, the associated id is returned. If `name` is an empty string a
  * new, anonymous namespace is created.
+ *
+ * Attributes:
+ *     Since: 0.3.2
  *
  * Parameters:
  *   - **{name}**  Namespace name or empty string
@@ -3523,6 +3676,9 @@ export function nvim_create_namespace(
 
 /**
  * Gets existing, non-anonymous `namespace`s.
+ *
+ * Attributes:
+ *     Since: 0.3.2
  *
  * Return:
  *     dict that maps from names to namespace ids.
@@ -3550,7 +3706,7 @@ export function nvim_get_namespaces(
  * Note: this function should not be called often. Rather, the callbacks
  * themselves can be used to throttle unneeded callbacks. the `on_start`
  * callback can return `false` to disable the provider until the next redraw.
- * Similarly, return `false` in `on_win` will skip the `on_lines` calls for
+ * Similarly, return `false` in `on_win` will skip the `on_line` calls for
  * that window (but any extmarks set in `on_win` will still be used). A
  * plugin managing multiple sources of decoration should ideally only set one
  * provider, and merge the sources internally. You can use multiple `ns_id`
@@ -3559,14 +3715,15 @@ export function nvim_get_namespaces(
  * Note: doing anything other than setting extmarks is considered
  * experimental. Doing things like changing options are not explicitly
  * forbidden, but is likely to have unexpected consequences (such as 100% CPU
- * consumption). doing `vim.rpcnotify` should be OK, but `vim.rpcrequest` is
+ * consumption). Doing `vim.rpcnotify` should be OK, but `vim.rpcrequest` is
  * quite dubious for the moment.
  *
- * Note: It is not allowed to remove or update extmarks in 'on_line'
+ * Note: It is not allowed to remove or update extmarks in `on_line`
  * callbacks.
  *
  * Attributes:
  *     Lua `vim.api` only
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - {ns_id}  Namespace id from `nvim_create_namespace()`
@@ -3575,14 +3732,14 @@ export function nvim_get_namespaces(
  *
  *                  ["start", tick]
  *
- *              - on_buf: called for each buffer being redrawn (before window
- *                callbacks)
+ *              - on_buf: called for each buffer being redrawn (once per
+ *                edit, before window callbacks)
  *
  *                    ["buf", bufnr, tick]
  *
  *              - on_win: called when starting to redraw a specific window.
  *
- *                  ["win", winid, bufnr, topline, botline]
+ *                  ["win", winid, bufnr, toprow, botrow]
  *
  *              - on_line: called for each buffer line being redrawn. (The
  *                interaction with fold lines is subject to change)
@@ -3608,72 +3765,42 @@ export function nvim_set_decoration_provider(
 /**
  * EXPERIMENTAL: this API will change in the future.
  *
- * Scopes a namespace to the a window, so extmarks in the namespace will be
- * active only in the given window.
+ * Get the properties for namespace
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
- *   - {ns_id}   Namespace
+ *   - {ns_id}  Namespace
  *
  * Return:
- *     true if the namespace was added, else false
+ *     Map defining the namespace properties, see `nvim__ns_set()`
  */
-export function nvim__win_add_ns(
-  denops: Denops,
-  window: unknown,
-  ns_id: unknown,
-): Promise<unknown>;
-export function nvim__win_add_ns(
+export function nvim__ns_get(denops: Denops, ns_id: unknown): Promise<unknown>;
+export function nvim__ns_get(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("nvim__win_add_ns", ...args);
+  return denops.call("nvim__ns_get", ...args);
 }
 
 /**
  * EXPERIMENTAL: this API will change in the future.
  *
- * Unscopes a namespace (un-binds it from the given scope).
+ * Set some properties for namespace
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
- *   - {ns_id}   the namespace to remove
- *
- * Return:
- *     true if the namespace was removed, else false
+ *   - {ns_id}  Namespace
+ *   - **{opts}**   Optional parameters to set:
+ *              - wins: a list of windows to be scoped in
  */
-export function nvim__win_del_ns(
+export function nvim__ns_set(
   denops: Denops,
-  window: unknown,
   ns_id: unknown,
+  opts: unknown,
 ): Promise<unknown>;
-export function nvim__win_del_ns(
+export function nvim__ns_set(
   denops: Denops,
   ...args: unknown[]
 ): Promise<unknown> {
-  return denops.call("nvim__win_del_ns", ...args);
-}
-
-/**
- * EXPERIMENTAL: this API will change in the future.
- *
- * Gets the namespace scopes for a given window.
- *
- * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
- *
- * Return:
- *     a list of namespaces ids
- */
-export function nvim__win_get_ns(
-  denops: Denops,
-  window: unknown,
-): Promise<unknown>;
-export function nvim__win_get_ns(
-  denops: Denops,
-  ...args: unknown[]
-): Promise<unknown> {
-  return denops.call("nvim__win_get_ns", ...args);
+  return denops.call("nvim__ns_set", ...args);
 }
 
 /**
@@ -3681,9 +3808,10 @@ export function nvim__win_get_ns(
  *
  * Attributes:
  *     Lua `vim.api` only
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{fun}**     Function to call inside the window (currently Lua callable
  *               only)
  *
@@ -3711,9 +3839,10 @@ export function nvim_win_call(
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.4.0
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{force}**   Behave like `:close!` The last window of a buffer with
  *               unwritten changes can be closed. The buffer will become
  *               hidden, even if 'hidden' is not set.
@@ -3733,8 +3862,11 @@ export function nvim_win_close(
 /**
  * Removes a window-scoped (w:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{name}**    Variable name
  */
 export function nvim_win_del_var(
@@ -3752,11 +3884,14 @@ export function nvim_win_del_var(
 /**
  * Gets the current buffer in a window
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
- *     Buffer handle
+ *     Buffer id
  */
 export function nvim_win_get_buf(
   denops: Denops,
@@ -3774,8 +3909,11 @@ export function nvim_win_get_buf(
  * (different windows showing the same buffer have independent cursor
  * positions). `api-indexing`
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     (row, col) tuple
@@ -3797,8 +3935,11 @@ export function nvim_win_get_cursor(
 /**
  * Gets the window height
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     Height as a count of rows
@@ -3817,8 +3958,11 @@ export function nvim_win_get_height(
 /**
  * Gets the window number
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     Window number
@@ -3837,8 +3981,11 @@ export function nvim_win_get_number(
 /**
  * Gets the window position in display cells. First position is zero.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     (row, col) tuple with the window position
@@ -3857,8 +4004,11 @@ export function nvim_win_get_position(
 /**
  * Gets the window tabpage
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     Tabpage that contains the window
@@ -3877,8 +4027,11 @@ export function nvim_win_get_tabpage(
 /**
  * Gets a window-scoped (w:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{name}**    Variable name
  *
  * Return:
@@ -3899,8 +4052,11 @@ export function nvim_win_get_var(
 /**
  * Gets the window width
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     Width as a count of columns
@@ -3926,9 +4082,10 @@ export function nvim_win_get_width(
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.5.0
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  */
 export function nvim_win_hide(
   denops: Denops,
@@ -3944,8 +4101,11 @@ export function nvim_win_hide(
 /**
  * Checks if a window is valid
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *
  * Return:
  *     true if the window is valid, false otherwise
@@ -3966,10 +4126,11 @@ export function nvim_win_is_valid(
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.3.2
  *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
- *   - **{buffer}**  Buffer handle
+ *   - **{window}**  `window-ID`, or 0 for current window
+ *   - **{buffer}**  Buffer id
  */
 export function nvim_win_set_buf(
   denops: Denops,
@@ -3987,8 +4148,11 @@ export function nvim_win_set_buf(
  * Sets the (1,0)-indexed cursor position in the window. `api-indexing` This
  * scrolls the window even if it is not the current one.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{pos}**     (row, col) tuple representing the new position
  */
 export function nvim_win_set_cursor(
@@ -4006,8 +4170,11 @@ export function nvim_win_set_cursor(
 /**
  * Sets the window height.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{height}**  Height as a count of rows
  */
 export function nvim_win_set_height(
@@ -4029,6 +4196,9 @@ export function nvim_win_set_height(
  *
  * This takes precedence over the 'winhighlight' option.
  *
+ * Attributes:
+ *     Since: 0.8.0
+ *
  * Parameters:
  *   - {ns_id}   the namespace to use
  */
@@ -4047,8 +4217,11 @@ export function nvim_win_set_hl_ns(
 /**
  * Sets a window-scoped (w:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{name}**    Variable name
  *   - **{value}**   Variable value
  */
@@ -4069,8 +4242,11 @@ export function nvim_win_set_var(
  * Sets the window width. This will only succeed if the screen is split
  * vertically.
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window
+ *   - **{window}**  `window-ID`, or 0 for current window
  *   - **{width}**   Width as a count of columns
  */
 export function nvim_win_set_width(
@@ -4097,8 +4273,11 @@ export function nvim_win_set_width(
  *
  * Line indexing is similar to `nvim_buf_get_text()`.
  *
+ * Attributes:
+ *     Since: 0.10.0
+ *
  * Parameters:
- *   - **{window}**  Window handle, or 0 for current window.
+ *   - **{window}**  `window-ID`, or 0 for current window.
  *   - **{opts}**    Optional parameters:
  *               - start_row: Starting line index, 0-based inclusive. When
  *                 omitted start at the very top.
@@ -4112,7 +4291,7 @@ export function nvim_win_set_width(
  *                 omitted include the whole line.
  *
  * Return:
- *     Dictionary containing text height information, with these keys:
+ *     Dict containing text height information, with these keys:
  *     - all: The total number of screen lines occupied by the range.
  *     - fill: The number of diff filler or virtual lines among them.
  *
@@ -4134,8 +4313,11 @@ export function nvim_win_text_height(
 /**
  * Removes a tab-scoped (t:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *   - **{name}**     Variable name
  */
 export function nvim_tabpage_del_var(
@@ -4153,8 +4335,11 @@ export function nvim_tabpage_del_var(
 /**
  * Gets the tabpage number
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *
  * Return:
  *     Tabpage number
@@ -4173,8 +4358,11 @@ export function nvim_tabpage_get_number(
 /**
  * Gets a tab-scoped (t:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *   - **{name}**     Variable name
  *
  * Return:
@@ -4195,11 +4383,14 @@ export function nvim_tabpage_get_var(
 /**
  * Gets the current window in a tabpage
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *
  * Return:
- *     Window handle
+ *     `window-ID`
  */
 export function nvim_tabpage_get_win(
   denops: Denops,
@@ -4215,8 +4406,11 @@ export function nvim_tabpage_get_win(
 /**
  * Checks if a tabpage is valid
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *
  * Return:
  *     true if the tabpage is valid, false otherwise
@@ -4235,8 +4429,11 @@ export function nvim_tabpage_is_valid(
 /**
  * Gets the windows in a tabpage
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *
  * Return:
  *     List of windows in `tabpage`
@@ -4255,8 +4452,11 @@ export function nvim_tabpage_list_wins(
 /**
  * Sets a tab-scoped (t:) variable
  *
+ * Attributes:
+ *     Since: 0.1.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
  *   - **{name}**     Variable name
  *   - **{value}**    Variable value
  */
@@ -4276,9 +4476,12 @@ export function nvim_tabpage_set_var(
 /**
  * Sets the current window in a tabpage
  *
+ * Attributes:
+ *     Since: 0.10.0
+ *
  * Parameters:
- *   - **{tabpage}**  Tabpage handle, or 0 for current tabpage
- *   - **{win}**      Window handle, must already belong to **{tabpage}**
+ *   - **{tabpage}**  `tab-ID`, or 0 for current tabpage
+ *   - **{win}**      `window-ID`, must already belong to **{tabpage}**
  */
 export function nvim_tabpage_set_win(
   denops: Denops,
@@ -4295,6 +4498,9 @@ export function nvim_tabpage_set_win(
 /**
  * Clears all autocommands selected by **{opts}**. To delete autocmds see
  * `nvim_del_autocmd()`.
+ *
+ * Attributes:
+ *     Since: 0.7.0
  *
  * Parameters:
  *   - **{opts}**  Parameters
@@ -4332,13 +4538,16 @@ export function nvim_clear_autocmds(
  *
  * To get an existing group id, do:
  *
- *     local id = vim.api.nvim_create_augroup("MyGroup", {
+ *     local id = vim.api.nvim_create_augroup('my.lsp.config', {
  *         clear = false
  *     })
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{name}**  String: The name of the group
- *   - **{opts}**  Dictionary Parameters
+ *   - **{opts}**  Dict Parameters
  *             - clear (bool) optional: defaults to true. Clear existing
  *               commands if the group already exists `autocmd-groups`.
  *
@@ -4367,8 +4576,8 @@ export function nvim_create_augroup(
  *
  * Example using Lua callback:
  *
- *     vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
- *       pattern = {"*.c", "*.h"},
+ *     vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+ *       pattern = {'*.c', '*.h'},
  *       callback = function(ev)
  *         print(string.format('event fired: %s', vim.inspect(ev)))
  *       end
@@ -4376,15 +4585,18 @@ export function nvim_create_augroup(
  *
  * Example using an Ex command as the handler:
  *
- *     vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
- *       pattern = {"*.c", "*.h"},
+ *     vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+ *       pattern = {'*.c', '*.h'},
  *       command = "echo 'Entering a C or C++ file'",
  *     })
  *
  * Note: `pattern` is NOT automatically expanded (unlike with `:autocmd`),
  * thus names like "$HOME" and `"~"` must be expanded explicitly:
  *
- *     pattern = vim.fn.expand("~") .. "/some/path/*.py"
+ *     pattern = vim.fn.expand('~') .. '/some/path/*.py'
+ *
+ * Attributes:
+ *     Since: 0.7.0
  *
  * Parameters:
  *   - **{event}**  (string|array) Event(s) that will trigger the handler
@@ -4402,16 +4614,16 @@ export function nvim_create_augroup(
  *              - callback (function|string) optional: Lua function (or
  *                Vimscript function name, if string) called when the
  *                event(s) is triggered. Lua callback can return a truthy
- *                value (not `false` or `nil`) to delete the autocommand.
- *                Receives one argument, a table with these keys:
+ *                value (not `false` or `nil`) to delete the autocommand, and
+ *                receives one argument, a table with these keys:
  *
  *                - id: (number) autocommand id
  *                - event: (string) name of the triggered event
  *                  `autocmd-events`
  *                - group: (number|nil) autocommand group id, if any
- *                - match: (string) expanded value of `<amatch>`
- *                - buf: (number) expanded value of `<abuf>`
- *                - file: (string) expanded value of `<afile>`
+ *                - file: (string) `<afile>` (not expanded to a full path)
+ *                - match: (string) `<amatch>` (expanded to a full path)
+ *                - buf: (number) `<abuf>`
  *                - data: (any) arbitrary data passed from
  *                  `nvim_exec_autocmds()`
  *              - command (string) optional: Vim command to execute on event.
@@ -4449,6 +4661,9 @@ export function nvim_create_autocmd(
  * autocommands contained in this group will also be deleted and cleared.
  * This group will no longer exist.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{id}**  Integer The id of the group.
  *
@@ -4474,6 +4689,9 @@ export function nvim_del_augroup_by_id(
  * autocommands contained in this group will also be deleted and cleared.
  * This group will no longer exist.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{name}**  String The name of the group.
  *
@@ -4494,6 +4712,9 @@ export function nvim_del_augroup_by_name(
 /**
  * Deletes an autocommand by id.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{id}**  Integer Autocommand id returned by `nvim_create_autocmd()`
  */
@@ -4509,9 +4730,12 @@ export function nvim_del_autocmd(
  * Execute all autocommands for **{event}** that match the corresponding **{opts}**
  * `autocmd-execute`.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
  *   - **{event}**  (String|Array) The event or events to execute
- *   - **{opts}**   Dictionary of autocommand options:
+ *   - **{opts}**   Dict of autocommand options:
  *              - group (string|integer) optional: the autocommand group name
  *                or id to match against. `autocmd-groups`.
  *              - pattern (string|array) optional: defaults to "*"
@@ -4545,48 +4769,53 @@ export function nvim_exec_autocmds(
  *
  *     -- Matches all criteria
  *     autocommands = vim.api.nvim_get_autocmds({
- *       group = "MyGroup",
- *       event = {"BufEnter", "BufWinEnter"},
- *       pattern = {"*.c", "*.h"}
+ *       group = 'MyGroup',
+ *       event = {'BufEnter', 'BufWinEnter'},
+ *       pattern = {'*.c', '*.h'}
  *     })
  *
  *     -- All commands from one group
  *     autocommands = vim.api.nvim_get_autocmds({
- *       group = "MyGroup",
+ *       group = 'MyGroup',
  *     })
  *
  * NOTE: When multiple patterns or events are provided, it will find all the
  * autocommands that match any combination of them.
  *
+ * Attributes:
+ *     Since: 0.7.0
+ *
  * Parameters:
- *   - **{opts}**  Dictionary with at least one of the following:
- *             - group (string|integer): the autocommand group name or id to
- *               match against.
- *             - event (string|array): event or events to match against
+ *   - **{opts}**  Dict with at least one of the following:
+ *             - buffer: (integer) Buffer number or list of buffer numbers
+ *               for buffer local autocommands `autocmd-buflocal`. Cannot be
+ *               used with **{pattern}**
+ *             - event: (string|table) event or events to match against
  *               `autocmd-events`.
- *             - pattern (string|array): pattern or patterns to match against
+ *             - id: (integer) Autocommand ID to match.
+ *             - group: (string|table) the autocommand group name or id to
+ *               match against.
+ *             - pattern: (string|table) pattern or patterns to match against
  *               `autocmd-pattern`. Cannot be used with **{buffer}**
- *             - buffer: Buffer number or list of buffer numbers for buffer
- *               local autocommands `autocmd-buflocal`. Cannot be used with
- *               **{pattern}**
  *
  * Return:
  *     Array of autocommands matching the criteria, with each item containing
  *     the following fields:
- *     - id (number): the autocommand id (only when defined with the API).
- *     - group (integer): the autocommand group id.
- *     - group_name (string): the autocommand group name.
- *     - desc (string): the autocommand description.
- *     - event (string): the autocommand event.
- *     - command (string): the autocommand command. Note: this will be empty
+ *     - buffer: (integer) the buffer number.
+ *     - buflocal: (boolean) true if the autocommand is buffer local.
+ *     - command: (string) the autocommand command. Note: this will be empty
  *       if a callback is set.
- *     - callback (function|string|nil): Lua function or name of a Vim script
- *       function which is executed when this autocommand is triggered.
- *     - once (boolean): whether the autocommand is only run once.
- *     - pattern (string): the autocommand pattern. If the autocommand is
+ *     - callback: (function|string|nil): Lua function or name of a Vim
+ *       script function which is executed when this autocommand is
+ *       triggered.
+ *     - desc: (string) the autocommand description.
+ *     - event: (string) the autocommand event.
+ *     - id: (integer) the autocommand id (only when defined with the API).
+ *     - group: (integer) the autocommand group id.
+ *     - group_name: (string) the autocommand group name.
+ *     - once: (boolean) whether the autocommand is only run once.
+ *     - pattern: (string) the autocommand pattern. If the autocommand is
  *       buffer local `autocmd-buffer-local`:
- *     - buflocal (boolean): true if the autocommand is buffer local.
- *     - buffer (number): the buffer number.
  */
 export function nvim_get_autocmds(
   denops: Denops,
@@ -4613,6 +4842,7 @@ export function nvim_get_autocmds(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.1.0
  *
  * Parameters:
  *   - **{width}**    Requested screen columns
@@ -4639,6 +4869,7 @@ export function nvim_ui_attach(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.1.0
  */
 export function nvim_ui_detach(denops: Denops): Promise<unknown>;
 export function nvim_ui_detach(
@@ -4661,6 +4892,7 @@ export function nvim_ui_detach(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.5.0
  *
  * Parameters:
  *   - **{width}**   Popupmenu width.
@@ -4688,6 +4920,7 @@ export function nvim_ui_pum_set_bounds(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{height}**  Popupmenu height, must be greater than zero.
@@ -4708,6 +4941,7 @@ export function nvim_ui_pum_set_height(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.9.0
  */
 export function nvim_ui_set_focus(
   denops: Denops,
@@ -4723,6 +4957,7 @@ export function nvim_ui_set_focus(
 /**
  * Attributes:
  *     `RPC` only
+ *     Since: 0.1.0
  */
 export function nvim_ui_set_option(
   denops: Denops,
@@ -4746,6 +4981,7 @@ export function nvim_ui_set_option(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.10.0
  *
  * Parameters:
  *   - **{event}**  Event name
@@ -4766,6 +5002,7 @@ export function nvim_ui_term_event(
 /**
  * Attributes:
  *     `RPC` only
+ *     Since: 0.1.0
  */
 export function nvim_ui_try_resize(
   denops: Denops,
@@ -4787,6 +5024,7 @@ export function nvim_ui_try_resize(
  *
  * Attributes:
  *     `RPC` only
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{grid}**    The handle of the grid to be changed.
@@ -4812,6 +5050,9 @@ export function nvim_ui_try_resize_grid(
  * View it in a nice human-readable format:
  *
  *     lua vim.print(vim.fn.api_info())
+ *
+ * Return:
+ *   (`table`)
  */
 export function api_info(denops: Denops): Promise<unknown>;
 export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4827,6 +5068,13 @@ export function api_info(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * pty master, sending SIGHUP to the job process.
  * For a socket, there is only one stream, and **{stream}** should be
  * omitted.
+ *
+ * Parameters:
+ *   - **{id}** (`integer`)
+ *   - **{stream}** (`string?`)
+ *
+ * Return:
+ *   (`0|1`)
  */
 export function chanclose(
   denops: Denops,
@@ -4859,6 +5107,13 @@ export function chanclose(
  * chansend() writes raw data, not RPC messages.  If the channel
  * was created with `"rpc":v:true` then the channel expects RPC
  * messages, use `rpcnotify()` and `rpcrequest()` instead.
+ *
+ * Parameters:
+ *   - **{id}** (`number`)
+ *   - **{data}** (`string|string[]`)
+ *
+ * Return:
+ *   (`0|1`)
  */
 export function chansend(
   denops: Denops,
@@ -4873,6 +5128,12 @@ export function chansend(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Returns a `Dictionary` representing the `context` at **{index}**
  * from the top of the `context-stack` (see `context-dict`).
  * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
+ *
+ * Parameters:
+ *   - **{index}** (`integer?`)
+ *
+ * Return:
+ *   (`table`)
  */
 export function ctxget(denops: Denops, index?: unknown): Promise<unknown>;
 export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4882,6 +5143,9 @@ export function ctxget(denops: Denops, ...args: unknown[]): Promise<unknown> {
 /**
  * Pops and restores the `context` at the top of the
  * `context-stack`.
+ *
+ * Return:
+ *   (`any`)
  */
 export function ctxpop(denops: Denops): Promise<unknown>;
 export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4894,6 +5158,12 @@ export function ctxpop(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * If **{types}** is given and is a `List` of `String`s, it specifies
  * which `context-types` to include in the pushed context.
  * Otherwise, all context types are included.
+ *
+ * Parameters:
+ *   - **{types}** (`string[]?`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function ctxpush(denops: Denops, types?: unknown): Promise<unknown>;
 export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4905,6 +5175,13 @@ export function ctxpush(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * `context-stack` to that represented by **{context}**.
  * **{context}** is a Dictionary with context data (`context-dict`).
  * If **{index}** is not given, it is assumed to be 0 (i.e.: top).
+ *
+ * Parameters:
+ *   - **{context}** (`table`)
+ *   - **{index}** (`integer?`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function ctxset(
   denops: Denops,
@@ -4917,6 +5194,9 @@ export function ctxset(denops: Denops, ...args: unknown[]): Promise<unknown> {
 
 /**
  * Returns the size of the `context-stack`.
+ *
+ * Return:
+ *   (`any`)
  */
 export function ctxsize(denops: Denops): Promise<unknown>;
 export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -4963,6 +5243,14 @@ export function ctxsize(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * This function can be used by plugins to implement options with
  * validation and parsing logic.
+ *
+ * Parameters:
+ *   - **{dict}** (`table`)
+ *   - **{pattern}** (`string`)
+ *   - **{callback}** (`function`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function dictwatcheradd(
   denops: Denops,
@@ -4981,6 +5269,14 @@ export function dictwatcheradd(
  * Removes a watcher added  with `dictwatcheradd()`. All three
  * arguments must match the ones passed to `dictwatcheradd()` in
  * order for the watcher to be successfully deleted.
+ *
+ * Parameters:
+ *   - **{dict}** (`any`)
+ *   - **{pattern}** (`string`)
+ *   - **{callback}** (`function`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function dictwatcherdel(
   denops: Denops,
@@ -4996,29 +5292,13 @@ export function dictwatcherdel(
 }
 
 /**
- * Returns a `String` which is a unique identifier of the
- * container type (`List`, `Dict`, `Blob` and `Partial`). It is
- * guaranteed that for the mentioned types `id(v1) ==# id(v2)`
- * returns true iff `type(v1) == type(v2) && v1 is v2`.
- * Note that `v:_null_string`, `v:_null_list`, `v:_null_dict` and
- * `v:_null_blob` have the same `id()` with different types
- * because they are internally represented as NULL pointers.
- * `id()` returns a hexadecimal representanion of the pointers to
- * the containers (i.e. like `0x994a40`), same as `printf("%p",
- * {expr})`, but it is advised against counting on the exact
- * format of the return value.
- *
- * It is not guaranteed that `id(no_longer_existing_container)`
- * will not be equal to some other `id()`: new containers may
- * reuse identifiers of the garbage-collected ones.
- */
-export function id(denops: Denops, expr: unknown): Promise<unknown>;
-export function id(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("id", ...args);
-}
-
-/**
  * Return the PID (process id) of `job-id` **{job}**.
+ *
+ * Parameters:
+ *   - **{job}** (`integer`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function jobpid(denops: Denops, job: unknown): Promise<unknown>;
 export function jobpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5029,6 +5309,14 @@ export function jobpid(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Resize the pseudo terminal window of `job-id` **{job}** to **{width}**
  * columns and **{height}** rows.
  * Fails if the job was not started with `"pty":v:true`.
+ *
+ * Parameters:
+ *   - **{job}** (`integer`)
+ *   - **{width}** (`integer`)
+ *   - **{height}** (`integer`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function jobresize(
   denops: Denops,
@@ -5044,7 +5332,7 @@ export function jobresize(
 }
 
 /**
- * Note: Prefer `vim.system()` in Lua (unless using the `pty` option).
+ * Note: Prefer `vim.system()` in Lua (unless using `rpc`, `pty`, or `term`).
  *
  * Spawns **{cmd}** as a job.
  * If **{cmd}** is a List it runs directly (no 'shell').
@@ -5054,9 +5342,13 @@ export function jobresize(
  *
  * (See `shell-unquoting` for details.)
  *
- * Example:
+ * Example: start a job and handle its output:
  *
- *     call jobstart('nvim -h', {'on_stdout':{j,d,e->append(line('.'),d)}})
+ *     call jobstart(['nvim', '-h'], {'on_stdout':{j,d,e->append(line('.'),d)}})
+ *
+ * Example: start a job in a `terminal` connected to the current buffer:
+ *
+ *     call jobstart(['nvim', '-h'], {'term':v:true})
  *
  * Returns `job-id` on success, 0 on invalid arguments (or job
  * table is full), -1 if **{cmd}**[0] or 'shell' is not executable.
@@ -5123,6 +5415,10 @@ export function jobresize(
  *   stdin:      (string) Either "pipe" (default) to connect the
  *               job's stdin to a channel or "null" to disconnect
  *               stdin.
+ *   term:     (boolean) Spawns **{cmd}** in a new pseudo-terminal session
+ *           connected to the current (unmodified) buffer. Implies "pty".
+ *           Default "height" and "width" are set to the current window
+ *           dimensions. `jobstart()`. Defaults $TERM to "xterm-256color".
  *   width:      (number) Width of the `pty` terminal.
  *
  * **{opts}** is passed as `self` dictionary to the callback; the
@@ -5133,6 +5429,13 @@ export function jobresize(
  *   - 0 on invalid arguments
  *   - -1 if **{cmd}**[0] is not executable.
  * See also `job-control`, `channel`, `msgpack-rpc`.
+ *
+ * Parameters:
+ *   - **{cmd}** (`string|string[]`)
+ *   - **{opts}** (`table?`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function jobstart(
   denops: Denops,
@@ -5152,6 +5455,12 @@ export function jobstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *
  * Returns 1 for valid job id, 0 for invalid id, including jobs have
  * exited or stopped.
+ *
+ * Parameters:
+ *   - **{id}** (`integer`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function jobstop(denops: Denops, id: unknown): Promise<unknown>;
 export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
@@ -5179,6 +5488,13 @@ export function jobstop(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         -1 if the timeout was exceeded
  *         -2 if the job was interrupted (by `CTRL-C`)
  *         -3 if the job-id is invalid
+ *
+ * Parameters:
+ *   - **{jobs}** (`integer[]`)
+ *   - **{timeout}** (`integer?`)
+ *
+ * Return:
+ *   (`integer[]`)
  */
 export function jobwait(
   denops: Denops,
@@ -5235,6 +5551,13 @@ export function jobwait(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         "shortcut": 0
  *       } ]
  *     } ]
+ *
+ * Parameters:
+ *   - **{path}** (`string`)
+ *   - **{modes}** (`string?`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function menu_get(
   denops: Denops,
@@ -5266,6 +5589,13 @@ export function menu_get(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * 3. Dictionary keys are always dumped as STR strings.
  * 4. Other strings and `Blob`s are always dumped as BIN strings.
  * 5. Points 3. and 4. do not apply to `msgpack-special-dict`s.
+ *
+ * Parameters:
+ *   - **{list}** (`any`)
+ *   - **{type}** (`any?`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function msgpackdump(
   denops: Denops,
@@ -5334,12 +5664,7 @@ export function msgpackdump(
  *            C parser does not support such values.
  * float   `Float`. This value cannot possibly appear in
  *         `msgpackparse()` output.
- * string  `readfile()`-style list of strings. This value will
- *         appear in `msgpackparse()` output if string contains
- *         zero byte or if string is a mapping key and mapping is
- *         being represented as special dictionary for other
- *         reasons.
- * binary  `String`, or `Blob` if binary string contains zero
+ * string  `String`, or `Blob` if binary string contains zero
  *         byte. This value cannot appear in `msgpackparse()`
  *         output since blobs were introduced.
  * array   `List`. This value cannot appear in `msgpackparse()`
@@ -5355,6 +5680,12 @@ export function msgpackdump(
  * ext     `List` with two values: first is a signed integer
  *         representing extension type. Second is
  *         `readfile()`-style list of strings.
+ *
+ * Parameters:
+ *   - **{data}** (`any`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function msgpackparse(denops: Denops, data: unknown): Promise<unknown>;
 export function msgpackparse(
@@ -5368,6 +5699,9 @@ export function msgpackparse(
  * Returns the single letter name of the last recorded register.
  * Returns an empty string when nothing was recorded yet.
  * See `q` and `Q`.
+ *
+ * Return:
+ *   (`any`)
  */
 export function reg_recorded(denops: Denops): Promise<unknown>;
 export function reg_recorded(
@@ -5383,6 +5717,14 @@ export function reg_recorded(
  * Example:
  *
  *     au VimLeave call rpcnotify(0, "leaving")
+ *
+ * Parameters:
+ *   - **{channel}** (`integer`)
+ *   - **{event}** (`string`)
+ *   - **{...}** (`any`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function rpcnotify(
   denops: Denops,
@@ -5403,6 +5745,14 @@ export function rpcnotify(
  * Example:
  *
  *     let result = rpcrequest(rpc_chan, "func", 1, 2, 3)
+ *
+ * Parameters:
+ *   - **{channel}** (`integer`)
+ *   - **{method}** (`string`)
+ *   - **{...}** (`any`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function rpcrequest(
   denops: Denops,
@@ -5415,24 +5765,6 @@ export function rpcrequest(
   ...args: unknown[]
 ): Promise<unknown> {
   return denops.call("rpcrequest", ...args);
-}
-
-/**
- * Deprecated. Replace
- *
- *     let id = rpcstart('prog', ['arg1', 'arg2'])
- *
- * with
- *
- *     let id = jobstart(['prog', 'arg1', 'arg2'], {'rpc': v:true})
- */
-export function rpcstart(
-  denops: Denops,
-  prog: unknown,
-  argv?: unknown,
-): Promise<unknown>;
-export function rpcstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("rpcstart", ...args);
 }
 
 /**
@@ -5473,6 +5805,12 @@ export function rpcstart(denops: Denops, ...args: unknown[]): Promise<unknown> {
  * Example TCP/IP address:
  *
  *     echo serverstart('::1:12345')
+ *
+ * Parameters:
+ *   - **{address}** (`string?`)
+ *
+ * Return:
+ *   (`string`)
  */
 export function serverstart(
   denops: Denops,
@@ -5490,6 +5828,12 @@ export function serverstart(
  * Returns TRUE if **{address}** is valid, else FALSE.
  * If `v:servername` is stopped it is set to the next available
  * address in `serverlist()`.
+ *
+ * Parameters:
+ *   - **{address}** (`string`)
+ *
+ * Return:
+ *   (`integer`)
  */
 export function serverstop(denops: Denops, address: unknown): Promise<unknown>;
 export function serverstop(
@@ -5523,6 +5867,14 @@ export function serverstop(
  * Returns:
  *   - The channel ID on success (greater than zero)
  *   - 0 on invalid arguments or connection failure.
+ *
+ * Parameters:
+ *   - **{mode}** (`string`)
+ *   - **{address}** (`string`)
+ *   - **{opts}** (`table?`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function sockconnect(
   denops: Denops,
@@ -5557,6 +5909,12 @@ export function sockconnect(
  * Returns:
  *   - `channel-id` on success (value is always 1)
  *   - 0 on invalid arguments
+ *
+ * Parameters:
+ *   - **{opts}** (`table`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function stdioopen(denops: Denops, opts: unknown): Promise<unknown>;
 export function stdioopen(
@@ -5568,7 +5926,9 @@ export function stdioopen(
 
 /**
  * Returns `standard-path` locations of various default files and
- * directories.
+ * directories. The locations are driven by `base-directories`
+ * which you can configure via `$NVIM_APPNAME` or the `$XDG_…`
+ * environment variables.
  *
  * **{what}**       Type    Description
  * cache        String  Cache directory: arbitrary temporary
@@ -5587,34 +5947,17 @@ export function stdioopen(
  * Example:
  *
  *     echo stdpath("config")
+ *
+ * Parameters:
+ *   - **{what}**
+ *     (`'cache'|'config'|'config_dirs'|'data'|'data_dirs'|'log'|'run'|'state'`)
+ *
+ * Return:
+ *   (`string|string[]`)
  */
 export function stdpath(denops: Denops, what: unknown): Promise<unknown>;
 export function stdpath(denops: Denops, ...args: unknown[]): Promise<unknown> {
   return denops.call("stdpath", ...args);
-}
-
-/**
- * Spawns **{cmd}** in a new pseudo-terminal session connected
- * to the current (unmodified) buffer. Parameters and behavior
- * are the same as `jobstart()` except "pty", "width", "height",
- * and "TERM" are ignored: "height" and "width" are taken from
- * the current window. Note that termopen() implies a "pty" arg
- * to jobstart(), and thus has the implications documented at
- * `jobstart()`.
- *
- * Returns the same values as jobstart().
- *
- * Terminal environment is initialized as in `jobstart-env`,
- * except $TERM is set to "xterm-256color". Full behavior is
- * described in `terminal`.
- */
-export function termopen(
-  denops: Denops,
-  cmd: unknown,
-  opts?: unknown,
-): Promise<unknown>;
-export function termopen(denops: Denops, ...args: unknown[]): Promise<unknown> {
-  return denops.call("termopen", ...args);
 }
 
 /**
@@ -5632,6 +5975,14 @@ export function termopen(denops: Denops, ...args: unknown[]): Promise<unknown> {
  *         -1 if the timeout was exceeded
  *         -2 if the function was interrupted (by `CTRL-C`)
  *         -3 if an error occurred
+ *
+ * Parameters:
+ *   - **{timeout}** (`integer`)
+ *   - **{condition}** (`any`)
+ *   - **{interval}** (`number?`)
+ *
+ * Return:
+ *   (`any`)
  */
 export function wait(
   denops: Denops,

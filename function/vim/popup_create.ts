@@ -31,6 +31,8 @@ import type { Denops } from "../../mod.ts";
  * Can also be used as a `method`:
  *
  *     GetText()->popup_create({})
+ *
+ * Return type: `Number`
  */
 export function popup_create(
   denops: Denops,

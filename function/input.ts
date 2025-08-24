@@ -53,6 +53,8 @@ import { type BuiltinCompletion, isValidBuiltinCompletion } from "./types.ts";
  * Can also be used as a `method`:
  *
  *     GetPrompt()->input()
+ *
+ * Return type: `String`
  */
 export function input(
   denops: Denops,
@@ -91,6 +93,8 @@ export function input(
  * Can also be used as a `method`:
  *
  *     GetChoices()->inputlist()
+ *
+ * Return type: `Number`
  */
 export function inputlist(denops: Denops, textlist: string[]): Promise<number> {
   return denops.call("inputlist", textlist) as Promise<number>;
@@ -101,6 +105,8 @@ export function inputlist(denops: Denops, textlist: string[]): Promise<number> {
  * Should be called the same number of times inputsave() is
  * called.  Calling it more often is harmless though.
  * Returns TRUE when there is nothing to restore, FALSE otherwise.
+ *
+ * Return type: `Number`
  */
 export async function inputrestore(denops: Denops): Promise<boolean> {
   const result = await denops.call("inputrestore") as number;
@@ -114,6 +120,8 @@ export async function inputrestore(denops: Denops): Promise<boolean> {
  * be used several times, in which case there must be just as
  * many inputrestore() calls.
  * Returns TRUE when out of memory, FALSE otherwise.
+ *
+ * Return type: `Number`
  */
 export async function inputsave(denops: Denops): Promise<boolean> {
   const result = await denops.call("inputsave") as number;
@@ -134,6 +142,8 @@ export async function inputsave(denops: Denops): Promise<boolean> {
  * Can also be used as a `method`:
  *
  *     GetPrompt()->inputsecret()
+ *
+ * Return type: `String`
  */
 export function inputsecret(
   denops: Denops,

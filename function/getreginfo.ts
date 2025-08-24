@@ -61,6 +61,8 @@ export type GetreginfoResult = {
  * Can also be used as a `method`:
  *
  *     GetRegname()->getreginfo()
+ *
+ * Return type: dict<any>
  */
 export function getreginfo(
   denops: Denops,

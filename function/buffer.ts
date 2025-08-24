@@ -77,6 +77,8 @@ export interface GetBufInfoDictArg {
  * passed as the second argument:
  *
  *     mylist->appendbufline(buf, lnum)
+ *
+ * Return type: `Number`
  */
 export async function appendbufline(
   denops: Denops,
@@ -105,6 +107,8 @@ export async function appendbufline(
  * Can also be used as a `method`:
  *
  *     let bufnr = 'somename'->bufadd()
+ *
+ * Return type: `Number`
  */
 export async function bufadd(
   denops: Denops,
@@ -140,6 +144,8 @@ export async function bufadd(
  *
  *     let exists = 'somename'->bufexists()
  *
+ * Return type: `Number`
+ *
  * Obsolete name: buffer_exists().
  */
 export async function bufexists(
@@ -158,6 +164,8 @@ export async function bufexists(
  * Can also be used as a `method`:
  *
  *     let listed = 'somename'->buflisted()
+ *
+ * Return type: `Number`
  */
 export async function buflisted(
   denops: Denops,
@@ -180,6 +188,8 @@ export async function buflisted(
  * Can also be used as a `method`:
  *
  *     eval 'somename'->bufload()
+ *
+ * Return type: `Number`
  */
 export async function bufload(
   denops: Denops,
@@ -196,6 +206,8 @@ export async function bufload(
  * Can also be used as a `method`:
  *
  *     let loaded = 'somename'->bufloaded()
+ *
+ * Return type: `Number`
  */
 export async function bufloaded(
   denops: Denops,
@@ -242,6 +254,8 @@ export async function bufloaded(
  *     bufname("%")            name of current buffer
  *     bufname("file2")        name of buffer where "file2" matches.
  *
+ * Return type: `String`
+ *
  * Obsolete name: buffer_name().
  */
 export async function bufname(
@@ -278,6 +292,8 @@ export async function bufname(
  *
  *     echo bufref->bufnr()
  *
+ * Return type: `Number`
+ *
  * Obsolete name: buffer_number().
  *
  * Obsolete name for bufnr("$"): last_buffer_nr().
@@ -304,6 +320,8 @@ export async function bufnr(
  * Can also be used as a `method`:
  *
  *     FindBuffer()->bufwinid()
+ *
+ * Return type: `Number`
  */
 export async function bufwinid(
   denops: Denops,
@@ -326,6 +344,8 @@ export async function bufwinid(
  * Can also be used as a `method`:
  *
  *     FindBuffer()->bufwinnr()
+ *
+ * Return type: `Number`
  */
 export async function bufwinnr(
   denops: Denops,
@@ -351,6 +371,8 @@ export async function bufwinnr(
  * Can also be used as a `method`:
  *
  *     GetBuffer()->deletebufline(1)
+ *
+ * Return type: `Number`
  */
 export async function deletebufline(
   denops: Denops,
@@ -437,6 +459,8 @@ export async function deletebufline(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->getbufinfo()
+ *
+ * Return type: list<dict<any>>
  */
 export function getbufinfo(
   denops: Denops,
@@ -492,6 +516,8 @@ export async function getbufinfo(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->getbufline(lnum)
+ *
+ * Return type: list<string>
  */
 export async function getbufline(
   denops: Denops,
@@ -527,6 +553,8 @@ export async function getbufline(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->getbufvar(varname)
+ *
+ * Return type: any, depending on **{varname}**
  */
 export function getbufvar(
   denops: Denops,
@@ -566,6 +594,8 @@ export function getbufvar(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->getchangelist()
+ *
+ * Return type: list<any>
  */
 export async function getchangelist(
   denops: Denops,
@@ -596,6 +626,8 @@ export async function getchangelist(
  * Can also be used as a `method`:
  *
  *     GetBufnr()->getmarklist()
+ *
+ * Return type: list<dict<any>> or list<any>
  */
 export async function getmarklist(
   denops: Denops,
@@ -635,6 +667,8 @@ export async function getmarklist(
  * third argument:
  *
  *     GetText()->setbufline(buf, lnum)
+ *
+ * Return type: `Number`
  */
 export async function setbufline(
   denops: Denops,
@@ -666,6 +700,8 @@ export async function setbufline(
  * third argument:
  *
  *     GetValue()->setbufvar(buf, varname)
+ *
+ * Return type: `Number`
  */
 export async function setbufvar(
   denops: Denops,
@@ -686,6 +722,8 @@ export async function setbufvar(
  * Can also be used as a `method`:
  *
  *     GetBufname()->swapname()
+ *
+ * Return type: `String`
  */
 export async function swapname(
   denops: Denops,

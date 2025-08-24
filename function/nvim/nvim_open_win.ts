@@ -54,6 +54,7 @@ import type { Denops } from "../../mod.ts";
  *
  * Attributes:
  *     not allowed when `textlock` is active
+ *     Since: 0.4.0
  *
  * Parameters:
  *   - **{buffer}**  Buffer to display, or 0 for current buffer
@@ -61,11 +62,13 @@ import type { Denops } from "../../mod.ts";
  *   - **{config}**  Map defining the window configuration. Keys:
  *               - relative: Sets the window layout to "floating", placed at
  *                 (row,col) coordinates relative to:
- *                 - "editor" The global editor grid
+ *                 - "cursor" Cursor position in current window.
+ *                 - "editor" The global editor grid.
+ *                 - "laststatus" 'laststatus' if present, or last row.
+ *                 - "mouse" Mouse position.
+ *                 - "tabline" Tabline if present, or first row.
  *                 - "win" Window given by the `win` field, or current
  *                   window.
- *                 - "cursor" Cursor position in current window.
- *                 - "mouse" Mouse position
  *               - win: `window-ID` window to split, or relative window when
  *                 creating a float (relative="win").
  *               - anchor: Decides which corner of the float to place at
@@ -89,7 +92,13 @@ import type { Denops } from "../../mod.ts";
  *                 be fractional.
  *               - focusable: Enable focus by user actions (wincmds, mouse
  *                 events). Defaults to true. Non-focusable windows can be
- *                 entered by `nvim_set_current_win()`.
+ *                 entered by `nvim_set_current_win()`, or, when the `mouse`
+ *                 field is set to true, by mouse events. See `focusable`.
+ *               - mouse: Specify how this window interacts with mouse
+ *                 events. Defaults to `focusable` value.
+ *                 - If false, mouse events pass through this window.
+ *                 - If true, mouse events interact with this window
+ *                   normally.
  *               - external: GUI should display the window as an external
  *                 top-level window. Currently accepts no other positioning
  *                 configuration together with this.
@@ -116,31 +125,23 @@ import type { Denops } from "../../mod.ts";
  *                   `eob` flag of 'fillchars' to a space char, and clearing
  *                   the `hl-EndOfBuffer` region in 'winhighlight'.
  *               - border: Style of (optional) window border. This can either
- *                 be a string or an array. The string values are
- *                 - "none": No border (default).
- *                 - "single": A single line box.
- *                 - "double": A double line box.
- *                 - "rounded": Like "single", but with rounded corners
- *                   ("╭" etc.).
- *                 - "solid": Adds padding by a single whitespace cell.
- *                 - "shadow": A drop shadow effect by blending with the
- *                   background.
- *                 - If it is an array, it should have a length of eight or
- *                   any divisor of eight. The array will specify the eight
- *                   chars building up the border in a clockwise fashion
- *                   starting with the top-left corner. As an example, the
- *                   double box style could be specified as:
+ *                 be a string or an array. The string values are the same as
+ *                 those described in 'winborder'. If it is an array, it
+ *                 should have a length of eight or any divisor of eight. The
+ *                 array will specify the eight chars building up the border
+ *                 in a clockwise fashion starting with the top-left corner.
+ *                 As an example, the double box style could be specified as:
  *
- *                       [ "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ].
+ *                     [ "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ].
  *
- *                   If the number of chars are less than eight, they will be
- *                   repeated. Thus an ASCII border could be specified as
+ *                 If the number of chars are less than eight, they will be
+ *                 repeated. Thus an ASCII border could be specified as
  *
- *                       [ "/", "-", \"\\\\\", "|" ],
+ *                     [ "/", "-", \"\\\\\", "|" ],
  *
- *                   or all chars the same as
+ *                 or all chars the same as
  *
- *                       [ "x" ].
+ *                     [ "x" ].
  *
  *                 An empty string can be used to turn off a specific border,
  *                 for instance,
@@ -156,13 +157,15 @@ import type { Denops } from "../../mod.ts";
  *
  *               - title: Title (optional) in window border, string or list.
  *                 List should consist of `[text, highlight]` tuples. If
- *                 string, the default highlight group is `FloatTitle`.
+ *                 string, or a tuple lacks a highlight, the default
+ *                 highlight group is `FloatTitle`.
  *               - title_pos: Title position. Must be set with `title`
  *                 option. Value can be one of "left", "center", or "right".
  *                 Default is `"left"`.
  *               - footer: Footer (optional) in window border, string or
  *                 list. List should consist of `[text, highlight]` tuples.
- *                 If string, the default highlight group is `FloatFooter`.
+ *                 If string, or a tuple lacks a highlight, the default
+ *                 highlight group is `FloatFooter`.
  *               - footer_pos: Footer position. Must be set with `footer`
  *                 option. Value can be one of "left", "center", or "right".
  *                 Default is `"left"`.
@@ -175,7 +178,7 @@ import type { Denops } from "../../mod.ts";
  *               - split: Split direction: "left", "right", "above", "below".
  *
  * Return:
- *     Window handle, or 0 on error
+ *     `window-ID`, or 0 on error
  */
 export function nvim_open_win(
   denops: Denops,

@@ -3,27 +3,25 @@ import type { Position, ScreenPos } from "./types.ts";
 
 /**
  * The result is a Number, which is the byte index of the column
- * position given with **{expr}**.  The accepted positions are:
- *     .       the cursor position
- *     $       the end of the cursor line (the result is the
- *             number of bytes in the cursor line plus one)
- *     'x      position of mark x (if the mark is not set, 0 is
- *             returned)
- *     v       In Visual mode: the start of the Visual area (the
- *             cursor is the end).  When not in Visual mode
- *             returns the cursor position.  Differs from `'<` in
- *             that it's updated right away.
+ * position given with **{expr}**.
+ * For accepted positions see `getpos()`.
+ * When **{expr}** is "$", it means the end of the cursor line, so
+ * the result is the number of bytes in the cursor line plus one.
  * Additionally **{expr}** can be [lnum, col]: a `List` with the line
  * and column number. Most useful when the column is "$", to get
  * the last column of a specific line.  When "lnum" or "col" is
  * out of range then col() returns zero.
+ *
  * With the optional **{winid}** argument the values are obtained for
  * that window instead of the current window.
+ *
  * To get the line number use `line()`.  To get both use
  * `getpos()`.
  * For the screen column position use `virtcol()`.  For the
  * character position use `charcol()`.
+ *
  * Note that only marks in the current file can be used.
+ *
  * Examples:
  *
  *     col(".")                column of cursor
@@ -45,6 +43,8 @@ import type { Position, ScreenPos } from "./types.ts";
  * Can also be used as a `method`:
  *
  *     GetPos()->col()
+ *
+ * Return type: `Number`
  */
 export async function col(
   denops: Denops,
@@ -65,7 +65,9 @@ export async function col(
  * set to 8, it returns 8. `conceal` is ignored.
  * For the byte position use `col()`.
  *
- * For the use of **{expr}** see `col()`.
+ * For the use of **{expr}** see `getpos()` and `col()`.
+ * When **{expr}** is "$", it means the end of the cursor line, so
+ * the result is the number of cells in the cursor line plus one.
  *
  * When 'virtualedit' is used **{expr}** can be [lnum, col, off],
  * where "off" is the offset in screen columns from the start of
@@ -73,19 +75,7 @@ export async function col(
  * last character.  When "off" is omitted zero is used.  When
  * Virtual editing is active in the current mode, a position
  * beyond the end of the line can be returned.  Also see
- * `'virtualedit'`
- *
- * The accepted positions are:
- *     .       the cursor position
- *     $       the end of the cursor line (the result is the
- *             number of displayed characters in the cursor line
- *             plus one)
- *     'x      position of mark x (if the mark is not set, 0 is
- *             returned)
- *     v       In Visual mode: the start of the Visual area (the
- *             cursor is the end).  When not in Visual mode
- *             returns the cursor position.  Differs from `'<` in
- *             that it's updated right away.
+ * 'virtualedit'
  *
  * If **{list}** is present and non-zero then virtcol() returns a
  * List with the first and last screen position occupied by the
@@ -95,6 +85,7 @@ export async function col(
  * that window instead of the current window.
  *
  * Note that only marks in the current file can be used.
+ *
  * Examples:
  *
  *     " With text "foo^Lbar" and cursor on the "^L":
@@ -108,6 +99,7 @@ export async function col(
  *     virtcol("'t")   " returns 6
  *
  * The first column is 1.  0 or [0, 0] is returned for an error.
+ *
  * A more advanced example that echoes the maximum length of
  * all lines:
  *
@@ -116,6 +108,8 @@ export async function col(
  * Can also be used as a `method`:
  *
  *     GetPos()->virtcol()
+ *
+ * Return type: `Number`
  */
 export async function virtcol(
   denops: Denops,
@@ -133,26 +127,16 @@ export async function virtcol(
 /**
  * The result is a Number, which is the line number of the file
  * position given with **{expr}**.  The **{expr}** argument is a string.
- * The accepted positions are:
- *     .       the cursor position
- *     $       the last line in the current buffer
- *     'x      position of mark x (if the mark is not set, 0 is
- *             returned)
- *     w0      first line visible in current window (one if the
- *             display isn't updated, e.g. in silent Ex mode)
- *     w$      last line visible in current window (this is one
- *             less than "w0" if no lines are visible)
- *     v       In Visual mode: the start of the Visual area (the
- *             cursor is the end).  When not in Visual mode
- *             returns the cursor position.  Differs from `'<` in
- *             that it's updated right away.
- * Note that a mark in another file can be used.  The line number
- * then applies to another buffer.
+ * See `getpos()` for accepted positions.
+ *
  * To get the column number use `col()`.  To get both use
  * `getpos()`.
+ *
  * With the optional **{winid}** argument the values are obtained for
  * that window instead of the current window.
+ *
  * Returns 0 for invalid values of **{expr}** and **{winid}**.
+ *
  * Examples:
  *
  *     line(".")               line number of the cursor
@@ -166,6 +150,8 @@ export async function virtcol(
  * Can also be used as a `method`:
  *
  *     GetValue()->line()
+ *
+ * Return type: `Number`
  */
 export async function line(
   denops: Denops,
@@ -179,6 +165,8 @@ export async function line(
  * The result is a Number, which is the virtual column of the
  * cursor in the window.  This is counting screen cells from the
  * left side of the window.  The leftmost column is one.
+ *
+ * Return type: `Number`
  */
 export async function wincol(denops: Denops): Promise<number> {
   return await denops.call("wincol") as number;
@@ -190,6 +178,8 @@ export async function wincol(denops: Denops): Promise<number> {
  * the window.  The first line is one.
  * If the cursor was moved the view on the file will be updated
  * first, this may cause a scroll.
+ *
+ * Return type: `Number`
  */
 export async function winline(denops: Denops): Promise<number> {
   return await denops.call("winline") as number;
@@ -230,6 +220,8 @@ export async function winline(denops: Denops): Promise<number> {
  * Can also be used as a `method`:
  *
  *     GetCursorPos()->cursor()
+ *
+ * Return type: `Number`
  */
 export async function cursor(
   denops: Denops,
@@ -282,6 +274,8 @@ export async function cursor(
  * Can also be used as a `method`:
  *
  *     GetWinid()->screenpos(lnum, col)
+ *
+ * Return type: dict<number> or dict<any>
  */
 export async function screenpos(
   denops: Denops,
@@ -322,6 +316,8 @@ export async function screenpos(
  * Can also be used as a `method`:
  *
  *     GetWinid()->getcurpos()
+ *
+ * Return type: list<number>
  */
 export async function getcurpos(
   denops: Denops,
@@ -331,9 +327,34 @@ export async function getcurpos(
 }
 
 /**
- * Get the position for String **{expr}**.  For possible values of
- * **{expr}** see `line()`.  For getting the cursor position see
- * `getcurpos()`.
+ * Get the position for String **{expr}**.
+ * The accepted values for **{expr}** are:
+ *     .       The cursor position.
+ *     $       The last line in the current buffer.
+ *     'x      Position of mark x (if the mark is not set, 0 is
+ *             returned for all values).
+ *     w0      First line visible in current window (one if the
+ *             display isn't updated, e.g. in silent Ex mode).
+ *     w$      Last line visible in current window (this is one
+ *             less than "w0" if no lines are visible).
+ *     v       When not in Visual mode, returns the cursor
+ *             position.  In Visual mode, returns the other end
+ *             of the Visual area.  A good way to think about
+ *             this is that in Visual mode "v" and "." complement
+ *             each other.  While "." refers to the cursor
+ *             position, "v" refers to where `v_o` would move the
+ *             cursor.  As a result, you can use "v" and "."
+ *             together to work on all of a selection in
+ *             characterwise Visual mode.  If the cursor is at
+ *             the end of a characterwise Visual area, "v" refers
+ *             to the start of the same Visual area.  And if the
+ *             cursor is at the start of a characterwise Visual
+ *             area, "v" refers to the end of the same Visual
+ *             area.  "v" differs from `'<` and `'>` in that it's
+ *             updated right away.
+ * Note that a mark in another file can be used.  The line number
+ * then applies to another buffer.
+ *
  * The result is a `List` with four numbers:
  *     [bufnum, lnum, col, off]
  * "bufnum" is zero, unless a mark like '0 or 'A is used, then it
@@ -344,15 +365,19 @@ export async function getcurpos(
  * it is the offset in screen columns from the start of the
  * character.  E.g., a position within a `<Tab>` or after the last
  * character.
- * Note that for '< and '> Visual mode matters: when it is "V"
- * (visual line mode) the column of '< is zero and the column of
- * '> is a large number equal to `v:maxcol`.
+ *
+ * For getting the cursor position see `getcurpos()`.
  * The column number in the returned List is the byte position
  * within the line. To get the character position in the line,
  * use `getcharpos()`.
+ *
+ * Note that for '< and '> Visual mode matters: when it is "V"
+ * (visual line mode) the column of '< is zero and the column of
+ * '> is a large number equal to `v:maxcol`.
  * A very large column number equal to `v:maxcol` can be returned,
  * in which case it means "after the end of the line".
  * If **{expr}** is invalid, returns a list with all zeros.
+ *
  * This can be used to save and restore the position of a mark:
  *
  *     let save_a_mark = getpos("'a")
@@ -364,6 +389,8 @@ export async function getcurpos(
  * Can also be used as a `method`:
  *
  *     GetMark()->getpos()
+ *
+ * Return type: list<number>
  */
 export async function getpos(denops: Denops, expr: string): Promise<Position> {
   return await denops.call("getpos", expr) as Position;
@@ -421,6 +448,8 @@ export async function getpos(denops: Denops, expr: string): Promise<Position> {
  * Can also be used as a `method`:
  *
  *     GetPosition()->setpos('.')
+ *
+ * Return type: `Number`
  */
 export async function setpos(
   denops: Denops,
@@ -443,6 +472,8 @@ export async function setpos(
  * Can also be used as a `method`:
  *
  *     GetOffset()->byte2line()
+ *
+ * Return type: `Number`
  *
  * *not available when compiled without the `+byte_offset`
  * feature*
@@ -470,6 +501,8 @@ export async function byte2line(denops: Denops, byte: number): Promise<number> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->line2byte()
+ *
+ * Return type: `Number`
  */
 export async function line2byte(denops: Denops, lnum: number): Promise<number> {
   return await denops.call("line2byte", lnum) as number;
@@ -487,6 +520,8 @@ export async function line2byte(denops: Denops, lnum: number): Promise<number> {
  * Can also be used as a `method`:
  *
  *     GetLnum()->diff_filler()
+ *
+ * Return type: `Number`
  */
 // deno-lint-ignore camelcase
 export async function diff_filler(

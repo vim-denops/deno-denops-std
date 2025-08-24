@@ -116,6 +116,8 @@ import type { Denops } from "../mod.ts";
  * Can also be used as a `method`:
  *
  *     Varname()->exists()
+ *
+ * Return type: `String`
  */
 export async function exists(
   denops: Denops,
@@ -168,6 +170,7 @@ export async function exists(
  *         fname_case      Case in file names matters (for Darwin and MS-Windows
  *                         this is not present).
  *         gui_running     Nvim has a GUI.
+ *         hurd            GNU/Hurd system.
  *         iconv           Can use `iconv()` for conversion.
  *         linux           Linux system.
  *         mac             MacOS system.
@@ -196,6 +199,12 @@ export async function exists(
  *         if has("patch-7.4.237")
  *           " ...
  *         endif
+ *
+ * Parameters:
+ *   - **{feature}** (`string`)
+ *
+ * Return:
+ *   (`0|1`)
  */
 export async function has(
   denops: Denops,
@@ -237,6 +246,8 @@ export async function has(
  *
  *     ComputeLnum()->getline()
  *
+ * Return type: list<string> or `String` depending on **{end}**
+ *
  * To get lines from another buffer see `getbufline()` and
  * `getbufoneline()`
  */
@@ -260,7 +271,9 @@ export async function getline(
 /**
  * Set line **{lnum}** of the current buffer to **{text}**.  To insert
  * lines use `append()`. To set lines in another buffer use
- * `setbufline()`.  Any text properties in **{lnum}** are cleared.
+ * `setbufline()`.
+ * Any text properties in **{lnum}** are cleared.  See
+ * `text-prop-cleared`
  *
  * **{lnum}** is used like with `getline()`.
  * When **{lnum}** is just below the last line the **{text}** will be
@@ -294,6 +307,8 @@ export async function getline(
  * second argument:
  *
  *     GetText()->setline(lnum)
+ *
+ * Return type: `Number`
  */
 export async function setline(
   denops: Denops,

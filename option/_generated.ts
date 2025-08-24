@@ -223,12 +223,12 @@ export const autowriteall: GlobalOption<boolean> = new BooleanOption(
  * Vim will guess the value.  In the GUI this should work correctly,
  * in other cases Vim might not be able to guess the right value.
  * If the GUI supports a dark theme, you can use the "d" flag in
- * 'guioptions', see 'go-d'.
+ * 'guioptions', see `'go-d'`.
  *
  * When the `t_RB` option is set, Vim will use it to request the background
  * color from the terminal.  If the returned RGB value is dark/light and
  * 'background' is not dark/light, 'background' will be set and the
- * screen is redrawn.  This may have side effects, make t_BG empty in
+ * screen is redrawn.  This may have side effects, make `t_RB` empty in
  * your .vimrc if you suspect this problem.  The response to `t_RB` can
  * be found in `v:termrbgresp`.
  *
@@ -294,8 +294,8 @@ export const background: GlobalOption<string> = new StringOption("background");
  * See `:fixdel` if your `<BS>` or `<Del>` key does not do what you want.
  * NOTE: This option is set to "" when 'compatible' is set.
  *
- * (default "", set to "indent,eol,start"
- *  in `defaults.vim`)
+ * (Vim default: "indent,eol,start",
+ *  Vi default:  "")
  */
 export const backspace: GlobalOption<string> = new StringOption("backspace");
 
@@ -360,7 +360,8 @@ export const backup: GlobalOption<boolean> = new BooleanOption("backup");
  * that opens a file, invokes Vim to edit that file, and then tests if
  * the open file was changed (through the file descriptor) will check the
  * backup file instead of the newly created file.  "crontab -e" is an
- * example.
+ * example, as are several `file-watcher` daemons like inotify.  In that
+ * case you probably want to switch this option.
  *
  * When a copy is made, the original file is truncated and then filled
  * with the new text.  This means that protection bits, owner and
@@ -619,7 +620,7 @@ export const breakindent: WindowLocalOption<boolean> = new BooleanOption(
  *                     applying 'breakindent', even if the resulting
  *                     text should normally be narrower. This prevents
  *                     text indented almost to the right window border
- *                     occupying lot of vertical space when broken.
+ *                     occupying lots of vertical space when broken.
  *                     (default: 20)
  *         shift:**{n}**   After applying 'breakindent', the wrapped line's
  *                     beginning will be shifted by the given number of
@@ -633,9 +634,9 @@ export const breakindent: WindowLocalOption<boolean> = new BooleanOption(
  *         list:**{n}**    Adds an additional indent for lines that match a
  *                     numbered or bulleted list (using the
  *                     'formatlistpat' setting).
- *         list:-1     Uses the length of a match with 'formatlistpat'
- *                     for indentation.
  *                     (default: 0)
+ *         list:-1     Uses the width of a match with 'formatlistpat' for
+ *                     indentation.
  *         column:**{n}**  Indent at column **{n}**. Will overrule the other
  *                     sub-options. Note: an additional indent may be
  *                     added for the 'showbreak' setting.
@@ -648,20 +649,6 @@ export const breakindent: WindowLocalOption<boolean> = new BooleanOption(
 export const breakindentopt: WindowLocalOption<string> = new StringOption(
   "breakindentopt",
 );
-
-/**
- * Which directory to use for the file browser:
- *    last         Use same directory as with last file browser, where a
- *                 file was opened or saved.
- *    buffer       Use the directory of the related buffer.
- *    current      Use the current directory.
- *    **{path}**       Use the specified directory
- *
- * (default: "last")
- *
- * *only for Motif, GTK, Mac and Win32 GUI*
- */
-export const browsedir: GlobalOption<string> = new StringOption("browsedir");
 
 /**
  * This option specifies what happens when a buffer is no longer
@@ -738,7 +725,7 @@ export const buflisted: BufferLocalOption<boolean> = new BooleanOption(
  * "nofile" and "nowrite" buffers are similar:
  * both:           The buffer is not to be written to disk, ":w" doesn't
  *                 work (":w filename" does work though).
- * both:           The buffer is never considered to be `'modified'`.
+ * both:           The buffer is never considered to be 'modified'.
  *                 There is no warning when the changes will be lost, for
  *                 example when you quit Vim.
  * both:           A swap file is only created when using too much memory
@@ -797,7 +784,7 @@ export const cdhome: GlobalOption<boolean> = new BooleanOption("cdhome");
  * searched for has a relative path, not an absolute part starting with
  * "/", "./" or "../", the 'cdpath' option is not used then.
  * The 'cdpath' option's value has the same form and semantics as
- * `'path'`.  Also see `file-searching`.
+ * 'path'.  Also see `file-searching`.
  * The default value is taken from $CDPATH, with a "," prepended to look
  * in the current directory first.
  * If the default value taken from $CDPATH is not what you want, include
@@ -819,10 +806,11 @@ export const cdpath: GlobalOption<string> = new StringOption("cdpath");
  * The default is CTRL-F when 'compatible' is off.
  * Only non-printable keys are allowed.
  * The key can be specified as a single character, but it is difficult to
- * type.  The preferred way is to use the `<>` notation.  Examples:
+ * type.  The preferred way is to use `key-notation` (e.g. `<Up>`, `<C-F>`) or
+ * a letter preceded with a caret (e.g. `^F` is CTRL-F).  Examples:
  *
- *     :exe "set cedit=\<C-Y>"
- *     :exe "set cedit=\<Esc>"
+ *     :set cedit=^Y
+ *     :set cedit=<Esc>
  *
  * `Nvi` also has this option, but it only uses the first character.
  * See `cmdwin`.
@@ -987,11 +975,13 @@ export const cinwords: BufferLocalOption<string> = new StringOption("cinwords");
  *                 register '*' for all yank, delete, change and put
  *                 operations which would normally go to the unnamed
  *                 register.  When "unnamed" is also included to the
- *                 option, yank operations (but not delete, change or
- *                 put) will additionally copy the text into register
- *                 '*'.
- *                 Only available with the `+X11` feature.
- *                 Availability can be checked with:
+ *                 option, yank operations (but not delete, change or put)
+ *                 will additionally copy the text into register '*'.  If
+ *                 Wayland is being used and the compositor does not
+ *                 support the primary-selection-unstable-v1 protocol,
+ *                 then the regular selection is used in its place.  Only
+ *                 available with the `+X11` or `+wayland_clipboard`
+ *                 feature.  Availability can be checked with:
  *
  *                     if has('unnamedplus')
  *
@@ -1025,21 +1015,25 @@ export const cinwords: BufferLocalOption<string> = new StringOption("cinwords");
  * exclude:**{pattern}**
  *                 Defines a pattern that is matched against the name of
  *                 the terminal 'term'.  If there is a match, no
- *                 connection will be made to the X server.  This is
- *                 useful in this situation:
+ *                 connection will be made to the X server or Wayland
+ *                 compositor.  This is useful in this situation:
  *                 - Running Vim in a console.
- *                 - $DISPLAY is set to start applications on another
- *                   display.
- *                 - You do not want to connect to the X server in the
- *                   console, but do want this in a terminal emulator.
- *                 To never connect to the X server use:
+ *                 - $DISPLAY/$WAYLAND_DISPLAY is set to start
+ *                   applications on another display.
+ *                 - You do not want to connect to the X server/Wayland
+ *                   compositor in the console, but do want this in a
+ *                   terminal emulator.
+ *                 To never connect to the X server/Wayland compositor
+ *                 use:
  *
  *                     exclude:.*
  *
- *                 This has the same effect as using the `-X` argument.
+ *                 This has the same effect as using the `-X` or `-Y`
+ *                 argument.
  *                 Note that when there is no connection to the X server
  *                 the window title won't be restored and the clipboard
- *                 cannot be accessed.
+ *                 cannot be accessed.  This is the same for Wayland,
+ *                 except there is no title restoring.
  *                 The value of 'magic' is ignored, **{pattern}** is
  *                 interpreted as if 'magic' was on.
  *                 The rest of the option value will be used for
@@ -1048,7 +1042,7 @@ export const cinwords: BufferLocalOption<string> = new StringOption("cinwords");
  * (default "autoselect,exclude:cons\|linux"
  *  for X-windows, "" otherwise)
  *
- * *only in GUI versions or when the `+xterm_clipboard` feature is included*
+ * *only in GUI versions or when the `+xterm_clipboard` or `+wayland_clipboard` features are included*
  */
 export const clipboard: GlobalOption<string> = new StringOption("clipboard");
 
@@ -1128,10 +1122,11 @@ export const comments: BufferLocalOption<string> = new StringOption("comments");
 
 /**
  * A template for a comment.  The "%s" in the value is replaced with the
- * comment text.  Currently only used to add markers for folding, see
- * `fold-marker`.  Also used by comment plugins `comment-install`.
+ * comment text, and should be padded with a space when possible.
+ * Currently used to add markers for folding, see `fold-marker`.  Also
+ * commonly used by commenting plugins (e.g. `comment-install`).
  *
- * (default "/*%s* /")
+ * (default "/* %s * /")
  *
  * *not available when compiled without the `+folding` feature*
  */
@@ -1164,6 +1159,25 @@ export const commentstring: BufferLocalOption<string> = new StringOption(
  *         `i_CTRL-X_CTRL-D`
  * ]       tag completion
  * t       same as "]"
+ * F**{func}** call the function **{func}**.  Multiple "F" flags may be specified.
+ *         Refer to `complete-functions` for details on how the function
+ *         is invoked and what it should return.  The value can be the
+ *         name of a function or a `Funcref`.  For `Funcref` values,
+ *         spaces must be escaped with a backslash ('\'), and commas with
+ *         double backslashes ('\\') (see `option-backslash`).
+ *         Unlike other sources, functions can provide completions starting
+ *         from a non-keyword character before the cursor, and their
+ *         start position for replacing text may differ from other sources.
+ *         If the Dict returned by the **{func}** includes {"refresh": "always"},
+ *         the function will be invoked again whenever the leading text
+ *         changes.
+ *         If generating matches is potentially slow, call
+ *         `complete_check()` periodically to keep Vim responsive. This
+ *         is especially important for `ins-autocompletion`.
+ * F       equivalent to using "F**{func}**", where the function is taken from
+ *         the 'completefunc' option.
+ * o       equivalent to using "F**{func}**", where the function is taken from
+ *         the 'omnifunc' option.
  *
  * Unloaded buffers are not loaded, thus their autocmds `:autocmd` are
  * not executed, this may lead to unexpected completions from some files
@@ -1181,6 +1195,13 @@ export const commentstring: BufferLocalOption<string> = new StringOption(
  * As you can see, CTRL-N and CTRL-P can be used to do any 'iskeyword'-
  * based expansion (e.g., dictionary `i_CTRL-X_CTRL-K`, included patterns
  * `i_CTRL-X_CTRL-I`, tags `i_CTRL-X_CTRL-]` and normal expansions).
+ *
+ * An optional match limit can be specified for a completion source by
+ * appending a caret ("^") followed by a **{count}** to the source flag.
+ * For example: ".^9,w,u,t^5" limits matches from the current buffer
+ * to 9 and from tags to 5.  Other sources remain unlimited.
+ * Note: The match limit takes effect only during forward completion
+ * (CTRL-N) and is ignored during backward completion (CTRL-P).
  *
  * (default: ".,w,b,u,t,i")
  */
@@ -1205,8 +1226,39 @@ export const completefunc: BufferLocalOption<string> = new StringOption(
 );
 
 /**
+ * global
+ *         A comma-separated list of strings that controls the alignment and
+ *         display order of items in the popup menu during Insert mode
+ *         completion.  The supported values are "abbr", "kind", and "menu".
+ *         These values allow customizing how `complete-items` are shown in the
+ *         popup menu.  Note: must always contain those three values in any
+ *         order.
+ *
+ * (default: "abbr,kind,menu")
+ */
+export const completeitemalign: GlobalOption<string> = new StringOption(
+  "completeitemalign",
+);
+
+/**
  * A comma-separated list of options for Insert mode completion
  * `ins-completion`.  The supported values are:
+ *
+ *    fuzzy    Enable `fuzzy-matching` for completion candidates. This
+ *             allows for more flexible and intuitive matching, where
+ *             characters can be skipped and matches can be found even
+ *             if the exact sequence is not typed.  Note: This option
+ *             does not affect the collection of candidate list, it only
+ *             controls how completion candidates are reduced from the
+ *             list of alternatives.  If you want to use `fuzzy-matching`
+ *             to gather more alternatives for your candidate list,
+ *             see 'completefuzzycollect'.
+ *
+ *    longest  Only insert the longest common text of the matches.  If
+ *             the menu is displayed you can use CTRL-L to add more
+ *             characters.  Whether case is ignored depends on the kind
+ *             of completion.  For buffer text the 'ignorecase' option is
+ *             used.
  *
  *    menu     Use a popup menu to show the possible completions.  The
  *             menu is only shown when there is more than one match and
@@ -1216,20 +1268,28 @@ export const completefunc: BufferLocalOption<string> = new StringOption(
  *             Useful when there is additional information about the
  *             match, e.g., what file it comes from.
  *
- *    longest  Only insert the longest common text of the matches.  If
- *             the menu is displayed you can use CTRL-L to add more
- *             characters.  Whether case is ignored depends on the kind
- *             of completion.  For buffer text the 'ignorecase' option is
- *             used.
+ *    nearest  Matches are listed based on their proximity to the cursor
+ *             position, unlike the default behavior, which only
+ *             considers proximity for matches appearing below the
+ *             cursor.  This applies only to matches from the current
+ *             buffer.  No effect if "fuzzy" is present.
  *
- *    preview  Show extra information about the currently selected
- *             completion in the preview window.  Only works in
- *             combination with "menu" or "menuone".
+ *    noinsert Do not insert any text for a match until the user selects
+ *             a match from the menu.  Only works in combination with
+ *             "menu" or "menuone".  No effect if "longest" is present.
+ *
+ *    noselect Same as "noinsert", except that no menu item is
+ *             pre-selected.  If both "noinsert" and "noselect" are
+ *             present, "noselect" has precedence.
+ *
+ *    nosort   Disable sorting of completion candidates based on fuzzy
+ *             scores when "fuzzy" is enabled.  Candidates will appear
+ *             in their original order.
  *
  *    popup    Show extra information about the currently selected
  *             completion in a popup window.  Only works in combination
  *             with "menu" or "menuone".  Overrides "preview".
- *             See `'completepopup'` for specifying properties.
+ *             See 'completepopup' for specifying properties.
  *             *only works when compiled with the `+textprop` feature*
  *
  *    popuphidden
@@ -1239,17 +1299,25 @@ export const completefunc: BufferLocalOption<string> = new StringOption(
  *             See the example at `complete-popuphidden`.
  *             *only works when compiled with the `+textprop` feature*
  *
- *    noinsert Do not insert any text for a match until the user selects
- *             a match from the menu. Only works in combination with
- *             "menu" or "menuone". No effect if "longest" is present.
+ *    preinsert
+ *             Preinsert the portion of the first candidate word that is
+ *             not part of the current completion leader and using the
+ *             `hl-ComplMatchIns` highlight group.  In order for it to
+ *             work, "fuzzy" must not be set and "menuone" must be set.
  *
- *    noselect Do not select a match in the menu, force the user to
- *             select one from the menu. Only works in combination with
- *             "menu" or "menuone".
+ *    preview  Show extra information about the currently selected
+ *             completion in the preview window.  Only works in
+ *             combination with "menu" or "menuone".
+ *
+ * Only "fuzzy", "popup", "popuphidden" and "preview" have an effect when
+ * 'autocomplete' is enabled.
+ *
+ * This option does not apply to `cmdline-completion`. See 'wildoptions'
+ * for that.
  *
  * (default: "menu,preview")
  */
-export const completeopt: GlobalOption<string> = new StringOption(
+export const completeopt: GlobalOrBufferLocalOption<string> = new StringOption(
   "completeopt",
 );
 
@@ -1344,7 +1412,7 @@ export const confirm: GlobalOption<boolean> = new BooleanOption("confirm");
 /**
  * Copy the structure of the existing lines indent when autoindenting a
  * new line.  Normally the new indent is reconstructed by a series of
- * tabs followed by spaces as required (unless `'expandtab'` is enabled,
+ * tabs followed by spaces as required (unless 'expandtab' is enabled,
  * in which case only spaces are used).  Enabling this option makes the
  * new line copy whatever characters were used for indenting on the
  * existing line.  'expandtab' has no effect on these characters, a Tab
@@ -1497,7 +1565,7 @@ export const copyindent: BufferLocalOption<boolean> = new BooleanOption(
  *
  *         m       When included, a showmatch will always wait half a
  *                 second.  When not included, a showmatch will wait half
- *                 a second or until a character is typed.  `'showmatch'`
+ *                 a second or until a character is typed.  'showmatch'
  *
  *         M       When excluded, "%" matching will take backslashes into
  *                 account.  Thus in "( \( )" and "\( ( \)" the outer
@@ -1587,6 +1655,9 @@ export const copyindent: BufferLocalOption<boolean> = new BooleanOption(
  *         Z       When using "w!" while the 'readonly' option is set,
  *                 don't reset 'readonly'.
  *
+ *         z       Special casing the "cw" and "d" command (see `cw` and
+ *                 `d-special`).
+ *
  *         !       When redoing a filter command, use the last used
  *                 external command, whatever it was.  Otherwise the last
  *                 used -filter- command is used.
@@ -1645,6 +1716,13 @@ export const copyindent: BufferLocalOption<boolean> = new BooleanOption(
  *                 the cursor would skip over it and jump to the
  *                 following occurrence.
  *
+ *         `~`       When included, don't resolve symbolic links when
+ *                 changing directory with `:cd`, `:lcd`, or `:tcd`.
+ *                 This preserves the symbolic link path in buffer names
+ *                 and when displaying the current directory.  When
+ *                 excluded (default), symbolic links are resolved to
+ *                 their target paths.
+ *
  * POSIX flags.  These are not included in the Vi default value, except
  * when $VIM_POSIX was set on startup. `posix`
  *
@@ -1677,8 +1755,9 @@ export const copyindent: BufferLocalOption<boolean> = new BooleanOption(
  *                 variables overrule the terminal size values obtained
  *                 with system specific functions.
  *
- * (Vim default: "aABceFs",
- *  Vi default:  all flags)
+ * (Vim default: "aABceFsz",
+ *  Vi default:  all flags, except `"#{|&/\.~"`
+ *  `$VIM_POSIX`:  all flags)
  */
 export const cpoptions: GlobalOption<string> = new StringOption("cpoptions");
 
@@ -1876,11 +1955,24 @@ export const diffexpr: GlobalOption<string> = new StringOption("diffexpr");
  * Option settings for diff mode.  It can consist of the following items.
  * All are optional.  Items must be separated by a comma.
  *
- *         filler          Show filler lines, to keep the text
- *                         synchronized with a window that has inserted
- *                         lines at the same position.  Mostly useful
- *                         when windows are side-by-side and 'scrollbind'
- *                         is set.
+ *         algorithm:**{text}** Use the specified diff algorithm with the
+ *                         internal diff engine. Currently supported
+ *                         algorithms are:
+ *                         myers      the default algorithm
+ *                         minimal    spend extra time to generate the
+ *                                    smallest possible diff
+ *                         patience   patience diff algorithm
+ *                         histogram  histogram diff algorithm
+ *
+ *         anchor          Anchor specific lines in each buffer to be
+ *                         aligned with each other if 'diffanchors' is
+ *                         set.  See `diff-anchors`.
+ *
+ *         closeoff        When a window is closed where 'diff' is set
+ *                         and there is only one window remaining in the
+ *                         same tab page with 'diff' set, execute
+ *                         `:diffoff` in that window.  This undoes a
+ *                         `:diffsplit` command.
  *
  *         context:**{n}**     Use a context of **{n}** lines between a change
  *                         and a fold that contains unchanged lines.
@@ -1890,6 +1982,23 @@ export const diffexpr: GlobalOption<string> = new StringOption("diffexpr");
  *                         for a deleted line. Set it to a very large
  *                         value (999999) to disable folding completely.
  *                         See `fold-diff`.
+ *
+ *         filler          Show filler lines, to keep the text
+ *                         synchronized with a window that has inserted
+ *                         lines at the same position.  Mostly useful
+ *                         when windows are side-by-side and 'scrollbind'
+ *                         is set.
+ *
+ *         foldcolumn:**{n}**  Set the 'foldcolumn' option to **{n}** when
+ *                         starting diff mode.  Without this 2 is used.
+ *
+ *         followwrap      Follow the 'wrap' option and leave as it is.
+ *
+ *         horizontal      Start diff mode with horizontal splits (unless
+ *                         explicitly specified otherwise).
+ *
+ *         hiddenoff       Do not use diff mode for a buffer when it
+ *                         becomes hidden.
  *
  *         iblank          Ignore changes where lines are all blank.  Adds
  *                         the "-B" flag to the "diff" command if
@@ -1903,6 +2012,35 @@ export const diffexpr: GlobalOption<string> = new StringOption("diffexpr");
  *         icase           Ignore changes in case of text.  "a" and "A"
  *                         are considered the same.  Adds the "-i" flag
  *                         to the "diff" command if 'diffexpr' is empty.
+ *
+ *         indent-heuristic
+ *                         Use the indent heuristic for the internal
+ *                         diff library.
+ *
+ *         inline:**{text}**   Highlight inline differences within a change.
+ *                         See `view-diffs`.  Supported values are:
+ *
+ *                         none    Do not perform inline highlighting.
+ *                         simple  Highlight from first different
+ *                                 character to the last one in each
+ *                                 line.  This is the default if no
+ *                                 `inline:` value is set.
+ *                         char    Use internal diff to perform a
+ *                                 character-wise diff and highlight the
+ *                                 difference.
+ *                         word    Use internal diff to perform a
+ *                                 `word`-wise diff and highlight the
+ *                                 difference.  Non-alphanumeric
+ *                                 multi-byte characters such as emoji
+ *                                 and CJK characters are considered
+ *                                 individual words.
+ *
+ *         internal        Use the internal diff library.  This is
+ *                         ignored when 'diffexpr' is set.
+ *                         When running out of memory when writing a
+ *                         buffer this item will be ignored for diffs
+ *                         involving that buffer.  Set the 'verbose'
+ *                         option to see when this happens.
  *
  *         iwhite          Ignore changes in amount of white space.  Adds
  *                         the "-b" flag to the "diff" command if
@@ -1923,45 +2061,19 @@ export const diffexpr: GlobalOption<string> = new StringOption("diffexpr");
  *                         of the "diff" command for what this does
  *                         exactly.
  *
- *         horizontal      Start diff mode with horizontal splits (unless
- *                         explicitly specified otherwise).
+ *         linematch:**{n}**   Align and mark changes between the most
+ *                         similar lines between the buffers. When the
+ *                         total number of lines in the diff hunk exceeds
+ *                         **{n}**, the lines will not be aligned because for
+ *                         very large diff hunks there will be a
+ *                         noticeable lag. A reasonable setting is
+ *                         "linematch:60", as this will enable alignment
+ *                         for a 2 buffer diff hunk of 30 lines each,
+ *                         or a 3 buffer diff hunk of 20 lines each.
+ *                         Implicitly sets "filler" when this is set.
  *
  *         vertical        Start diff mode with vertical splits (unless
  *                         explicitly specified otherwise).
- *
- *         closeoff        When a window is closed where 'diff' is set
- *                         and there is only one window remaining in the
- *                         same tab page with 'diff' set, execute
- *                         `:diffoff` in that window.  This undoes a
- *                         `:diffsplit` command.
- *
- *         hiddenoff       Do not use diff mode for a buffer when it
- *                         becomes hidden.
- *
- *         foldcolumn:**{n}**  Set the 'foldcolumn' option to **{n}** when
- *                         starting diff mode.  Without this 2 is used.
- *
- *         followwrap      Follow the 'wrap' option and leave as it is.
- *
- *         internal        Use the internal diff library.  This is
- *                         ignored when 'diffexpr' is set.
- *                         When running out of memory when writing a
- *                         buffer this item will be ignored for diffs
- *                         involving that buffer.  Set the 'verbose'
- *                         option to see when this happens.
- *
- *         indent-heuristic
- *                         Use the indent heuristic for the internal
- *                         diff library.
- *
- *         algorithm:**{text}** Use the specified diff algorithm with the
- *                         internal diff engine. Currently supported
- *                         algorithms are:
- *                         myers      the default algorithm
- *                         minimal    spend extra time to generate the
- *                                    smallest possible diff
- *                         patience   patience diff algorithm
- *                         histogram  histogram diff algorithm
  *
  * Examples:
  *
@@ -1970,7 +2082,8 @@ export const diffexpr: GlobalOption<string> = new StringOption("diffexpr");
  *     :set diffopt=internal,filler,foldcolumn:3
  *     :set diffopt-=internal  " do NOT use the internal diff parser
  *
- * (default "internal,filler,closeoff")
+ * (default
+ *  "internal,filler,closeoff,inline:simple")
  *
  * *not available when compiled without the `+diff` feature*
  */
@@ -2282,10 +2395,93 @@ export const errorformat: GlobalOrBufferLocalOption<string> = new StringOption(
  *
  *     :set ei=WinEnter,WinLeave
  *
+ * To ignore all but some events, a "-" prefix can be used:
+ *
+ *     :set ei=all,-WinLeave
+ *
  * (default "")
  */
 export const eventignore: GlobalOption<string> = new StringOption(
   "eventignore",
+);
+
+/**
+ * window-local
+ *         Similar to 'eventignore' but applies to a particular window and its
+ *         buffers, for which window and buffer related autocommands can be
+ *         ignored indefinitely without affecting the global 'eventignore'.
+ *
+ *         Note: The following events are considered to happen outside of a
+ *         window context and thus cannot be ignored by 'eventignorewin':
+ *
+ *                 `CmdlineChanged`,
+ *                 `CmdlineEnter`,
+ *                 `CmdlineLeave`,
+ *                 `CmdlineLeavePre`,
+ *                 `CmdUndefined`,
+ *                 `CmdwinEnter`,
+ *                 `CmdwinLeave`,
+ *                 `ColorScheme`,
+ *                 `ColorSchemePre`,
+ *                 `CompleteChanged`,
+ *                 `CompleteDone`,
+ *                 `CompleteDonePre`,
+ *                 `DiffUpdated`,
+ *                 `DirChanged`,
+ *                 `DirChangedPre`,
+ *                 `EncodingChanged`,
+ *                 `ExitPre`,
+ *                 `FocusGained`,
+ *                 `FocusLost`,
+ *                 `FuncUndefined`,
+ *                 `GUIEnter`,
+ *                 `GUIFailed`,
+ *                 `KeyInputPre`,
+ *                 `MenuPopup`,
+ *                 `ModeChanged`,
+ *                 `OptionSet`,
+ *                 `QuickFixCmdPost`,
+ *                 `QuickFixCmdPre`,
+ *                 `QuitPre`,
+ *                 `RemoteReply`,
+ *                 `SafeState`,
+ *                 `SafeStateAgain`,
+ *                 `SessionLoadPost`,
+ *                 `SessionWritePost`,
+ *                 `ShellCmdPost`,
+ *                 `SigUSR1`,
+ *                 `SourceCmd`,
+ *                 `SourcePost`,
+ *                 `SourcePre`,
+ *                 `SpellFileMissing`,
+ *                 `StdinReadPost`,
+ *                 `StdinReadPre`,
+ *                 `SwapExists`,
+ *                 `Syntax`,
+ *                 `TabClosed`,
+ *                 `TabClosedPre`,
+ *                 `TabEnter`,
+ *                 `TabLeave`,
+ *                 `TabNew`,
+ *                 `TermChanged`,
+ *                 `TerminalOpen`,
+ *                 `TerminalWinOpen`,
+ *                 `TermResponse`,
+ *                 `TermResponseAll`,
+ *                 `User`,
+ *                 `VimEnter`,
+ *                 `VimLeave`,
+ *                 `VimLeavePre`,
+ *                 `VimResized`,
+ *                 `VimResume`,
+ *                 `VimSuspend`,
+ *                 `WinNew`,
+ *                 `WinNewPre`
+ *
+ * (default "")
+ */
+export const eventignorewin: GlobalOption<string> = new StringOption(
+  "eventignorewin",
 );
 
 /**
@@ -2464,7 +2660,7 @@ export const fileencodings: GlobalOption<string> = new StringOption(
  * 'textmode' is set, otherwise 'textmode' is reset.
  *
  * (MS-Windows default: "dos",
- *  Unix, macOS default: "unix")
+ *  Unix default: "unix")
  */
 export const fileformat: BufferLocalOption<string> = new StringOption(
   "fileformat",
@@ -2524,7 +2720,7 @@ export const fileformat: BufferLocalOption<string> = new StringOption(
  *
  * (default:
  *  Vim+Vi MS-Windows: "dos,unix",
- *  Vim    Unix, macOS: "unix,dos",
+ *  Vim    Unix: "unix,dos",
  *  Vi     Cygwin: "unix,dos",
  *  Vi     others: "")
  */
@@ -2557,22 +2753,23 @@ export const fileignorecase: GlobalOption<boolean> = new BooleanOption(
  *         /* vim: set filetype=idl : * /
  * `FileType` `filetypes`
  * When a dot appears in the value then this separates two filetype
- * names.  Example:
+ * names, it should therefore not be used for a filetype.  Example:
  *         /* vim: set filetype=c.doxygen : * /
  * This will use the "c" filetype first, then the "doxygen" filetype.
  * This works both for filetype plugins and for syntax files.  More than
  * one dot may appear.
  * This option is not copied to another buffer, independent of the 's' or
  * 'S' flag in 'cpoptions'.
- * Only normal file name characters can be used, `"/\*?[|<>"` are illegal.
+ * Only alphanumeric characters, '-' and '_' can be used (and a '.' is
+ * allowed as delimiter when combining different filetypes).
  *
  * (default: "")
  */
 export const filetype: BufferLocalOption<string> = new StringOption("filetype");
 
 /**
- * Characters to fill the statuslines, vertical separators and special
- * lines in the window.
+ * Characters to fill the statuslines, vertical separators, special
+ * lines in the window and truncated text in the `ins-completion-menu`.
  * It is a comma-separated list of items.  Each item has a name, a colon
  * and the value of that item: `E1511`
  *
@@ -2587,16 +2784,19 @@ export const filetype: BufferLocalOption<string> = new StringOption("filetype");
  *   diff          '-'             deleted lines of the 'diff' option
  *   eob           `'~'`             empty lines below the end of a buffer
  *   lastline      '@'             'display' contains lastline/truncate
+ *   trunc         '>'             truncated text in the
+ *                                 `ins-completion-menu`.
+ *   truncrl       `'<'`             same as "trunc" in 'rightleft' mode
+ *   tpl_vert      '|'             vertical separators of 'tabpanel'
  *
  * Any one that is omitted will fall back to the default.
  *
  * Example:
  *
- *     :set fillchars=stl:\ ,stlnc:\ ,vert:\|,fold:-,diff:-
+ *     :set fillchars=stl:\ ,stlnc:\ ,vert:\|,fold:-,diff:-,tpl_vert:\|
  *
- * For the "stl", "stlnc", "foldopen", "foldclose" and "foldsep" items
- * single-byte and multibyte characters are supported.  But double-width
- * characters are not supported. `E1512`
+ * All items support single-byte and multibyte characters.  But
+ * double-width characters are not supported. `E1512`
  *
  * The highlighting used for these items:
  *   item name     highlight group
@@ -2604,14 +2804,74 @@ export const filetype: BufferLocalOption<string> = new StringOption("filetype");
  *   stlnc         StatusLineNC            `hl-StatusLineNC`
  *   vert          VertSplit               `hl-VertSplit`
  *   fold          Folded                  `hl-Folded`
+ *   foldopen      FoldColumn              `hl-FoldColumn`
+ *   foldclose     FoldColumn              `hl-FoldColumn`
+ *   foldsep       FoldColumn              `hl-FoldColumn`
  *   diff          DiffDelete              `hl-DiffDelete`
  *   eob           EndOfBuffer             `hl-EndOfBuffer`
  *   lastline      NonText                 `hl-NonText`
+ *   trunc         one of the many Popup menu highlighting groups like
+ *                 `hl-PmenuSel`
+ *   truncrl       same as "trunc"
  *
- * (default `"vert:|,fold:-,eob:~"`)
+ * (default `"vert:|,fold:-,eob:~,lastline:@"`)
  */
 export const fillchars: GlobalOrWindowLocalOption<string> = new StringOption(
   "fillchars",
+);
+
+/**
+ * Function that is called to obtain the filename(s) for the `:find`
+ * command.  When this option is empty, the internal `file-searching`
+ * mechanism is used.
+ *
+ * The value can be the name of a function, a `lambda` or a `Funcref`.
+ * See `option-value-function` for more information.
+ *
+ * The function is called with two arguments.  The first argument is a
+ * `String` and is the `:find` command argument.  The second argument is
+ * a `Boolean` and is set to `v:true` when the function is called to get
+ * a List of command-line completion matches for the `:find` command.
+ * The function should return a List of strings.
+ *
+ * The function is called only once per `:find` command invocation.
+ * The function can process all the directories specified in 'path'.
+ *
+ * If a match is found, the function should return a `List` containing
+ * one or more file names.  If a match is not found, the function
+ * should return an empty List.
+ *
+ * If any errors are encountered during the function invocation, an
+ * empty List is used as the return value.
+ *
+ * It is not allowed to change text or jump to another window while
+ * executing the 'findfunc' `textlock`.
+ *
+ * This option cannot be set from a `modeline` or in the `sandbox`, for
+ * security reasons.
+ *
+ * Examples:
+ *
+ *     " Use glob()
+ *     func FindFuncGlob(cmdarg, cmdcomplete)
+ *         let pat = a:cmdcomplete ? $'{a:cmdarg}*' : a:cmdarg
+ *         return glob(pat, v:false, v:true)
+ *     endfunc
+ *     set findfunc=FindFuncGlob
+ *
+ *     " Use the 'git ls-files' output
+ *     func FindGitFiles(cmdarg, cmdcomplete)
+ *         let fnames = systemlist('git ls-files')
+ *         return fnames->filter('v:val =~? a:cmdarg')
+ *     endfunc
+ *     set findfunc=FindGitFiles
+ *
+ * (default empty)
+ *
+ * *not available when compiled without the `+eval` feature*
+ */
+export const findfunc: GlobalOrBufferLocalOption<string> = new StringOption(
+  "findfunc",
 );
 
 /**
@@ -3012,7 +3272,9 @@ export const gdefault: GlobalOption<boolean> = new BooleanOption("gdefault");
  *
  * (default "%f:%l:%m,%f:%l%m,%f  %l%m")
  */
-export const grepformat: GlobalOption<string> = new StringOption("grepformat");
+export const grepformat: GlobalOrBufferLocalOption<string> = new StringOption(
+  "grepformat",
+);
 
 /**
  * Program to use for the `:grep` command.  This option may contain '%'
@@ -3157,179 +3419,6 @@ export const guifontwide: GlobalOption<string> = new StringOption(
 );
 
 /**
- * This option only has an effect in the GUI version of Vim.  It is a
- * sequence of letters which describes what components and options of the
- * GUI should be used.
- * To avoid problems with flags that are added in the future, use the
- * "+=" and "-=" feature of ":set" `add-option-flags`.
- *
- * Valid characters are as follows:
- *
- *   '!'   External commands are executed in a terminal window.  Without
- *         this flag the MS-Windows GUI will open a console window to
- *         execute the command.  The Unix GUI will simulate a dumb
- *         terminal to list the command output.
- *         The terminal window will be positioned at the bottom, and grow
- *         upwards as needed.
- *
- *   'a'   Autoselect:  If present, then whenever VISUAL mode is started,
- *         or the Visual area extended, Vim tries to become the owner of
- *         the windowing system's global selection.  This means that the
- *         Visually highlighted text is available for pasting into other
- *         applications as well as into Vim itself.  When the Visual mode
- *         ends, possibly due to an operation on the text, or when an
- *         application wants to paste the selection, the highlighted text
- *         is automatically yanked into the "* selection register.
- *         Thus the selection is still available for pasting into other
- *         applications after the VISUAL mode has ended.
- *             If not present, then Vim won't become the owner of the
- *         windowing system's global selection unless explicitly told to
- *         by a yank or delete operation for the "* register.
- *         The same applies to the modeless selection.
- *
- *   'P'   Like autoselect but using the "+ register instead of the "*
- *         register.
- *
- *   'A'   Autoselect for the modeless selection.  Like 'a', but only
- *         applies to the modeless selection.
- *
- *             'guioptions'   autoselect Visual  autoselect modeless
- *                  ""              -                       -
- *                  "a"            yes                     yes
- *                  "A"             -                      yes
- *                  "aA"           yes                     yes
- *
- *         When using a terminal see the 'clipboard' option.
- *
- *   'c'   Use console dialogs instead of popup dialogs for simple
- *         choices.
- *
- *   'd'   Use dark theme variant if available. Currently only works for
- *         GTK+ GUI.
- *
- *   'e'   Add tab pages when indicated with 'showtabline'.
- *         'guitablabel' can be used to change the text in the labels.
- *         When 'e' is missing a non-GUI tab pages line may be used.
- *         The GUI tabs are only supported on some systems, currently
- *         GTK, Motif, Mac OS/X, Haiku, and MS-Windows.
- *
- *   'f'   Foreground: Don't use fork() to detach the GUI from the shell
- *         where it was started.  Use this for programs that wait for the
- *         editor to finish (e.g., an e-mail program).  Alternatively you
- *         can use "gvim -f" or ":gui -f" to start the GUI in the
- *         foreground.  `gui-fork`
- *         Note: Set this option in the vimrc file.  The forking may have
- *         happened already when the `gvimrc` file is read.
- *
- *   'i'   Use a Vim icon.  For GTK with KDE it is used in the left-upper
- *         corner of the window.  It's black&white on non-GTK, because of
- *         limitations of X11.  For a color icon, see `X11-icon`.
- *
- *   'm'   Menu bar is present.
- *
- *   'M'   The system menu "$VIMRUNTIME/menu.vim" is not sourced.  Note
- *         that this flag must be added in the .vimrc file, before
- *         switching on syntax or filetype recognition (when the `gvimrc`
- *         file is sourced the system menu has already been loaded; the
- *         `:syntax on` and `:filetype on` commands load the menu too).
- *
- *   'g'   Grey menu items: Make menu items that are not active grey.  If
- *         'g' is not included inactive menu items are not shown at all.
- *
- *   't'   Include tearoff menu items.  Currently only works for Win32,
- *         GTK+, and Motif 1.2 GUI.
- *
- *   'T'   Include Toolbar.  Currently only in Win32, GTK+, Motif and
- *         Photon GUIs.
- *
- *   'r'   Right-hand scrollbar is always present.
- *
- *   'R'   Right-hand scrollbar is present when there is a vertically
- *         split window.
- *
- *   'l'   Left-hand scrollbar is always present.
- *
- *   'L'   Left-hand scrollbar is present when there is a vertically
- *         split window.
- *
- *   'b'   Bottom (horizontal) scrollbar is present.  Its size depends on
- *         the longest visible line, or on the cursor line if the 'h'
- *         flag is included. `gui-horiz-scroll`
- *
- *   'h'   Limit horizontal scrollbar size to the length of the cursor
- *         line.  Reduces computations. `gui-horiz-scroll`
- *
- * And yes, you may even have scrollbars on the left AND the right if
- * you really want to :-).  See `gui-scrollbars` for more information.
- *
- *   'v'   Use a vertical button layout for dialogs.  When not included,
- *         a horizontal layout is preferred, but when it doesn't fit a
- *         vertical layout is used anyway.  Not supported in GTK 3.
- *
- *   'p'   Use Pointer callbacks for X11 GUI.  This is required for some
- *         window managers.  If the cursor is not blinking or hollow at
- *         the right moment, try adding this flag.  This must be done
- *         before starting the GUI.  Set it in your `gvimrc`.  Adding or
- *         removing it after the GUI has started has no effect.
- *
- *   'F'   Add a footer.  Only for Motif.  See `gui-footer`.
- *
- *   'k'   Keep the GUI window size when adding/removing a scrollbar, or
- *         toolbar, tabline, etc.  Instead, the behavior is similar to
- *         when the window is maximized and will adjust 'lines' and
- *         'columns' to fit to the window.  Without the 'k' flag Vim will
- *         try to keep 'lines' and 'columns' the same when adding and
- *         removing GUI components.
- *
- * (default "egmrLtT"   (MS-Windows,
- *  "t" is removed in `defaults.vim`),
- *  "aegimrLtT" (GTK and Motif),
- *  )
- *
- * *only available when compiled with GUI enabled*
- */
-export const guioptions: GlobalOption<string> = new StringOption("guioptions");
-
-/**
- * When non-empty describes the text to use in a label of the GUI tab
- * pages line.  When empty and when the result is empty Vim will use a
- * default label.  See `setting-guitablabel` for more info.
- *
- * The format of this option is like that of 'statusline'.
- * 'guitabtooltip' is used for the tooltip, see below.
- * The expression will be evaluated in the `sandbox` when set from a
- * modeline, see `sandbox-option`.
- * This option cannot be set in a modeline when 'modelineexpr' is off.
- *
- * Only used when the GUI tab pages line is displayed.  'e' must be
- * present in 'guioptions'.  For the non-GUI tab pages line 'tabline' is
- * used.
- *
- * (default empty)
- *
- * *only available when compiled with GUI enabled*
- */
-export const guitablabel: GlobalOption<string> = new StringOption(
-  "guitablabel",
-);
-
-/**
- * When non-empty describes the text to use in a tooltip for the GUI tab
- * pages line.  When empty Vim will use a default tooltip.
- * This option is otherwise just like 'guitablabel' above.
- * You can include a line break.  Simplest method is to use `:let`:
- *
- *     :let &guitabtooltip = "line one\nline two"
- *
- * (default empty)
- *
- * *only available when compiled with GUI enabled*
- */
-export const guitabtooltip: GlobalOption<string> = new StringOption(
-  "guitabtooltip",
-);
-
-/**
  * Name of the main help file.  All distributed help files should be
  * placed together in one directory.  Additionally, all "doc" directories
  * in 'runtimepath' will be used.
@@ -3402,13 +3491,13 @@ export const hidden: GlobalOption<boolean> = new BooleanOption("hidden");
 /**
  * A history of ":" commands, and a history of previous search patterns
  * is remembered.  This option decides how many entries may be stored in
- * each of these histories (see `cmdline-editing`).
+ * each of these histories (see `cmdline-editing` and 'messagesopt' for
+ * the number of messages to remember).
  * The maximum value is 10000.
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
  *
- * (Vim default: 50, Vi default: 0,
- *  set to 200 in `defaults.vim`)
+ * (Vim default: 200, Vi default: 0)
  */
 export const history: GlobalOption<number> = new NumberOption("history");
 
@@ -3477,7 +3566,8 @@ export const iconstring: GlobalOption<string> = new StringOption("iconstring");
 
 /**
  * Ignore case in search patterns, `cmdline-completion`, when
- * searching in the tags file, and non-|Vim9| `expr-==`.
+ * searching in the tags file, non-|Vim9| `expr-==` and for Insert-mode
+ * completion `ins-completion`.
  * Also see 'smartcase' and 'tagcase'.
  * Can be overruled by using "\c" or "\C" in the pattern, see
  * `/ignorecase`.
@@ -3487,27 +3577,6 @@ export const iconstring: GlobalOption<string> = new StringOption("iconstring");
 export const ignorecase: GlobalOption<boolean> = new BooleanOption(
   "ignorecase",
 );
-
-/**
- * When set the Input Method is always on when starting to edit a command
- * line, unless entering a search pattern (see 'imsearch' for that).
- * Setting this option is useful when your input method allows entering
- * English characters directly, e.g., when it's used to type accented
- * characters with dead keys.
- *
- * (default off)
- */
-export const imcmdline: GlobalOption<boolean> = new BooleanOption("imcmdline");
-
-/**
- * When set the Input Method is never used.  This is useful to disable
- * the IM when it doesn't work properly.
- * Currently this option is on by default for SGI/IRIX machines.  This
- * may change in later releases.
- *
- * (default off, on for some systems (SGI))
- */
-export const imdisable: GlobalOption<boolean> = new BooleanOption("imdisable");
 
 /**
  * Specifies whether :lmap or an Input Method (IM) is to be used in
@@ -3592,7 +3661,7 @@ export const include: GlobalOrBufferLocalOption<string> = new StringOption(
  *
  * Also used for the `gf` command if an unmodified file name can't be
  * found.  Allows doing "gf" on the name after an 'include' statement.
- * Also used for `<cfile>`.
+ * Note: Not used for `<cfile>`.
  *
  * If the expression starts with s: or `<SID>`, then it is replaced with
  * the script ID (`local-function`). Example:
@@ -3683,7 +3752,7 @@ export const incsearch: GlobalOption<boolean> = new BooleanOption("incsearch");
  * in Insert mode as specified with the 'indentkeys' option.
  * When this option is not empty, it overrules the 'cindent' and
  * 'smartindent' indenting.  When 'lisp' is set, this option is
- * is only used when 'lispoptions' contains "expr:1".
+ * only used when 'lispoptions' contains "expr:1".
  * When 'paste' is set this option is not used for indenting.
  * The expression is evaluated with `v:lnum` set to the line number for
  * which the indent is to be computed.  The cursor is also in this line
@@ -3886,7 +3955,7 @@ export const iskeyword: BufferLocalOption<string> = new StringOption(
  * Unprintable and zero-width Unicode characters are displayed as `<xxxx>`.
  * There is no option to specify these characters.
  *
- * (default for Win32 and macOS:
+ * (default for Win32 and VMS:
  *  `"@,~-255"`; otherwise: "@,161-255")
  */
 export const isprint: GlobalOption<string> = new StringOption("isprint");
@@ -3922,7 +3991,7 @@ export const jumpoptions: GlobalOption<string> = new StringOption(
  * Setting this option to a valid keymap name has the side effect of
  * setting 'iminsert' to one, so that the keymap becomes effective.
  * 'imsearch' is also set to one, unless it was -1
- * Only normal file name characters can be used, `"/\*?[|<>"` are illegal.
+ * Only alphanumeric characters, '.', '-' and '_' can be used.
  *
  * (default "")
  *
@@ -3996,7 +4065,7 @@ export const keywordprg: GlobalOrBufferLocalOption<string> = new StringOption(
  * part can be in one of two forms:
  * 1.  A list of pairs.  Each pair is a "from" character immediately
  *     followed by the "to" character.  Examples: "aA", "aAbBcC".
- * 2.  A list of "from" characters, a semi-colon and a list of "to"
+ * 2.  A list of "from" characters, a semicolon and a list of "to"
  *     characters.  Example: "abc;ABC"
  * Example: "aA,fgh;FGH,cCdDeE"
  * Special characters need to be preceded with a backslash.  These are
@@ -4087,7 +4156,7 @@ export const laststatus: GlobalOption<number> = new NumberOption("laststatus");
  * update use `:redraw`.
  * This may occasionally cause display errors.  It is only meant to be set
  * temporarily when performing an operation where redrawing may cause
- * flickering or cause a slow down.
+ * flickering or cause a slowdown.
  *
  * (default off)
  */
@@ -4167,8 +4236,7 @@ export const lisp: BufferLocalOption<boolean> = new BooleanOption("lisp");
 
 /**
  * Comma-separated list of items that influence the Lisp indenting when
- * enabled with the `'lisp'` option.  Currently only one item is
- * supported:
+ * enabled with the 'lisp' option.  Currently only one item is supported:
  *         expr:1  use 'indentexpr' for Lisp indenting when it is set
  *         expr:0  do not use 'indentexpr' for Lisp indenting (default)
  * Note that when using 'indentexpr' the `=` operator indents all the
@@ -4182,7 +4250,7 @@ export const lispoptions: BufferLocalOption<string> = new StringOption(
 
 /**
  * Comma-separated list of words that influence the Lisp indenting when
- * enabled with the `'lisp'` option.
+ * enabled with the 'lisp' option.
  *
  * (default is very long)
  */
@@ -4508,6 +4576,32 @@ export const maxmempattern: GlobalOption<number> = new NumberOption(
 export const menuitems: GlobalOption<number> = new NumberOption("menuitems");
 
 /**
+ * Option settings for outputting messages.  It can consist of the
+ * following items.  Items must be separated by a comma.
+ *
+ * hit-enter       Use a `hit-enter` prompt when the message is longer than
+ *                 'cmdheight' size.
+ *
+ * wait:**{n}**        Instead of using a `hit-enter` prompt, simply wait for
+ *                 **{n}** milliseconds so that the user has a chance to read
+ *                 the message.  The maximum value of **{n}** is 10000.  Use
+ *                 0 to disable the wait (but then the user may miss an
+ *                 important message).
+ *                 This item is ignored when "hit-enter" is present, but
+ *                 required when "hit-enter" is not present.
+ *
+ * history:**{n}**     Determines how many entries are remembered in the
+ *                 `:messages` history.  The maximum value is 10000.
+ *                 Setting it to zero clears the message history.
+ *                 This item must always be present.
+ *
+ * (default "hit-enter,history:500")
+ */
+export const messagesopt: GlobalOption<string> = new StringOption(
+  "messagesopt",
+);
+
+/**
  * Parameters for `:mkspell`.  This tunes when to start compressing the
  * word tree.  Compression can be slow when there are many words, but
  * it's needed to avoid running out of memory.  The amount of memory used
@@ -4668,7 +4762,7 @@ export const more: GlobalOption<boolean> = new BooleanOption("more");
  * When the mouse is not enabled, the GUI will still use the mouse for
  * modeless selection.  This doesn't move the text cursor.
  *
- * See `mouse-using`.  Also see `'clipboard'`.
+ * See `mouse-using`.  Also see 'clipboard'.
  *
  * Note: When enabling the mouse in a terminal, copy/paste will use the
  * "* register if there is access to an X-server.  The xterm handling of
@@ -4745,93 +4839,6 @@ export const mousehide: GlobalOption<boolean> = new BooleanOption("mousehide");
 export const mousemodel: GlobalOption<string> = new StringOption("mousemodel");
 
 /**
- * When on, mouse move events are delivered to the input queue and are
- * available for mapping. The default, off, avoids the mouse movement
- * overhead except when needed. See `gui-mouse-mapping`.
- * Warning: Setting this option can make pending mappings to be aborted
- * when the mouse is moved.
- * Currently only works in the GUI, may be made to work in a terminal
- * later.
- *
- * (default off)
- *
- * *only works in the GUI*
- */
-export const mousemoveevent: GlobalOption<boolean> = new BooleanOption(
-  "mousemoveevent",
-);
-
-/**
- * This option tells Vim what the mouse pointer should look like in
- * different modes.  The option is a comma-separated list of parts, much
- * like used for 'guicursor'.  Each part consist of a mode/location-list
- * and an argument-list:
- *         mode-list:shape,mode-list:shape,..
- * The mode-list is a dash separated list of these modes/locations:
- *                 In a normal window:
- *         n       Normal mode
- *         v       Visual mode
- *         ve      Visual mode with 'selection' "exclusive" (same as 'v',
- *                 if not specified)
- *         o       Operator-pending mode
- *         i       Insert mode
- *         r       Replace mode
- *
- *                 Others:
- *         c       appending to the command-line
- *         ci      inserting in the command-line
- *         cr      replacing in the command-line
- *         m       at the 'Hit ENTER' or 'More' prompts
- *         ml      idem, but cursor in the last line
- *         e       any mode, pointer below last window
- *         s       any mode, pointer on a status line
- *         sd      any mode, while dragging a status line
- *         vs      any mode, pointer on a vertical separator line
- *         vd      any mode, while dragging a vertical separator line
- *         a       everywhere
- *
- * The shape is one of the following:
- * avail   name            looks like
- * w x     arrow           Normal mouse pointer
- * w x     blank           no pointer at all (use with care!)
- * w x     beam            I-beam
- * w x     updown          up-down sizing arrows
- * w x     leftright       left-right sizing arrows
- * w x     busy            The system's usual busy pointer
- * w x     no              The system's usual 'no input' pointer
- *   x     udsizing        indicates up-down resizing
- *   x     lrsizing        indicates left-right resizing
- *   x     crosshair       like a big thin +
- *   x     hand1           black hand
- *   x     hand2           white hand
- *   x     pencil          what you write with
- *   x     question        big ?
- *   x     rightup-arrow   arrow pointing right-up
- * w x     up-arrow        arrow pointing up
- *   x     `<number>`        any X11 pointer number (see X11/cursorfont.h)
- *
- * The "avail" column contains a 'w' if the shape is available for Win32,
- * x for X11.
- * Any modes not specified or shapes not available use the normal mouse
- * pointer.
- *
- * Example:
- *
- *     :set mouseshape=s:udsizing,m:no
- *
- * will make the mouse turn to a sizing arrow over the status lines and
- * indicate no input when the hit-enter prompt is displayed (since
- * clicking the mouse has no effect in this state.)
- *
- * (default "i-r:beam,s:updown,sd:udsizing,
- *  vs:leftright,vd:lrsizing,m:no,
- *  ml:up-arrow,v:rightup-arrow")
- *
- * *only available when compiled with the `+mouseshape` feature*
- */
-export const mouseshape: GlobalOption<string> = new StringOption("mouseshape");
-
-/**
  * Only for GUI, Win32 and Unix with xterm.  Defines the maximum
  * time in msec between two mouse clicks for the second click to be
  * recognized as a multi click.
@@ -4864,6 +4871,20 @@ export const mousetime: GlobalOption<number> = new NumberOption("mousetime");
  *             (without "unsigned" it would become "9-2019").
  *             Using CTRL-X on "0" or CTRL-A on "18446744073709551615"
  *             (2^64 - 1) has no effect, overflow is prevented.
+ * blank   If included, treat numbers as signed or unsigned based on
+ *         preceding whitespace.  If a number with a leading dash has its
+ *         dash immediately preceded by a non-whitespace character (i.e.,
+ *         not a tab or a " "), the negative sign won't be considered as
+ *         part of the number.  For example:
+ *             Using CTRL-A on "14" in "Carbon-14" results in "Carbon-15"
+ *             (without "blank" it would become "Carbon-13").
+ *             Using CTRL-X on "8" in "Carbon -8" results in "Carbon -9"
+ *             (because -8 is preceded by whitespace.  If "unsigned" was
+ *             set, it would result in "Carbon -7").
+ *         If this format is included, overflow is prevented as if
+ *         "unsigned" were set.  If both this format and "unsigned" are
+ *         included, "unsigned" will take precedence.
+ *
  * Numbers which simply begin with a digit in the range 1-9 are always
  * considered decimal.  This also happens for numbers that are not
  * recognized as octal or hex.
@@ -4941,20 +4962,6 @@ export const numberwidth: WindowLocalOption<number> = new NumberOption(
  * *not available when compiled without the `+eval` feature*
  */
 export const omnifunc: BufferLocalOption<string> = new StringOption("omnifunc");
-
-/**
- * *only for MS-Windows*
- *         Enable reading and writing from devices.  This may get Vim stuck on a
- *         device that can be opened but doesn't actually do the I/O.  Therefore
- *         it is off by default.
- *         Note that on MS-Windows editing "aux.h", "lpt1.txt" and the like also
- *         result in editing a device.
- *
- * (default off)
- */
-export const opendevice: GlobalOption<boolean> = new BooleanOption(
-  "opendevice",
-);
 
 /**
  * This option specifies a function to be called by the `g@` operator.
@@ -5084,7 +5091,7 @@ export const patchmode: GlobalOption<string> = new StringOption("patchmode");
  *
  * To use an environment variable, you probably need to replace the
  * separator.  Here is an example to append $INCL, in which directory
- * names are separated with a semi-colon:
+ * names are separated with a semicolon:
  *
  *     :let &path = &path .. "," .. substitute($INCL, ';', ',', 'g')
  *
@@ -5099,7 +5106,7 @@ export const path: GlobalOrBufferLocalOption<string> = new StringOption("path");
 /**
  * When changing the indent of the current line, preserve as much of the
  * indent structure as possible.  Normally the indent is replaced by a
- * series of tabs followed by spaces as required (unless `'expandtab'` is
+ * series of tabs followed by spaces as required (unless 'expandtab' is
  * enabled, in which case only spaces are used).  Enabling this option
  * means the indent will preserve as many existing characters as possible
  * for indenting, and only add additional tabs or spaces as required.
@@ -5425,7 +5432,7 @@ export const rulerformat: GlobalOption<string> = new StringOption(
  *   import/       files that are found by `:import`
  *   indent/       indent scripts `indent-expression`
  *   keymap/       key mapping files `mbyte-keymap`
- *   lang/         menu translations `:menutrans`
+ *   lang/         message translations `:menutrans` and `multi-lang`
  *   menu.vim      GUI menus `menu.vim`
  *   pack/         packages `:packadd`
  *   plugin/       plugin scripts `write-plugin`
@@ -5495,9 +5502,6 @@ export const rulerformat: GlobalOption<string> = new StringOption(
  *  $VIMRUNTIME,
  *  $VIM/vimfiles/after,
  *  $HOME/vimfiles/after"
- *  macOS: "$VIM:vimfiles,
- *  $VIMRUNTIME,
- *  $VIM:vimfiles:after"
  *  Haiku: "$BE_USER_SETTINGS/vim,
  *  $VIM/vimfiles,
  *  $VIMRUNTIME,
@@ -5531,7 +5535,7 @@ export const scroll: WindowLocalOption<number> = new NumberOption("scroll");
  * current window also scrolls other scrollbind windows (windows that
  * also have this option set).  This option is useful for viewing the
  * differences between two versions of a file, see 'diff'.
- * See `'scrollopt'` for options that determine how this option should be
+ * See 'scrollopt' for options that determine how this option should be
  * interpreted.
  * This option is mostly reset when splitting a window to edit another
  * file.  This means that ":split | edit file" results in two windows
@@ -5634,9 +5638,16 @@ export const sections: GlobalOption<string> = new StringOption("sections");
  * selection.
  * When "old" is used and 'virtualedit' allows the cursor to move past
  * the end of line the line break still isn't included.
- * Note that when "exclusive" is used and selecting from the end
- * backwards, you cannot include the last character of a line, when
- * starting in Normal mode and 'virtualedit' empty.
+ * When "exclusive" is used, cursor position in visual mode will be
+ * adjusted for inclusive motions `inclusive-motion-selection-exclusive`.
+ *
+ * Note:
+ * - When "exclusive" is used and selecting from the end backwards, you
+ *   cannot include the last character of a line, when starting in Normal
+ *   mode and 'virtualedit' empty.
+ * - when "exclusive" is used with a single character visual selection,
+ *   Vim will behave as if the 'selection' is inclusive (in other words,
+ *   you cannot visually select an empty region).
  *
  * The 'selection' option is set by the `:behave` command.
  *
@@ -5809,6 +5820,9 @@ export const shellcmdflag: GlobalOption<string> = new StringOption(
  * Don't forget to precede the space with a backslash: ":set sp=\ ".
  * In the future pipes may be used for filtering and this option will
  * become obsolete (at least for Unix).
+ * Note: When using a pipe like "| tee", you'll lose the exit code of the
+ * shell command.  This might be configurable by your shell, look for
+ * the pipefail option (for bash and zsh, use ":set -o pipefail").
  * This option cannot be set from a `modeline` or in the `sandbox`, for
  * security reasons.
  *
@@ -5969,10 +5983,10 @@ export const shiftround: GlobalOption<boolean> = new BooleanOption(
 );
 
 /**
- * Number of spaces to use for each step of (auto)indent.  Used for
- * `'cindent'`, `>>`, `<<`, etc.
- * When zero the 'tabstop' value will be used.  Use the `shiftwidth()`
- * function to get the effective shiftwidth value.
+ * Number of columns that make up one level of (auto)indentation.  Used
+ * by 'cindent', `<<`, `>>`, etc.
+ * If set to 0, Vim uses the current 'tabstop' value.  Use `shiftwidth()`
+ * to obtain the effective value in scripts.
  *
  * (default 8)
  */
@@ -5982,7 +5996,7 @@ export const shiftwidth: BufferLocalOption<number> = new NumberOption(
 
 /**
  * This option helps to avoid all the `hit-enter` prompts caused by file
- * messages, for example  with CTRL-G, and to avoid some other messages.
+ * messages, for example with CTRL-G, and to avoid some other messages.
  * It is a list of flags:
  *  flag   meaning when present
  *   f     use "(3 of 5)" instead of "(file 3 of 5)"
@@ -6005,8 +6019,8 @@ export const shiftwidth: BufferLocalOption<number> = new NumberOption(
  *         message;  also for quickfix message (e.g., ":cn")
  *   s     don't give "search hit BOTTOM, continuing at TOP" or
  *         "search hit TOP, continuing at BOTTOM" messages; when using
- *         the search count do not show "W" after the count message (see
- *         S below)
+ *         the search count do not show "W" before the count message
+ *         (see `shm-S` below)
  *   t     truncate file message at the start if it is too long
  *         to fit on the command-line, `"<"` will appear in the left most
  *         column; ignored in Ex mode
@@ -6028,7 +6042,12 @@ export const shiftwidth: BufferLocalOption<number> = new NumberOption(
  *         `:silent` was used for the command; note that this also
  *         affects messages from autocommands and 'autoread' reloading
  *   S     do not show search count message when searching, e.g.
- *         "[1/5]"
+ *         "[1/5]". When the "S" flag is not present (e.g. search count
+ *         is shown), the "search hit BOTTOM, continuing at TOP" and
+ *         "search hit TOP, continuing at BOTTOM" messages are only
+ *         indicated by a "W" (Mnemonic: Wrapped) letter before the
+ *         search count statistics.  The maximum limit can be set with
+ *         the 'maxsearchcount' option.
  *
  * This gives you the opportunity to avoid that a change between buffers
  * requires you to hit `<Enter>`, but still gives as useful a message as
@@ -6094,8 +6113,7 @@ export const showbreak: GlobalOrWindowLocalOption<string> = new StringOption(
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
  *
- * (Vim default: on, off for Unix,
- *  Vi default: off, set in `defaults.vim`)
+ * (Vim default: on, Vi default: off)
  */
 export const showcmd: GlobalOption<boolean> = new BooleanOption("showcmd");
 
@@ -6200,7 +6218,7 @@ export const sidescroll: GlobalOption<number> = new NumberOption("sidescroll");
 /**
  * The minimal number of screen columns to keep to the left and to the
  * right of the cursor if 'nowrap' is set.  Setting this option to a
- * value greater than 0 while having `'sidescroll'` also at a non-zero
+ * value greater than 0 while having 'sidescroll' also at a non-zero
  * value makes some context visible in the line you are scrolling in
  * horizontally (except at beginning of the line).  Setting this option
  * to a large value (like 999) has the effect of keeping the cursor
@@ -6214,9 +6232,9 @@ export const sidescroll: GlobalOption<number> = new NumberOption("sidescroll");
  *
  * NOTE: This option is set to 0 when 'compatible' is set.
  *
- * Example: Try this together with 'sidescroll' and 'listchars' as
- *          in the following example to never allow the cursor to move
- *          onto the "extends" character:
+ * Example: Try this together with 'sidescroll' and 'listchars' as in the
+ *          following example to never allow the cursor to move onto the
+ *          "extends" character:
  *
  *              :set nowrap sidescroll=1 listchars=extends:>,precedes:<
  *              :set sidescrolloff=1
@@ -6246,9 +6264,11 @@ export const signcolumn: WindowLocalOption<string> = new StringOption(
  * Override the 'ignorecase' option if the search pattern contains upper
  * case characters.  Only used when the search pattern is typed and
  * 'ignorecase' option is on.  Used for the commands "/", "?", "n", "N",
- * ":g" and ":s".  Not used for "*", "#", "gd", tag search, etc.  After
- * "*" and "#" you can make 'smartcase' used by doing a "/" command,
- * recalling the search pattern from history and hitting `<Enter>`.
+ * ":g" and ":s" and when filtering matches for the completion menu
+ * `compl-states`.
+ * Not used for "*", "#", "gd", tag search, etc.  After "*" and "#" you
+ * can make 'smartcase' used by doing a "/" command, recalling the search
+ * pattern from history and hitting `<Enter>`.
  * NOTE: This option is reset when 'compatible' is set.
  *
  * (default off)
@@ -6286,19 +6306,16 @@ export const smartindent: BufferLocalOption<boolean> = new BooleanOption(
 );
 
 /**
- * When on, a `<Tab>` in front of a line inserts blanks according to
- * 'shiftwidth'.  'tabstop' or 'softtabstop' is used in other places.  A
- * `<BS>` will delete a 'shiftwidth' worth of space at the start of the
- * line.
- * When off, a `<Tab>` always inserts blanks according to 'tabstop' or
- * 'softtabstop'.  'shiftwidth' is only used for shifting text left or
- * right `shift-left-right`.
- * What gets inserted (a `<Tab>` or spaces) depends on the 'expandtab'
- * option.  Also see `ins-expandtab`.  When 'expandtab' is not set, the
- * number of spaces is minimized by using `<Tab>`s.
- * This option is reset when 'paste' is set and restored when 'paste' is
- * reset.
- * NOTE: This option is reset when 'compatible' is set.
+ * When enabled, the `<Tab>` key will indent by 'shiftwidth' if the cursor
+ * is in leading whitespace.  The `<BS>` key has the opposite effect.
+ * In leading whitespace, this has the same effect as setting
+ * 'softtabstop' to the value of 'shiftwidth'.
+ * This option is reset when 'compatible' is set; it is temporarily
+ * disabled when 'paste' is enabled, and restored when 'paste' is turned
+ * off.
+ * NOTE: in most cases, using 'softtabstop' is a better option.  Have a
+ * look at section `30.5` of the user guide for detailed
+ * explanations on how Vim works with tabs and spaces.
  *
  * (default off)
  */
@@ -6320,25 +6337,28 @@ export const smoothscroll: WindowLocalOption<boolean> = new BooleanOption(
 );
 
 /**
- * Number of spaces that a `<Tab>` counts for while performing editing
- * operations, like inserting a `<Tab>` or using `<BS>`.  It "feels" like
- * `<Tab>`s are being inserted, while in fact a mix of spaces and `<Tab>`s is
- * used.  This is useful to keep the 'ts' setting at its standard value
- * of 8, while being able to edit like it is set to 'sts'.  However,
- * commands like "x" still work on the actual characters.
- * When 'sts' is zero, this feature is off.
- * When 'sts' is negative, the value of 'shiftwidth' is used.
- * 'softtabstop' is set to 0 when the 'paste' option is set and restored
- * when 'paste' is reset.
- * See also `ins-expandtab`.  When 'expandtab' is not set, the number of
- * spaces is minimized by using `<Tab>`s.
- * The 'L' flag in 'cpoptions' changes how tabs are used when 'list' is
- * set.
- * NOTE: This option is set to 0 when 'compatible' is set.
+ * Create soft tab stops, separated by 'softtabstop' number of columns.
+ * In Insert mode, pressing the `<Tab>` key will move the cursor to the
+ * next soft tab stop, instead of inserting a literal tab.  `<BS>` behaves
+ * similarly in reverse.  Vim inserts a minimal mix of tab and space
+ * characters to produce the visual effect.
+ *
+ * This setting does not affect the display of existing tab characters.
+ *
+ * A value of 0 disables this behaviour.  A negative value makes Vim use
+ * 'shiftwidth'.  If you plan to use 'sts' and 'shiftwidth' with
+ * different values, you might consider setting 'smarttab'.
+ *
+ * 'softtabstop' is temporarily set to 0 when 'paste' is on and reset
+ * when it is turned off.  It is also reset when 'compatible' is set.
+ *
+ * The 'L' flag in 'cpoptions' alters tab behavior when 'list' is
+ * enabled.  See also `ins-expandtab` ans user manual section `30.5` for
+ * in-depth explanations.
  *
  * If Vim is compiled with the `+vartabs` feature then the value of
- * 'softtabstop' will be ignored if `'varsofttabstop'` is set to
- * anything other than an empty string.
+ * 'softtabstop' will be ignored if 'varsofttabstop' is set to anything
+ * other than an empty string.
  *
  * (default 0)
  */
@@ -6498,7 +6518,7 @@ export const spelloptions: BufferLocalOption<string> = new StringOption(
  *                 minus two.
  *
  * timeout:**{millisec}**   Limit the time searching for suggestions to
- *                 **{millisec}** milli seconds.  Applies to the following
+ *                 **{millisec}** milliseconds.  Applies to the following
  *                 methods.  When omitted the limit is 5000. When
  *                 negative there is no limit.  *only works when built
  *                 with the `+reltime` feature*
@@ -6592,7 +6612,8 @@ export const splitright: GlobalOption<boolean> = new BooleanOption(
  * non-blank of the line.  When off the cursor is kept in the same column
  * (if possible).  This applies to the commands:
  * - CTRL-D, CTRL-U, CTRL-B, CTRL-F, "G", "H", "M", "L", "gg"
- * - "d", `"<<"` and ">>" with a linewise operator
+ * - "d", `"<<"`, "==" and ">>" with a linewise operator
+ *   (`operator-resulting-pos`)
  * - "%" with a count
  * - buffer changing commands (CTRL-^, :bnext, :bNext, etc.)
  * - Ex commands that only has a line number, e.g., ":25" or ":+".
@@ -6780,7 +6801,7 @@ export const startofline: GlobalOption<boolean> = new BooleanOption(
  * Examples:
  * Emulate standard status line with 'ruler' set
  *
- *     :set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+ *     :set statusline=%<%f\ %h%w%m%r%=%-14.(%l,%c%V%)\ %P
  *
  * Similar, but add ASCII value of char under the cursor (like "ga")
  *
@@ -6852,12 +6873,12 @@ export const suffixesadd: BufferLocalOption<string> = new StringOption(
  * Careful: All text will be in memory:
  *         - Don't use this for big files.
  *         - Recovery will be impossible!
- * A swapfile will only be present when `'updatecount'` is non-zero and
+ * A swapfile will only be present when 'updatecount' is non-zero and
  * 'swapfile' is set.
  * When 'swapfile' is reset, the swap file for the current buffer is
  * immediately deleted.  When 'swapfile' is set, and 'updatecount' is
  * non-zero, a swap file is immediately created.
- * Also see `swap-file` and `'swapsync'`.
+ * Also see `swap-file` and 'swapsync'.
  * If you want to open a new buffer without creating a swap file for it,
  * use the `:noswapfile` modifier.
  * See 'directory' for where the swap file is created.
@@ -6947,13 +6968,28 @@ export const synmaxcol: BufferLocalOption<number> = new NumberOption(
  * Syntax autocommand event is triggered with the value as argument.
  * This option is not copied to another buffer, independent of the 's' or
  * 'S' flag in 'cpoptions'.
- * Only normal file name characters can be used, `"/\*?[|<>"` are illegal.
+ * Only alphanumeric characters, '.', '-' and '_' can be used.
  *
  * (default empty)
  *
  * *not available when compiled without the `+syntax` feature*
  */
 export const syntax: BufferLocalOption<string> = new StringOption("syntax");
+
+/**
+ * This option controls the behavior when closing tab pages (e.g., using
+ * `:tabclose`).  When empty Vim goes to the next (right) tab page.
+ *
+ * Possible values (comma-separated list):
+ *    left         If included, go to the previous tab page instead of
+ *                 the next one.
+ *    uselast      If included, go to the previously used tab page if
+ *                 possible.  This option takes precedence over the
+ *                 others.
+ *
+ * (default "")
+ */
+export const tabclose: GlobalOption<string> = new StringOption("tabclose");
 
 /**
  * When non-empty, this option determines the content of the tab pages
@@ -6990,46 +7026,13 @@ export const tabline: GlobalOption<string> = new StringOption("tabline");
 export const tabpagemax: GlobalOption<number> = new NumberOption("tabpagemax");
 
 /**
- * Number of spaces that a `<Tab>` in the file counts for.  Also see
- * the `:retab` command, and the 'softtabstop' option.
- *
- * Note: Setting 'tabstop' to any other value than 8 can make your file
- * appear wrong in many places, e.g., when printing it.
- * The value must be more than 0 and less than 10000.
- *
- * There are five main ways to use tabs in Vim:
- * 1. Always keep 'tabstop' at 8, set 'softtabstop' and 'shiftwidth' to 4
- *    (or 3 or whatever you prefer) and use 'noexpandtab'.  Then Vim
- *    will use a mix of tabs and spaces, but typing `<Tab>` and `<BS>` will
- *    behave like a tab appears every 4 (or 3) characters.
- *    This is the recommended way, the file will look the same with other
- *    tools and when listing it in a terminal.
- * 2. Set 'softtabstop' and 'shiftwidth' to whatever you prefer and use
- *    'expandtab'.  This way you will always insert spaces.  The
- *    formatting will never be messed up when 'tabstop' is changed (leave
- *    it at 8 just in case).  The file will be a bit larger.
- *    You do need to check if no Tabs exist in the file.  You can get rid
- *    of them by first setting 'expandtab' and using `%retab!`, making
- *    sure the value of 'tabstop' is set correctly.
- * 3. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use
- *    'expandtab'.  This way you will always insert spaces.  The
- *    formatting will never be messed up when 'tabstop' is changed.
- *    You do need to check if no Tabs exist in the file, just like in the
- *    item just above.
- * 4. Set 'tabstop' and 'shiftwidth' to whatever you prefer and use a
- *    `modeline` to set these values when editing the file again.  Only
- *    works when using Vim to edit the file, other tools assume a tabstop
- *    is worth 8 spaces.
- * 5. Always set 'tabstop' and 'shiftwidth' to the same value, and
- *    'noexpandtab'.  This should then work (for initial indents only)
- *    for any tabstop setting that people use.  It might be nice to have
- *    tabs after the first non-blank inserted as spaces if you do this
- *    though.  Otherwise aligned comments will be wrong when 'tabstop' is
- *    changed.
- *
- * If Vim is compiled with the `+vartabs` feature then the value of
- * 'tabstop' will be ignored if `'vartabstop'` is set to anything other
- * than an empty string.
+ * Defines the column multiple used to display the Horizontal Tab
+ * character (ASCII 9); a Horizontal Tab always advances to the next tab
+ * stop.
+ * The value must be at least 1 and at most 9999.
+ * If Vim was compiled with `+vartabs` and 'vartabstop' is set, this
+ * option is ignored.
+ * Leave it at 8 unless you have a strong reason (see usr `30.5`).
  *
  * (default 8)
  */
@@ -7111,7 +7114,8 @@ export const tagcase: GlobalOrBufferLocalOption<string> = new StringOption(
 );
 
 /**
- * This option specifies a function to be used to perform tag searches.
+ * This option specifies a function to be used to perform tag searches
+ * (including `taglist()`).
  * The function gets the tag pattern and should return a List of matching
  * tags.  See `tag-function` for an explanation of how to write the
  * function and an example.  The value can be the name of a function, a
@@ -7229,7 +7233,8 @@ export const termbidi: GlobalOption<boolean> = new BooleanOption("termbidi");
  *
  * NOTE: This option is reset when 'compatible' is set.
  *
- * (default off)
+ * (default off unless Vim detects that it runs
+ *  in a capable terminal)
  *
  * *not available when compiled without the `+termguicolors` feature*
  */
@@ -7388,7 +7393,7 @@ export const ttimeoutlen: GlobalOption<number> = new NumberOption(
  * When Vim was compiled with HAVE_X11 defined, the original title will
  * be restored if possible.  The output of ":version" will include "+X11"
  * when HAVE_X11 was defined, otherwise it will be "-X11".  This also
- * works for the icon name `'icon'`.
+ * works for the icon name 'icon'.
  * But: When Vim was started with the `-X` argument, restoring the title
  * will not work (except in the GUI).
  * If the title cannot be restored, it is set to the value of 'titleold'.
@@ -7442,7 +7447,9 @@ export const titleold: GlobalOption<string> = new StringOption("titleold");
  * be restored if possible, see `X11`.
  *
  * When this option contains printf-style '%' items, they will be
- * expanded according to the rules used for 'statusline'.
+ * expanded according to the rules used for 'statusline'.  If it contains
+ * an invalid '%' format, the value is used as-is and no error or warning
+ * will be given when the value is set.
  * This option cannot be set in a modeline when 'modelineexpr' is off.
  *
  * Example:
@@ -7471,7 +7478,7 @@ export const titlestring: GlobalOption<string> = new StringOption(
 
 /**
  * List of directory names for undo files, separated with commas.
- * See `'backupdir'` for details of the format.
+ * See 'backupdir' for details of the format.
  * "." means using the directory of the file.  The undo file name for
  * "file.txt" is `".file.txt.un~"`.
  * For other directories the file name is the full path of the edited
@@ -7562,13 +7569,13 @@ export const undoreload: GlobalOption<number> = new NumberOption("undoreload");
  * recovery `crash-recovery`).  'updatecount' is set to zero by starting
  * Vim with the "-n" option, see `startup`.  When editing in readonly
  * mode this option will be initialized to 10000.
- * The swapfile can be disabled per buffer with `'swapfile'`.
+ * The swapfile can be disabled per buffer with 'swapfile'.
  * When 'updatecount' is set from zero to non-zero, swap files are
  * created for all buffers that have 'swapfile' set.  When 'updatecount'
  * is set to zero, existing swap files are not deleted.
- * Also see `'swapsync'`.
- * This option has no meaning in buffers where `'buftype'` is "nofile"
- * or "nowrite".
+ * Also see 'swapsync'.
+ * This option has no meaning in buffers where 'buftype' is "nofile" or
+ * "nowrite".
  *
  * (default: 200)
  */
@@ -7586,11 +7593,9 @@ export const updatecount: GlobalOption<number> = new NumberOption(
 export const updatetime: GlobalOption<number> = new NumberOption("updatetime");
 
 /**
- * A list of the number of spaces that a `<Tab>` counts for while editing,
- * such as inserting a `<Tab>` or using `<BS>`.  It "feels" like variable-
- * width `<Tab>`s are being inserted, while in fact a mixture of spaces
- * and `<Tab>`s is used.  Tab widths are separated with commas, with the
- * final value applying to all subsequent tabs.
+ * Defines variable-width soft tab stops.  The value is a comma-separated
+ * list of widths in columns.  Each width defines the number of columns
+ * before the next soft tab stop.  The last value repeats indefinitely.
  *
  * For example, when editing assembly language files where statements
  * start in the 9th column and comments in the 41st, it may be useful
@@ -7598,11 +7603,12 @@ export const updatetime: GlobalOption<number> = new NumberOption("updatetime");
  *
  *     :set varsofttabstop=8,32,8
  *
- * This will set soft tabstops with 8 and 8 + 32 spaces, and 8 more
- * for every column thereafter.
+ * This sets soft tab stops at column 8, then at column 40 (8 + 32), and
+ * every 8 columns thereafter.
  *
- * Note that the value of `'softtabstop'` will be ignored while
- * 'varsofttabstop' is set.
+ * Note: this setting overrides 'softtabstop'.
+ * See section `30.5` of the user manual for detailed explanations on how
+ * Vim works with tabs and spaces.
  *
  * (default "")
  *
@@ -7613,17 +7619,22 @@ export const varsofttabstop: BufferLocalOption<string> = new StringOption(
 );
 
 /**
- * A list of the number of spaces that a `<Tab>` in the file counts for,
- * separated by commas.  Each value corresponds to one tab, with the
- * final value applying to all subsequent tabs. For example:
+ * Defines variable-width tab stops. The value is a comma-separated list
+ * of widths in columns.  Each width defines the number of columns
+ * before the next tab stop; the last value repeats indefinitely.
  *
- *     :set vartabstop=4,20,10,8
+ * For example:
  *
- * This will make the first tab 4 spaces wide, the second 20 spaces,
- * the third 10 spaces, and all following tabs 8 spaces.
+ *     :set vartabstop=4,8
  *
- * Note that the value of `'tabstop'` will be ignored while 'vartabstop'
- * is set.
+ * This places the first tab stop 4 columns from the start of the line
+ * and each subsequent tab stop 8 columns apart.
+ *
+ * Note: this setting overrides 'tabstop'.
+ * On UNIX, it is recommended to keep the default tabstop value of 8.
+ * Consider setting 'varsofttabstop' instead.
+ * See section `30.5` of the user manual for detailed explanations on how
+ * Vim works with tabs and spaces.
  *
  * (default "")
  *
@@ -7687,7 +7698,6 @@ export const verbosefile: GlobalOption<string> = new StringOption(
  *  for Win32: "$HOME/vimfiles/view",
  *  for Unix: "$HOME/.vim/view" or
  *  "$XDG_CONFIG_HOME/vim/view"
- *  for macOS: "$VIM/vimfiles/view",
  *  for VMS: "sys$login:vimfiles/view")
  *
  * *not available when compiled without the `+mksession` feature*
@@ -7845,10 +7855,19 @@ export const whichwrap: GlobalOption<string> = new StringOption("whichwrap");
  * Some keys will not work, such as CTRL-C, `<CR>` and Enter.
  * `<Esc>` can be used, but hitting it twice in a row will still exit
  * command-line as a failsafe measure.
- * Although 'wc' is a number option, you can set it to a special key:
+ * Although 'wc' is a number option, it can be specified as a number, a
+ * single character, a `key-notation` (e.g. `<Up>`, `<C-F>`) or a letter
+ * preceded with a caret (e.g. `^F` is CTRL-F):
  *
+ *     :set wc=27
+ *     :set wc=X
+ *     :set wc=^I
  *     :set wc=<Tab>
  *
+ * 'wildchar' also enables completion in search pattern contexts such as
+ * `/`, `?`, `:s`, `:g`, `:v`, and `:vim`.  To insert a literal `<Tab>`
+ * instead of triggering completion, type `<C-V><Tab>` or "\t".
+ * See also 'wildoptions' and `wildtrigger()`.
  * NOTE: This option is set to the Vi default value when 'compatible' is
  * set and to the Vim default value when 'compatible' is reset.
  *
@@ -7961,63 +7980,84 @@ export const wildignorecase: GlobalOption<boolean> = new BooleanOption(
  * The "WildMenu" highlighting is used for displaying the current match
  * `hl-WildMenu`.
  *
- * (default off, set in `defaults.vim`)
+ * (default on)
  */
 export const wildmenu: GlobalOption<boolean> = new BooleanOption("wildmenu");
 
 /**
- * Completion mode that is used for the character specified with
- * 'wildchar'.  It is a comma-separated list of up to four parts.  Each
- * part specifies what to do for each consecutive use of 'wildchar'.  The
- * first part specifies the behavior for the first use of 'wildchar',
- * The second part for the second use, etc.
+ * Completion mode used for the character specified with 'wildchar'.
+ * This option is a comma-separated list of up to four parts,
+ * corresponding to the first, second, third, and fourth presses of
+ * 'wildchar'.  Each part is a colon-separated list of completion
+ * behaviors, which are applied simultaneously during that phase.
  *
- * Each part consists of a colon separated list consisting of the
- * following possible values:
- * ""              Complete only the first match.
- * "full"          Complete the next full match.  After the last match,
- *                 the original string is used and then the first match
- *                 again.  Will also start 'wildmenu' if it is enabled.
- * "longest"       Complete till longest common string.  If this doesn't
- *                 result in a longer string, use the next part.
- * "list"          When more than one match, list all matches.
- * "lastused"      When completing buffer names and more than one buffer
- *                 matches, sort buffers by time last used (other than
- *                 the current buffer).
- * When there is only a single match, it is fully completed in all cases.
+ * The possible behavior values are:
+ * ""              Only complete (insert) the first match.  No further
+ *                 matches are cycled or listed.
+ * "full"          Complete the next full match.  Cycles through all
+ *                 matches, returning to the original input after the
+ *                 last match.  If 'wildmenu' is enabled, it will be
+ *                 shown.
+ * "longest"       Complete to the longest common substring.  If this
+ *                 doesn't extend the input, the next 'wildmode' part is
+ *                 used.
+ * "list"          If multiple matches are found, list all of them.
+ * "lastused"      When completing buffer names, sort them by most
+ *                 recently used (excluding the current buffer).  Only
+ *                 applies to buffer name completion.
+ * "noselect"      If 'wildmenu' is enabled, show the menu but do not
+ *                 preselect the first item.
+ * If only one match exists, it is completed fully, unless "noselect" is
+ * specified.
  *
- * Examples of useful colon-separated values:
- * "longest:full"  Like "longest", but also start 'wildmenu' if it is
- *                 enabled.  Will not complete to the next full match.
- * "list:full"     When more than one match, list all matches and
- *                 complete first match.
- * "list:longest"  When more than one match, list all matches and
- *                 complete till longest common string.
- * "list:lastused" When more than one buffer matches, list all matches
- *                 and sort buffers by time last used (other than the
- *                 current buffer).
+ * Some useful combinations of colon-separated values:
+ * "longest:full"          Start with the longest common string and show
+ *                         'wildmenu' (if enabled).  Does not cycle
+ *                         through full matches.
+ * "list:full"             List all matches and complete first match.
+ * "list:longest"          List all matches and complete till the longest
+ *                         common prefix.
+ * "list:lastused"         List all matches.  When completing buffers,
+ *                         sort them by most recently used (excluding the
+ *                         current buffer).
+ * "noselect:lastused"     Do not preselect the first item in 'wildmenu'
+ *                         if it is active.  When completing buffers,
+ *                         sort them by most recently used (excluding the
+ *                         current buffer).
  *
  * Examples:
  *
  *     :set wildmode=full
  *
- * Complete first full match, next match, etc.  (the default)
+ * Complete full match on every press (default behavior)
  *
  *     :set wildmode=longest,full
  *
- * Complete longest common string, then each full match
+ * First press: longest common substring
+ * Second press: cycle through full matches
  *
  *     :set wildmode=list:full
  *
- * List all matches and complete each full match
+ * First press: list all matches and complete the first one
  *
  *     :set wildmode=list,full
  *
- * List all matches without completing, then each full match
+ * First press: list matches only
+ * Second press: complete full matches
  *
  *     :set wildmode=longest,list
  *
- * Complete longest common string, then list alternatives.
+ * First press: longest common substring
+ * Second press: list all matches
+ *
+ *     :set wildmode=noselect:full
+ *
+ * First press: show 'wildmenu' without completing or selecting
+ * Second press: cycle full matches
+ *
+ *     :set wildmode=noselect:lastused,full
+ *
+ * Same as above, but buffer matches are sorted by time last used
  * More info here: `cmdline-completion`.
  *
  * (Vim default: "full")
@@ -8026,7 +8066,22 @@ export const wildmode: GlobalOption<string> = new StringOption("wildmode");
 
 /**
  * A list of words that change how `cmdline-completion` is done.
+ *
  * The following values are supported:
+ *   exacttext     When this flag is present, search pattern completion
+ *                 (e.g., in `/`, `?`, `:s`, `:g`, `:v`, and `:vim`)
+ *                 shows exact buffer text as menu items, without
+ *                 preserving regex artifacts like position
+ *                 anchors (e.g., `/\<`).  This provides more intuitive
+ *                 menu items that match the actual buffer text.
+ *                 However, searches may be less accurate since the
+ *                 pattern is not preserved exactly.
+ *                 By default, Vim preserves the typed pattern (with
+ *                 anchors) and appends the matched word.  This preserves
+ *                 search correctness, especially when using regular
+ *                 expressions or with 'smartcase' enabled.  However, the
+ *                 case of the appended matched word may not exactly
+ *                 match the case of the word in the buffer.
  *   fuzzy         Use `fuzzy-matching` to find completion matches. When
  *                 this value is specified, wildcard expansion will not
  *                 be used for completion.  The matches will be sorted by
@@ -8042,6 +8097,9 @@ export const wildmode: GlobalOption<string> = new StringOption("wildmode");
  *                 is displayed per line.  Often used tag kinds are:
  *                         d       #define
  *                         f       function
+ *
+ * This option does not apply to `ins-completion`. See 'completeopt' for
+ * that.
  *
  * (default "")
  */
