@@ -60,14 +60,6 @@ jobs:
         run: deno task check
       - name: Doc check
         run: deno task check:doc
-      - name: Gen check
-        run: |
-          deno task gen
-          git diff --exit-code
-      - name: Supported version inconsistency check
-        run: |
-          deno task apply:supported-versions
-          git diff --exit-code
 
   test:
     strategy:
@@ -145,3 +137,33 @@ jobs:
           os: ${{ runner.os }}
           files: ./coverage.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  supported-version-check:
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+        deno_version:
+          - "2.x"
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - run: git config --global core.autocrlf false
+        if: runner.os == 'Windows'
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: "${{ matrix.deno_version }}"
+      - uses: actions/cache@v4
+        with:
+          key: deno-${{ hashFiles('**/*') }}
+          restore-keys: deno-
+          path: |
+            /home/runner/.cache/deno/deps/https/deno.land
+      - name: Gen check
+        run: |
+          deno task gen
+          git diff --exit-code
+      - name: Supported version inconsistency check
+        run: |
+          deno task apply:supported-versions
+          git diff --exit-code
