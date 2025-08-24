@@ -1,6 +1,5 @@
 {
   "name": "@denops/std",
-  "version": "0.0.0",
   "exports": {
     ".": "./mod.ts",
     "./argument": "./argument/mod.ts",
