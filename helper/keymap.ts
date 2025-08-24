@@ -5,11 +5,10 @@ import { batch } from "../batch/batch.ts";
 import { isRawString, type RawString, rawString } from "../eval/string.ts";
 import { useEval } from "../eval/use_eval.ts";
 import { feedkeys } from "../function/mod.ts";
-import { type ExprString, isExprString } from "../helper/expr_string.ts";
 import { add } from "../lambda/mod.ts";
 
 export type Keys = {
-  keys: string | RawString | ExprString;
+  keys: string | RawString;
   remap: boolean;
 };
 
@@ -20,7 +19,7 @@ function toArray<T>(x: T | T[]): T[] {
 }
 
 function toKeys(keys: KeysSpecifier): Keys {
-  if (isString(keys) || isRawString(keys) || isExprString(keys)) {
+  if (isString(keys) || isRawString(keys)) {
     return { keys, remap: false };
   }
   return keys;
