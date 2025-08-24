@@ -4,7 +4,6 @@ import { test } from "@denops/test";
 import { expr } from "./expression.ts";
 import { rawString } from "./string.ts";
 import { type VimEvaluatable, vimExpressionOf } from "./vim_evaluatable.ts";
-import { exprQuote } from "../helper/expr_string.ts";
 
 import { stringify } from "./stringify.ts";
 
@@ -88,10 +87,6 @@ Deno.test("stringify()", async (t) => {
     const actual = stringify(rawString`\<Cmd>call Foo("bar")\<CR>`);
     assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
   });
-  await t.step("stringify ExprString to Vim's expr-string", () => {
-    const actual = stringify(exprQuote`\<Cmd>call Foo("bar")\<CR>`);
-    assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
-  });
   await t.step("stringify array to Vim's list", () => {
     const actual = stringify(["foo", 42, null, undefined]);
     assertEquals(actual, "['foo',42,v:null,v:null]");
@@ -169,13 +164,6 @@ Deno.test("stringify()", async (t) => {
   await t.step("stringify RawString that returns from `toJSON`", () => {
     const x = {
       toJSON: () => rawString`\<Cmd>call Foo("bar")\<CR>`,
-    };
-    const actual = stringify(x);
-    assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');
-  });
-  await t.step("stringify ExprString that returns from `toJSON`", () => {
-    const x = {
-      toJSON: () => exprQuote`\<Cmd>call Foo("bar")\<CR>`,
     };
     const actual = stringify(x);
     assertEquals(actual, '"\\<Cmd>call Foo(\\"bar\\")\\<CR>"');

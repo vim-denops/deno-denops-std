@@ -15,7 +15,6 @@ import { isRecord } from "@core/unknownutil/is/record";
 import { isString } from "@core/unknownutil/is/string";
 import { isSymbol } from "@core/unknownutil/is/symbol";
 import { isUndefined } from "@core/unknownutil/is/undefined";
-import { isExprString } from "../helper/expr_string.ts";
 import {
   isVimEvaluatable,
   type VimEvaluatable,
@@ -80,16 +79,10 @@ export function stringify(value: unknown): string {
     if (isVimEvaluatable(value)) {
       return toVimExpression(value);
     }
-    if (isExprString(value)) {
-      return `"${value.replaceAll('"', '\\"')}"`;
-    }
     if (isCustomJsonable(value)) {
       value = value.toJSON(key);
       if (isVimEvaluatable(value)) {
         return toVimExpression(value);
-      }
-      if (isExprString(value)) {
-        return `"${value.replaceAll('"', '\\"')}"`;
       }
     }
     if (isNullish(value) || isFunction(value) || isSymbol(value)) {

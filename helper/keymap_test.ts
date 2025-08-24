@@ -3,7 +3,6 @@ import { test } from "@denops/test";
 import { AsyncDisposableStack } from "@nick/dispose";
 import * as fn from "../function/mod.ts";
 import { rawString } from "../eval/string.ts";
-import { exprQuote } from "./expr_string.ts";
 import { send } from "./keymap.ts";
 
 test({
@@ -33,20 +32,6 @@ test({
         rawString`\<Cmd>call setline(1, 'foo')\<CR>`,
         rawString`\<Cmd>call append(0, 'bar')\<CR>`,
         rawString`\<Cmd>call append(0, 'baz')\<CR>`,
-      ]);
-      assertEquals(await fn.getline(denops, 1, "$"), ["baz", "bar", "foo"]);
-    });
-    await t.step("sends special keys with ExprString", async () => {
-      await fn.deletebufline(denops, "%", 1, "$");
-      await send(denops, exprQuote`\<Cmd>call setline(1, 'foo')\<CR>`);
-      assertEquals(await fn.getline(denops, 1), "foo");
-    });
-    await t.step("sends special keys with ExprString[]", async () => {
-      await fn.deletebufline(denops, "%", 1, "$");
-      await send(denops, [
-        exprQuote`\<Cmd>call setline(1, 'foo')\<CR>`,
-        exprQuote`\<Cmd>call append(0, 'bar')\<CR>`,
-        exprQuote`\<Cmd>call append(0, 'baz')\<CR>`,
       ]);
       assertEquals(await fn.getline(denops, 1, "$"), ["baz", "bar", "foo"]);
     });
