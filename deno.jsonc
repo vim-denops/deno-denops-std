@@ -1,5 +1,6 @@
 {
   "name": "@denops/std",
+  "nodeModulesDir": "auto",
   "exports": {
     ".": "./mod.ts",
     "./argument": "./argument/mod.ts",
