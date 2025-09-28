@@ -64,7 +64,7 @@ export interface Decoration {
  * }
  * ```
  *
- * It uses `prop_add_list` in Vim and `nvim_buf_add_highlight` in Neovim to
+ * It uses `prop_add_list` in Vim and `nvim_buf_set_extmark` in Neovim to
  * decorate the buffer.
  */
 export function decorate(
@@ -122,7 +122,7 @@ export function decorate(
  * }
  * ```
  *
- * It uses `prop_add` in Vim and `nvim_buf_add_highlight` in Neovim to decorate the
+ * It uses `prop_remove` in Vim and `nvim_buf_clear_namespace` in Neovim to decorate the
  * buffer.
  */
 export function undecorate(
