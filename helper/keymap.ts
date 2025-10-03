@@ -52,7 +52,7 @@ function toKeys(keys: KeysSpecifier): Keys {
  *       // "baz"
  *       console.log(await fn.getline(denops, "."));
  *
- *       // Send remaped keys.
+ *       // Send remapped keys.
  *       await send(denops, { keys: rawString`\<C-l>`, remap: true });
  *       // "bazsend"
  *       console.log(await fn.getline(denops, "."));

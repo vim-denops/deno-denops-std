@@ -18,7 +18,7 @@ test({
       },
     });
     await t.step({
-      name: "options.get() return the defautValue when the option is empty",
+      name: "options.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set filetype&");
         const result = await options.get(
@@ -66,7 +66,7 @@ test({
     });
     await t.step({
       name:
-        "localOptions.get() return the defautValue when the option is empty",
+        "localOptions.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set filetype&");
         const result = await localOptions.get(
@@ -114,7 +114,7 @@ test({
     });
     await t.step({
       name:
-        "globalOptions.get() return the defautValue when the option is empty",
+        "globalOptions.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set filetype&");
         const result = await globalOptions.get(

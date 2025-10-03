@@ -390,7 +390,7 @@ test({
           "The method is unregistered",
         );
       });
-      await t.step("is diposable", async () => {
+      await t.step("is disposable", async () => {
         // Unregister all methods
         denops.dispatcher = {};
         const fn = spy(returnsNext(["foo"]));

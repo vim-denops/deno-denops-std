@@ -66,7 +66,7 @@ test({
       type_bufnr: 0,
     }]);
 
-    // Re-appling the same decorations is OK
+    // Re-applying the same decorations is OK
     await decorate(denops, bufnr, [
       {
         line: 1,
