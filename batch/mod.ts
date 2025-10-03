@@ -6,7 +6,7 @@
  * import { batch, collect } from "jsr:@denops/std/batch";
  *
  * export const main: Entrypoint = async (denops) => {
- *   // Call multiple denops functions sequentially in a signle RPC call
+ *   // Call multiple denops functions sequentially in a single RPC call
  *   await batch(denops, async (denops) => {
  *     await denops.cmd("setlocal modifiable");
  *     await denops.cmd("setlocal noswap");

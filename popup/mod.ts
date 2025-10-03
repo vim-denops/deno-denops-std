@@ -30,7 +30,7 @@
  *     title: "Hello, world!",
  *   });
  *
- *   // Wiat 3 seconds
+ *   // Wait 3 seconds
  *   await new Promise((resolve) => setTimeout(resolve, 3000));
  *
  *   // Close the popup window
@@ -64,7 +64,7 @@
  *     col: 1,
  *   });
  *
- *   // Wiat 3 seconds
+ *   // Wait 3 seconds
  *   await new Promise((resolve) => setTimeout(resolve, 3000));
  *
  *   // The popup window is automatically closed, due to `await using` statement

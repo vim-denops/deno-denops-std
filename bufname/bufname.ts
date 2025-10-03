@@ -54,7 +54,7 @@ export interface Bufname {
    */
   expr: string;
   /**
-   * Params part of a buffer name. While '?' is not supported, the params part are splitted by ';' instead.
+   * Params part of a buffer name. While '?' is not supported, the params part are split by ';' instead.
    */
   params?: BufnameParams;
   /**
@@ -64,7 +64,7 @@ export interface Bufname {
 }
 
 // Vim only supports alphabet characters in the scheme part of a buffer name.
-// That behavior has slightly improved from Vim 8.2.3153 but we suppor Vim 8.2.0662
+// That behavior has slightly improved from Vim 8.2.3153 but we support Vim 8.2.0662
 // thus we need to stack old behavior
 // https://github.com/vim/vim/pull/8299
 const schemeUnusablePattern = /[^a-zA-Z]/;

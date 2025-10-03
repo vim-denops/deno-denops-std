@@ -18,7 +18,7 @@ test({
       },
     });
     await t.step({
-      name: "dictionary.get() return the defautValue when the option is empty",
+      name: "dictionary.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set dictionary&");
         assertEquals(await _generated.dictionary.get(denops), "");
@@ -54,7 +54,7 @@ test({
     });
     await t.step({
       name:
-        "dictionary.getGlobal() return the defautValue when the option is empty",
+        "dictionary.getGlobal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal dictionary&");
         await denops.cmd("setlocal dictionary=hello");
@@ -92,7 +92,7 @@ test({
     });
     await t.step({
       name:
-        "dictionary.getLocal() return the defautValue when the option is empty",
+        "dictionary.getLocal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal dictionary=hello");
         await denops.cmd("setlocal dictionary&");
@@ -140,7 +140,7 @@ test({
     });
     await t.step({
       name:
-        "dictionary.getBuffer() return the defautValue when the option is empty",
+        "dictionary.getBuffer() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           const bufnr = await denops.call("bufnr") as number;
@@ -196,7 +196,7 @@ test({
     });
     await t.step({
       name:
-        "colorcolumn.getWindow() return the defautValue when the option is empty",
+        "colorcolumn.getWindow() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           await denops.cmd("setlocal colorcolumn&");
@@ -241,7 +241,7 @@ test({
       },
     });
     await t.step({
-      name: "undolevels.get() return the defautValue when the option is empty",
+      name: "undolevels.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set undolevels&");
         assertEquals(await _generated.undolevels.get(denops), 1000);
@@ -274,7 +274,7 @@ test({
     });
     await t.step({
       name:
-        "undolevels.getGlobal() return the defautValue when the option is empty",
+        "undolevels.getGlobal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal undolevels&");
         await denops.cmd("setlocal undolevels=123");
@@ -312,7 +312,7 @@ test({
     });
     await t.step({
       name:
-        "undolevels.getLocal() return the defautValue when the option is empty",
+        "undolevels.getLocal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal undolevels=123");
         await denops.cmd("setlocal undolevels&");
@@ -360,7 +360,7 @@ test({
     });
     await t.step({
       name:
-        "undolevels.getBuffer() return the defautValue when the option is empty",
+        "undolevels.getBuffer() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           const bufnr = await denops.call("bufnr") as number;
@@ -413,7 +413,7 @@ test({
     });
     await t.step({
       name:
-        "foldlevel.getWindow() return the defautValue when the option is empty",
+        "foldlevel.getWindow() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           await denops.cmd("setlocal foldlevel&");
@@ -455,7 +455,7 @@ test({
       },
     });
     await t.step({
-      name: "autoread.get() return the defautValue when the option is empty",
+      name: "autoread.get() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("set autoread&");
         if (await denops.call("has", "nvim")) {
@@ -496,7 +496,7 @@ test({
     });
     await t.step({
       name:
-        "autoread.getGlobal() return the defautValue when the option is empty",
+        "autoread.getGlobal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal autoread&");
         await denops.cmd("setlocal autoread& autoread!");
@@ -543,7 +543,7 @@ test({
     });
     await t.step({
       name:
-        "autoread.getLocal() return the defautValue when the option is empty",
+        "autoread.getLocal() return the defaultValue when the option is empty",
       fn: async () => {
         await denops.cmd("setglobal autoread& autoread!");
         await denops.cmd("setlocal autoread&");
@@ -600,7 +600,7 @@ test({
     });
     await t.step({
       name:
-        "autoread.getBuffer() return the defautValue when the option is empty",
+        "autoread.getBuffer() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           const bufnr = await denops.call("bufnr") as number;
@@ -656,7 +656,7 @@ test({
       },
     });
     await t.step({
-      name: "list.getWindow() return the defautValue when the option is empty",
+      name: "list.getWindow() return the defaultValue when the option is empty",
       fn: async () => {
         try {
           await denops.cmd("setlocal list&");
