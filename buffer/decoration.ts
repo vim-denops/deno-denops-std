@@ -9,6 +9,8 @@ const cacheKey = "denops_std/buffer/decoration/vimDecorate/rs@1";
 
 const PREFIX = "denops_std:buffer:decoration:decorate";
 
+const DEFAULT_DECORATION_PRIORITY = 0;
+
 export type DecorateOptions = {
   /**
    * Decoration namespace
@@ -33,6 +35,11 @@ export interface Decoration {
    * Highlight name
    */
   highlight: string;
+  /**
+   * Priority for the decoration (higher numbers are displayed on top)
+   * Defaults to 0 if not specified
+   */
+  priority?: number;
 }
 
 /**
@@ -53,6 +60,7 @@ export interface Decoration {
  *       column: 1,
  *       length: 10,
  *       highlight: "Special",
+ *       priority: 10,
  *     },
  *     {
  *       line: 2,
@@ -157,10 +165,6 @@ export function listDecorations(
   }
 }
 
-function uniq<T>(array: readonly T[]): T[] {
-  return [...new Set(array)];
-}
-
 async function vimDecorate(
   denops: Denops,
   bufnr: number,
@@ -168,30 +172,43 @@ async function vimDecorate(
   options: Readonly<DecorateOptions> = {},
 ): Promise<void> {
   const prefix = options.namespace ?? `${PREFIX}:${denops.name}`;
-  const toPropType = (n: string) => `${prefix}:${n}`;
+  const toPropTypeName = (n: string, p: number | undefined) =>
+    `${prefix}:${p ?? DEFAULT_DECORATION_PRIORITY}:${n}`;
   const rs = (denops.context[cacheKey] ?? new Set()) as Set<string>;
   denops.context[cacheKey] = rs;
-  const hs = uniq(decorations.map((v) => v.highlight)).filter((v) =>
-    !rs.has(v)
-  );
-  const decoMap = new Map<string, Set<[number, number, number, number]>>();
+  const decosToUpdate = Array.from(
+    new Map(
+      decorations
+        .map(({ highlight, priority }) => ({ highlight, priority }))
+        .map((p) => [toPropTypeName(p.highlight, p.priority), p] as const),
+    ).values(),
+  ).filter((p) => !rs.has(toPropTypeName(p.highlight, p.priority)));
+
+  const propsByType = new Map<string, Set<[number, number, number, number]>>();
   for (const deco of decorations) {
-    const propType = toPropType(deco.highlight);
-    const props = decoMap.get(propType) ?? new Set();
+    const propTypeName = toPropTypeName(deco.highlight, deco.priority);
+    const props = propsByType.get(propTypeName) ?? new Set();
     props.add([deco.line, deco.column, deco.line, deco.column + deco.length]);
-    decoMap.set(propType, props);
+    propsByType.set(propTypeName, props);
   }
+
   await batch(denops, async (denops) => {
-    for (const highlight of hs) {
-      const propType = toPropType(highlight);
-      await vimFn.prop_type_add(denops, propType, {
+    for (const { highlight, priority } of decosToUpdate) {
+      const propTypeName = toPropTypeName(highlight, priority);
+      const propOptions: Record<string, unknown> = {
         highlight,
         combine: false,
-      });
-      rs.add(highlight);
+        priority: priority ?? DEFAULT_DECORATION_PRIORITY,
+      };
+
+      if (!rs.has(propTypeName)) {
+        await vimFn.prop_type_add(denops, propTypeName, propOptions);
+      }
+      rs.add(propTypeName);
     }
+
     let id = 1;
-    for (const [type, props] of decoMap.entries()) {
+    for (const [type, props] of propsByType.entries()) {
       await vimFn.prop_add_list(denops, { bufnr, type, id: id++ }, [...props]);
     }
   });
@@ -240,14 +257,22 @@ async function vimListDecorations(
     type: string;
     type_bufnr: number;
   }[];
-  return props
-    .filter((prop) => prop.type.startsWith(`${prefix}:`))
-    .map((prop) => ({
-      line: prop.lnum,
-      column: prop.col,
-      length: prop.length,
-      highlight: prop.type.split(":").pop() as string,
-    }));
+  return Promise.all(
+    props
+      .filter((prop) => prop.type.startsWith(`${prefix}:`))
+      .map(async (prop) => {
+        const propType = await vimFn.prop_type_get(denops, prop.type) as {
+          priority: number;
+        };
+        return ({
+          line: prop.lnum,
+          column: prop.col,
+          length: prop.length,
+          highlight: prop.type.split(":").pop() as string,
+          priority: propType.priority,
+        });
+      }),
+  );
 }
 
 async function nvimDecorate(
@@ -270,6 +295,7 @@ async function nvimDecorate(
           {
             end_col: deco.column - 1 + deco.length,
             hl_group: deco.highlight,
+            priority: deco.priority ?? DEFAULT_DECORATION_PRIORITY,
           },
         );
       }
@@ -323,5 +349,6 @@ async function nvimListDecorations(
     column: extmark[2] + 1,
     length: extmark[3].end_col - extmark[2],
     highlight: extmark[3].hl_group,
+    priority: extmark[3].priority ?? DEFAULT_DECORATION_PRIORITY,
   }));
 }
