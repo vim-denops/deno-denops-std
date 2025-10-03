@@ -54,7 +54,7 @@ test({
       length: 5,
       lnum: 1,
       start: 1,
-      type: "denops_std:buffer:decoration:decorate:denops-test:Title",
+      type: "denops_std:buffer:decoration:decorate:denops-test:0:Title",
       type_bufnr: 0,
     }, {
       col: 2,
@@ -62,7 +62,7 @@ test({
       length: 3,
       lnum: 2,
       start: 1,
-      type: "denops_std:buffer:decoration:decorate:denops-test:Search",
+      type: "denops_std:buffer:decoration:decorate:denops-test:0:Search",
       type_bufnr: 0,
     }]);
 
@@ -125,6 +125,54 @@ test({
 
 test({
   mode: "all",
+  name:
+    "decorate defines each highlight when multiple decorations have different priorities",
+  fn: async (denops) => {
+    const bufnr = await fn.bufnr(denops);
+    await buffer.replace(denops, bufnr, [
+      "Hello",
+      "World",
+    ]);
+
+    await decorate(denops, bufnr, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+        priority: 10,
+      },
+      {
+        line: 2,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+        priority: 20,
+      },
+    ]);
+
+    const decorations = await listDecorations(denops, bufnr);
+    assertEquals(decorations, [
+      {
+        line: 1,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+        priority: 10,
+      },
+      {
+        line: 2,
+        column: 1,
+        length: 5,
+        highlight: "Title",
+        priority: 20,
+      },
+    ]);
+  },
+});
+
+test({
+  mode: "all",
   name: "listDecorations list decorations defined in the buffer",
   fn: async (denops) => {
     const bufnr = await fn.bufnr(denops);
@@ -146,6 +194,7 @@ test({
         column: 2,
         length: 3,
         highlight: "Search",
+        priority: 10,
       },
     ]);
     assertEquals(await listDecorations(denops, bufnr), [
@@ -154,12 +203,14 @@ test({
         column: 1,
         length: 5,
         highlight: "Title",
+        priority: 0,
       },
       {
         line: 2,
         column: 2,
         length: 3,
         highlight: "Search",
+        priority: 10,
       },
     ]);
   },
@@ -188,6 +239,7 @@ test({
         column: 2,
         length: 3,
         highlight: "Search",
+        priority: 10,
       },
     ]);
     await undecorate(denops, bufnr);
@@ -218,6 +270,7 @@ test({
         column: 2,
         length: 3,
         highlight: "Search",
+        priority: 10,
       },
     ]);
     await undecorate(denops, bufnr, 0, 1);
@@ -227,6 +280,7 @@ test({
         column: 2,
         length: 3,
         highlight: "Search",
+        priority: 10,
       },
     ]);
   },
