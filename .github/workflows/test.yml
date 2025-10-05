@@ -69,7 +69,7 @@ jobs:
           - macos-latest
           - ubuntu-latest
         deno_version:
-          - "2.3.0"
+          - "~2.3"
           - "2.x"
         host_version:
           - vim: "v9.1.1646"
