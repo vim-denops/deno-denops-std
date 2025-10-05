@@ -48,7 +48,7 @@
     "@core/asyncutil": "jsr:@core/asyncutil@^1.2.0",
     "@core/unknownutil": "jsr:@core/unknownutil@^4.3.0",
     "@denops/core": "jsr:@denops/core@^8.0.0",
-    "@denops/test": "jsr:@denops/test@^3.0.4",
+    "@denops/test": "jsr:@denops/test@^4.0.0",
     "@lambdalisue/errorutil": "jsr:@lambdalisue/errorutil@^1.1.1",
     "@lambdalisue/itertools": "jsr:@lambdalisue/itertools@^1.1.2",
     "@lambdalisue/unreachable": "jsr:@lambdalisue/unreachable@^1.0.1",
