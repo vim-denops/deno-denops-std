@@ -128,11 +128,11 @@ jobs:
             ./mod.ts
 
       - name: Test
-        run: deno task test:coverage
+        run: deno task test --coverage=cov
         timeout-minutes: 15
 
       - run: |
-          deno task coverage --lcov > coverage.lcov
+          deno coverage --lcov cov > coverage.lcov
 
       - uses: codecov/codecov-action@v4
         with:

@@ -30,19 +30,9 @@
     "./popup": "./popup/mod.ts",
     "./variable": "./variable/mod.ts"
   },
-  "exclude": [
-    ".coverage/**"
-  ],
   "publish": {
-    "include": [
-      "**/*.ts",
-      "README.md",
-      "LICENSE"
-    ],
-    "exclude": [
-      "**/*_test.ts",
-      ".*"
-    ]
+    "include": ["**/*.ts", "README.md", "LICENSE"],
+    "exclude": ["**/*_test.ts", ".*"]
   },
   "imports": {
     "@core/asyncutil": "jsr:@core/asyncutil@^1.2.0",
@@ -94,8 +84,6 @@
     "check": "deno check ./**/*.ts",
     "check:doc": "deno test --doc --no-run",
     "test": "deno test -A --parallel --shuffle",
-    "test:coverage": "deno task test --coverage=.coverage",
-    "coverage": "deno coverage .coverage",
     "gen:function": "deno run -A ./.scripts/gen-function/gen-function.ts",
     "gen:option": "deno run -A ./.scripts/gen-option/gen-option.ts",
     "gen": "deno task gen:function && deno task gen:option && deno fmt",
