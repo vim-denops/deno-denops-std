@@ -62,14 +62,17 @@ jobs:
         run: deno task check:doc
 
   test:
+    needs: check
+
     strategy:
+      fail-fast: false
       matrix:
         runner:
           - windows-latest
           - macos-latest
           - ubuntu-latest
         deno_version:
-          - "2.3.0"
+          - "~2.3"
           - "2.x"
         host_version:
           - vim: "v9.1.1646"
@@ -77,12 +80,14 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     steps:
-      - run: git config --global core.autocrlf false
+      - run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
         if: runner.os == 'Windows'
 
       - uses: actions/checkout@v4
 
-      - uses: denoland/setup-deno@v1.1.4
+      - uses: denoland/setup-deno@v2
         with:
           deno-version: "${{ matrix.deno_version }}"
 
@@ -126,11 +131,11 @@ jobs:
             ./mod.ts
 
       - name: Test
-        run: deno task test:coverage
+        run: deno task test --coverage=cov
         timeout-minutes: 15
 
       - run: |
-          deno task coverage --lcov > coverage.lcov
+          deno coverage --lcov cov > coverage.lcov
 
       - uses: codecov/codecov-action@v4
         with:
