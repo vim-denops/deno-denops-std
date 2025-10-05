@@ -77,7 +77,9 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
     steps:
-      - run: git config --global core.autocrlf false
+      - run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
         if: runner.os == 'Windows'
 
       - uses: actions/checkout@v4
