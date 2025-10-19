@@ -4,7 +4,7 @@
  * @module
  */
 
-import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
+import type { Call, Context, Denops, Dispatcher, Meta } from "@denops/core";
 import { isString } from "@core/unknownutil/is/string";
 import { isUndefined } from "@core/unknownutil/is/undefined";
 import { ulid } from "@std/ulid";
@@ -105,11 +105,11 @@ class UseEvalHelper implements Denops {
     );
   }
 
-  async batch(...calls: [string, ...unknown[]][]): Promise<unknown[]> {
+  async batch(...calls: Call[]): Promise<unknown[]> {
     const suffix = await ensurePrerequisites(this.#denops);
     const callHelper = `DenopsStd_Eval_UseEval_Call_${suffix}`;
     return await this.#denops.batch(
-      ...calls.map(([fn, ...args]): [string, ...unknown[]] => [
+      ...calls.map(([fn, ...args]): Call => [
         callHelper,
         fn,
         stringify(trimEndOfArgs(args)),
