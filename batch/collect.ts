@@ -1,4 +1,4 @@
-import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
+import type { Call, Context, Denops, Dispatcher, Meta } from "@denops/core";
 
 type VimVoid<T> = T extends void ? 0 : T;
 
@@ -8,7 +8,7 @@ type Collect<T extends readonly unknown[] | []> = {
 
 class CollectHelper implements Denops {
   #denops: Denops;
-  #calls: [string, ...unknown[]][];
+  #calls: Call[];
   #closed: boolean;
 
   constructor(denops: Denops) {
@@ -17,7 +17,7 @@ class CollectHelper implements Denops {
     this.#closed = false;
   }
 
-  static getCalls(helper: CollectHelper): [string, ...unknown[]][] {
+  static getCalls(helper: CollectHelper): Call[] {
     return helper.#calls;
   }
 
@@ -63,7 +63,7 @@ class CollectHelper implements Denops {
     return Promise.resolve();
   }
 
-  batch(..._calls: [string, ...unknown[]][]): Promise<unknown[]> {
+  batch(..._calls: Call[]): Promise<unknown[]> {
     throw new Error("The 'batch' method is not available on CollectHelper.");
   }
 

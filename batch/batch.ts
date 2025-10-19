@@ -1,10 +1,10 @@
-import type { Context, Denops, Dispatcher, Meta } from "@denops/core";
+import type { Call, Context, Denops, Dispatcher, Meta } from "@denops/core";
 
 type Redraw = undefined | boolean;
 
 class BatchHelper implements Denops {
   #denops: Denops;
-  #calls: [string, ...unknown[]][];
+  #calls: Call[];
   #redraw: Redraw;
   #closed: boolean;
 
@@ -14,7 +14,7 @@ class BatchHelper implements Denops {
     this.#closed = false;
   }
 
-  static getCalls(helper: BatchHelper): [string, ...unknown[]][] {
+  static getCalls(helper: BatchHelper): Call[] {
     return helper.#calls;
   }
 
@@ -64,7 +64,7 @@ class BatchHelper implements Denops {
     return Promise.resolve();
   }
 
-  batch(...calls: [string, ...unknown[]][]): Promise<unknown[]> {
+  batch(...calls: Call[]): Promise<unknown[]> {
     if (this.#closed) {
       return this.#denops.batch(...calls);
     }
